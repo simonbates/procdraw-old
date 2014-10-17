@@ -3,105 +3,37 @@
 
 namespace procdraw {
 
-    // LispObject
-
     class LispObject {
     public:
+        LispObject(LispObjectType t) : Type(t) { }
         virtual ~LispObject() { }
-        virtual LispObjectType GetType() = 0;
-        virtual bool Null()
-        {
-            return false;
-        }
-        virtual double NumVal()
-        {
-            return 0.0;
-        }
-        virtual std::string StringVal()
-        {
-            return "";
-        }
-        virtual LispObjectPtr Car()
-        {
-            return LispMemory::Nil;
-        }
-        virtual LispObjectPtr Cdr()
-        {
-            return LispMemory::Nil;
-        }
+        const LispObjectType Type;
     };
-
-    // LispNil
 
     class LispNil : public LispObject {
     public:
-        LispObjectType GetType() override
-        {
-            return LispObjectType::Nil;
-        }
-        bool Null() override
-        {
-            return true;
-        }
+        LispNil() : LispObject(LispObjectType::Nil) { }
     };
-
-    // LispNumber
 
     class LispNumber : public LispObject {
     public:
-        LispNumber(double val) : val_(val) { }
-        LispObjectType GetType() override
-        {
-            return LispObjectType::Number;
-        }
-        double NumVal() override
-        {
-            return val_;
-        }
-    private:
+        LispNumber(double val) : LispObject(LispObjectType::Number), val_(val) { }
         double val_;
     };
 
-    // LispSymbol
-
     class LispSymbol : public LispObject {
     public:
-        LispSymbol(const std::string &str) : str_(str) { }
-        LispObjectType GetType() override
-        {
-            return LispObjectType::Symbol;
-        }
-        std::string StringVal() override
-        {
-            return str_;
-        }
-    private:
+        LispSymbol(const std::string &str) : LispObject(LispObjectType::Symbol), str_(str) { }
         std::string str_;
     };
 
-    // LispCell
-
-    class LispCell : public LispObject {
+    class LispCons : public LispObject {
     public:
-        LispCell(LispObjectPtr car, LispObjectPtr cdr) : car_(car), cdr_(cdr) { }
-        LispObjectType GetType() override
-        {
-            return LispObjectType::Cell;
-        }
-        LispObjectPtr Car() override
-        {
-            return car_;
-        }
-        LispObjectPtr Cdr() override
-        {
-            return cdr_;
-        }
-    private:
+        LispCons(LispObjectPtr car, LispObjectPtr cdr) :
+            LispObject(LispObjectType::Cons), car_(car), cdr_(cdr) { }
         LispObjectPtr car_;
         LispObjectPtr cdr_;
     };
-
-    // LispMemory
 
     LispObjectPtr LispMemory::MakeNumber(double val)
     {
@@ -111,12 +43,12 @@ namespace procdraw {
     LispObjectPtr LispMemory::MakeSymbol(const std::string &str)
     {
         LispObjectPtr n = symbolTable_;
-        while (!n->Null()) {
-            auto symbol = n->Car();
-            if (symbol->StringVal() == str) {
+        while (!Null(n)) {
+            auto symbol = Car(n);
+            if (StringVal(symbol) == str) {
                 return symbol;
             }
-            n = n->Cdr();
+            n = Cdr(n);
         }
         auto symbol = std::make_shared<LispSymbol>(str);
         symbolTable_ = Cons(symbol, symbolTable_);
@@ -125,39 +57,55 @@ namespace procdraw {
 
     LispObjectPtr LispMemory::Cons(LispObjectPtr car, LispObjectPtr cdr)
     {
-        return std::make_shared<LispCell>(car, cdr);
+        return std::make_shared<LispCons>(car, cdr);
     }
 
     LispObjectPtr LispMemory::Nil = std::make_shared<LispNil>();
 
-    LispObjectType LispMemory::GetType(LispObjectPtr obj)
+    LispObjectType LispMemory::TypeOf(LispObjectPtr obj)
     {
-        return obj->GetType();
+        return obj->Type;
     }
 
     bool LispMemory::Null(LispObjectPtr obj)
     {
-        return obj->Null();
+        return obj->Type == LispObjectType::Nil;
     }
 
     double LispMemory::NumVal(LispObjectPtr obj)
     {
-        return obj->NumVal();
+        if (obj->Type == LispObjectType::Number) {
+            return static_cast<LispNumber*>(obj.get())->val_;
+        }
+        // TODO or throw bad type exception?
+        return 0.0;
     }
 
     std::string LispMemory::StringVal(LispObjectPtr obj)
     {
-        return obj->StringVal();
+        if (obj->Type == LispObjectType::Symbol) {
+            return static_cast<LispSymbol*>(obj.get())->str_;
+        }
+        // TODO or throw bad type exception?
+        return "";
     }
 
     LispObjectPtr LispMemory::Car(LispObjectPtr obj)
     {
-        return obj->Car();
+        if (obj->Type == LispObjectType::Cons) {
+            return static_cast<LispCons*>(obj.get())->car_;
+        }
+        // TODO or throw bad type exception?
+        return LispMemory::Nil;
     }
 
     LispObjectPtr LispMemory::Cdr(LispObjectPtr obj)
     {
-        return obj->Cdr();
+        if (obj->Type == LispObjectType::Cons) {
+            return static_cast<LispCons*>(obj.get())->cdr_;
+        }
+        // TODO or throw bad type exception?
+        return LispMemory::Nil;
     }
 
 }

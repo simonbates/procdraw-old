@@ -8,7 +8,7 @@ namespace procdraw {
     class LispObject;
     typedef std::shared_ptr<LispObject> LispObjectPtr;
 
-    enum class LispObjectType { Nil, Number, Symbol, Cell };
+    enum class LispObjectType { Nil, Number, Symbol, Cons };
 
     class LispMemory {
     public:
@@ -19,7 +19,7 @@ namespace procdraw {
         // Shared Nil instance
         static LispObjectPtr Nil;
         // Object access
-        LispObjectType GetType(LispObjectPtr obj);
+        LispObjectType TypeOf(LispObjectPtr obj);
         bool Null(LispObjectPtr obj);
         double NumVal(LispObjectPtr obj);
         std::string StringVal(LispObjectPtr obj);

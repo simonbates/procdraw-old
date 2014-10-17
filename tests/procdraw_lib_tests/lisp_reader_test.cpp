@@ -8,13 +8,13 @@ TEST_CASE("LispReader") {
 
     SECTION("Integer") {
         auto obj = reader.Read("42");
-        REQUIRE(mem.GetType(obj) == procdraw::LispObjectType::Number);
+        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Number);
         REQUIRE(mem.NumVal(obj) == 42);
     }
 
     SECTION("Symbol") {
         auto obj = reader.Read("HELLO-WORLD-1");
-        REQUIRE(mem.GetType(obj) == procdraw::LispObjectType::Symbol);
+        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(mem.StringVal(obj) == "HELLO-WORLD-1");
     }
 
@@ -25,7 +25,7 @@ TEST_CASE("LispReader") {
 
     SECTION("List with single element") {
         auto obj = reader.Read("(42)");
-        REQUIRE(mem.GetType(obj) == procdraw::LispObjectType::Cell);
+        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Cons);
         REQUIRE(mem.NumVal(mem.Car(obj)) == 42);
         REQUIRE(mem.Null(mem.Cdr(obj)));
     }

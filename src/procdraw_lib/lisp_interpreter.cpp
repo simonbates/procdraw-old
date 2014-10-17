@@ -4,7 +4,7 @@ namespace procdraw {
 
     bool LispInterpreter::Atom(LispObjectPtr obj)
     {
-        return mem_.GetType(obj) != LispObjectType::Cell;
+        return mem_.TypeOf(obj) != LispObjectType::Cons;
     }
 
     LispObjectPtr LispInterpreter::Read(const std::string &str)
@@ -14,7 +14,7 @@ namespace procdraw {
 
     std::string LispInterpreter::PrintString(LispObjectPtr obj)
     {
-        switch (mem_.GetType(obj)) {
+        switch (mem_.TypeOf(obj)) {
         case LispObjectType::Nil:
             return "NIL";
         case LispObjectType::Number:
@@ -25,7 +25,7 @@ namespace procdraw {
         }
         case LispObjectType::Symbol:
             return mem_.StringVal(obj);
-        case LispObjectType::Cell:
+        case LispObjectType::Cons:
         {
             std::string s("(");
             LispObjectPtr n = obj;
