@@ -96,4 +96,12 @@ namespace procdraw {
         return LispInterpreter::Nil;
     }
 
+    bool LispInterpreter::Eq(LispObjectPtr x, LispObjectPtr y)
+    {
+        if (x->Type == LispObjectType::Number && y->Type == LispObjectType::Number) {
+            return static_cast<LispNumber*>(x.get())->val_ == static_cast<LispNumber*>(y.get())->val_;
+        }
+        return x.get() == y.get();
+    }
+
 }

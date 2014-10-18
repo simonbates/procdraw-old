@@ -23,9 +23,34 @@ namespace procdraw {
         return symbol;
     }
 
+    LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
+    {
+        LispObjectPtr n = alist;
+        while (!Null(n)) {
+            auto pair = Car(n);
+            if (Eq(key, Car(pair))) {
+                return pair;
+            }
+            n = Cdr(n);
+        }
+        return Nil;
+    }
+
     bool LispInterpreter::Atom(LispObjectPtr obj)
     {
         return TypeOf(obj) != LispObjectType::Cons;
+    }
+
+    LispObjectPtr LispInterpreter::List(std::initializer_list<LispObjectPtr> objs)
+    {
+        auto list1 = Nil;
+        auto i = std::rbegin(objs);
+        auto end = std::rend(objs);
+        while (i != end) {
+            list1 = Cons(*i, list1);
+            ++i;
+        }
+        return list1;
     }
 
     LispObjectPtr LispInterpreter::Read(const std::string &str)
