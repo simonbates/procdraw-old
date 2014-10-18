@@ -104,4 +104,22 @@ namespace procdraw {
         return x.get() == y.get();
     }
 
+    LispObjectPtr LispInterpreter::Rplaca(LispObjectPtr cons, LispObjectPtr obj)
+    {
+        if (cons->Type == LispObjectType::Cons) {
+            static_cast<LispCons*>(cons.get())->car_ = obj;
+        }
+        // TODO if not LispObjectType::Cons?
+        return cons;
+    }
+
+    LispObjectPtr LispInterpreter::Rplacd(LispObjectPtr cons, LispObjectPtr obj)
+    {
+        if (cons->Type == LispObjectType::Cons) {
+            static_cast<LispCons*>(cons.get())->cdr_ = obj;
+        }
+        // TODO if not LispObjectType::Cons?
+        return cons;
+    }
+
 }

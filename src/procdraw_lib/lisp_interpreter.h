@@ -25,6 +25,8 @@ namespace procdraw {
         LispObjectPtr Car(LispObjectPtr obj);
         LispObjectPtr Cdr(LispObjectPtr obj);
         bool Eq(LispObjectPtr x, LispObjectPtr y);
+        LispObjectPtr Rplaca(LispObjectPtr cons, LispObjectPtr obj);
+        LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
         // Symbols
         LispObjectPtr SymbolRef(const std::string &str);
         // Functions

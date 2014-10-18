@@ -131,3 +131,25 @@ TEST_CASE("LispInterpreter::Assoc()") {
     }
 
 }
+
+TEST_CASE("LispInterpreter::Rplaca()") {
+
+    procdraw::LispInterpreter L;
+
+    auto cons = L.Cons(L.MakeNumber(1), L.MakeNumber(2));
+    auto result = L.Rplaca(cons, L.MakeNumber(10));
+    REQUIRE(L.NumVal(L.Car(cons)) == 10);
+    REQUIRE(L.NumVal(L.Cdr(cons)) == 2);
+    REQUIRE(L.Eq(cons, result));
+}
+
+TEST_CASE("LispInterpreter::Rplacd()") {
+
+    procdraw::LispInterpreter L;
+
+    auto cons = L.Cons(L.MakeNumber(1), L.MakeNumber(2));
+    auto result = L.Rplacd(cons, L.MakeNumber(20));
+    REQUIRE(L.NumVal(L.Car(cons)) == 1);
+    REQUIRE(L.NumVal(L.Cdr(cons)) == 20);
+    REQUIRE(L.Eq(cons, result));
+}
