@@ -6,6 +6,8 @@ namespace procdraw {
     {
         InitNil();
         symbols_ = Nil;
+        S_ADD = SymbolRef("ADD");
+        S_QUOTE = SymbolRef("QUOTE");
     }
 
     LispObjectPtr LispInterpreter::SymbolRef(const std::string &str)
@@ -21,6 +23,17 @@ namespace procdraw {
         auto symbol = MakeSymbol(str);
         symbols_ = Cons(symbol, symbols_);
         return symbol;
+    }
+
+    LispObjectPtr LispInterpreter::Add(LispObjectPtr args)
+    {
+        double sum = 0;
+        LispObjectPtr n = args;
+        while (!Null(n)) {
+            sum += NumVal(Car(n));
+            n = Cdr(n);
+        }
+        return MakeNumber(sum);
     }
 
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
@@ -39,6 +52,37 @@ namespace procdraw {
     bool LispInterpreter::Atom(LispObjectPtr obj)
     {
         return TypeOf(obj) != LispObjectType::Cons;
+    }
+
+    LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)
+    {
+        if (Atom(exp)) {
+            if (TypeOf(exp) == LispObjectType::Number) {
+                return exp;
+            }
+            else {
+                return Cdr(Assoc(exp, env));
+            }
+        }
+        else {
+            if (Eq(Car(exp), S_QUOTE)) {
+                return (Car(Cdr(exp)));
+            }
+            else if (Eq(Car(exp), S_ADD)) {
+                return Add(Evlis(Cdr(exp), env));
+            }
+        }
+
+        return Nil;
+    }
+
+    LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env) {
+        if (Null(arglist)) {
+            return Nil;
+        }
+        else {
+            return Cons(Eval(Car(arglist), env), Evlis(Cdr(arglist), env));
+        }
     }
 
     LispObjectPtr LispInterpreter::List(std::initializer_list<LispObjectPtr> objs)

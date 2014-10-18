@@ -153,3 +153,39 @@ TEST_CASE("LispInterpreter::Rplacd()") {
     REQUIRE(L.NumVal(L.Cdr(cons)) == 20);
     REQUIRE(L.Eq(cons, result));
 }
+
+TEST_CASE("LispInterpreter::Eval()") {
+
+    procdraw::LispInterpreter L;
+
+    SECTION("Number") {
+        auto result = L.Eval(L.MakeNumber(42), L.Nil);
+        REQUIRE(L.NumVal(result) == 42);
+    }
+
+    SECTION("Retrieve undefined") {
+        REQUIRE(L.Null(L.Eval(L.SymbolRef("A"), L.Nil)));
+    }
+
+    SECTION("Retrieve number") {
+        auto env = L.List({ L.Cons(L.SymbolRef("A"), L.MakeNumber(42)) });
+        auto result = L.Eval(L.SymbolRef("A"), env);
+        REQUIRE(L.NumVal(result) == 42);
+    }
+
+    SECTION("QUOTE") {
+        auto result = L.Eval(L.Read("(QUOTE 42)"), L.Nil);
+        REQUIRE(L.NumVal(result) == 42);
+    }
+
+    SECTION("ADD") {
+        auto env = L.List({
+            L.Cons(L.SymbolRef("A"), L.MakeNumber(1)),
+            L.Cons(L.SymbolRef("B"), L.MakeNumber(2)),
+            L.Cons(L.SymbolRef("C"), L.MakeNumber(4))
+        });
+        auto result = L.Eval(L.Read("(ADD (ADD A B 8) 16 C)"), env);
+        REQUIRE(L.NumVal(result) == 31);
+    }
+
+}
