@@ -1,14 +1,15 @@
 #include "lisp_reader.h"
+#include "lisp_interpreter.h"
 #include <cctype>
 
 namespace procdraw {
 
-    LispObjectPtr LispReader::Read(const std::string &str)
+    LispObjectPtr LispReader::Read(LispInterpreter *L, const std::string &str)
     {
         input_ = std::istringstream(str);
         GetCh();
         GetToken();
-        return Read();
+        return Read(L);
     }
 
     void LispReader::GetCh()
@@ -60,19 +61,19 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr LispReader::Read()
+    LispObjectPtr LispReader::Read(LispInterpreter *L)
     {
         if (token_ == LispTokenType::LParen) {
             GetToken();
-            return ReadCons();
+            return ReadCons(L);
         }
         else if (token_ == LispTokenType::Number) {
-            auto intObj = mem_.MakeNumber(numVal_);
+            auto intObj = L->MakeNumber(numVal_);
             GetToken();
             return intObj;
         }
         else if (token_ == LispTokenType::Symbol) {
-            auto symbolObj = mem_.MakeSymbol(symbolVal_);
+            auto symbolObj = L->MakeSymbol(symbolVal_);
             GetToken();
             return symbolObj;
         }
@@ -82,24 +83,24 @@ namespace procdraw {
         throw std::runtime_error("Bad input at LispReader::Read()");
     }
 
-    LispObjectPtr LispReader::ReadCons()
+    LispObjectPtr LispReader::ReadCons(LispInterpreter *L)
     {
         if (token_ == LispTokenType::RParen) {
             // Empty list
             GetToken();
-            return LispMemory::Nil;
+            return LispInterpreter::Nil;
         }
-        auto car = Read();
+        auto car = Read(L);
         if (token_ == LispTokenType::RParen) {
             GetToken();
-            return mem_.Cons(car, LispMemory::Nil);
+            return L->Cons(car, LispInterpreter::Nil);
         }
         else if (token_ == LispTokenType::Dot) {
             GetToken();
-            return mem_.Cons(car, Read());
+            return L->Cons(car, Read(L));
         }
         else {
-            return mem_.Cons(car, ReadCons());
+            return L->Cons(car, ReadCons(L));
         }
     }
 

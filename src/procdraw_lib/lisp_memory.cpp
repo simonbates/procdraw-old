@@ -1,5 +1,5 @@
 #include "lisp_memory.h"
-#include <sstream>
+#include "lisp_interpreter.h"
 
 namespace procdraw {
 
@@ -8,11 +8,6 @@ namespace procdraw {
         LispObject(LispObjectType t) : Type(t) { }
         virtual ~LispObject() { }
         const LispObjectType Type;
-    };
-
-    class LispNil : public LispObject {
-    public:
-        LispNil() : LispObject(LispObjectType::Nil) { }
     };
 
     class LispNumber : public LispObject {
@@ -35,12 +30,12 @@ namespace procdraw {
         LispObjectPtr cdr_;
     };
 
-    LispObjectPtr LispMemory::MakeNumber(double val)
+    LispObjectPtr LispInterpreter::MakeNumber(double val)
     {
         return std::make_shared<LispNumber>(val);
     }
 
-    LispObjectPtr LispMemory::MakeSymbol(const std::string &str)
+    LispObjectPtr LispInterpreter::MakeSymbol(const std::string &str)
     {
         LispObjectPtr n = symbolTable_;
         while (!Null(n)) {
@@ -55,24 +50,24 @@ namespace procdraw {
         return symbol;
     }
 
-    LispObjectPtr LispMemory::Cons(LispObjectPtr car, LispObjectPtr cdr)
+    LispObjectPtr LispInterpreter::Cons(LispObjectPtr car, LispObjectPtr cdr)
     {
         return std::make_shared<LispCons>(car, cdr);
     }
 
-    LispObjectPtr LispMemory::Nil = std::make_shared<LispNil>();
+    LispObjectPtr LispInterpreter::Nil = std::make_shared<LispObject>(LispObjectType::Nil);
 
-    LispObjectType LispMemory::TypeOf(LispObjectPtr obj)
+    LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
     {
         return obj->Type;
     }
 
-    bool LispMemory::Null(LispObjectPtr obj)
+    bool LispInterpreter::Null(LispObjectPtr obj)
     {
         return obj->Type == LispObjectType::Nil;
     }
 
-    double LispMemory::NumVal(LispObjectPtr obj)
+    double LispInterpreter::NumVal(LispObjectPtr obj)
     {
         if (obj->Type == LispObjectType::Number) {
             return static_cast<LispNumber*>(obj.get())->val_;
@@ -81,7 +76,7 @@ namespace procdraw {
         return 0.0;
     }
 
-    std::string LispMemory::StringVal(LispObjectPtr obj)
+    std::string LispInterpreter::StringVal(LispObjectPtr obj)
     {
         if (obj->Type == LispObjectType::Symbol) {
             return static_cast<LispSymbol*>(obj.get())->str_;
@@ -90,22 +85,22 @@ namespace procdraw {
         return "";
     }
 
-    LispObjectPtr LispMemory::Car(LispObjectPtr obj)
+    LispObjectPtr LispInterpreter::Car(LispObjectPtr obj)
     {
         if (obj->Type == LispObjectType::Cons) {
             return static_cast<LispCons*>(obj.get())->car_;
         }
         // TODO or throw bad type exception?
-        return LispMemory::Nil;
+        return LispInterpreter::Nil;
     }
 
-    LispObjectPtr LispMemory::Cdr(LispObjectPtr obj)
+    LispObjectPtr LispInterpreter::Cdr(LispObjectPtr obj)
     {
         if (obj->Type == LispObjectType::Cons) {
             return static_cast<LispCons*>(obj.get())->cdr_;
         }
         // TODO or throw bad type exception?
-        return LispMemory::Nil;
+        return LispInterpreter::Nil;
     }
 
 }

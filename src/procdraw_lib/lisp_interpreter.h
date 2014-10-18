@@ -2,17 +2,36 @@
 
 #include "lisp_memory.h"
 #include "lisp_reader.h"
+#include <string>
 
 namespace procdraw {
 
+    enum class LispObjectType { Nil, Number, Symbol, Cons };
+
     class LispInterpreter {
     public:
+        LispInterpreter() : symbolTable_(Nil) { }
+
+        // Memory allocation
+        LispObjectPtr MakeNumber(double val);
+        LispObjectPtr MakeSymbol(const std::string &str);
+        LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
+        // Memory access
+        LispObjectType TypeOf(LispObjectPtr obj);
+        bool Null(LispObjectPtr obj);
+        double NumVal(LispObjectPtr obj);
+        std::string StringVal(LispObjectPtr obj);
+        LispObjectPtr Car(LispObjectPtr obj);
+        LispObjectPtr Cdr(LispObjectPtr obj);
+        // Shared Nil instance
+        static LispObjectPtr Nil;
+        // Functions
         bool Atom(LispObjectPtr obj);
         LispObjectPtr Read(const std::string &str);
         std::string PrintString(LispObjectPtr obj);
     private:
-        LispMemory mem_;
-        LispReader reader_{mem_};
+        LispObjectPtr symbolTable_;
+        LispReader reader_;
     };
 
 }

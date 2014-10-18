@@ -1,33 +1,34 @@
 #include "lisp_reader.h"
+#include "lisp_interpreter.h"
 #include "catch.hpp"
 
 TEST_CASE("LispReader") {
 
-    procdraw::LispMemory mem;
-    procdraw::LispReader reader(mem);
+    procdraw::LispReader reader;
+    procdraw::LispInterpreter L;
 
     SECTION("Integer") {
-        auto obj = reader.Read("42");
-        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Number);
-        REQUIRE(mem.NumVal(obj) == 42);
+        auto obj = reader.Read(&L, "42");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
+        REQUIRE(L.NumVal(obj) == 42);
     }
 
     SECTION("Symbol") {
-        auto obj = reader.Read("HELLO-WORLD-1");
-        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Symbol);
-        REQUIRE(mem.StringVal(obj) == "HELLO-WORLD-1");
+        auto obj = reader.Read(&L, "HELLO-WORLD-1");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.StringVal(obj) == "HELLO-WORLD-1");
     }
 
     SECTION("Empty list") {
-        auto obj = reader.Read("()");
-        REQUIRE(mem.Null(obj));
+        auto obj = reader.Read(&L, "()");
+        REQUIRE(L.Null(obj));
     }
 
     SECTION("List with single element") {
-        auto obj = reader.Read("(42)");
-        REQUIRE(mem.TypeOf(obj) == procdraw::LispObjectType::Cons);
-        REQUIRE(mem.NumVal(mem.Car(obj)) == 42);
-        REQUIRE(mem.Null(mem.Cdr(obj)));
+        auto obj = reader.Read(&L, "(42)");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);
+        REQUIRE(L.NumVal(L.Car(obj)) == 42);
+        REQUIRE(L.Null(L.Cdr(obj)));
     }
 
     // A      B      C
@@ -35,13 +36,13 @@ TEST_CASE("LispReader") {
     // |2|*|->|3|*|->|5|/|
     // +---+  +---+  +---+
     SECTION("List with multiple elements") {
-        auto consA = reader.Read("(2 3 5)");
-        REQUIRE(mem.NumVal(mem.Car(consA)) == 2);
-        auto consB = mem.Cdr(consA);
-        REQUIRE(mem.NumVal(mem.Car(consB)) == 3);
-        auto consC = mem.Cdr(consB);
-        REQUIRE(mem.NumVal(mem.Car(consC)) == 5);
-        REQUIRE(mem.Null(mem.Cdr(consC)));
+        auto consA = reader.Read(&L, "(2 3 5)");
+        REQUIRE(L.NumVal(L.Car(consA)) == 2);
+        auto consB = L.Cdr(consA);
+        REQUIRE(L.NumVal(L.Car(consB)) == 3);
+        auto consC = L.Cdr(consB);
+        REQUIRE(L.NumVal(L.Car(consC)) == 5);
+        REQUIRE(L.Null(L.Cdr(consC)));
     }
 
     // A      B      C
@@ -55,23 +56,23 @@ TEST_CASE("LispReader") {
     //        +---+  +---+
     //        D      E
     SECTION("List with embedded list") {
-        auto consA = reader.Read("(2 (3 5) 7)");
-        REQUIRE(mem.NumVal(mem.Car(consA)) == 2);
-        auto consB = mem.Cdr(consA);
-        auto consC = mem.Cdr(consB);
-        REQUIRE(mem.NumVal(mem.Car(consC)) == 7);
-        REQUIRE(mem.Null(mem.Cdr(consC)));
-        auto consD = mem.Car(consB);
-        REQUIRE(mem.NumVal(mem.Car(consD)) == 3);
-        auto consE = mem.Cdr(consD);
-        REQUIRE(mem.NumVal(mem.Car(consE)) == 5);
-        REQUIRE(mem.Null(mem.Cdr(consE)));
+        auto consA = reader.Read(&L, "(2 (3 5) 7)");
+        REQUIRE(L.NumVal(L.Car(consA)) == 2);
+        auto consB = L.Cdr(consA);
+        auto consC = L.Cdr(consB);
+        REQUIRE(L.NumVal(L.Car(consC)) == 7);
+        REQUIRE(L.Null(L.Cdr(consC)));
+        auto consD = L.Car(consB);
+        REQUIRE(L.NumVal(L.Car(consD)) == 3);
+        auto consE = L.Cdr(consD);
+        REQUIRE(L.NumVal(L.Car(consE)) == 5);
+        REQUIRE(L.Null(L.Cdr(consE)));
     }
 
     SECTION("Dotted pair") {
-        auto obj = reader.Read("(2 . 3)");
-        REQUIRE(mem.NumVal(mem.Car(obj)) == 2);
-        REQUIRE(mem.NumVal(mem.Cdr(obj)) == 3);
+        auto obj = reader.Read(&L, "(2 . 3)");
+        REQUIRE(L.NumVal(L.Car(obj)) == 2);
+        REQUIRE(L.NumVal(L.Cdr(obj)) == 3);
     }
 
 }

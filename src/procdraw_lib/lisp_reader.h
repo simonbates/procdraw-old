@@ -1,20 +1,19 @@
 #pragma once
 
 #include "lisp_memory.h"
-#include <memory>
-#include <sstream>
 #include <string>
+#include <sstream>
 
 namespace procdraw {
+
+    class LispInterpreter;
 
     enum class LispTokenType { LParen, RParen, Dot, Number, Symbol, EndOfInput, Undefined };
 
     class LispReader {
     public:
-        LispReader(LispMemory &mem) : mem_(mem) { }
-        LispObjectPtr Read(const std::string &str);
+        LispObjectPtr Read(LispInterpreter *L, const std::string &str);
     private:
-        LispMemory &mem_;
         std::istringstream input_;
         int ch_;
         LispTokenType token_;
@@ -22,8 +21,8 @@ namespace procdraw {
         std::string symbolVal_;
         void GetCh();
         void GetToken();
-        LispObjectPtr Read();
-        LispObjectPtr ReadCons();
+        LispObjectPtr Read(LispInterpreter *L);
+        LispObjectPtr ReadCons(LispInterpreter *L);
     };
 
 }
