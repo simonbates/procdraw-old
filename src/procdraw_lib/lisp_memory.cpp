@@ -42,17 +42,7 @@ namespace procdraw {
 
     LispObjectPtr LispInterpreter::MakeSymbol(const std::string &str)
     {
-        LispObjectPtr n = symbolTable_;
-        while (!Null(n)) {
-            auto symbol = Car(n);
-            if (StringVal(symbol) == str) {
-                return symbol;
-            }
-            n = Cdr(n);
-        }
-        auto symbol = std::make_shared<LispSymbol>(str);
-        symbolTable_ = Cons(symbol, symbolTable_);
-        return symbol;
+        return std::make_shared<LispSymbol>(str);
     }
 
     LispObjectPtr LispInterpreter::Cons(LispObjectPtr car, LispObjectPtr cdr)

@@ -5,7 +5,22 @@ namespace procdraw {
     LispInterpreter::LispInterpreter()
     {
         InitNil();
-        symbolTable_ = Nil;
+        symbols_ = Nil;
+    }
+
+    LispObjectPtr LispInterpreter::SymbolRef(const std::string &str)
+    {
+        LispObjectPtr n = symbols_;
+        while (!Null(n)) {
+            auto symbol = Car(n);
+            if (StringVal(symbol) == str) {
+                return symbol;
+            }
+            n = Cdr(n);
+        }
+        auto symbol = MakeSymbol(str);
+        symbols_ = Cons(symbol, symbols_);
+        return symbol;
     }
 
     bool LispInterpreter::Atom(LispObjectPtr obj)

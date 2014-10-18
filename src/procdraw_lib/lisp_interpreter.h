@@ -15,7 +15,6 @@ namespace procdraw {
         LispObjectPtr Nil;
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
-        LispObjectPtr MakeSymbol(const std::string &str);
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
         // Memory access
         LispObjectType TypeOf(LispObjectPtr obj);
@@ -24,14 +23,17 @@ namespace procdraw {
         std::string StringVal(LispObjectPtr obj);
         LispObjectPtr Car(LispObjectPtr obj);
         LispObjectPtr Cdr(LispObjectPtr obj);
+        // Symbols
+        LispObjectPtr SymbolRef(const std::string &str);
         // Functions
         bool Atom(LispObjectPtr obj);
         LispObjectPtr Read(const std::string &str);
         std::string PrintString(LispObjectPtr obj);
     private:
-        LispObjectPtr symbolTable_;
+        LispObjectPtr symbols_;
         LispReader reader_;
         void InitNil();
+        LispObjectPtr MakeSymbol(const std::string &str);
     };
 
 }

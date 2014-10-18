@@ -26,14 +26,14 @@ TEST_CASE("LispInterpreter::PrintString()") {
 
 }
 
-TEST_CASE("LispInterpreter::MakeSymbol()") {
+TEST_CASE("LispInterpreter::SymbolRef()") {
 
     procdraw::LispInterpreter L;
 
-    auto hello1 = L.MakeSymbol("HELLO");
+    auto hello1 = L.SymbolRef("HELLO");
     REQUIRE(L.TypeOf(hello1) == procdraw::LispObjectType::Symbol);
     REQUIRE(L.StringVal(hello1) == "HELLO");
-    auto hello2 = L.MakeSymbol("HELLO");
+    auto hello2 = L.SymbolRef("HELLO");
     REQUIRE(L.TypeOf(hello2) == procdraw::LispObjectType::Symbol);
     REQUIRE(L.StringVal(hello2) == "HELLO");
     // Verify that they are the same address

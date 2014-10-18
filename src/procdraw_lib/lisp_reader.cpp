@@ -73,7 +73,7 @@ namespace procdraw {
             return intObj;
         }
         else if (token_ == LispTokenType::Symbol) {
-            auto symbolObj = L->MakeSymbol(symbolVal_);
+            auto symbolObj = L->SymbolRef(symbolVal_);
             GetToken();
             return symbolObj;
         }
