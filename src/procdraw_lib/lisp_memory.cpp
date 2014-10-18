@@ -30,6 +30,11 @@ namespace procdraw {
         LispObjectPtr cdr_;
     };
 
+    void LispInterpreter::InitNil()
+    {
+        Nil = std::make_shared<LispObject>(LispObjectType::Nil);
+    }
+
     LispObjectPtr LispInterpreter::MakeNumber(double val)
     {
         return std::make_shared<LispNumber>(val);
@@ -54,8 +59,6 @@ namespace procdraw {
     {
         return std::make_shared<LispCons>(car, cdr);
     }
-
-    LispObjectPtr LispInterpreter::Nil = std::make_shared<LispObject>(LispObjectType::Nil);
 
     LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
     {

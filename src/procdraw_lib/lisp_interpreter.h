@@ -10,8 +10,9 @@ namespace procdraw {
 
     class LispInterpreter {
     public:
-        LispInterpreter() : symbolTable_(Nil) { }
-
+        LispInterpreter();
+        // Nil
+        LispObjectPtr Nil;
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
         LispObjectPtr MakeSymbol(const std::string &str);
@@ -23,8 +24,6 @@ namespace procdraw {
         std::string StringVal(LispObjectPtr obj);
         LispObjectPtr Car(LispObjectPtr obj);
         LispObjectPtr Cdr(LispObjectPtr obj);
-        // Shared Nil instance
-        static LispObjectPtr Nil;
         // Functions
         bool Atom(LispObjectPtr obj);
         LispObjectPtr Read(const std::string &str);
@@ -32,6 +31,7 @@ namespace procdraw {
     private:
         LispObjectPtr symbolTable_;
         LispReader reader_;
+        void InitNil();
     };
 
 }

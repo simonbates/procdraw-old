@@ -2,6 +2,12 @@
 
 namespace procdraw {
 
+    LispInterpreter::LispInterpreter()
+    {
+        InitNil();
+        symbolTable_ = Nil;
+    }
+
     bool LispInterpreter::Atom(LispObjectPtr obj)
     {
         return TypeOf(obj) != LispObjectType::Cons;

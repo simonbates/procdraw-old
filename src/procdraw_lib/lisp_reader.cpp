@@ -88,12 +88,12 @@ namespace procdraw {
         if (token_ == LispTokenType::RParen) {
             // Empty list
             GetToken();
-            return LispInterpreter::Nil;
+            return L->Nil;
         }
         auto car = Read(L);
         if (token_ == LispTokenType::RParen) {
             GetToken();
-            return L->Cons(car, LispInterpreter::Nil);
+            return L->Cons(car, L->Nil);
         }
         else if (token_ == LispTokenType::Dot) {
             GetToken();
