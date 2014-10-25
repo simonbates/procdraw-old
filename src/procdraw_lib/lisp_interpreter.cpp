@@ -85,14 +85,11 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr LispInterpreter::List(std::initializer_list<LispObjectPtr> objs)
+    LispObjectPtr LispInterpreter::List(std::vector<LispObjectPtr> objs)
     {
         auto list1 = Nil;
-        auto i = std::rbegin(objs);
-        auto end = std::rend(objs);
-        while (i != end) {
-            list1 = Cons(*i, list1);
-            ++i;
+        for (auto it = objs.rbegin(); it != objs.rend(); ++it) {
+            list1 = Cons(*it, list1);
         }
         return list1;
     }

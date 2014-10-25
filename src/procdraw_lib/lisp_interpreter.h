@@ -3,7 +3,7 @@
 #include "lisp_memory.h"
 #include "lisp_reader.h"
 #include <string>
-#include <initializer_list>
+#include <vector>
 
 namespace procdraw {
 
@@ -35,7 +35,7 @@ namespace procdraw {
         bool Atom(LispObjectPtr obj);
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Evlis(LispObjectPtr arglist, LispObjectPtr env);
-        LispObjectPtr List(std::initializer_list<LispObjectPtr> objs);
+        LispObjectPtr List(std::vector<LispObjectPtr> objs);
         LispObjectPtr Read(const std::string &str);
         std::string PrintString(LispObjectPtr obj);
     private:

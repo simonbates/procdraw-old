@@ -1,6 +1,9 @@
 ProcDraw
 ========
 
+Building on Windows
+-------------------
+
 Dependencies:
 
 - Visual Studio Express 2013 for Desktop
@@ -25,7 +28,32 @@ To run ProcDraw from Visual Studio:
 - Set procdraw_winmain as the Startup Project
 - Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
 
-To run the tests (from the build directory):
+Building on Linux
+-----------------
+
+Dependencies:
+
+- GNU C++ compiler
+- CMake
+
+Run CMake to generate a Makefile:
+
+```
+mkdir build
+cd build
+cmake ..
+```
+
+To build (in the build directory):
+
+```
+make
+```
+
+Running the tests
+-----------------
+
+To run the tests (in the build directory):
 
 ```
 ctest --output-on-failure
