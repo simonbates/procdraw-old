@@ -41,8 +41,7 @@ namespace procdraw {
         D3D_FEATURE_LEVEL d3dFeatureLevel_;
         IDXGISwapChainPtr swapChain_;
         ID3D11DevicePtr d3dDevice_;
-        // TODO rename immediateContext_ to d3dContext_
-        ID3D11DeviceContextPtr immediateContext_;
+        ID3D11DeviceContextPtr d3dContext_;
         ID3D11Texture2DPtr backBuffer_;
         ID3D11RenderTargetViewPtr renderTargetView_;
         ID3D11VertexShaderPtr vertexShader_;

@@ -18,7 +18,7 @@ namespace procdraw {
 
     D3D11Graphics::~D3D11Graphics()
     {
-        immediateContext_->ClearState();
+        d3dContext_->ClearState();
     }
 
     void D3D11Graphics::Background(float h, float s, float v)
@@ -26,7 +26,7 @@ namespace procdraw {
         float r, g, b;
         Hsv2Rgb(h, s, v, r, g, b);
         FLOAT c[4] = { r, g, b, 1.0f };
-        immediateContext_->ClearRenderTargetView(renderTargetView_, c);
+        d3dContext_->ClearRenderTargetView(renderTargetView_, c);
     }
 
     void D3D11Graphics::Present()
@@ -36,13 +36,13 @@ namespace procdraw {
 
     void D3D11Graphics::Triangle()
     {
-        immediateContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         UINT stride = sizeof(ShaderVertex);
         UINT offset = 0;
-        immediateContext_->IASetVertexBuffers(0, 1, &triangleVertexBuffer_.GetInterfacePtr(), &stride, &offset);
+        d3dContext_->IASetVertexBuffers(0, 1, &triangleVertexBuffer_.GetInterfacePtr(), &stride, &offset);
 
-        immediateContext_->Draw(3, 0);
+        d3dContext_->Draw(3, 0);
     }
 
     void D3D11Graphics::InitD3D()
@@ -86,13 +86,13 @@ namespace procdraw {
         HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
             createDeviceFlags, feature_levels, num_feature_levels,
             D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-            &d3dFeatureLevel_, &immediateContext_);
+            &d3dFeatureLevel_, &d3dContext_);
         if (hr == E_INVALIDARG) {
             // Try again without D3D_FEATURE_LEVEL_11_1
             hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
                 createDeviceFlags, &feature_levels[1], num_feature_levels - 1,
                 D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-                &d3dFeatureLevel_, &immediateContext_);
+                &d3dFeatureLevel_, &d3dContext_);
         }
         ThrowOnFail(hr);
 
@@ -103,7 +103,7 @@ namespace procdraw {
 
         ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_, nullptr, &renderTargetView_));
 
-        immediateContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), nullptr);
+        d3dContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), nullptr);
 
         // Viewport
 
@@ -114,7 +114,7 @@ namespace procdraw {
         vp.MaxDepth = 1.0f;
         vp.TopLeftX = 0;
         vp.TopLeftY = 0;
-        immediateContext_->RSSetViewports(1, &vp);
+        d3dContext_->RSSetViewports(1, &vp);
     }
 
     ID3D10BlobPtr D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
@@ -138,7 +138,7 @@ namespace procdraw {
         ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "vertex_shader", "vs_5_0");
         ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
             vs->GetBufferSize(), nullptr, &vertexShader_));
-        immediateContext_->VSSetShader(vertexShader_, 0, 0);
+        d3dContext_->VSSetShader(vertexShader_, 0, 0);
 
         // Input layout
 
@@ -152,7 +152,7 @@ namespace procdraw {
         ThrowOnFail(d3dDevice_->CreateInputLayout(inputElementDescriptions,
             ARRAYSIZE(inputElementDescriptions), vs->GetBufferPointer(),
             vs->GetBufferSize(), &inputLayout_));
-        immediateContext_->IASetInputLayout(inputLayout_);
+        d3dContext_->IASetInputLayout(inputLayout_);
     }
 
     void D3D11Graphics::CreatePixelShader()
@@ -160,7 +160,7 @@ namespace procdraw {
         ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "pixel_shader", "ps_5_0");
         ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
             ps->GetBufferSize(), nullptr, &pixelShader_));
-        immediateContext_->PSSetShader(pixelShader_, 0, 0);
+        d3dContext_->PSSetShader(pixelShader_, 0, 0);
     }
 
     void D3D11Graphics::CreateTriangleVertexBuffer()
