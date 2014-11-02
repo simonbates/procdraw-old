@@ -26,6 +26,7 @@ To build in Visual Studio:
 To run ProcDraw from Visual Studio:
 
 - Set procdraw_winmain as the Startup Project
+- Set the procdraw_winmain project Working Directory to the procdraw directory (Properties/Debugging/Working Directory)
 - Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
 
 Building on Linux

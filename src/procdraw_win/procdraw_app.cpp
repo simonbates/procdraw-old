@@ -155,7 +155,8 @@ namespace procdraw {
 
     void ProcDrawApp::Draw()
     {
-        graphics_->Background((MouseX() * 360) / Width(), 0.4f, 1);
+        graphics_->Background(0, 0, 0);
+        graphics_->Triangle();
     }
 
 }

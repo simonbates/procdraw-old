@@ -2,6 +2,7 @@
 #include "d3d11graphics.h"
 #include "color.h"
 #include "win_util.h"
+#include <d3dcompiler.h>
 
 namespace procdraw {
 
@@ -10,6 +11,9 @@ namespace procdraw {
         d3dFeatureLevel_(D3D_FEATURE_LEVEL_10_0)
     {
         InitD3D();
+        CreateVertexShader();
+        CreatePixelShader();
+        CreateTriangleVertexBuffer();
     }
 
     D3D11Graphics::~D3D11Graphics()
@@ -30,15 +34,27 @@ namespace procdraw {
         swapChain_->Present(0, 0);
     }
 
+    void D3D11Graphics::Triangle()
+    {
+        immediateContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        UINT stride = sizeof(ShaderVertex);
+        UINT offset = 0;
+        immediateContext_->IASetVertexBuffers(0, 1, &triangleVertexBuffer_.GetInterfacePtr(), &stride, &offset);
+
+        immediateContext_->Draw(3, 0);
+    }
+
     void D3D11Graphics::InitD3D()
     {
+        // Device, immediate context, and swap chain
+
         RECT rc;
         GetClientRect(hWnd_, &rc);
         UINT width = rc.right - rc.left;
         UINT height = rc.bottom - rc.top;
 
-        // TODO is D3D11_CREATE_DEVICE_BGRA_SUPPORT what I want here?
-        UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+        UINT createDeviceFlags = 0;
 #ifdef _DEBUG
         createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -80,6 +96,8 @@ namespace procdraw {
         }
         ThrowOnFail(hr);
 
+        // Render Target View
+
         ThrowOnFail(swapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
             reinterpret_cast<void**>(&backBuffer_)));
 
@@ -87,7 +105,8 @@ namespace procdraw {
 
         immediateContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), nullptr);
 
-        // Set up the viewport
+        // Viewport
+
         D3D11_VIEWPORT vp;
         vp.Width = (FLOAT)width;
         vp.Height = (FLOAT)height;
@@ -96,6 +115,78 @@ namespace procdraw {
         vp.TopLeftX = 0;
         vp.TopLeftY = 0;
         immediateContext_->RSSetViewports(1, &vp);
+    }
+
+    ID3D10BlobPtr D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
+        _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget)
+    {
+        ID3D10BlobPtr compiledShader;
+        ID3D10BlobPtr errorMessages;
+        HRESULT hr = D3DCompileFromFile(pFileName, nullptr, nullptr,
+            pEntrypoint, pTarget, 0, 0, &compiledShader, &errorMessages);
+        if (errorMessages != nullptr) {
+            throw std::runtime_error(static_cast<char*>(errorMessages->GetBufferPointer()));
+        }
+        ThrowOnFail(hr);
+        return compiledShader;
+    }
+
+    void D3D11Graphics::CreateVertexShader()
+    {
+        // Create shader
+
+        ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "vertex_shader", "vs_5_0");
+        ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
+            vs->GetBufferSize(), nullptr, &vertexShader_));
+        immediateContext_->VSSetShader(vertexShader_, 0, 0);
+
+        // Input layout
+
+        D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+            D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        ThrowOnFail(d3dDevice_->CreateInputLayout(inputElementDescriptions,
+            ARRAYSIZE(inputElementDescriptions), vs->GetBufferPointer(),
+            vs->GetBufferSize(), &inputLayout_));
+        immediateContext_->IASetInputLayout(inputLayout_);
+    }
+
+    void D3D11Graphics::CreatePixelShader()
+    {
+        ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "pixel_shader", "ps_5_0");
+        ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
+            ps->GetBufferSize(), nullptr, &pixelShader_));
+        immediateContext_->PSSetShader(pixelShader_, 0, 0);
+    }
+
+    void D3D11Graphics::CreateTriangleVertexBuffer()
+    {
+        ShaderVertex vertices[] =
+        {
+            ShaderVertex(DirectX::XMFLOAT4(-0.8f, 0.8f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
+            ShaderVertex(DirectX::XMFLOAT4(0.8f, -0.8f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
+            ShaderVertex(DirectX::XMFLOAT4(-0.8f, -0.8f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
+        };
+
+        D3D11_BUFFER_DESC vertexBufferDesc;
+        ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
+        vertexBufferDesc.ByteWidth = sizeof(ShaderVertex) * ARRAYSIZE(vertices);
+        vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+        D3D11_SUBRESOURCE_DATA vertexSubresourceData;
+        ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
+        vertexSubresourceData.pSysMem = vertices;
+
+        ThrowOnFail(d3dDevice_->CreateBuffer(&vertexBufferDesc,
+            &vertexSubresourceData, &triangleVertexBuffer_));
     }
 
 }
