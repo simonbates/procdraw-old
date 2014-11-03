@@ -13,6 +13,11 @@ namespace procdraw {
         InitD3D();
         CreateVertexShader();
         CreatePixelShader();
+
+        // Constant Buffer
+        DirectX::XMStoreFloat4x4(&cbData_.WorldViewProjection, DirectX::XMMatrixIdentity());
+        CreateConstantBuffer();
+
         CreateTriangleVertexBuffer();
     }
 
@@ -43,6 +48,18 @@ namespace procdraw {
         d3dContext_->IASetVertexBuffers(0, 1, &triangleVertexBuffer_.GetInterfacePtr(), &stride, &offset);
 
         d3dContext_->Draw(3, 0);
+    }
+
+    void D3D11Graphics::Rotate(float angle)
+    {
+        DirectX::XMStoreFloat4x4(&cbData_.WorldViewProjection, DirectX::XMMatrixRotationZ(angle));
+
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        ZeroMemory(&mappedResource, sizeof(mappedResource));
+
+        ThrowOnFail(d3dContext_->Map(constantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+        memcpy(mappedResource.pData, &cbData_, sizeof(cbData_));
+        d3dContext_->Unmap(constantBuffer_, 0);
     }
 
     void D3D11Graphics::InitD3D()
@@ -161,6 +178,24 @@ namespace procdraw {
         ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
             ps->GetBufferSize(), nullptr, &pixelShader_));
         d3dContext_->PSSetShader(pixelShader_, 0, 0);
+    }
+
+    void D3D11Graphics::CreateConstantBuffer()
+    {
+        D3D11_BUFFER_DESC cbDesc;
+        ZeroMemory(&cbDesc, sizeof(cbDesc));
+        cbDesc.ByteWidth = sizeof(CBufferPerObject);
+        cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+        cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+        D3D11_SUBRESOURCE_DATA cbSubresourceData;
+        ZeroMemory(&cbSubresourceData, sizeof(cbSubresourceData));
+        cbSubresourceData.pSysMem = &cbData_;
+
+        ThrowOnFail(d3dDevice_->CreateBuffer(&cbDesc, &cbSubresourceData, &constantBuffer_));
+
+        d3dContext_->VSSetConstantBuffers(0, 1, &constantBuffer_.GetInterfacePtr());
     }
 
     void D3D11Graphics::CreateTriangleVertexBuffer()

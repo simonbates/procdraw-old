@@ -7,7 +7,7 @@ enable_testing()
 # Platform-specific compiler settings
 
 if (WIN32)
-    add_definitions(-DUNICODE -D_UNICODE)
+    add_definitions(-DUNICODE -D_UNICODE -D_USE_MATH_DEFINES)
 endif()
 
 if (CMAKE_COMPILER_IS_GNUCXX)

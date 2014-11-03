@@ -1,3 +1,8 @@
+cbuffer CBufferPerObject
+{
+    float4x4 WorldViewProjection;
+}
+
 struct VS_INPUT
 {
     float4 ObjectPosition : POSITION;
@@ -14,7 +19,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.Position = IN.ObjectPosition;
+    OUT.Position = mul(IN.ObjectPosition, WorldViewProjection);
     OUT.Color = IN.Color;
 
     return OUT;

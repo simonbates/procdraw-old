@@ -2,6 +2,7 @@
 #include "procdraw_app.h"
 #include "util.h"
 #include "win_util.h"
+#include <cmath>
 
 namespace procdraw {
 
@@ -116,7 +117,7 @@ namespace procdraw {
         }
 
         // Create window
-        RECT rc = { 0, 0, 800, 600 };
+        RECT rc = { 0, 0, 640, 640 };
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
         hWnd_ = CreateWindow(L"ProcDrawWindowClass", L"ProcDraw", WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,
@@ -156,6 +157,7 @@ namespace procdraw {
     void ProcDrawApp::Draw()
     {
         graphics_->Background(0, 0, 0);
+        graphics_->Rotate((MouseX() * M_PI) / Width());
         graphics_->Triangle();
     }
 

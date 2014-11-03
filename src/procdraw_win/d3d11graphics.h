@@ -29,6 +29,10 @@ namespace procdraw {
         ShaderVertex(DirectX::XMFLOAT4 pos, DirectX::XMFLOAT4 color) : Position(pos), Color(color) { }
     };
 
+    struct CBufferPerObject {
+        DirectX::XMFLOAT4X4 WorldViewProjection;
+    };
+
     class D3D11Graphics {
     public:
         D3D11Graphics(HWND hWnd);
@@ -36,6 +40,7 @@ namespace procdraw {
         void Background(float h, float s, float v);
         void Present();
         void Triangle();
+        void Rotate(float angle);
     private:
         HWND hWnd_;
         D3D_FEATURE_LEVEL d3dFeatureLevel_;
@@ -47,12 +52,15 @@ namespace procdraw {
         ID3D11VertexShaderPtr vertexShader_;
         ID3D11PixelShaderPtr pixelShader_;
         ID3D11InputLayoutPtr inputLayout_;
+        CBufferPerObject cbData_;
+        ID3D11BufferPtr constantBuffer_;
         ID3D11BufferPtr triangleVertexBuffer_;
         void InitD3D();
         ID3D10BlobPtr CompileShaderFromFile(_In_ LPCWSTR pFileName,
             _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
         void CreateVertexShader();
         void CreatePixelShader();
+        void CreateConstantBuffer();
         void CreateTriangleVertexBuffer();
     };
 
