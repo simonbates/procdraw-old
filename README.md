@@ -29,6 +29,18 @@ To run ProcDraw from Visual Studio:
 - Set the procdraw_winmain project Working Directory to the procdraw directory (Properties/Debugging/Working Directory)
 - Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
 
+To run the tests (in the build directory):
+
+```
+ctest -C Debug -V
+```
+
+or
+
+```
+ctest -C Release -V
+```
+
 Building on Linux
 -----------------
 
@@ -51,11 +63,8 @@ To build (in the build directory):
 make
 ```
 
-Running the tests
------------------
-
 To run the tests (in the build directory):
 
 ```
-ctest --output-on-failure
+ctest -V
 ```

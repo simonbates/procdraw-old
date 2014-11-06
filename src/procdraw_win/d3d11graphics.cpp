@@ -64,7 +64,7 @@ namespace procdraw {
 
     void D3D11Graphics::InitD3D()
     {
-        // Device, immediate context, and swap chain
+        // Device, context, and swap chain
 
         RECT rc;
         GetClientRect(hWnd_, &rc);
