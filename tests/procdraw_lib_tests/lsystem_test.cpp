@@ -4,11 +4,7 @@
 TEST_CASE("Lsystem Algae") {
     // Algae -- variables only
 
-    // TODO when upgrade to VS2013, switch to list initialization
-    std::map<char, std::string> rules;
-    rules['A'] = "AB";
-    rules['B'] = "A";
-    procdraw::Lsystem algae("A", rules);
+    procdraw::Lsystem algae("A", { { 'A', "AB" }, { 'B', "A" } });
 
     REQUIRE(algae.GetString() == std::string("A"));
     algae.Next();
@@ -24,10 +20,7 @@ TEST_CASE("Lsystem Algae") {
 TEST_CASE("Lsystem Koch Curve") {
     // Koch Curve -- variables and constants
 
-    // TODO when upgrade to VS2013, switch to list initialization
-    std::map<char, std::string> rules;
-    rules['F'] = "F-F++F-F";
-    procdraw::Lsystem kochCurve("F", rules);
+    procdraw::Lsystem kochCurve("F", { { 'F', "F-F++F-F" } });
 
     REQUIRE(kochCurve.GetString() == std::string("F"));
     kochCurve.Next();
