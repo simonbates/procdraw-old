@@ -36,7 +36,7 @@ namespace procdraw {
         sum_(0)
     {
         if (!(numDataPoints > 0)) {
-            throw std::invalid_argument("numDataPoints must be positive");
+            throw std::invalid_argument("numDataPoints must be greater than zero");
         }
         data_ = std::vector<T>(numDataPoints, 0);
     }
