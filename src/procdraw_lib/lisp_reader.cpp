@@ -73,9 +73,15 @@ namespace procdraw {
             return intObj;
         }
         else if (token_ == LispTokenType::Symbol) {
-            auto symbolObj = L->SymbolRef(symbolVal_);
+            LispObjectPtr obj;
+            if (symbolVal_ == "nil") {
+                obj = L->Nil;
+            }
+            else {
+                obj = L->SymbolRef(symbolVal_);
+            }
             GetToken();
-            return symbolObj;
+            return obj;
         }
         // TODO LispTokenType::EndOfInput
         // TODO badly formed input

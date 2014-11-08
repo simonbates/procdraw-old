@@ -101,6 +101,9 @@ namespace procdraw {
         if (x->Type == LispObjectType::Number && y->Type == LispObjectType::Number) {
             return static_cast<LispNumber*>(x.get())->val_ == static_cast<LispNumber*>(y.get())->val_;
         }
+        else if (x->Type == LispObjectType::Nil && y->Type == LispObjectType::Nil) {
+            return true;
+        }
         return x.get() == y.get();
     }
 

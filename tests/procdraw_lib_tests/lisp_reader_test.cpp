@@ -19,6 +19,11 @@ TEST_CASE("LispReader") {
         REQUIRE(L.StringVal(obj) == "HELLO-WORLD-1");
     }
 
+    SECTION("Nil") {
+        auto obj = reader.Read(&L, "nil");
+        REQUIRE(L.Null(obj));
+    }
+
     SECTION("Empty list") {
         auto obj = reader.Read(&L, "()");
         REQUIRE(L.Null(obj));
