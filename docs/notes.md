@@ -9,6 +9,7 @@ Existing Languages and Software Systems
 ---------------------------------------
 
 - [Acme](http://acme.cat-v.org/)
+- Array languages: APL, J, A+, K, Q
 - BASIC
 - BEFLIX [@Knowlton:1964:CTP:1464122.1464130]
 - [Cinder](http://libcinder.org/)
@@ -115,10 +116,19 @@ Applications of procedural generation
 
 - [ANGELINA](http://www.gamesbyangelina.org/)
 - [Dwarf Fortress](http://www.bay12games.com/dwarves/)
+- [Games of Darren Grey](http://gamesofgrey.com/)
 - [No Man's Sky](http://www.no-mans-sky.com/)
 - Rogue
 - [Spelunky](http://www.spelunkyworld.com/)
 - [Ultima Ratio Regum](http://www.ultimaratioregum.co.uk/game/)
+
+Procedural generation resources
+-------------------------------
+
+- "Generative Art" by Matt Pearson
+- "Generative Design" by Hartmut Bohnacker, Benedikt Gross, Julia Laub, and Claudius Lazzeroni [@bohnacker:2012]
+- "[The Nature of Code](http://natureofcode.com/)" by Daniel Shiffman [@shiffman:2012]
+- [Procedural Content Generation Wiki](http://pcg.wikidot.com/)
 
 Hardware
 --------
@@ -171,6 +181,7 @@ Journals, Conferences, and such
 - [Not only computing--also art](http://computer-arts-society.com/static/cas/cache/Archive/Lansdown/LansdownBCS1974.htm)
 - [Procedural Generation Jam](http://itch.io/jam/procjam)
 - [Resonate](http://resonate.io/)
+- [Roguelike Radio](http://www.roguelikeradio.com/)
 - [TOPLAP](http://toplap.org/)
 
 History and Preservation
