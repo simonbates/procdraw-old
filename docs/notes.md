@@ -100,6 +100,26 @@ Writing a Lisp interpreter
 - "Lisp in Small Pieces" by Christian Queinnec
 - "Scheme 9 from Empty Space" by Nils M Holm [@holm:2010]
 
+Procedural generation and simulation algorithms
+-----------------------------------------------
+
+- [Boids](http://www.red3d.com/cwr/boids/)
+- Cellular automata
+- Fractals
+- Genetic algorithms [@todd:1992]
+- Lindenmayer systems
+- Perlin Noise
+
+Applications of procedural generation
+-------------------------------------
+
+- [ANGELINA](http://www.gamesbyangelina.org/)
+- [Dwarf Fortress](http://www.bay12games.com/dwarves/)
+- [No Man's Sky](http://www.no-mans-sky.com/)
+- Rogue
+- [Spelunky](http://www.spelunkyworld.com/)
+- [Ultima Ratio Regum](http://www.ultimaratioregum.co.uk/game/)
+
 Hardware
 --------
 
