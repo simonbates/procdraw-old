@@ -6,7 +6,7 @@ namespace procdraw {
 
     class CommandProcessor {
     public:
-        virtual void DoCommand(const std::wstring &cmd) = 0;
+        virtual void DoCommand(const std::string &cmd) = 0;
         virtual ~CommandProcessor() { }
     };
 

@@ -14,7 +14,7 @@ namespace procdraw {
         static void RegisterWindowClass(HINSTANCE hInstance);
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         HWND GetHwnd();
-        void AddText(const std::wstring &text);
+        void AddText(const std::string &text);
     private:
         HINSTANCE hInstance_;
         HWND hwnd_;
@@ -22,7 +22,7 @@ namespace procdraw {
         bool readonly_;
         CommandProcessor *cmdProcessor_;
         void CreateWorkspaceWindow(const std::wstring &name);
-        void DoCommand(const std::wstring &cmd);
+        void DoCommand(const std::string &cmd);
     };
 
 }

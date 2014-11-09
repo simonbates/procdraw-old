@@ -1,6 +1,8 @@
 #pragma once
 
 #include <comdef.h>
+#include <string>
+#include <vector>
 
 namespace procdraw {
 
@@ -12,5 +14,7 @@ namespace procdraw {
     }
 
     bool IsFirstKeydown(LPARAM lParam);
+
+    std::vector<WCHAR> Utf8ToUtf16(const std::string &utf8str);
 
 }

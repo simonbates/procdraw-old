@@ -17,7 +17,7 @@ namespace procdraw {
         }
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         int MainLoop();
-        void DoCommand(const std::wstring &cmd) override;
+        void DoCommand(const std::string &cmd) override;
         long FrameCount();
         float Width();
         float Height();

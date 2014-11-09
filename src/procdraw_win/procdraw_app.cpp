@@ -25,8 +25,8 @@ namespace procdraw {
         Workspace::RegisterWindowClass(hInstance);
         workspace_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Workspace", false, this));
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
-        transcript_->AddText(L"Hello\r\n");
-        transcript_->AddText(L"World\r\n");
+        transcript_->AddText("Hello\r\n");
+        transcript_->AddText("World\r\n");
     }
 
     int ProcDrawApp::MainLoop()
@@ -50,7 +50,7 @@ namespace procdraw {
         return (int)msg.wParam;
     }
 
-    void ProcDrawApp::DoCommand(const std::wstring &cmd)
+    void ProcDrawApp::DoCommand(const std::string &cmd)
     {
         transcript_->AddText(cmd);
     }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "workspace.h"
+#include "win_util.h"
 #include "resource.h"
 #include <stdexcept>
 
@@ -99,7 +100,7 @@ namespace procdraw {
             if (LOWORD(wParam) == IDM_DO_COMMAND)
             {
                 // TODO get current selection and send to DoCommand
-                workspace->DoCommand(L"Eval!\r\n");
+                workspace->DoCommand("Eval!\r\n");
                 return 0;
             }
         }
@@ -112,14 +113,16 @@ namespace procdraw {
         return hwnd_;
     }
 
-    void Workspace::AddText(const std::wstring &text)
+    void Workspace::AddText(const std::string &text)
     {
+        auto wtext = Utf8ToUtf16(text);
+
         int ndx = GetWindowTextLength(hwndEdit_);
         SendMessage(hwndEdit_, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-        SendMessage(hwndEdit_, EM_REPLACESEL, 0, (LPARAM)text.c_str());
+        SendMessage(hwndEdit_, EM_REPLACESEL, 0, (LPARAM)wtext.data());
     }
 
-    void Workspace::DoCommand(const std::wstring &cmd)
+    void Workspace::DoCommand(const std::string &cmd)
     {
         cmdProcessor_->DoCommand(cmd);
     }
