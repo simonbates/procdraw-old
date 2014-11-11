@@ -7,6 +7,7 @@ namespace procdraw {
     LispObjectPtr LispReader::Read(LispInterpreter *L, const std::string &str)
     {
         input_.str(str);
+        input_.clear();
         GetCh();
         GetToken();
         return Read(L);

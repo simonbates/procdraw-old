@@ -13,6 +13,15 @@ TEST_CASE("LispReader") {
         REQUIRE(L.NumVal(obj) == 42);
     }
 
+    SECTION("Multiple reads") {
+        auto a = reader.Read(&L, "100");
+        REQUIRE(L.NumVal(a) == 100);
+        auto b = reader.Read(&L, "20");
+        REQUIRE(L.NumVal(b) == 20);
+        auto c = reader.Read(&L, "300");
+        REQUIRE(L.NumVal(c) == 300);
+    }
+
     SECTION("Symbol") {
         auto obj = reader.Read(&L, "HELLO-WORLD-1");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
