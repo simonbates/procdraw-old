@@ -6,6 +6,7 @@ namespace procdraw {
     {
         InitNil();
         symbols_ = Nil;
+        globalEnv_ = Nil;
         S_ADD = SymbolRef("ADD");
         S_QUOTE = SymbolRef("QUOTE");
     }
@@ -74,6 +75,11 @@ namespace procdraw {
         }
 
         return Nil;
+    }
+
+    LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp)
+    {
+        return Eval(exp, globalEnv_);
     }
 
     LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env) {
