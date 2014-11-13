@@ -99,8 +99,18 @@ namespace procdraw {
         case WM_COMMAND:
             if (LOWORD(wParam) == IDM_DO_COMMAND)
             {
-                // TODO get current selection and send to DoCommand
-                workspace->DoCommand("Eval!\r\n");
+                // Get the current selection and send it to DoCommand
+                DWORD selStart;
+                DWORD selEnd;
+                SendMessage(workspace->hwndEdit_, EM_GETSEL, (WPARAM)&selStart, (LPARAM)&selEnd);
+                int selLength = selEnd - selStart;
+                if (selLength > 0) {
+                    auto numWchars = SendMessage(workspace->hwndEdit_, WM_GETTEXTLENGTH, 0, 0);
+                    numWchars = numWchars + 1; // add 1 for null terminator
+                    std::vector<WCHAR> text(numWchars);
+                    SendMessage(workspace->hwndEdit_, WM_GETTEXT, numWchars, (LPARAM)text.data());
+                    workspace->DoCommand(Utf16ToUtf8(&text[selStart], selLength));
+                }
                 return 0;
             }
         }
@@ -113,9 +123,9 @@ namespace procdraw {
         return hwnd_;
     }
 
-    void Workspace::AddText(const std::string &text)
+    void Workspace::AddLine(const std::string &text)
     {
-        auto wtext = Utf8ToUtf16(text);
+        auto wtext = Utf8ToUtf16(text + "\r\n");
 
         int ndx = GetWindowTextLength(hwndEdit_);
         SendMessage(hwndEdit_, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);

@@ -3,6 +3,7 @@
 #include "command_processor.h"
 #include "d3d11graphics.h"
 #include "workspace.h"
+#include "lisp_interpreter.h"
 #include <string>
 #include <memory>
 
@@ -32,6 +33,7 @@ namespace procdraw {
         std::unique_ptr<Workspace> workspace_;
         std::unique_ptr<Workspace> transcript_;
         long frameCount_;
+        LispInterpreter L_;
         void CreateAppWindow();
         void CreateAccelTable();
         void Draw();

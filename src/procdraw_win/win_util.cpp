@@ -16,4 +16,17 @@ namespace procdraw {
         return utf16str;
     }
 
+    std::string Utf16ToUtf8(LPCWSTR utf16str, int count)
+    {
+        auto numChars = WideCharToMultiByte(CP_UTF8, 0, utf16str, count, nullptr, 0, nullptr, nullptr);
+        std::vector<char> utf8str(numChars);
+        WideCharToMultiByte(CP_UTF8, 0, utf16str, count, utf8str.data(), numChars, nullptr, nullptr);
+        if (count == -1) {
+            return std::string(utf8str.data());
+        }
+        else {
+            return std::string(utf8str.data(), numChars);
+        }
+    }
+
 }

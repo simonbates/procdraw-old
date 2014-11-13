@@ -107,6 +107,7 @@ namespace procdraw {
             return L->Cons(car, Read(L));
         }
         else {
+            // TODO I am recursing for each list item -- instead iterate to reduce stack usage?
             return L->Cons(car, ReadCons(L));
         }
     }

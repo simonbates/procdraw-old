@@ -17,4 +17,6 @@ namespace procdraw {
 
     std::vector<WCHAR> Utf8ToUtf16(const std::string &utf8str);
 
+    std::string Utf16ToUtf8(LPCWSTR utf16str, int count);
+
 }

@@ -115,6 +115,7 @@ Applications of procedural generation
 -------------------------------------
 
 - [ANGELINA](http://www.gamesbyangelina.org/)
+- Civilization
 - [Dwarf Fortress](http://www.bay12games.com/dwarves/)
 - [Games of Darren Grey](http://gamesofgrey.com/)
 - [No Man's Sky](http://www.no-mans-sky.com/)
@@ -179,7 +180,12 @@ Journals, Conferences, and such
 - [MIDI Hack](http://www.midihack.com/)
 - [NODE](http://node.vvvv.org/)
 - [Not only computing--also art](http://computer-arts-society.com/static/cas/cache/Archive/Lansdown/LansdownBCS1974.htm)
-- [Procedural Generation Jam](http://itch.io/jam/procjam)
+- Symposium on Principles of Programming Languages (POPL)
+    - [POPL 2013 papers](https://github.com/23Skidoo/popl13-papers-links)
+    - [POPL 2014 papers](https://github.com/gasche/popl2014-papers)
+    - [POPL 2015 papers](https://github.com/yallop/popl2015-papers)
+- [PROCJAM](http://www.procjam.com/)
+    - [PROCJAM 2014 talks](http://www.youtube.com/playlist?list=PLxGbBc3OuMgiHnQfqerWtgJRA3fMzasra)
 - [Resonate](http://resonate.io/)
 - [Roguelike Radio](http://www.roguelikeradio.com/)
 - [TOPLAP](http://toplap.org/)

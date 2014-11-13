@@ -14,7 +14,7 @@ namespace procdraw {
         static void RegisterWindowClass(HINSTANCE hInstance);
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         HWND GetHwnd();
-        void AddText(const std::string &text);
+        void AddLine(const std::string &text);
     private:
         HINSTANCE hInstance_;
         HWND hwnd_;
