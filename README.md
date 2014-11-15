@@ -6,8 +6,7 @@ Building on Windows
 
 Dependencies:
 
-- Visual Studio Express 2013 for Desktop
-- DirectX SDK
+- Visual Studio Community 2013
 - CMake
 
 Run CMake to generate the Visual Studio solution:

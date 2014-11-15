@@ -7,8 +7,10 @@ namespace procdraw {
         InitNil();
         symbols_ = Nil;
         globalEnv_ = Nil;
-        S_ADD = SymbolRef("ADD");
-        S_QUOTE = SymbolRef("QUOTE");
+        S_ADD = SymbolRef("add");
+        S_APPLY = SymbolRef("apply");
+        S_LAMBDA = SymbolRef("lambda");
+        S_QUOTE = SymbolRef("quote");
     }
 
     LispObjectPtr LispInterpreter::SymbolRef(const std::string &str)
@@ -37,6 +39,11 @@ namespace procdraw {
         return MakeNumber(sum);
     }
 
+    LispObjectPtr LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
+    {
+        return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
+    }
+
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
     {
         LispObjectPtr n = alist;
@@ -55,6 +62,29 @@ namespace procdraw {
         return TypeOf(obj) != LispObjectType::Cons;
     }
 
+    LispObjectPtr LispInterpreter::Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO verify that vars and args are the same length
+        auto v = vars;
+        auto a = args;
+        while (!Null(v)) {
+            env = Cons(Cons(Car(v), Car(a)), env);
+            v = Cdr(v);
+            a = Cdr(a);
+        }
+        return env;
+    }
+
+    LispObjectPtr LispInterpreter::Cadr(LispObjectPtr obj)
+    {
+        return Car(Cdr(obj));
+    }
+
+    LispObjectPtr LispInterpreter::Caddr(LispObjectPtr obj)
+    {
+        return Car(Cdr(Cdr(obj)));
+    }
+
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)
     {
         if (Atom(exp)) {
@@ -67,7 +97,13 @@ namespace procdraw {
         }
         else {
             if (Eq(Car(exp), S_QUOTE)) {
-                return (Car(Cdr(exp)));
+                return Car(Cdr(exp));
+            }
+            else if (Eq(Car(exp), S_LAMBDA)) {
+                return exp;
+            }
+            else if (Eq(Car(exp), S_APPLY)) {
+                return Apply(Eval(Cadr(exp), env), Eval(Caddr(exp), env), env);
             }
             else if (Eq(Car(exp), S_ADD)) {
                 return Add(Evlis(Cdr(exp), env));

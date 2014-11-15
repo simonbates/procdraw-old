@@ -166,28 +166,43 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("Retrieve undefined") {
-        REQUIRE(L.Null(L.Eval(L.SymbolRef("A"), L.Nil)));
+        REQUIRE(L.Null(L.Eval(L.SymbolRef("a"), L.Nil)));
     }
 
     SECTION("Retrieve number") {
-        auto env = L.List({ L.Cons(L.SymbolRef("A"), L.MakeNumber(42)) });
-        auto result = L.Eval(L.SymbolRef("A"), env);
+        auto env = L.List({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
+        auto result = L.Eval(L.SymbolRef("a"), env);
         REQUIRE(L.NumVal(result) == 42);
     }
 
     SECTION("QUOTE") {
-        auto result = L.Eval(L.Read("(QUOTE 42)"), L.Nil);
+        auto result = L.Eval(L.Read("(quote 42)"), L.Nil);
         REQUIRE(L.NumVal(result) == 42);
     }
 
     SECTION("ADD") {
         auto env = L.List({
-            L.Cons(L.SymbolRef("A"), L.MakeNumber(1)),
-            L.Cons(L.SymbolRef("B"), L.MakeNumber(2)),
-            L.Cons(L.SymbolRef("C"), L.MakeNumber(4))
+            L.Cons(L.SymbolRef("a"), L.MakeNumber(1)),
+            L.Cons(L.SymbolRef("b"), L.MakeNumber(2)),
+            L.Cons(L.SymbolRef("c"), L.MakeNumber(4))
         });
-        auto result = L.Eval(L.Read("(ADD (ADD A B 8) 16 C)"), env);
+        auto result = L.Eval(L.Read("(add (add a b 8) 16 c)"), env);
         REQUIRE(L.NumVal(result) == 31);
+    }
+
+    SECTION("LAMBDA expression evaluates to itself") {
+        auto result = L.Eval(L.Read("(lambda (n) (add n 1))"));
+        REQUIRE(L.PrintString(result) == "(lambda (n) (add n 1))");
+    }
+
+    SECTION("APPLY 1 arg") {
+        auto result = L.Eval(L.Read("(apply (lambda (n) (add n 1)) (quote (1)))"));
+        REQUIRE(L.NumVal(result) == 2);
+    }
+
+    SECTION("APPLY 2 args") {
+        auto result = L.Eval(L.Read("(apply (lambda (n m) (add n m 10)) (quote (1 2)))"));
+        REQUIRE(L.NumVal(result) == 13);
     }
 
 }

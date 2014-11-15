@@ -110,6 +110,7 @@ Procedural generation and simulation algorithms
 - Genetic algorithms [@todd:1992]
 - Lindenmayer systems
 - Perlin Noise
+- Simplex Noise
 
 Applications of procedural generation
 -------------------------------------
@@ -118,6 +119,8 @@ Applications of procedural generation
 - Civilization
 - [Dwarf Fortress](http://www.bay12games.com/dwarves/)
 - [Games of Darren Grey](http://gamesofgrey.com/)
+- [libnoise](http://libnoise.sourceforge.net/)
+- [libtcod](http://roguecentral.org/doryen/libtcod/)
 - [No Man's Sky](http://www.no-mans-sky.com/)
 - Rogue
 - [Spelunky](http://www.spelunkyworld.com/)
@@ -129,6 +132,7 @@ Procedural generation resources
 - "Generative Art" by Matt Pearson
 - "Generative Design" by Hartmut Bohnacker, Benedikt Gross, Julia Laub, and Claudius Lazzeroni [@bohnacker:2012]
 - "[The Nature of Code](http://natureofcode.com/)" by Daniel Shiffman [@shiffman:2012]
+- [Procedural Content Generation in Games](http://pcgbook.com/)
 - [Procedural Content Generation Wiki](http://pcg.wikidot.com/)
 
 Hardware
