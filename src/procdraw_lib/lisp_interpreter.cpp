@@ -42,7 +42,9 @@ namespace procdraw {
         if (TypeOf(fun) == LispObjectType::CFunction) {
             return ApplyCFunction(fun, args, env);
         }
-        return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
+        else {
+            return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
+        }
     }
 
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
@@ -214,7 +216,9 @@ namespace procdraw {
         if (Null(binding)) {
             return SymbolValue(symbol);
         }
-        return Cdr(binding);
+        else {
+            return Cdr(binding);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "procdraw_app.h"
+#include "procdraw_app_lisp.h"
 #include "util.h"
 #include "win_util.h"
 #include <cmath>
@@ -27,6 +28,7 @@ namespace procdraw {
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
         transcript_->AddLine("Welcome to ProcDraw");
         transcript_->AddLine("");
+        RegisterProcDrawAppFunctionsForLisp(this, &L_);
     }
 
     int ProcDrawApp::MainLoop()
