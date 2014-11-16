@@ -12,9 +12,9 @@ namespace procdraw {
     class ProcDrawApp : public CommandProcessor {
     public:
         ProcDrawApp(HINSTANCE hInstance, int nCmdShow);
-        inline D3D11Graphics & graphics()
+        inline D3D11Graphics* Graphics()
         {
-            return *graphics_;
+            return graphics_.get();
         }
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         int MainLoop();
@@ -29,7 +29,7 @@ namespace procdraw {
         int nCmdShow_;
         HWND hWnd_;
         HACCEL hAccel_;
-        std::shared_ptr<D3D11Graphics> graphics_;
+        std::unique_ptr<D3D11Graphics> graphics_;
         std::unique_ptr<Workspace> workspace_;
         std::unique_ptr<Workspace> transcript_;
         long frameCount_;

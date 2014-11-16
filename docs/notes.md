@@ -57,6 +57,7 @@ Existing Languages and Software Systems
 - [pbrt](http://www.pbrt.org/)
 - [Pd](http://puredata.info/)
 - PIC [@Bentley:1986:PPL:6424.315691]
+- [\@pixelsorter Twitter bot](http://wayspurrchen.com/pixelsorter/)
 - [Polycode](http://polycode.org/)
 - PostScript
 - [Praxis LIVE](http://www.praxislive.org/)

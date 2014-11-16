@@ -47,6 +47,11 @@ namespace procdraw {
         }
     }
 
+    LispObjectPtr LispInterpreter::Apply(const std::string &name)
+    {
+        return Apply(Value(SymbolRef(name), Nil), Nil, Nil);
+    }
+
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
     {
         LispObjectPtr n = alist;

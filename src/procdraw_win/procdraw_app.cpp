@@ -22,7 +22,7 @@ namespace procdraw {
             throw std::runtime_error("Failed to load accelerators");
         }
 
-        graphics_ = std::make_shared<D3D11Graphics>(hWnd_);
+        graphics_ = std::unique_ptr<D3D11Graphics>(new D3D11Graphics(hWnd_));
         Workspace::RegisterWindowClass(hInstance);
         workspace_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Workspace", false, this));
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
@@ -165,9 +165,7 @@ namespace procdraw {
 
     void ProcDrawApp::Draw()
     {
-        graphics_->Background(0, 0, 0);
-        graphics_->Rotate((MouseX() * M_PI) / Width());
-        graphics_->Triangle();
+        L_.Apply("draw");
     }
 
 }
