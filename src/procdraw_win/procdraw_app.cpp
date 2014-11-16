@@ -25,8 +25,8 @@ namespace procdraw {
         Workspace::RegisterWindowClass(hInstance);
         workspace_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Workspace", false, this));
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
-        transcript_->AddLine("Hello");
-        transcript_->AddLine("World");
+        transcript_->AddLine("Welcome to ProcDraw");
+        transcript_->AddLine("");
     }
 
     int ProcDrawApp::MainLoop()

@@ -12,13 +12,16 @@ namespace procdraw {
 
     class LispNumber : public LispObject {
     public:
-        LispNumber(double val) : LispObject(LispObjectType::Number), val_(val) { }
+        LispNumber(double val) :
+            LispObject(LispObjectType::Number),
+            val_(val) { }
         double val_;
     };
 
     class LispSymbol : public LispObject {
     public:
-        LispSymbol(const std::string &name, LispObjectPtr value) : LispObject(LispObjectType::Symbol),
+        LispSymbol(const std::string &name, LispObjectPtr value) :
+            LispObject(LispObjectType::Symbol),
             name_(name), value_(value) { }
         std::string name_;
         LispObjectPtr value_;
@@ -27,9 +30,18 @@ namespace procdraw {
     class LispCons : public LispObject {
     public:
         LispCons(LispObjectPtr car, LispObjectPtr cdr) :
-            LispObject(LispObjectType::Cons), car_(car), cdr_(cdr) { }
+            LispObject(LispObjectType::Cons),
+            car_(car), cdr_(cdr) { }
         LispObjectPtr car_;
         LispObjectPtr cdr_;
+    };
+
+    class LispCFunction : public LispObject {
+    public:
+        LispCFunction(lisp_CFunction cfun) :
+            LispObject(LispObjectType::CFunction),
+            cfun_(cfun) { }
+        lisp_CFunction cfun_;
     };
 
     void LispInterpreter::InitNil()
@@ -50,6 +62,11 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Cons(LispObjectPtr car, LispObjectPtr cdr)
     {
         return std::make_shared<LispCons>(car, cdr);
+    }
+
+    LispObjectPtr LispInterpreter::MakeCFunction(lisp_CFunction cfun)
+    {
+        return std::make_shared<LispCFunction>(cfun);
     }
 
     LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
@@ -144,6 +161,15 @@ namespace procdraw {
         }
         // TODO if not LispObjectType::Cons?
         return cons;
+    }
+
+    LispObjectPtr LispInterpreter::ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env)
+    {
+        if (cfun->Type == LispObjectType::CFunction) {
+            return static_cast<LispCFunction*>(cfun.get())->cfun_(this, args, env);
+        }
+        // TODO or throw bad type exception?
+        return Nil;
     }
 
 }

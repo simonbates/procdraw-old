@@ -64,7 +64,7 @@ TEST_CASE("LispInterpreter::PrintString()") {
     }
 
     SECTION("List") {
-        REQUIRE(L.PrintString(L.List({})) == "NIL");
+        REQUIRE(L.PrintString(L.List({})) == "nil");
         REQUIRE(L.PrintString(L.List({ L.MakeNumber(42) })) == "(42)");
         REQUIRE(L.PrintString(L.List({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) == "(1 2 3 4)");
         REQUIRE(L.PrintString(L.List({ L.List({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) })) == "((1 2) 3 4)");

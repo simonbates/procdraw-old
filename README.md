@@ -1,6 +1,14 @@
 ProcDraw
 ========
 
+Source code layout
+------------------
+
+- `src/procdraw_lib` - platform-independent code
+- `src/procdraw_win` - Windows GUI code
+- `src/procdraw_winmain` - Windows GUI WinMain
+- `tests/procdraw_lib_tests` - tests
+
 Building on Windows
 -------------------
 

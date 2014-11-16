@@ -1,4 +1,5 @@
 #include "lisp_interpreter.h"
+#include "lisp_functions.h"
 
 namespace procdraw {
 
@@ -6,12 +7,14 @@ namespace procdraw {
     {
         InitNil();
         symbols_ = Nil;
-        S_ADD = SymbolRef("add");
-        S_APPLY = SymbolRef("apply");
+        // Special forms
         S_LAMBDA = SymbolRef("lambda");
         S_PROGN = SymbolRef("progn");
         S_QUOTE = SymbolRef("quote");
         S_SETQ = SymbolRef("setq");
+        // Functions
+        SetGlobalCFunction("add", lisp_Add);
+        SetGlobalCFunction("apply", lisp_Apply);
     }
 
     LispObjectPtr LispInterpreter::SymbolRef(const std::string &name)
@@ -29,19 +32,16 @@ namespace procdraw {
         return symbol;
     }
 
-    LispObjectPtr LispInterpreter::Add(LispObjectPtr args)
+    LispObjectPtr LispInterpreter::SetGlobalCFunction(const std::string &name, lisp_CFunction cfun)
     {
-        double sum = 0;
-        LispObjectPtr n = args;
-        while (!Null(n)) {
-            sum += NumVal(Car(n));
-            n = Cdr(n);
-        }
-        return MakeNumber(sum);
+        return Set(SymbolRef(name), MakeCFunction(cfun), Nil);
     }
 
     LispObjectPtr LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
     {
+        if (TypeOf(fun) == LispObjectType::CFunction) {
+            return ApplyCFunction(fun, args, env);
+        }
         return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
     }
 
@@ -97,26 +97,21 @@ namespace procdraw {
             }
         }
         else {
-            if (Eq(Car(exp), S_QUOTE)) {
+            auto first = Car(exp);
+            if (Eq(first, S_QUOTE)) {
                 return Cadr(exp);
             }
-            else if (Eq(Car(exp), S_LAMBDA)) {
+            else if (Eq(first, S_LAMBDA)) {
                 return exp;
             }
-            else if (Eq(Car(exp), S_SETQ)) {
+            else if (Eq(first, S_SETQ)) {
                 return Set(Cadr(exp), Eval(Caddr(exp), env), env);
             }
-            else if (Eq(Car(exp), S_PROGN)) {
+            else if (Eq(first, S_PROGN)) {
                 return Progn(Cdr(exp), env);
             }
-            else if (Eq(Car(exp), S_APPLY)) {
-                return Apply(Eval(Cadr(exp), env), Eval(Caddr(exp), env), env);
-            }
-            else if (Eq(Car(exp), S_ADD)) {
-                return Add(Evlis(Cdr(exp), env));
-            }
             else {
-                return Apply(Eval(Car(exp), env), Evlis(Cdr(exp), env), env);
+                return Apply(Eval(first, env), Evlis(Cdr(exp), env), env);
             }
         }
 
@@ -150,7 +145,7 @@ namespace procdraw {
     {
         switch (TypeOf(obj)) {
         case LispObjectType::Nil:
-            return "NIL";
+            return "nil";
         case LispObjectType::Number:
         {
             std::ostringstream s;
@@ -178,6 +173,8 @@ namespace procdraw {
             s.append(")");
             return s;
         }
+        case LispObjectType::CFunction:
+            return "<CFunction>";
         default:
             return "";
         }
@@ -191,7 +188,6 @@ namespace procdraw {
             result = Eval(Car(n), env);
             n = Cdr(n);
         }
-
         return result;
     }
 

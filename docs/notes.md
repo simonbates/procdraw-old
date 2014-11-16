@@ -8,9 +8,11 @@ Notes
 Existing Languages and Software Systems
 ---------------------------------------
 
+- [A Diary of Whispered Truths](http://niall-moody.itch.io/a-diary-of-whispered-truths)
 - [Acme](http://acme.cat-v.org/)
 - Array languages: APL, J, A+, K, Q
 - BASIC
+- [BECOME A GREAT ARTIST IN JUST 10 SECONDS](http://ludumdare.com/compo/ludum-dare-27/?action=preview&uid=4987)
 - BEFLIX [@Knowlton:1964:CTP:1464122.1464130]
 - [Cinder](http://libcinder.org/)
 - [ChucK](http://chuck.cs.princeton.edu/)
