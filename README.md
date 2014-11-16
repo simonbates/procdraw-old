@@ -20,7 +20,7 @@ cmake -G "Visual Studio 12" ..
 To build in Visual Studio:
 
 - Open build\ProcDraw.sln
-- Build Solution (F7)
+- Build Solution (Ctrl+Shift+B)
 
 To run ProcDraw from Visual Studio:
 

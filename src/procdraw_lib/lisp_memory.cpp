@@ -18,8 +18,10 @@ namespace procdraw {
 
     class LispSymbol : public LispObject {
     public:
-        LispSymbol(const std::string &str) : LispObject(LispObjectType::Symbol), str_(str) { }
-        std::string str_;
+        LispSymbol(const std::string &name, LispObjectPtr value) : LispObject(LispObjectType::Symbol),
+            name_(name), value_(value) { }
+        std::string name_;
+        LispObjectPtr value_;
     };
 
     class LispCons : public LispObject {
@@ -40,9 +42,9 @@ namespace procdraw {
         return std::make_shared<LispNumber>(val);
     }
 
-    LispObjectPtr LispInterpreter::MakeSymbol(const std::string &str)
+    LispObjectPtr LispInterpreter::MakeSymbol(const std::string &name, LispObjectPtr value)
     {
-        return std::make_shared<LispSymbol>(str);
+        return std::make_shared<LispSymbol>(name, value);
     }
 
     LispObjectPtr LispInterpreter::Cons(LispObjectPtr car, LispObjectPtr cdr)
@@ -69,13 +71,32 @@ namespace procdraw {
         return 0.0;
     }
 
-    std::string LispInterpreter::StringVal(LispObjectPtr obj)
+    std::string LispInterpreter::SymbolName(LispObjectPtr symbol)
     {
-        if (obj->Type == LispObjectType::Symbol) {
-            return static_cast<LispSymbol*>(obj.get())->str_;
+        if (symbol->Type == LispObjectType::Symbol) {
+            return static_cast<LispSymbol*>(symbol.get())->name_;
         }
         // TODO or throw bad type exception?
         return "";
+    }
+
+    LispObjectPtr LispInterpreter::SymbolValue(LispObjectPtr symbol)
+    {
+        if (symbol->Type == LispObjectType::Symbol) {
+            return static_cast<LispSymbol*>(symbol.get())->value_;
+        }
+        // TODO or throw bad type exception?
+        return Nil;
+    }
+
+    LispObjectPtr LispInterpreter::SetSymbolValue(LispObjectPtr symbol, LispObjectPtr value)
+    {
+        if (symbol->Type == LispObjectType::Symbol) {
+            static_cast<LispSymbol*>(symbol.get())->value_ = value;
+            return value;
+        }
+        // TODO or throw bad type exception?
+        return Nil;
     }
 
     LispObjectPtr LispInterpreter::Car(LispObjectPtr obj)
@@ -84,7 +105,7 @@ namespace procdraw {
             return static_cast<LispCons*>(obj.get())->car_;
         }
         // TODO or throw bad type exception?
-        return LispInterpreter::Nil;
+        return Nil;
     }
 
     LispObjectPtr LispInterpreter::Cdr(LispObjectPtr obj)
@@ -93,7 +114,7 @@ namespace procdraw {
             return static_cast<LispCons*>(obj.get())->cdr_;
         }
         // TODO or throw bad type exception?
-        return LispInterpreter::Nil;
+        return Nil;
     }
 
     bool LispInterpreter::Eq(LispObjectPtr x, LispObjectPtr y)

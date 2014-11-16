@@ -82,10 +82,10 @@ TEST_CASE("LispInterpreter::SymbolRef()") {
 
     auto hello1 = L.SymbolRef("HELLO");
     REQUIRE(L.TypeOf(hello1) == procdraw::LispObjectType::Symbol);
-    REQUIRE(L.StringVal(hello1) == "HELLO");
+    REQUIRE(L.SymbolName(hello1) == "HELLO");
     auto hello2 = L.SymbolRef("HELLO");
     REQUIRE(L.TypeOf(hello2) == procdraw::LispObjectType::Symbol);
-    REQUIRE(L.StringVal(hello2) == "HELLO");
+    REQUIRE(L.SymbolName(hello2) == "HELLO");
     // Verify that they are the same address
     REQUIRE(hello1.get() == hello2.get());
 }
@@ -195,14 +195,62 @@ TEST_CASE("LispInterpreter::Eval()") {
         REQUIRE(L.PrintString(result) == "(lambda (n) (add n 1))");
     }
 
+    SECTION("LAMBDA call no args") {
+        auto result = L.Eval(L.Read("((lambda () (add 1 2)))"));
+        REQUIRE(L.NumVal(result) == 3);
+    }
+
+    SECTION("LAMBDA call 1 arg") {
+        auto result = L.Eval(L.Read("((lambda (n) (add n 1)) 1)"));
+        REQUIRE(L.NumVal(result) == 2);
+    }
+
+    SECTION("LAMBDA call 2 args") {
+        auto result = L.Eval(L.Read("((lambda (m n) (add m n 10)) 30 2)"));
+        REQUIRE(L.NumVal(result) == 42);
+    }
+
+    SECTION("PROGN") {
+        REQUIRE(L.Null(L.Eval(L.Read("(progn)"))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1)"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3)"))) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3 (add 40 2))"))) == 42);
+    }
+
+    SECTION("SETQ top level") {
+        auto setqReturn = L.Eval(L.Read("(setq a 10)"));
+        REQUIRE(L.NumVal(setqReturn) == 10);
+        auto aVal = L.Eval(L.Read("a"));
+        REQUIRE(L.NumVal(aVal) == 10);
+    }
+
+    SECTION("SETQ in LAMBDA") {
+        auto setqReturn = L.Eval(L.Read("(setq a 1)"));
+        REQUIRE(L.NumVal(setqReturn) == 1);
+        L.Eval(L.Read("(setq f (lambda (a) (progn (setq b a) (setq a 3) (setq c a))))"));
+        auto fReturn = L.Eval(L.Read("(f 2)"));
+        REQUIRE(L.NumVal(fReturn) == 3);
+        auto aVal = L.Eval(L.Read("a"));
+        REQUIRE(L.NumVal(aVal) == 1);
+        auto bVal = L.Eval(L.Read("b"));
+        REQUIRE(L.NumVal(bVal) == 2);
+        auto cVal = L.Eval(L.Read("c"));
+        REQUIRE(L.NumVal(cVal) == 3);
+    }
+
+    SECTION("APPLY no args") {
+        auto result = L.Eval(L.Read("(apply (lambda () (add 1 2)) (quote ()))"));
+        REQUIRE(L.NumVal(result) == 3);
+    }
+
     SECTION("APPLY 1 arg") {
         auto result = L.Eval(L.Read("(apply (lambda (n) (add n 1)) (quote (1)))"));
         REQUIRE(L.NumVal(result) == 2);
     }
 
     SECTION("APPLY 2 args") {
-        auto result = L.Eval(L.Read("(apply (lambda (n m) (add n m 10)) (quote (1 2)))"));
-        REQUIRE(L.NumVal(result) == 13);
+        auto result = L.Eval(L.Read("(apply (lambda (m n) (add m n 10)) (quote (30 2)))"));
+        REQUIRE(L.NumVal(result) == 42);
     }
 
 }

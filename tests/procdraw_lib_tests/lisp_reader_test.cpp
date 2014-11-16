@@ -16,7 +16,7 @@ TEST_CASE("LispReader") {
     SECTION("Symbol") {
         auto obj = reader.Read(&L, "HELLO-WORLD-1");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
-        REQUIRE(L.StringVal(obj) == "HELLO-WORLD-1");
+        REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
     SECTION("Nil") {
@@ -78,11 +78,11 @@ TEST_CASE("LispReader") {
 
     SECTION("Multiple reads") {
         auto a = reader.Read(&L, "HELLO");
-        REQUIRE(L.StringVal(a) == "HELLO");
+        REQUIRE(L.SymbolName(a) == "HELLO");
         auto b = reader.Read(&L, "42");
         REQUIRE(L.NumVal(b) == 42);
         auto c = reader.Read(&L, "(LIST 10 20)");
-        REQUIRE(L.StringVal(L.Car(c)) == "LIST");
+        REQUIRE(L.SymbolName(L.Car(c)) == "LIST");
         REQUIRE(L.NumVal(L.Car(L.Cdr(c))) == 10);
         REQUIRE(L.NumVal(L.Car(L.Cdr(L.Cdr(c)))) == 20);
     }

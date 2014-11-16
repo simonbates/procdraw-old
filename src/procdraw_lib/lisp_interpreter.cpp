@@ -6,24 +6,25 @@ namespace procdraw {
     {
         InitNil();
         symbols_ = Nil;
-        globalEnv_ = Nil;
         S_ADD = SymbolRef("add");
         S_APPLY = SymbolRef("apply");
         S_LAMBDA = SymbolRef("lambda");
+        S_PROGN = SymbolRef("progn");
         S_QUOTE = SymbolRef("quote");
+        S_SETQ = SymbolRef("setq");
     }
 
-    LispObjectPtr LispInterpreter::SymbolRef(const std::string &str)
+    LispObjectPtr LispInterpreter::SymbolRef(const std::string &name)
     {
         LispObjectPtr n = symbols_;
         while (!Null(n)) {
             auto symbol = Car(n);
-            if (StringVal(symbol) == str) {
+            if (SymbolName(symbol) == name) {
                 return symbol;
             }
             n = Cdr(n);
         }
-        auto symbol = MakeSymbol(str);
+        auto symbol = MakeSymbol(name, Nil);
         symbols_ = Cons(symbol, symbols_);
         return symbol;
     }
@@ -92,21 +93,30 @@ namespace procdraw {
                 return exp;
             }
             else {
-                return Cdr(Assoc(exp, env));
+                return Value(exp, env);
             }
         }
         else {
             if (Eq(Car(exp), S_QUOTE)) {
-                return Car(Cdr(exp));
+                return Cadr(exp);
             }
             else if (Eq(Car(exp), S_LAMBDA)) {
                 return exp;
+            }
+            else if (Eq(Car(exp), S_SETQ)) {
+                return Set(Cadr(exp), Eval(Caddr(exp), env), env);
+            }
+            else if (Eq(Car(exp), S_PROGN)) {
+                return Progn(Cdr(exp), env);
             }
             else if (Eq(Car(exp), S_APPLY)) {
                 return Apply(Eval(Cadr(exp), env), Eval(Caddr(exp), env), env);
             }
             else if (Eq(Car(exp), S_ADD)) {
                 return Add(Evlis(Cdr(exp), env));
+            }
+            else {
+                return Apply(Eval(Car(exp), env), Evlis(Cdr(exp), env), env);
             }
         }
 
@@ -115,7 +125,7 @@ namespace procdraw {
 
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp)
     {
-        return Eval(exp, globalEnv_);
+        return Eval(exp, Nil);
     }
 
     LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env) {
@@ -136,11 +146,6 @@ namespace procdraw {
         return list1;
     }
 
-    LispObjectPtr LispInterpreter::Read(const std::string &str)
-    {
-        return reader_.Read(this, str);
-    }
-
     std::string LispInterpreter::PrintString(LispObjectPtr obj)
     {
         switch (TypeOf(obj)) {
@@ -153,7 +158,7 @@ namespace procdraw {
             return s.str();
         }
         case LispObjectType::Symbol:
-            return StringVal(obj);
+            return SymbolName(obj);
         case LispObjectType::Cons:
         {
             std::string s("(");
@@ -176,6 +181,44 @@ namespace procdraw {
         default:
             return "";
         }
+    }
+
+    LispObjectPtr LispInterpreter::Progn(LispObjectPtr actions, LispObjectPtr env)
+    {
+        LispObjectPtr result = Nil;
+        LispObjectPtr n = actions;
+        while (!Null(n)) {
+            result = Eval(Car(n), env);
+            n = Cdr(n);
+        }
+
+        return result;
+    }
+
+    LispObjectPtr LispInterpreter::Read(const std::string &str)
+    {
+        return reader_.Read(this, str);
+    }
+
+    LispObjectPtr LispInterpreter::Set(LispObjectPtr symbol, LispObjectPtr value, LispObjectPtr env)
+    {
+        auto binding = Assoc(symbol, env);
+        if (Null(binding)) {
+            SetSymbolValue(symbol, value);
+        }
+        else {
+            Rplacd(binding, value);
+        }
+        return value;
+    }
+
+    LispObjectPtr LispInterpreter::Value(LispObjectPtr symbol, LispObjectPtr env)
+    {
+        auto binding = Assoc(symbol, env);
+        if (Null(binding)) {
+            return SymbolValue(symbol);
+        }
+        return Cdr(binding);
     }
 
 }
