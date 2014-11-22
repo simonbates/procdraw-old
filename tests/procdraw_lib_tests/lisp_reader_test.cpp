@@ -31,6 +31,12 @@ TEST_CASE("LispReader") {
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
+    SECTION("Star") {
+        auto obj = reader.Read(&L, "*");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(obj) == "*");
+    }
+
     SECTION("Plus symbol") {
         auto obj = reader.Read(&L, "(+ 42)");
         REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
@@ -39,18 +45,12 @@ TEST_CASE("LispReader") {
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
-    SECTION("Minus symbol") {
+    SECTION("Hyphen-minus symbol") {
         auto obj = reader.Read(&L, "(- 42)");
         REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(L.Car(obj)) == "-");
         REQUIRE(L.TypeOf(L.Cadr(obj)) == procdraw::LispObjectType::Number);
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
-    }
-
-    SECTION("Star") {
-        auto obj = reader.Read(&L, "*");
-        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
-        REQUIRE(L.SymbolName(obj) == "*");
     }
 
     SECTION("Slash") {

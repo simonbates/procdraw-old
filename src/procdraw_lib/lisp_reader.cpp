@@ -35,8 +35,8 @@ namespace procdraw {
             token_ = LispTokenType::RParen;
             GetCh();
         }
-        else if (ch_ == '.') {
-            token_ = LispTokenType::Dot;
+        else if (ch_ == '*') {
+            token_ = LispTokenType::Star;
             GetCh();
         }
         else if (ch_ == '+') {
@@ -55,11 +55,11 @@ namespace procdraw {
                 numVal_ = -numVal_;
             }
             else {
-                token_ = LispTokenType::Minus;
+                token_ = LispTokenType::HyphenMinus;
             }
         }
-        else if (ch_ == '*') {
-            token_ = LispTokenType::Star;
+        else if (ch_ == '.') {
+            token_ = LispTokenType::Dot;
             GetCh();
         }
         else if (ch_ == '/') {
@@ -121,17 +121,17 @@ namespace procdraw {
             GetToken();
             return obj;
         }
+        else if (token_ == LispTokenType::Star) {
+            GetToken();
+            return L->SymbolRef("*");
+        }
         else if (token_ == LispTokenType::Plus) {
             GetToken();
             return L->SymbolRef("+");
         }
-        else if (token_ == LispTokenType::Minus) {
+        else if (token_ == LispTokenType::HyphenMinus) {
             GetToken();
             return L->SymbolRef("-");
-        }
-        else if (token_ == LispTokenType::Star) {
-            GetToken();
-            return L->SymbolRef("*");
         }
         else if (token_ == LispTokenType::Slash) {
             GetToken();
