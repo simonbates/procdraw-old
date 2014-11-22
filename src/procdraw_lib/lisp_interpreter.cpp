@@ -1,5 +1,6 @@
 #include "lisp_interpreter.h"
 #include "lisp_functions.h"
+#include <cmath>
 
 namespace procdraw {
 
@@ -13,8 +14,13 @@ namespace procdraw {
         S_QUOTE = SymbolRef("quote");
         S_SETQ = SymbolRef("setq");
         // Functions
-        SetGlobalCFunction("add", lisp_Add);
         SetGlobalCFunction("apply", lisp_Apply);
+        SetGlobalCFunction("difference", lisp_Difference);
+        SetGlobalCFunction("product", lisp_Product);
+        SetGlobalCFunction("quotient", lisp_Quotient);
+        SetGlobalCFunction("sum", lisp_Sum);
+        // Constants
+        Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }
 
     LispObjectPtr LispInterpreter::SymbolRef(const std::string &name)
