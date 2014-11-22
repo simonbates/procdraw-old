@@ -21,7 +21,7 @@ namespace procdraw {
 
         if (L->Null(n)) {
             // 1 arg
-            return L->MakeNumber(0 - difference);
+            return L->MakeNumber(-difference);
         }
 
         // 2 or more args

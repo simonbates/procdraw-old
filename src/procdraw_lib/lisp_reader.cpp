@@ -39,6 +39,25 @@ namespace procdraw {
             token_ = LispTokenType::Dot;
             GetCh();
         }
+        else if (ch_ == '+') {
+            GetCh();
+            if (IsStartOfNumber()) {
+                GetNumber();
+            }
+            else {
+                token_ = LispTokenType::Plus;
+            }
+        }
+        else if (ch_ == '-') {
+            GetCh();
+            if (IsStartOfNumber()) {
+                GetNumber();
+                numVal_ = -numVal_;
+            }
+            else {
+                token_ = LispTokenType::Minus;
+            }
+        }
         else if (ch_ == '*') {
             token_ = LispTokenType::Asterisk;
             GetCh();
@@ -47,14 +66,8 @@ namespace procdraw {
             token_ = LispTokenType::Slash;
             GetCh();
         }
-        else if (isdigit(ch_)) {
-            std::string number;
-            while (isdigit(ch_)) {
-                number += ch_;
-                GetCh();
-            }
-            token_ = LispTokenType::Number;
-            numVal_ = atoi(number.c_str());
+        else if (IsStartOfNumber()) {
+            GetNumber();
         }
         else if (isalpha(ch_)) {
             std::string str;
@@ -68,6 +81,22 @@ namespace procdraw {
         else {
             token_ = LispTokenType::Undefined;
         }
+    }
+
+    bool LispReader::IsStartOfNumber()
+    {
+        return isdigit(ch_);
+    }
+
+    void LispReader::GetNumber()
+    {
+        std::string number;
+        while (isdigit(ch_)) {
+            number += ch_;
+            GetCh();
+        }
+        token_ = LispTokenType::Number;
+        numVal_ = atoi(number.c_str());
     }
 
     LispObjectPtr LispReader::Read(LispInterpreter *L)
@@ -91,6 +120,14 @@ namespace procdraw {
             }
             GetToken();
             return obj;
+        }
+        else if (token_ == LispTokenType::Plus) {
+            GetToken();
+            return L->SymbolRef("+");
+        }
+        else if (token_ == LispTokenType::Minus) {
+            GetToken();
+            return L->SymbolRef("-");
         }
         else if (token_ == LispTokenType::Asterisk) {
             GetToken();

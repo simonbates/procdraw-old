@@ -14,11 +14,11 @@ namespace procdraw {
         S_QUOTE = SymbolRef("quote");
         S_SETQ = SymbolRef("setq");
         // Functions
-        SetGlobalCFunction("apply", lisp_Apply);
-        SetGlobalCFunction("difference", lisp_Difference);
         SetGlobalCFunction("*", lisp_Product);
+        SetGlobalCFunction("+", lisp_Sum);
+        SetGlobalCFunction("-", lisp_Difference);
         SetGlobalCFunction("/", lisp_Quotient);
-        SetGlobalCFunction("sum", lisp_Sum);
+        SetGlobalCFunction("apply", lisp_Apply);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }

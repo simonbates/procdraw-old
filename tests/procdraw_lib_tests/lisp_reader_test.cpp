@@ -7,16 +7,44 @@ TEST_CASE("LispReader") {
     procdraw::LispReader reader;
     procdraw::LispInterpreter L;
 
-    SECTION("Integer") {
+    SECTION("Integer without sign") {
         auto obj = reader.Read(&L, "42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
         REQUIRE(L.NumVal(obj) == 42);
+    }
+
+    SECTION("Integer with positive sign") {
+        auto obj = reader.Read(&L, "+42");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
+        REQUIRE(L.NumVal(obj) == 42);
+    }
+
+    SECTION("Integer with negative sign") {
+        auto obj = reader.Read(&L, "-42");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
+        REQUIRE(L.NumVal(obj) == -42);
     }
 
     SECTION("Symbol") {
         auto obj = reader.Read(&L, "HELLO-WORLD-1");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
+    }
+
+    SECTION("Plus symbol") {
+        auto obj = reader.Read(&L, "(+ 42)");
+        REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(L.Car(obj)) == "+");
+        REQUIRE(L.TypeOf(L.Cadr(obj)) == procdraw::LispObjectType::Number);
+        REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
+    }
+
+    SECTION("Minus symbol") {
+        auto obj = reader.Read(&L, "(- 42)");
+        REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(L.Car(obj)) == "-");
+        REQUIRE(L.TypeOf(L.Cadr(obj)) == procdraw::LispObjectType::Number);
+        REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
     SECTION("Asterisk") {

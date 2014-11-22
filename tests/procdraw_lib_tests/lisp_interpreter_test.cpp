@@ -182,11 +182,11 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("SUM") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sum)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sum 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sum 2)"), L.Nil)) == 2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sum 2 3)"), L.Nil)) == 5);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sum 2 3 4)"), L.Nil)) == 9);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+)"), L.Nil)) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 0)"), L.Nil)) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2)"), L.Nil)) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3)"), L.Nil)) == 5);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3 4)"), L.Nil)) == 9);
     }
 
     SECTION("SUM with subexpressions") {
@@ -195,16 +195,16 @@ TEST_CASE("LispInterpreter::Eval()") {
             L.Cons(L.SymbolRef("b"), L.MakeNumber(2)),
             L.Cons(L.SymbolRef("c"), L.MakeNumber(4))
         });
-        auto result = L.Eval(L.Read("(sum (sum a b 8) 16 c)"), env);
+        auto result = L.Eval(L.Read("(+ (+ a b 8) 16 c)"), env);
         REQUIRE(L.NumVal(result) == 31);
     }
 
     SECTION("DIFFERENCE") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(difference)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(difference 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(difference 2)"), L.Nil)) == -2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(difference 5 2)"), L.Nil)) == 3);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(difference 5 2 7)"), L.Nil)) == -4);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(-)"), L.Nil)) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 0)"), L.Nil)) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 2)"), L.Nil)) == -2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2)"), L.Nil)) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2 7)"), L.Nil)) == -4);
     }
 
     SECTION("PRODUCT") {
@@ -226,22 +226,22 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("LAMBDA expression evaluates to itself") {
-        auto result = L.Eval(L.Read("(lambda (n) (sum n 1))"));
-        REQUIRE(L.PrintString(result) == "(lambda (n) (sum n 1))");
+        auto result = L.Eval(L.Read("(lambda (n) (+ n 1))"));
+        REQUIRE(L.PrintString(result) == "(lambda (n) (+ n 1))");
     }
 
     SECTION("LAMBDA call no args") {
-        auto result = L.Eval(L.Read("((lambda () (sum 1 2)))"));
+        auto result = L.Eval(L.Read("((lambda () (+ 1 2)))"));
         REQUIRE(L.NumVal(result) == 3);
     }
 
     SECTION("LAMBDA call 1 arg") {
-        auto result = L.Eval(L.Read("((lambda (n) (sum n 1)) 1)"));
+        auto result = L.Eval(L.Read("((lambda (n) (+ n 1)) 1)"));
         REQUIRE(L.NumVal(result) == 2);
     }
 
     SECTION("LAMBDA call 2 args") {
-        auto result = L.Eval(L.Read("((lambda (m n) (sum m n 10)) 30 2)"));
+        auto result = L.Eval(L.Read("((lambda (m n) (+ m n 10)) 30 2)"));
         REQUIRE(L.NumVal(result) == 42);
     }
 
@@ -249,7 +249,7 @@ TEST_CASE("LispInterpreter::Eval()") {
         REQUIRE(L.Null(L.Eval(L.Read("(progn)"))));
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1)"))) == 1);
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3)"))) == 3);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3 (sum 40 2))"))) == 42);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3 (+ 40 2))"))) == 42);
     }
 
     SECTION("SETQ top level") {
@@ -274,17 +274,17 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("APPLY no args") {
-        auto result = L.Eval(L.Read("(apply (lambda () (sum 1 2)) (quote ()))"));
+        auto result = L.Eval(L.Read("(apply (lambda () (+ 1 2)) (quote ()))"));
         REQUIRE(L.NumVal(result) == 3);
     }
 
     SECTION("APPLY 1 arg") {
-        auto result = L.Eval(L.Read("(apply (lambda (n) (sum n 1)) (quote (1)))"));
+        auto result = L.Eval(L.Read("(apply (lambda (n) (+ n 1)) (quote (1)))"));
         REQUIRE(L.NumVal(result) == 2);
     }
 
     SECTION("APPLY 2 args") {
-        auto result = L.Eval(L.Read("(apply (lambda (m n) (sum m n 10)) (quote (30 2)))"));
+        auto result = L.Eval(L.Read("(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"));
         REQUIRE(L.NumVal(result) == 42);
     }
 
