@@ -8,7 +8,7 @@ namespace procdraw {
 
     class LispInterpreter;
 
-    enum class LispTokenType { LParen, RParen, Dot, Number, Symbol, EndOfInput, Undefined };
+    enum class LispTokenType { LParen, RParen, Dot, Asterisk, Slash, Number, Symbol, EndOfInput, Undefined };
 
     class LispReader {
     public:

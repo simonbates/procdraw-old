@@ -16,8 +16,8 @@ namespace procdraw {
         // Functions
         SetGlobalCFunction("apply", lisp_Apply);
         SetGlobalCFunction("difference", lisp_Difference);
-        SetGlobalCFunction("product", lisp_Product);
-        SetGlobalCFunction("quotient", lisp_Quotient);
+        SetGlobalCFunction("*", lisp_Product);
+        SetGlobalCFunction("/", lisp_Quotient);
         SetGlobalCFunction("sum", lisp_Sum);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);

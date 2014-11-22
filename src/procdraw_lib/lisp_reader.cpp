@@ -39,6 +39,14 @@ namespace procdraw {
             token_ = LispTokenType::Dot;
             GetCh();
         }
+        else if (ch_ == '*') {
+            token_ = LispTokenType::Asterisk;
+            GetCh();
+        }
+        else if (ch_ == '/') {
+            token_ = LispTokenType::Slash;
+            GetCh();
+        }
         else if (isdigit(ch_)) {
             std::string number;
             while (isdigit(ch_)) {
@@ -83,6 +91,14 @@ namespace procdraw {
             }
             GetToken();
             return obj;
+        }
+        else if (token_ == LispTokenType::Asterisk) {
+            GetToken();
+            return L->SymbolRef("*");
+        }
+        else if (token_ == LispTokenType::Slash) {
+            GetToken();
+            return L->SymbolRef("/");
         }
         // TODO LispTokenType::EndOfInput
         // TODO badly formed input

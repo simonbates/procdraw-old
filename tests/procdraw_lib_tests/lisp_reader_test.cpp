@@ -19,6 +19,18 @@ TEST_CASE("LispReader") {
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
+    SECTION("Asterisk") {
+        auto obj = reader.Read(&L, "*");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(obj) == "*");
+    }
+
+    SECTION("Slash") {
+        auto obj = reader.Read(&L, "/");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(obj) == "/");
+    }
+
     SECTION("Nil") {
         auto obj = reader.Read(&L, "nil");
         REQUIRE(L.Null(obj));

@@ -208,21 +208,21 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("PRODUCT") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product)"), L.Nil)) == 1);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product 1)"), L.Nil)) == 1);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product 2)"), L.Nil)) == 2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product 2 3)"), L.Nil)) == 6);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(product 2 3 4)"), L.Nil)) == 24);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(*)"), L.Nil)) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 0)"), L.Nil)) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 1)"), L.Nil)) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2)"), L.Nil)) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3)"), L.Nil)) == 6);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3 4)"), L.Nil)) == 24);
     }
 
     SECTION("QUOTIENT") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(quotient)"), L.Nil)) == 1);
-        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(quotient 0)"), L.Nil))));
-        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(quotient 1 0)"), L.Nil))));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(quotient 2)"), L.Nil)) == 0.5);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(quotient 8 5)"), L.Nil)) == 1.6);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(quotient 360 4 3)"), L.Nil)) == 30);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/)"), L.Nil)) == 1);
+        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 0)"), L.Nil))));
+        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 1 0)"), L.Nil))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 2)"), L.Nil)) == 0.5);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 8 5)"), L.Nil)) == 1.6);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 360 4 3)"), L.Nil)) == 30);
     }
 
     SECTION("LAMBDA expression evaluates to itself") {
