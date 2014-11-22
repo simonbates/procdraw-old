@@ -14,12 +14,14 @@ Existing Languages and Software Systems
 - BASIC
 - [BECOME A GREAT ARTIST IN JUST 10 SECONDS](http://ludumdare.com/compo/ludum-dare-27/?action=preview&uid=4987)
 - BEFLIX [@Knowlton:1964:CTP:1464122.1464130]
+- [CEPL](https://github.com/cbaggers/cepl)
 - [Cinder](http://libcinder.org/)
 - [ChucK](http://chuck.cs.princeton.edu/)
 - [Common Music](http://commonmusic.sourceforge.net/)
 - [Conception](https://github.com/shurcooL/Conception)
 - [Context Free](http://www.contextfreeart.org/)
 - [Csound](http://www.csounds.com/)
+- [Cyril](http://cyrilcode.com/)
 - [Design By Numbers](http://dbn.media.mit.edu/) [@maeda:2001]
 - [Emacs](http://www.gnu.org/software/emacs/)
 - EXPLOR [@Knowlton:1975:MFV:988049.988052]
@@ -38,6 +40,7 @@ Existing Languages and Software Systems
 - [ixi lang](http://www.ixi-audio.net/)
 - Joy
 - [Light Table](http://www.lighttable.com/)
+- [LiveCodeLab](http://livecodelab.net/)
 - Logo [@papert:1971:246]
 - [LÖVE](http://love2d.org/)
 - [LuaAV](http://lua-av.mat.ucsb.edu/)
@@ -85,17 +88,49 @@ Some Lisps
 - LISP [@mccarthy:1960][@levin:1962]
 - Interlisp
 - Maclisp
-- Common Lisp
+- [Common Lisp](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm)
 - Emacs Lisp
 - Acornsoft Lisp
-- Scheme [@r5rs]
+- [Scheme](http://schemers.org/) [@r5rs]
     - [s7](https://ccrma.stanford.edu/software/snd/snd/s7.html)
     - [TinyScheme](http://tinyscheme.sourceforge.net/)
 - [PicoLisp](http://picolisp.com/)
-- newLISP
-- Racket
-- Clojure
-- Arc
+- [newLISP](http://www.newlisp.org/)
+- [Racket](http://racket-lang.org/)
+- [Clojure](http://clojure.org/)
+- [Arc](http://arclanguage.org/)
+
+Language design for livecoding
+------------------------------
+
+### Errors
+
+Some sources of errors:
+
+- syntax error
+- wrong number of objects sent to a function
+- wrong type of object sent to a function
+- reference to an undefined variable
+- divide by zero
+- index out of bounds
+- error from an external system
+
+Some strategies for handling and preventing errors:
+
+- static analysis
+- static type system
+- functions that can operate on a variable number of arguments
+- missing function arguments are given default values (nil or undefined in the worst case)
+- functions that can operate on variable types (such as arithmetic on scalars or arrays)
+- object type coercion (with or without warning)
+- minimise the number of types
+- return a value if possible and a suitable value exists
+    - in IEEE 754 floating point arithmetic, 1.0/0.0 => +Infinity
+    - in Common Lisp, (car '()) => nil (whereas in Scheme it raises an error)
+- error values such as NaN, nil, undefined
+- return error codes or error objects (for example see [Go](https://golang.org/))
+- exceptions
+- a program editor, such as for a visual programming language, that constrains the expressible programs to those that minimise runtime errors; for example static type checking can be provided at the editor stage which blocks the user from constructing programs with type errors
 
 Writing a Lisp interpreter
 --------------------------
@@ -103,6 +138,7 @@ Writing a Lisp interpreter
 - "The Art of the Interpreter" by Guy Steele Jr. and Gerald Sussman [@steele:1978]
 - "Lisp in Small Pieces" by Christian Queinnec
 - "Scheme 9 from Empty Space" by Nils M Holm [@holm:2010]
+- "Structure and Interpretation of Computer Programs" by Harold Abelson, Gerald Jay Sussman, and Julie Sussman [@abelson:1996]
 
 Procedural generation and simulation algorithms
 -----------------------------------------------
