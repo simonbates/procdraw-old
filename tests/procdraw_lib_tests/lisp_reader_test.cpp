@@ -47,7 +47,7 @@ TEST_CASE("LispReader") {
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
-    SECTION("Asterisk") {
+    SECTION("Star") {
         auto obj = reader.Read(&L, "*");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(obj) == "*");

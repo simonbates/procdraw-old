@@ -59,7 +59,7 @@ namespace procdraw {
             }
         }
         else if (ch_ == '*') {
-            token_ = LispTokenType::Asterisk;
+            token_ = LispTokenType::Star;
             GetCh();
         }
         else if (ch_ == '/') {
@@ -129,7 +129,7 @@ namespace procdraw {
             GetToken();
             return L->SymbolRef("-");
         }
-        else if (token_ == LispTokenType::Asterisk) {
+        else if (token_ == LispTokenType::Star) {
             GetToken();
             return L->SymbolRef("*");
         }
