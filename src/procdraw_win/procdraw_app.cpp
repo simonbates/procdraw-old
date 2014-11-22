@@ -3,7 +3,6 @@
 #include "procdraw_app_lisp.h"
 #include "util.h"
 #include "win_util.h"
-#include <cmath>
 
 namespace procdraw {
 

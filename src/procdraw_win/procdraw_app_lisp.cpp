@@ -15,6 +15,11 @@ namespace procdraw {
         return(L->MakeNumber(app->MouseY()));
     }
 
+    static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return(L->MakeNumber(app->Width()));
+    }
+
     // Graphics
 
     static LispObjectPtr lisp_Background(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
@@ -49,6 +54,7 @@ namespace procdraw {
         L->SetGlobalCFunction("background", lisp_Background);
         L->SetGlobalCFunction("rotate", lisp_Rotate);
         L->SetGlobalCFunction("triangle", lisp_Triangle);
+        L->SetGlobalCFunction("width", lisp_Width);
     }
 
 }
