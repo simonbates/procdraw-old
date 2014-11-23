@@ -157,6 +157,27 @@ TEST_CASE("LispInterpreter::Rplacd()") {
     REQUIRE(L.Eq(cons, result));
 }
 
+TEST_CASE("LispInterpreter implicit type conversion") {
+
+    procdraw::LispInterpreter L;
+
+    SECTION("to number") {
+        SECTION("should convert non-numbers to NaN") {
+            // Nil
+            REQUIRE(std::isnan(L.NumVal(L.Nil)));
+            // Number
+            REQUIRE(L.NumVal(L.MakeNumber(42)) == 42);
+            // Symbol
+            REQUIRE(std::isnan(L.NumVal(L.SymbolRef("SYMBOL"))));
+            // Cons
+            REQUIRE(std::isnan(L.NumVal(L.Cons(L.MakeNumber(1), L.MakeNumber(2)))));
+            // CFunction
+            REQUIRE(std::isnan(L.NumVal(L.SetGlobalCFunction("cfunction", nullptr))));
+        }
+    }
+
+}
+
 TEST_CASE("LispInterpreter::Eval()") {
 
     procdraw::LispInterpreter L;

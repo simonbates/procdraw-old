@@ -122,7 +122,7 @@ Some strategies for handling and preventing errors:
 - functions that can operate on a variable number of arguments
 - missing function arguments are given default values (nil or undefined in the worst case)
 - functions that can operate on variable types (such as arithmetic on scalars or arrays)
-- object type coercion (with or without warning)
+- implicit type conversion (with or without warning)
 - minimise the number of types
 - return a value if possible and a suitable value exists
     - in IEEE 754 floating point arithmetic, 1.0/0.0 => +Infinity

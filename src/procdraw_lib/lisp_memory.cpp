@@ -1,5 +1,6 @@
 #include "lisp_memory.h"
 #include "lisp_interpreter.h"
+#include <limits>
 
 namespace procdraw {
 
@@ -84,8 +85,9 @@ namespace procdraw {
         if (obj->Type == LispObjectType::Number) {
             return static_cast<LispNumber*>(obj.get())->val_;
         }
-        // TODO or throw bad type exception?
-        return 0.0;
+        else {
+            return std::numeric_limits<double>::quiet_NaN();
+        }
     }
 
     std::string LispInterpreter::SymbolName(LispObjectPtr symbol)
