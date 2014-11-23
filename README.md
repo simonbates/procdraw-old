@@ -27,26 +27,18 @@ cmake -G "Visual Studio 12" ..
 
 To build in Visual Studio:
 
-- Open build\ProcDraw.sln
+- Open `build\ProcDraw.sln`
 - Build Solution (Ctrl+Shift+B)
 
 To run ProcDraw from Visual Studio:
 
-- Set procdraw_winmain as the Startup Project
-- Set the procdraw_winmain project Working Directory to the procdraw directory (Properties/Debugging/Working Directory)
+- Set `procdraw_winmain` as the Startup Project
+- Set the `procdraw_winmain` project Working Directory to the `procdraw` directory (Properties/Debugging/Working Directory)
 - Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
 
-To run the tests (in the build directory):
+To run the tests in Visual Studio:
 
-```
-ctest -C Debug -V
-```
-
-or
-
-```
-ctest -C Release -V
-```
+- Build the `test` project
 
 Building on Linux
 -----------------
@@ -64,14 +56,14 @@ cd build
 cmake ..
 ```
 
-To build (in the build directory):
+To build (in the `build` directory):
 
 ```
 make
 ```
 
-To run the tests (in the build directory):
+To run the tests (in the `build` directory):
 
 ```
-ctest -V
+make test
 ```
