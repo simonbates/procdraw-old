@@ -100,8 +100,8 @@ Some Lisps
 - [Clojure](http://clojure.org/)
 - [Arc](http://arclanguage.org/)
 
-Language design for livecoding
-------------------------------
+Language design for live programming
+------------------------------------
 
 ### Errors
 

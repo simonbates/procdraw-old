@@ -43,7 +43,7 @@ namespace procdraw {
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Eval(LispObjectPtr exp);
         LispObjectPtr Evlis(LispObjectPtr arglist, LispObjectPtr env);
-        LispObjectPtr List(std::vector<LispObjectPtr> objs);
+        LispObjectPtr MakeList(std::vector<LispObjectPtr> objs);
         std::string PrintString(LispObjectPtr obj);
         LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);
         LispObjectPtr Read(const std::string &str);

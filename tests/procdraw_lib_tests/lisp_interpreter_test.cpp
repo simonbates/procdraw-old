@@ -2,16 +2,16 @@
 #include "catch.hpp"
 #include <cmath>
 
-TEST_CASE("LispInterpreter::List()") {
+TEST_CASE("LispInterpreter::MakeList()") {
 
     procdraw::LispInterpreter L;
 
     SECTION("Empty list") {
-        REQUIRE(L.Null(L.List({})));
+        REQUIRE(L.Null(L.MakeList({})));
     }
 
     SECTION("Single item") {
-        auto list1 = L.List({ L.MakeNumber(42) });
+        auto list1 = L.MakeList({ L.MakeNumber(42) });
         REQUIRE(L.TypeOf(list1) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(list1)) == 42);
         REQUIRE(L.Null(L.Cdr(list1)));
@@ -22,7 +22,7 @@ TEST_CASE("LispInterpreter::List()") {
     // +---+  +---+  +---+  +---+
     //
     SECTION("Multiple items") {
-        auto list1 = L.List({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) });
+        auto list1 = L.MakeList({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) });
         REQUIRE(L.TypeOf(list1) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(list1)) == 1);
         REQUIRE(L.NumVal(L.Car(L.Cdr(list1))) == 2);
@@ -41,7 +41,7 @@ TEST_CASE("LispInterpreter::List()") {
     // +---+  +---+
     //
     SECTION("Embedded list") {
-        auto list1 = L.List({ L.List({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) });
+        auto list1 = L.MakeList({ L.MakeList({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) });
         REQUIRE(L.TypeOf(list1) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(L.Car(list1))) == 1);
         REQUIRE(L.NumVal(L.Car(L.Cdr(L.Car(list1)))) == 2);
@@ -65,10 +65,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
     }
 
     SECTION("List") {
-        REQUIRE(L.PrintString(L.List({})) == "nil");
-        REQUIRE(L.PrintString(L.List({ L.MakeNumber(42) })) == "(42)");
-        REQUIRE(L.PrintString(L.List({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) == "(1 2 3 4)");
-        REQUIRE(L.PrintString(L.List({ L.List({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) })) == "((1 2) 3 4)");
+        REQUIRE(L.PrintString(L.MakeList({})) == "nil");
+        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(42) })) == "(42)");
+        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) == "(1 2 3 4)");
+        REQUIRE(L.PrintString(L.MakeList({ L.MakeList({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) })) == "((1 2) 3 4)");
     }
 
     SECTION("Dotted pair") {
@@ -105,7 +105,7 @@ TEST_CASE("LispInterpreter::Eq()") {
     REQUIRE(L.Eq(L.SymbolRef("A"), L.SymbolRef("A")));
     REQUIRE_FALSE(L.Eq(L.SymbolRef("A"), L.SymbolRef("B")));
 
-    auto list1 = L.List({ L.MakeNumber(42) });
+    auto list1 = L.MakeList({ L.MakeNumber(42) });
     REQUIRE(L.Eq(list1, list1));
 }
 
@@ -120,7 +120,7 @@ TEST_CASE("LispInterpreter::Assoc()") {
     SECTION("Non-empty association list") {
         auto symbolA = L.SymbolRef("A");
         auto symbolB = L.SymbolRef("B");
-        auto alist = L.List({ L.Cons(symbolA, L.MakeNumber(1)), L.Cons(symbolB, L.MakeNumber(2)) });
+        auto alist = L.MakeList({ L.Cons(symbolA, L.MakeNumber(1)), L.Cons(symbolB, L.MakeNumber(2)) });
 
         auto pairA = L.Assoc(symbolA, alist);
         REQUIRE(L.Eq(symbolA, L.Car(pairA)));
@@ -192,7 +192,7 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("Retrieve number") {
-        auto env = L.List({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
+        auto env = L.MakeList({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
         auto result = L.Eval(L.SymbolRef("a"), env);
         REQUIRE(L.NumVal(result) == 42);
     }
@@ -211,7 +211,7 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("SUM with subexpressions") {
-        auto env = L.List({
+        auto env = L.MakeList({
             L.Cons(L.SymbolRef("a"), L.MakeNumber(1)),
             L.Cons(L.SymbolRef("b"), L.MakeNumber(2)),
             L.Cons(L.SymbolRef("c"), L.MakeNumber(4))

@@ -111,17 +111,17 @@ namespace procdraw {
         }
         else {
             auto first = Car(exp);
-            if (Eq(first, S_QUOTE)) {
-                return Cadr(exp);
-            }
-            else if (Eq(first, S_LAMBDA)) {
+            if (Eq(first, S_LAMBDA)) {
                 return exp;
-            }
-            else if (Eq(first, S_SETQ)) {
-                return Set(Cadr(exp), Eval(Caddr(exp), env), env);
             }
             else if (Eq(first, S_PROGN)) {
                 return Progn(Cdr(exp), env);
+            }
+            else if (Eq(first, S_QUOTE)) {
+                return Cadr(exp);
+            }
+            else if (Eq(first, S_SETQ)) {
+                return Set(Cadr(exp), Eval(Caddr(exp), env), env);
             }
             else {
                 return Apply(Eval(first, env), Evlis(Cdr(exp), env), env);
@@ -145,7 +145,7 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr LispInterpreter::List(std::vector<LispObjectPtr> objs)
+    LispObjectPtr LispInterpreter::MakeList(std::vector<LispObjectPtr> objs)
     {
         auto list1 = Nil;
         for (auto it = objs.rbegin(); it != objs.rend(); ++it) {
