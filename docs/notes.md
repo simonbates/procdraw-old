@@ -108,8 +108,8 @@ Language design for live programming
 Some sources of errors:
 
 - syntax error
-- wrong number of objects sent to a function
-- wrong type of object sent to a function
+- unexpected shape/structure of object (such as unexpected number of arguments for a function)
+- unexpected type of object (such as unexpected type of argument for a function)
 - reference to an undefined variable
 - divide by zero
 - index out of bounds
@@ -131,6 +131,19 @@ Some strategies for handling and preventing errors:
 - return error codes or error objects (for example see [Go](https://golang.org/))
 - exceptions
 - a program editor, such as for a visual programming language, that constrains the expressible programs to those that minimise runtime errors; for example static type checking can be provided at the editor stage which blocks the user from constructing programs with type errors
+
+### Programs as data
+
+- declarative programming
+- genetic algorithms
+- pipes and operations in a dataflow language
+- text to be parsed
+- abstract syntax trees
+- s-expressions
+- JSON documents
+- bytecode
+- assembly language
+- machine code
 
 Writing a Lisp interpreter
 --------------------------
@@ -173,6 +186,13 @@ Procedural generation resources
 - "[The Nature of Code](http://natureofcode.com/)" by Daniel Shiffman [@shiffman:2012]
 - [Procedural Content Generation in Games](http://pcgbook.com/)
 - [Procedural Content Generation Wiki](http://pcg.wikidot.com/)
+
+Circuit bending, data bending, and visualization
+------------------------------------------------
+
+- [Kurt Werner's circuit-bendable digital models of instruments](https://ccrma.stanford.edu/~kwerner/)
+- [Here's What Happens When You Edit Photos Like Music](http://thecreatorsproject.vice.com/blog/heres-what-happens-when-you-edit-photos-like-music)
+- "[Visualizing Persistent Data Structures](http://youtu.be/2XH_q494U3U)" by Dann Toliver at Strange Loop 2014
 
 Hardware
 --------
