@@ -194,6 +194,20 @@ Circuit bending, data bending, and visualization
 - [Here's What Happens When You Edit Photos Like Music](http://thecreatorsproject.vice.com/blog/heres-what-happens-when-you-edit-photos-like-music)
 - "[Visualizing Persistent Data Structures](http://youtu.be/2XH_q494U3U)" by Dann Toliver at Strange Loop 2014
 
+Data formats
+------------
+
+- [ExtraFile](http://extrafile.org/)
+- GIF
+- JPEG
+- Netpbm formats
+    - [PBM](http://netpbm.sourceforge.net/doc/pbm.html)
+    - [PGM](http://netpbm.sourceforge.net/doc/pgm.html)
+    - [PPM](http://netpbm.sourceforge.net/doc/ppm.html)
+    - [PAM](http://netpbm.sourceforge.net/doc/pam.html)
+- PNG
+- TIFF
+
 Hardware
 --------
 
