@@ -10,7 +10,7 @@ Existing Languages and Software Systems
 
 - [A Diary of Whispered Truths](http://niall-moody.itch.io/a-diary-of-whispered-truths)
 - [Acme](http://acme.cat-v.org/)
-- Alternate Reality Kit
+- Alternate Reality Kit [@ungar:2013]
 - Array languages: APL, J, A+, K, Q
 - BASIC
 - [BECOME A GREAT ARTIST IN JUST 10 SECONDS](http://ludumdare.com/compo/ludum-dare-27/?action=preview&uid=4987)
@@ -71,7 +71,7 @@ Existing Languages and Software Systems
 - [Pygame](http://www.pygame.org/)
 - [Scratch](http://scratch.mit.edu/)
 - [Scsh](http://scsh.net/) [@shivers:1994]
-- Self
+- Self [@ungar:2013]
 - Sketchpad [@Sutherland:1963:SMG:1461551.1461591]
 - Smalltalk [@goldberg:1989]
 - [Snap!](http://snap.berkeley.edu/)
@@ -256,6 +256,7 @@ Journals, Conferences, and such
 - [Creative Applications Network](http://www.creativeapplications.net/)
 - [ACM SIGPLAN International Workshop on Functional Art, Music, Modelling and Design (FARM)](http://functional-art.org/)
 - [HOLO](http://www.creativeapplications.net/holo/)
+- [LIVE 2013](https://liveprogramming.github.io/2013/index.html)
 - [Ludum Dare](http://www.ludumdare.com/)
 - [MIDI Hack](http://www.midihack.com/)
 - [NODE](http://node.vvvv.org/)
