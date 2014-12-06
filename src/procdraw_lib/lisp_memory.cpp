@@ -45,9 +45,19 @@ namespace procdraw {
         lisp_CFunction cfun_;
     };
 
-    void LispInterpreter::InitNil()
+    class LispBoolean : public LispObject {
+    public:
+        LispBoolean(bool val) :
+            LispObject(LispObjectType::Boolean),
+            val_(val) { }
+        bool val_;
+    };
+
+    void LispInterpreter::InitSymbolLiterals()
     {
         Nil = std::make_shared<LispObject>(LispObjectType::Nil);
+        True = std::make_shared<LispBoolean>(true);
+        False = std::make_shared<LispBoolean>(false);
     }
 
     LispObjectPtr LispInterpreter::MakeNumber(double val)
@@ -95,8 +105,10 @@ namespace procdraw {
         if (symbol->Type == LispObjectType::Symbol) {
             return static_cast<LispSymbol*>(symbol.get())->name_;
         }
-        // TODO or throw bad type exception?
-        return "";
+        else {
+            // TODO or throw bad type exception?
+            return "";
+        }
     }
 
     LispObjectPtr LispInterpreter::SymbolValue(LispObjectPtr symbol)
@@ -104,8 +116,10 @@ namespace procdraw {
         if (symbol->Type == LispObjectType::Symbol) {
             return static_cast<LispSymbol*>(symbol.get())->value_;
         }
-        // TODO or throw bad type exception?
-        return Nil;
+        else {
+            // TODO or throw bad type exception?
+            return Nil;
+        }
     }
 
     LispObjectPtr LispInterpreter::SetSymbolValue(LispObjectPtr symbol, LispObjectPtr value)
@@ -114,8 +128,10 @@ namespace procdraw {
             static_cast<LispSymbol*>(symbol.get())->value_ = value;
             return value;
         }
-        // TODO or throw bad type exception?
-        return Nil;
+        else {
+            // TODO or throw bad type exception?
+            return Nil;
+        }
     }
 
     LispObjectPtr LispInterpreter::Car(LispObjectPtr obj)
@@ -123,8 +139,10 @@ namespace procdraw {
         if (obj->Type == LispObjectType::Cons) {
             return static_cast<LispCons*>(obj.get())->car_;
         }
-        // TODO or throw bad type exception?
-        return Nil;
+        else {
+            // TODO or throw bad type exception?
+            return Nil;
+        }
     }
 
     LispObjectPtr LispInterpreter::Cdr(LispObjectPtr obj)
@@ -132,8 +150,22 @@ namespace procdraw {
         if (obj->Type == LispObjectType::Cons) {
             return static_cast<LispCons*>(obj.get())->cdr_;
         }
-        // TODO or throw bad type exception?
-        return Nil;
+        else {
+            // TODO or throw bad type exception?
+            return Nil;
+        }
+    }
+
+    bool LispInterpreter::BoolVal(LispObjectPtr obj)
+    {
+        switch (obj->Type) {
+        case LispObjectType::Boolean:
+            return static_cast<LispBoolean*>(obj.get())->val_;
+        case LispObjectType::Nil:
+            return false;
+        default:
+            return true;
+        }
     }
 
     bool LispInterpreter::Eq(LispObjectPtr x, LispObjectPtr y)
@@ -144,7 +176,9 @@ namespace procdraw {
         else if (x->Type == LispObjectType::Nil && y->Type == LispObjectType::Nil) {
             return true;
         }
-        return x.get() == y.get();
+        else {
+            return x.get() == y.get();
+        }
     }
 
     LispObjectPtr LispInterpreter::Rplaca(LispObjectPtr cons, LispObjectPtr obj)
@@ -170,8 +204,10 @@ namespace procdraw {
         if (cfun->Type == LispObjectType::CFunction) {
             return static_cast<LispCFunction*>(cfun.get())->cfun_(this, args, env);
         }
-        // TODO or throw bad type exception?
-        return Nil;
+        else {
+            // TODO or throw bad type exception?
+            return Nil;
+        }
     }
 
 }

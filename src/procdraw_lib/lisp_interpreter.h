@@ -7,15 +7,17 @@
 
 namespace procdraw {
 
-    enum class LispObjectType { Nil, Number, Symbol, Cons, CFunction };
+    enum class LispObjectType { Nil, Number, Symbol, Cons, CFunction, Boolean };
 
     typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
 
     class LispInterpreter {
     public:
         LispInterpreter();
-        // Nil
+        // Symbol literals
         LispObjectPtr Nil;
+        LispObjectPtr True;
+        LispObjectPtr False;
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
@@ -27,6 +29,7 @@ namespace procdraw {
         LispObjectPtr SymbolValue(LispObjectPtr symbol);
         LispObjectPtr Car(LispObjectPtr obj);
         LispObjectPtr Cdr(LispObjectPtr obj);
+        bool BoolVal(LispObjectPtr obj);
         bool Eq(LispObjectPtr x, LispObjectPtr y);
         LispObjectPtr Rplaca(LispObjectPtr cons, LispObjectPtr obj);
         LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
@@ -56,7 +59,7 @@ namespace procdraw {
         LispObjectPtr S_PROGN;
         LispObjectPtr S_QUOTE;
         LispObjectPtr S_SETQ;
-        void InitNil();
+        void InitSymbolLiterals();
         LispObjectPtr ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr MakeCFunction(lisp_CFunction cfun);

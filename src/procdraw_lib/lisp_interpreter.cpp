@@ -6,7 +6,7 @@ namespace procdraw {
 
     LispInterpreter::LispInterpreter()
     {
-        InitNil();
+        InitSymbolLiterals();
         symbols_ = Nil;
         // Special forms
         S_LAMBDA = SymbolRef("lambda");
@@ -102,10 +102,12 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)
     {
         if (Atom(exp)) {
-            if (TypeOf(exp) == LispObjectType::Number) {
+            switch (TypeOf(exp)) {
+            case LispObjectType::Boolean:
+            case LispObjectType::Nil:
+            case LispObjectType::Number:
                 return exp;
-            }
-            else {
+            default:
                 return Value(exp, env);
             }
         }
@@ -188,6 +190,8 @@ namespace procdraw {
         }
         case LispObjectType::CFunction:
             return "<CFunction>";
+        case LispObjectType::Boolean:
+            return BoolVal(obj) ? "true" : "false";
         default:
             return "";
         }

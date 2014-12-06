@@ -43,6 +43,7 @@ Existing Languages and Software Systems
 - Joy
 - [Light Table](http://www.lighttable.com/)
 - [LiveCodeLab](http://livecodelab.net/)
+- [Lively Kernel](http://lively-kernel.org/)
 - Logo [@papert:1971:246]
 - [LÖVE](http://love2d.org/)
 - [LuaAV](http://lua-av.mat.ucsb.edu/)
@@ -126,6 +127,7 @@ Some strategies for handling and preventing errors:
 - missing function arguments are given default values (nil or undefined in the worst case)
 - functions that can operate on variable types (such as arithmetic on scalars or arrays)
 - implicit type conversion (with or without warning)
+- Smalltalk #doesNotUnderstand:
 - minimise the number of types
 - return a value if possible and a suitable value exists
     - in IEEE 754 floating point arithmetic, 1.0/0.0 => +Infinity
@@ -141,6 +143,7 @@ Some strategies for handling and preventing errors:
 - genetic algorithms
 - pipes and operations in a dataflow language
 - text to be parsed
+- Smalltalk image
 - abstract syntax trees
 - s-expressions
 - JSON documents

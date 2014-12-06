@@ -115,6 +115,12 @@ namespace procdraw {
             if (symbolVal_ == "nil") {
                 obj = L->Nil;
             }
+            else if (symbolVal_ == "true") {
+                obj = L->True;
+            }
+            else if (symbolVal_ == "false") {
+                obj = L->False;
+            }
             else {
                 obj = L->SymbolRef(symbolVal_);
             }

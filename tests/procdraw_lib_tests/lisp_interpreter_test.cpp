@@ -75,6 +75,11 @@ TEST_CASE("LispInterpreter::PrintString()") {
         REQUIRE(L.PrintString(L.Cons(L.MakeNumber(1), L.MakeNumber(2))) == "(1 . 2)");
     }
 
+    SECTION("Boolean") {
+        REQUIRE(L.PrintString(L.True) == "true");
+        REQUIRE(L.PrintString(L.False) == "false");
+    }
+
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()") {
@@ -162,7 +167,7 @@ TEST_CASE("LispInterpreter implicit type conversion") {
     procdraw::LispInterpreter L;
 
     SECTION("to number") {
-        SECTION("should convert non-numbers to NaN") {
+        SECTION("should preserve numbers and convert non-numbers to NaN") {
             // Nil
             REQUIRE(std::isnan(L.NumVal(L.Nil)));
             // Number
@@ -173,6 +178,27 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             REQUIRE(std::isnan(L.NumVal(L.Cons(L.MakeNumber(1), L.MakeNumber(2)))));
             // CFunction
             REQUIRE(std::isnan(L.NumVal(L.SetGlobalCFunction("cfunction", nullptr))));
+            // Boolean
+            REQUIRE(std::isnan(L.NumVal(L.True)));
+            REQUIRE(std::isnan(L.NumVal(L.False)));
+        }
+    }
+
+    SECTION("to bool") {
+        SECTION("should preserve booleans, convert nil to false, and other non-booleans to true") {
+            // Nil
+            REQUIRE_FALSE(L.BoolVal(L.Nil));
+            // Number
+            REQUIRE(L.BoolVal(L.MakeNumber(42)));
+            // Symbol
+            REQUIRE(L.BoolVal(L.SymbolRef("SYMBOL")));
+            // Cons
+            REQUIRE(L.BoolVal(L.Cons(L.MakeNumber(1), L.MakeNumber(2))));
+            // CFunction
+            REQUIRE(L.BoolVal(L.SetGlobalCFunction("cfunction", nullptr)));
+            // Boolean
+            REQUIRE(L.BoolVal(L.True));
+            REQUIRE_FALSE(L.BoolVal(L.False));
         }
     }
 
@@ -182,9 +208,18 @@ TEST_CASE("LispInterpreter::Eval()") {
 
     procdraw::LispInterpreter L;
 
+    SECTION("Nil") {
+        REQUIRE(L.Null(L.Eval(L.Nil, L.Nil)));
+    }
+
     SECTION("Number") {
         auto result = L.Eval(L.MakeNumber(42), L.Nil);
         REQUIRE(L.NumVal(result) == 42);
+    }
+
+    SECTION("Booleans") {
+        REQUIRE(L.BoolVal(L.Eval(L.True, L.Nil)));
+        REQUIRE_FALSE(L.BoolVal(L.Eval(L.False, L.Nil)));
     }
 
     SECTION("Retrieve undefined") {

@@ -127,4 +127,16 @@ TEST_CASE("LispReader") {
         REQUIRE(L.NumVal(L.Car(L.Cdr(L.Cdr(c)))) == 20);
     }
 
+    SECTION("true") {
+        auto obj = reader.Read(&L, "true");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Boolean);
+        REQUIRE(L.BoolVal(obj));
+    }
+
+    SECTION("false") {
+        auto obj = reader.Read(&L, "false");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Boolean);
+        REQUIRE_FALSE(L.BoolVal(obj));
+    }
+
 }
