@@ -41,6 +41,7 @@ Existing Languages and Software Systems
 - [Impromptu](http://impromptu.moso.com.au/)
 - [ixi lang](http://www.ixi-audio.net/)
 - Joy
+- LambdaMOO
 - [Light Table](http://www.lighttable.com/)
 - [LiveCodeLab](http://livecodelab.net/)
 - [Lively Kernel](http://lively-kernel.org/)
