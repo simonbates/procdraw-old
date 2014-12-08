@@ -13,12 +13,12 @@ Types
 Special-forms and functions
 ---------------------------
 
-- (* ...)
-- (+ ...)
-- (- number ...)
-- (/ number ...)
-- (apply function argument-list)
-- (lambda arg-list body)
-- (progn action ...)
-- (quote arg)
-- (setq identifier value)
+- `(* ...)`
+- `(+ ...)`
+- `(- number ...)`
+- `(/ number ...)`
+- `(apply function argument-list)`
+- `(lambda arg-list body)`
+- `(progn action ...)`
+- `(quote arg)`
+- `(setq identifier value)`
