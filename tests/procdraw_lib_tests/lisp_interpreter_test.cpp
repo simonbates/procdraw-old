@@ -209,21 +209,21 @@ TEST_CASE("LispInterpreter::Eval()") {
     procdraw::LispInterpreter L;
 
     SECTION("Nil") {
-        REQUIRE(L.Null(L.Eval(L.Nil, L.Nil)));
+        REQUIRE(L.Null(L.Eval(L.Nil)));
     }
 
     SECTION("Number") {
-        auto result = L.Eval(L.MakeNumber(42), L.Nil);
+        auto result = L.Eval(L.MakeNumber(42));
         REQUIRE(L.NumVal(result) == 42);
     }
 
     SECTION("Booleans") {
-        REQUIRE(L.BoolVal(L.Eval(L.True, L.Nil)));
-        REQUIRE_FALSE(L.BoolVal(L.Eval(L.False, L.Nil)));
+        REQUIRE(L.BoolVal(L.Eval(L.True)));
+        REQUIRE_FALSE(L.BoolVal(L.Eval(L.False)));
     }
 
     SECTION("Retrieve undefined") {
-        REQUIRE(L.Null(L.Eval(L.SymbolRef("a"), L.Nil)));
+        REQUIRE(L.Null(L.Eval(L.SymbolRef("a"))));
     }
 
     SECTION("Retrieve number") {
@@ -233,16 +233,16 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("QUOTE") {
-        auto result = L.Eval(L.Read("(quote 42)"), L.Nil);
+        auto result = L.Eval(L.Read("(quote 42)"));
         REQUIRE(L.NumVal(result) == 42);
     }
 
     SECTION("SUM") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(+)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2)"), L.Nil)) == 2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3)"), L.Nil)) == 5);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3 4)"), L.Nil)) == 9);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 0)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2)"))) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3)"))) == 5);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3 4)"))) == 9);
     }
 
     SECTION("SUM with subexpressions") {
@@ -256,29 +256,29 @@ TEST_CASE("LispInterpreter::Eval()") {
     }
 
     SECTION("DIFFERENCE") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(-)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(- 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(- 2)"), L.Nil)) == -2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2)"), L.Nil)) == 3);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2 7)"), L.Nil)) == -4);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(-)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 0)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 2)"))) == -2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2)"))) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2 7)"))) == -4);
     }
 
     SECTION("PRODUCT") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(*)"), L.Nil)) == 1);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(* 0)"), L.Nil)) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(* 1)"), L.Nil)) == 1);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2)"), L.Nil)) == 2);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3)"), L.Nil)) == 6);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3 4)"), L.Nil)) == 24);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(*)"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 0)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 1)"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2)"))) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3)"))) == 6);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3 4)"))) == 24);
     }
 
     SECTION("QUOTIENT") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(/)"), L.Nil)) == 1);
-        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 0)"), L.Nil))));
-        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 1 0)"), L.Nil))));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 2)"), L.Nil)) == 0.5);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 8 5)"), L.Nil)) == 1.6);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 360 4 3)"), L.Nil)) == 30);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/)"))) == 1);
+        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 0)")))));
+        REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 1 0)")))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 2)"))) == 0.5);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 8 5)"))) == 1.6);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 360 4 3)"))) == 30);
     }
 
     SECTION("LAMBDA expression evaluates to itself") {
