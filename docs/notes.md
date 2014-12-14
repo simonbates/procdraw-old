@@ -84,6 +84,7 @@ Existing Languages and Software Systems
 - [Tidal](http://yaxu.org/tidal/)
 - [TouchDesigner](https://www.derivative.ca/)
 - [TouchOSC](http://hexler.net/software/touchosc)
+- Twine
 - Unix [@kernighan:1984]
 - [vvvv](http://vvvv.org/)
 
