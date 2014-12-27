@@ -18,6 +18,7 @@ Existing Languages and Software Systems
 - [CEPL](https://github.com/cbaggers/cepl)
 - [Cinder](http://libcinder.org/)
 - [ChucK](http://chuck.cs.princeton.edu/)
+- [CodeChisel3D](http://robert.kra.hn/projects/live-programming-with-three-and-webvr)
 - [Common Music](http://commonmusic.sourceforge.net/)
 - [Conception](https://github.com/shurcooL/Conception)
 - [Context Free](http://www.contextfreeart.org/)
@@ -38,6 +39,7 @@ Existing Languages and Software Systems
 - GRAP
 - GRASS
 - HyperCard
+- [Icosa](http://forum.makega.me/t/icosa-art-creation-toy-wip-updated/1109)
 - [Impromptu](http://impromptu.moso.com.au/)
 - [ixi lang](http://www.ixi-audio.net/)
 - Joy
@@ -48,6 +50,7 @@ Existing Languages and Software Systems
 - Logo [@papert:1971:246]
 - [LÖVE](http://love2d.org/)
 - [LuaAV](http://lua-av.mat.ucsb.edu/)
+- [MagicaVoxel](https://voxel.codeplex.com/)
 - [Max](http://cycling74.com/products/max/)
 - [Minecraft](https://minecraft.net/)
 - Jeff Minter's Lightsynths
@@ -108,6 +111,18 @@ Some Lisps
 
 Language design for live programming
 ------------------------------------
+
+### Units of program composition
+
+- function/procedure
+- generator
+- filter
+- object
+- component
+- inheritance
+- mixin
+- trait
+- module
 
 ### Errors
 
