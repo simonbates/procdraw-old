@@ -328,4 +328,62 @@ TEST_CASE("LispInterpreter::Eval") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"))) == 42);
     }
 
+    SECTION("CAR") {
+        REQUIRE(L.Null(L.Eval(L.Read("(car nil)"))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(car (quote (1 . 2)))"))) == 1);
+    }
+
+    SECTION("CDR") {
+        REQUIRE(L.Null(L.Eval(L.Read("(cdr nil)"))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(cdr (quote (1 . 2)))"))) == 2);
+    }
+
+    SECTION("EQ") {
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(eq 42 42)"))));
+        REQUIRE_FALSE(L.BoolVal(L.Eval(L.Read("(eq 1 2)"))));
+    }
+
+    SECTION("IF") {
+        auto env = L.MakeList({
+            L.Cons(L.SymbolRef("a"), L.MakeNumber(1)),
+            L.Cons(L.SymbolRef("b"), L.MakeNumber(2))
+        });
+
+        SECTION("true with else") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(if (eq 42 42) (setq a 10) (setq b 20))"), env)) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("a"), env)) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("b"), env)) == 2);
+        }
+
+        SECTION("true without else") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(if (eq 42 42) (setq a 10))"), env)) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("a"), env)) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("b"), env)) == 2);
+        }
+
+        SECTION("false with else") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(if (eq 1 2) (setq a 10) (setq b 20))"), env)) == 20);
+            REQUIRE(L.NumVal(L.Eval(L.Read("a"), env)) == 1);
+            REQUIRE(L.NumVal(L.Eval(L.Read("b"), env)) == 20);
+        }
+
+        SECTION("false without else") {
+            REQUIRE(L.Null(L.Eval(L.Read("(if (eq 1 2) (setq a 10))"), env)));
+            REQUIRE(L.NumVal(L.Eval(L.Read("a"), env)) == 1);
+            REQUIRE(L.NumVal(L.Eval(L.Read("b"), env)) == 2);
+        }
+    }
+
+    SECTION("Recursion") {
+        auto exp = R"(
+            (progn
+                (setq f (lambda (n)
+                    (if (eq n 0)
+                        1
+                        (* n (f (- n 1))))))
+                (f 5))
+        )";
+        REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
+    }
+
 }

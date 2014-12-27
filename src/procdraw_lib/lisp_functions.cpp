@@ -17,6 +17,18 @@ namespace procdraw {
         return L->Apply(L->Car(args), L->Cadr(args), env);
     }
 
+    LispObjectPtr lisp_Car(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        return L->Caar(args);
+    }
+
+    LispObjectPtr lisp_Cdr(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        return L->Cdar(args);
+    }
+
     LispObjectPtr lisp_Difference(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         // TODO difference with 0 args? return a value or complain that not enough args?
@@ -36,6 +48,12 @@ namespace procdraw {
         // 2 or more args
         REDUCE_NUM(L, difference, x, difference - x, n);
         return L->MakeNumber(difference);
+    }
+
+    LispObjectPtr lisp_Eq(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        return L->Eq(L->Car(args), L->Cadr(args)) ? L->True : L->False;
     }
 
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)

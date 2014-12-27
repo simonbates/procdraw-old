@@ -9,6 +9,7 @@ namespace procdraw {
         InitSymbolLiterals();
         symbols_ = Nil;
         // Special forms
+        S_IF = SymbolRef("if");
         S_LAMBDA = SymbolRef("lambda");
         S_PROGN = SymbolRef("progn");
         S_QUOTE = SymbolRef("quote");
@@ -19,6 +20,9 @@ namespace procdraw {
         SetGlobalCFunction("-", lisp_Difference);
         SetGlobalCFunction("/", lisp_Quotient);
         SetGlobalCFunction("apply", lisp_Apply);
+        SetGlobalCFunction("car", lisp_Car);
+        SetGlobalCFunction("cdr", lisp_Cdr);
+        SetGlobalCFunction("eq", lisp_Eq);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }
@@ -89,9 +93,19 @@ namespace procdraw {
         return env;
     }
 
+    LispObjectPtr LispInterpreter::Caar(LispObjectPtr obj)
+    {
+        return Car(Car(obj));
+    }
+
     LispObjectPtr LispInterpreter::Cadr(LispObjectPtr obj)
     {
         return Car(Cdr(obj));
+    }
+
+    LispObjectPtr LispInterpreter::Cdar(LispObjectPtr obj)
+    {
+        return Cdr(Car(obj));
     }
 
     LispObjectPtr LispInterpreter::Caddr(LispObjectPtr obj)
@@ -113,7 +127,10 @@ namespace procdraw {
         }
         else {
             auto first = Car(exp);
-            if (Eq(first, S_LAMBDA)) {
+            if (Eq(first, S_IF)) {
+                return Evif(Cdr(exp), env);
+            }
+            else if (Eq(first, S_LAMBDA)) {
                 return exp;
             }
             else if (Eq(first, S_PROGN)) {
@@ -136,6 +153,15 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp)
     {
         return Eval(exp, Nil);
+    }
+
+    LispObjectPtr LispInterpreter::Evif(LispObjectPtr arglist, LispObjectPtr env) {
+        if (BoolVal(Eval(Car(arglist), env))) {
+            return Eval(Cadr(arglist), env);
+        }
+        else {
+            return Eval(Caddr(arglist), env);
+        }
     }
 
     LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env) {
