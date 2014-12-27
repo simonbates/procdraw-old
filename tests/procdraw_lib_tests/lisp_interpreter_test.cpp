@@ -204,37 +204,34 @@ TEST_CASE("LispInterpreter implicit type conversion") {
 
 }
 
-TEST_CASE("LispInterpreter::Eval()") {
+TEST_CASE("LispInterpreter::Eval") {
 
     procdraw::LispInterpreter L;
 
-    SECTION("Nil") {
+    SECTION("should evaluate NIL to itself") {
         REQUIRE(L.Null(L.Eval(L.Nil)));
     }
 
-    SECTION("Number") {
-        auto result = L.Eval(L.MakeNumber(42));
-        REQUIRE(L.NumVal(result) == 42);
+    SECTION("should evaluate a number to itself") {
+        REQUIRE(L.NumVal(L.Eval(L.MakeNumber(42))) == 42);
     }
 
-    SECTION("Booleans") {
+    SECTION("should evaluate booleans to themselves") {
         REQUIRE(L.BoolVal(L.Eval(L.True)));
         REQUIRE_FALSE(L.BoolVal(L.Eval(L.False)));
     }
 
-    SECTION("Retrieve undefined") {
+    SECTION("should evaluate an unbound symbol to nil") {
         REQUIRE(L.Null(L.Eval(L.SymbolRef("a"))));
     }
 
-    SECTION("Retrieve number") {
+    SECTION("should evaluate a bound symbol to the bound value") {
         auto env = L.MakeList({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
-        auto result = L.Eval(L.SymbolRef("a"), env);
-        REQUIRE(L.NumVal(result) == 42);
+        REQUIRE(L.NumVal(L.Eval(L.SymbolRef("a"), env)) == 42);
     }
 
     SECTION("QUOTE") {
-        auto result = L.Eval(L.Read("(quote 42)"));
-        REQUIRE(L.NumVal(result) == 42);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(quote 42)"))) == 42);
     }
 
     SECTION("SUM") {
@@ -251,8 +248,7 @@ TEST_CASE("LispInterpreter::Eval()") {
             L.Cons(L.SymbolRef("b"), L.MakeNumber(2)),
             L.Cons(L.SymbolRef("c"), L.MakeNumber(4))
         });
-        auto result = L.Eval(L.Read("(+ (+ a b 8) 16 c)"), env);
-        REQUIRE(L.NumVal(result) == 31);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(+ (+ a b 8) 16 c)"), env)) == 31);
     }
 
     SECTION("DIFFERENCE") {
@@ -281,27 +277,23 @@ TEST_CASE("LispInterpreter::Eval()") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(/ 360 4 3)"))) == 30);
     }
 
-    SECTION("LAMBDA expression evaluates to itself") {
-        auto result = L.Eval(L.Read("(lambda (n) (+ n 1))"));
-        REQUIRE(L.PrintString(result) == "(lambda (n) (+ n 1))");
+    SECTION("should evaluate a LAMBDA expression to itself") {
+        REQUIRE(L.PrintString(L.Eval(L.Read("(lambda (n) (+ n 1))"))) == "(lambda (n) (+ n 1))");
     }
 
     SECTION("LAMBDA call no args") {
-        auto result = L.Eval(L.Read("((lambda () (+ 1 2)))"));
-        REQUIRE(L.NumVal(result) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda () (+ 1 2)))"))) == 3);
     }
 
     SECTION("LAMBDA call 1 arg") {
-        auto result = L.Eval(L.Read("((lambda (n) (+ n 1)) 1)"));
-        REQUIRE(L.NumVal(result) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (n) (+ n 1)) 1)"))) == 2);
     }
 
     SECTION("LAMBDA call 2 args") {
-        auto result = L.Eval(L.Read("((lambda (m n) (+ m n 10)) 30 2)"));
-        REQUIRE(L.NumVal(result) == 42);
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (m n) (+ m n 10)) 30 2)"))) == 42);
     }
 
-    SECTION("PROGN") {
+    SECTION("PROGN should return the value of the last expression") {
         REQUIRE(L.Null(L.Eval(L.Read("(progn)"))));
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1)"))) == 1);
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3)"))) == 3);
@@ -311,37 +303,29 @@ TEST_CASE("LispInterpreter::Eval()") {
     SECTION("SETQ top level") {
         auto setqReturn = L.Eval(L.Read("(setq a 10)"));
         REQUIRE(L.NumVal(setqReturn) == 10);
-        auto aVal = L.Eval(L.Read("a"));
-        REQUIRE(L.NumVal(aVal) == 10);
+        REQUIRE(L.NumVal(L.Eval(L.Read("a"))) == 10);
     }
 
-    SECTION("SETQ in LAMBDA") {
+    SECTION("SETQ in LAMBDA should modify the environment") {
         auto setqReturn = L.Eval(L.Read("(setq a 1)"));
         REQUIRE(L.NumVal(setqReturn) == 1);
         L.Eval(L.Read("(setq f (lambda (a) (progn (setq b a) (setq a 3) (setq c a))))"));
-        auto fReturn = L.Eval(L.Read("(f 2)"));
-        REQUIRE(L.NumVal(fReturn) == 3);
-        auto aVal = L.Eval(L.Read("a"));
-        REQUIRE(L.NumVal(aVal) == 1);
-        auto bVal = L.Eval(L.Read("b"));
-        REQUIRE(L.NumVal(bVal) == 2);
-        auto cVal = L.Eval(L.Read("c"));
-        REQUIRE(L.NumVal(cVal) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(f 2)"))) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("a"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("b"))) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("c"))) == 3);
     }
 
     SECTION("APPLY no args") {
-        auto result = L.Eval(L.Read("(apply (lambda () (+ 1 2)) (quote ()))"));
-        REQUIRE(L.NumVal(result) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(apply (lambda () (+ 1 2)) (quote ()))"))) == 3);
     }
 
     SECTION("APPLY 1 arg") {
-        auto result = L.Eval(L.Read("(apply (lambda (n) (+ n 1)) (quote (1)))"));
-        REQUIRE(L.NumVal(result) == 2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(apply (lambda (n) (+ n 1)) (quote (1)))"))) == 2);
     }
 
     SECTION("APPLY 2 args") {
-        auto result = L.Eval(L.Read("(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"));
-        REQUIRE(L.NumVal(result) == 42);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"))) == 42);
     }
 
 }
