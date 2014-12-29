@@ -4,6 +4,7 @@
 #include "d3d11graphics.h"
 #include "workspace.h"
 #include "lisp_interpreter.h"
+#include "frame_counter.h"
 #include <string>
 #include <memory>
 
@@ -19,7 +20,7 @@ namespace procdraw {
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         int MainLoop();
         void DoCommand(const std::string &cmd) override;
-        long FrameCount();
+        double FramesPerSecond();
         float Width();
         float Height();
         float MouseX();
@@ -32,7 +33,7 @@ namespace procdraw {
         std::unique_ptr<D3D11Graphics> graphics_;
         std::unique_ptr<Workspace> workspace_;
         std::unique_ptr<Workspace> transcript_;
-        long frameCount_;
+        FrameCounter frameCounter_;
         LispInterpreter L_;
         void CreateAppWindow();
         void CreateAccelTable();

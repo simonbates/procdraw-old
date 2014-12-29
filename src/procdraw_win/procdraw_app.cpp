@@ -10,8 +10,7 @@ namespace procdraw {
         hInstance_(hInstance),
         nCmdShow_(nCmdShow),
         hWnd_(nullptr),
-        hAccel_(nullptr),
-        frameCount_(0)
+        hAccel_(nullptr)
     {
         CreateAppWindow();
 
@@ -43,7 +42,7 @@ namespace procdraw {
             else {
                 Draw();
                 graphics_->Present();
-                ++frameCount_;
+                frameCounter_.RecordFrame();
             }
         }
         return (int)msg.wParam;
@@ -61,9 +60,9 @@ namespace procdraw {
         transcript_->AddLine(val);
     }
 
-    long ProcDrawApp::FrameCount()
+    double ProcDrawApp::FramesPerSecond()
     {
-        return frameCount_;
+        return frameCounter_.GetFramesPerSecond();
     }
 
     float ProcDrawApp::Width()

@@ -5,19 +5,24 @@ namespace procdraw {
 
     static ProcDrawApp *app;
 
+    static LispObjectPtr lisp_FramesPerSecond(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return L->MakeNumber(app->FramesPerSecond());
+    }
+
     static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return(L->MakeNumber(app->MouseX()));
+        return L->MakeNumber(app->MouseX());
     }
 
     static LispObjectPtr lisp_MouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return(L->MakeNumber(app->MouseY()));
+        return L->MakeNumber(app->MouseY());
     }
 
     static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return(L->MakeNumber(app->Width()));
+        return L->MakeNumber(app->Width());
     }
 
     // Graphics
@@ -49,6 +54,7 @@ namespace procdraw {
     void RegisterProcDrawAppFunctionsForLisp(ProcDrawApp *a, LispInterpreter *L)
     {
         app = a;
+        L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond);
         L->SetGlobalCFunction("mousex", lisp_MouseX);
         L->SetGlobalCFunction("mousey", lisp_MouseY);
         L->SetGlobalCFunction("background", lisp_Background);
