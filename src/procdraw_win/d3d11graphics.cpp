@@ -152,7 +152,7 @@ namespace procdraw {
     {
         // Create shader
 
-        ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "vertex_shader", "vs_5_0");
+        ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "vertex_shader", "vs_4_0");
         ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
             vs->GetBufferSize(), nullptr, &vertexShader_));
         d3dContext_->VSSetShader(vertexShader_, 0, 0);
@@ -174,7 +174,7 @@ namespace procdraw {
 
     void D3D11Graphics::CreatePixelShader()
     {
-        ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "pixel_shader", "ps_5_0");
+        ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "pixel_shader", "ps_4_0");
         ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
             ps->GetBufferSize(), nullptr, &pixelShader_));
         d3dContext_->PSSetShader(pixelShader_, 0, 0);
