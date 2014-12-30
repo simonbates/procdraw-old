@@ -220,6 +220,8 @@ Circuit bending, data bending, and visualization
 Data formats
 ------------
 
+### Image formats
+
 - [ExtraFile](http://extrafile.org/)
 - GIF
 - JPEG
@@ -230,6 +232,11 @@ Data formats
     - [PAM](http://netpbm.sourceforge.net/doc/pam.html)
 - PNG
 - TIFF
+
+### Polygon mesh formats
+
+- OBJ
+- [PLY](http://paulbourke.net/dataformats/ply/)
 
 Hardware
 --------
