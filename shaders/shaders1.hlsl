@@ -1,31 +1,31 @@
 cbuffer CBufferPerObject
 {
-    float4x4 WorldViewProjection;
+    row_major float4x4 WorldViewProjection;
 }
 
-struct VS_INPUT
+struct VertexShaderInput
 {
-    float4 ObjectPosition : POSITION;
-    float4 Color : COLOR;
+    float4 pos : POSITION;
+    float4 color : COLOR;
 };
 
-struct VS_OUTPUT
+struct VertexShaderOutput
 {
-    float4 Position : SV_Position;
-    float4 Color : COLOR;
+    float4 pos : SV_Position;
+    float4 color : COLOR;
 };
 
-VS_OUTPUT vertex_shader(VS_INPUT IN)
+VertexShaderOutput vertex_shader(VertexShaderInput input)
 {
-    VS_OUTPUT OUT = (VS_OUTPUT)0;
+    VertexShaderOutput output;
 
-    OUT.Position = mul(IN.ObjectPosition, WorldViewProjection);
-    OUT.Color = IN.Color;
+    output.pos = mul(input.pos, WorldViewProjection);
+    output.color = input.color;
 
-    return OUT;
+    return output;
 }
 
-float4 pixel_shader(VS_OUTPUT IN): SV_Target
+float4 pixel_shader(VertexShaderOutput input) : SV_Target
 {
-    return IN.Color;
+    return input.color;
 }

@@ -19,6 +19,10 @@ namespace procdraw {
         CreateConstantBuffer();
 
         CreateTriangleVertexBuffer();
+        CreateTetrahedronVertexBuffer();
+
+        InitViewProjectionMatrix();
+        ResetMatrix();
     }
 
     D3D11Graphics::~D3D11Graphics()
@@ -32,6 +36,7 @@ namespace procdraw {
         Hsv2Rgb(h, s, v, r, g, b);
         FLOAT c[4] = { r, g, b, 1.0f };
         d3dContext_->ClearRenderTargetView(renderTargetView_, c);
+        ResetMatrix();
     }
 
     void D3D11Graphics::Present()
@@ -41,6 +46,8 @@ namespace procdraw {
 
     void D3D11Graphics::Triangle()
     {
+        UpdateConstantBuffer();
+
         d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         UINT stride = sizeof(ShaderVertex);
@@ -50,16 +57,38 @@ namespace procdraw {
         d3dContext_->Draw(3, 0);
     }
 
-    void D3D11Graphics::Rotate(float angle)
+    void D3D11Graphics::Tetrahedron()
     {
-        DirectX::XMStoreFloat4x4(&cbData_.WorldViewProjection, DirectX::XMMatrixRotationZ(angle));
+        UpdateConstantBuffer();
 
-        D3D11_MAPPED_SUBRESOURCE mappedResource;
-        ZeroMemory(&mappedResource, sizeof(mappedResource));
+        d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        ThrowOnFail(d3dContext_->Map(constantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-        memcpy(mappedResource.pData, &cbData_, sizeof(cbData_));
-        d3dContext_->Unmap(constantBuffer_, 0);
+        UINT stride = sizeof(ShaderVertex);
+        UINT offset = 0;
+        d3dContext_->IASetVertexBuffers(0, 1, &tetrahedronVertexBuffer_.GetInterfacePtr(), &stride, &offset);
+
+        d3dContext_->Draw(12, 0);
+    }
+
+    void D3D11Graphics::RotateX(float angle)
+    {
+        auto rotationMatrix = DirectX::XMMatrixRotationX(angle);
+        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
+        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
+    }
+
+    void D3D11Graphics::RotateY(float angle)
+    {
+        auto rotationMatrix = DirectX::XMMatrixRotationY(angle);
+        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
+        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
+    }
+
+    void D3D11Graphics::RotateZ(float angle)
+    {
+        auto rotationMatrix = DirectX::XMMatrixRotationZ(angle);
+        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
+        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
     }
 
     void D3D11Graphics::InitD3D()
@@ -119,6 +148,8 @@ namespace procdraw {
             reinterpret_cast<void**>(&backBuffer_)));
 
         ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_, nullptr, &renderTargetView_));
+
+        // Configure Output-Merger
 
         d3dContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), nullptr);
 
@@ -198,21 +229,11 @@ namespace procdraw {
         d3dContext_->VSSetConstantBuffers(0, 1, &constantBuffer_.GetInterfacePtr());
     }
 
-    void D3D11Graphics::CreateTriangleVertexBuffer()
+    ID3D11BufferPtr D3D11Graphics::CreateVertexBuffer(ShaderVertex *vertices, int numVertices)
     {
-        ShaderVertex vertices[] =
-        {
-            ShaderVertex(DirectX::XMFLOAT4(-0.8f, 0.8f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
-            ShaderVertex(DirectX::XMFLOAT4(0.8f, -0.8f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
-            ShaderVertex(DirectX::XMFLOAT4(-0.8f, -0.8f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
-        };
-
         D3D11_BUFFER_DESC vertexBufferDesc;
         ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-        vertexBufferDesc.ByteWidth = sizeof(ShaderVertex) * ARRAYSIZE(vertices);
+        vertexBufferDesc.ByteWidth = sizeof(ShaderVertex) * numVertices;
         vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -220,8 +241,93 @@ namespace procdraw {
         ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
         vertexSubresourceData.pSysMem = vertices;
 
+        ID3D11BufferPtr vertexBuffer;
         ThrowOnFail(d3dDevice_->CreateBuffer(&vertexBufferDesc,
-            &vertexSubresourceData, &triangleVertexBuffer_));
+            &vertexSubresourceData, &vertexBuffer));
+
+        return vertexBuffer;
+    }
+
+    void D3D11Graphics::CreateTriangleVertexBuffer()
+    {
+        ShaderVertex vertices[] =
+        {
+            ShaderVertex(DirectX::XMFLOAT4(-1.0f, 1.0f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
+            ShaderVertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
+            ShaderVertex(DirectX::XMFLOAT4(-1.0f, -1.0f, 0.0f, 1.0f),
+                DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
+        };
+
+        triangleVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
+    }
+
+    void D3D11Graphics::CreateTetrahedronVertexBuffer()
+    {
+        auto vertex1 = DirectX::XMFLOAT4(1, 0, -M_SQRT1_2, 1);
+        auto vertex2 = DirectX::XMFLOAT4(0, 1, M_SQRT1_2, 1);
+        auto vertex3 = DirectX::XMFLOAT4(0, -1, M_SQRT1_2, 1);
+        auto vertex4 = DirectX::XMFLOAT4(-1, 0, -M_SQRT1_2, 1);
+
+        auto red = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+        auto green = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        auto blue = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+        auto yellow = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
+
+        ShaderVertex vertices[] =
+        {
+            ShaderVertex(vertex1, red),
+            ShaderVertex(vertex4, red),
+            ShaderVertex(vertex2, red),
+            ShaderVertex(vertex1, blue),
+            ShaderVertex(vertex3, blue),
+            ShaderVertex(vertex4, blue),
+            ShaderVertex(vertex1, green),
+            ShaderVertex(vertex2, green),
+            ShaderVertex(vertex3, green),
+            ShaderVertex(vertex2, yellow),
+            ShaderVertex(vertex4, yellow),
+            ShaderVertex(vertex3, yellow)
+        };
+
+        tetrahedronVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
+    }
+
+    void D3D11Graphics::InitViewProjectionMatrix()
+    {
+        // TODO move the View-Projection matrix to its own 'camera' class
+
+        // View
+        auto eye = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
+        auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+        auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+        auto viewMatrix = DirectX::XMMatrixLookAtLH(eye, at, up);
+
+        // Projection
+        // TODO angle of view?
+        auto projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, 1.0f, 1.0f, 100.0f);
+
+        // View-Projection
+        DirectX::XMStoreFloat4x4(&viewProjectionMatrix_, viewMatrix * projectionMatrix);
+    }
+
+    void D3D11Graphics::ResetMatrix()
+    {
+        matrix_ = viewProjectionMatrix_;
+    }
+
+    void D3D11Graphics::UpdateConstantBuffer()
+    {
+        // TODO remove matrix_ and just use cbData_.WorldViewProjection?
+        cbData_.WorldViewProjection = matrix_;
+
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        ZeroMemory(&mappedResource, sizeof(mappedResource));
+
+        ThrowOnFail(d3dContext_->Map(constantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+        memcpy(mappedResource.pData, &cbData_, sizeof(cbData_));
+        d3dContext_->Unmap(constantBuffer_, 0);
     }
 
 }

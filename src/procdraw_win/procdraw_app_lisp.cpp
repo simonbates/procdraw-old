@@ -37,11 +37,33 @@ namespace procdraw {
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Rotate(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         // TODO check number and type of args
         auto angle = L->Car(args);
-        app->Graphics()->Rotate(L->NumVal(angle));
+        app->Graphics()->RotateX(L->NumVal(angle));
+        return L->Nil;
+    }
+
+    static LispObjectPtr lisp_RotateY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number and type of args
+        auto angle = L->Car(args);
+        app->Graphics()->RotateY(L->NumVal(angle));
+        return L->Nil;
+    }
+
+    static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number and type of args
+        auto angle = L->Car(args);
+        app->Graphics()->RotateZ(L->NumVal(angle));
+        return L->Nil;
+    }
+
+    static LispObjectPtr lisp_Tetrahedron(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        app->Graphics()->Tetrahedron();
         return L->Nil;
     }
 
@@ -55,12 +77,16 @@ namespace procdraw {
     {
         app = a;
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond);
-        L->SetGlobalCFunction("mousex", lisp_MouseX);
-        L->SetGlobalCFunction("mousey", lisp_MouseY);
-        L->SetGlobalCFunction("background", lisp_Background);
-        L->SetGlobalCFunction("rotate", lisp_Rotate);
-        L->SetGlobalCFunction("triangle", lisp_Triangle);
+        L->SetGlobalCFunction("mouse-x", lisp_MouseX);
+        L->SetGlobalCFunction("mouse-y", lisp_MouseY);
         L->SetGlobalCFunction("width", lisp_Width);
+        // Graphics
+        L->SetGlobalCFunction("background", lisp_Background);
+        L->SetGlobalCFunction("rotate-x", lisp_RotateX);
+        L->SetGlobalCFunction("rotate-y", lisp_RotateY);
+        L->SetGlobalCFunction("rotate-z", lisp_RotateZ);
+        L->SetGlobalCFunction("tetrahedron", lisp_Tetrahedron);
+        L->SetGlobalCFunction("triangle", lisp_Triangle);
     }
 
 }

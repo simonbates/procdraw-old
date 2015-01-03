@@ -40,7 +40,10 @@ namespace procdraw {
         void Background(float h, float s, float v);
         void Present();
         void Triangle();
-        void Rotate(float angle);
+        void Tetrahedron();
+        void RotateX(float angle);
+        void RotateY(float angle);
+        void RotateZ(float angle);
     private:
         HWND hWnd_;
         D3D_FEATURE_LEVEL d3dFeatureLevel_;
@@ -55,13 +58,21 @@ namespace procdraw {
         CBufferPerObject cbData_;
         ID3D11BufferPtr constantBuffer_;
         ID3D11BufferPtr triangleVertexBuffer_;
+        ID3D11BufferPtr tetrahedronVertexBuffer_;
+        DirectX::XMFLOAT4X4 viewProjectionMatrix_;
+        DirectX::XMFLOAT4X4 matrix_;
         void InitD3D();
         ID3D10BlobPtr CompileShaderFromFile(_In_ LPCWSTR pFileName,
             _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
         void CreateVertexShader();
         void CreatePixelShader();
         void CreateConstantBuffer();
+        ID3D11BufferPtr CreateVertexBuffer(ShaderVertex *vertices, int numVertices);
         void CreateTriangleVertexBuffer();
+        void CreateTetrahedronVertexBuffer();
+        void InitViewProjectionMatrix();
+        void ResetMatrix();
+        void UpdateConstantBuffer();
     };
 
 }
