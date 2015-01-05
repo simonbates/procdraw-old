@@ -1,6 +1,10 @@
 ProcDraw
 ========
 
+ProcDraw is a work-in-progress live programming system for Windows with an interpreter for a Lisp-like language.
+
+Videos: https://vimeo.com/channels/858277
+
 Source code layout
 ------------------
 
@@ -43,6 +47,8 @@ To run the tests in Visual Studio:
 
 Building on Linux
 -----------------
+
+The ProcDraw graphics and GUI are Windows-only but the language core and other platform-independent code can be built on Linux (and other platforms too hopefully, but I only test Linux).
 
 Dependencies:
 
