@@ -26,3 +26,16 @@ Special-forms and functions
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`
+
+Graphics
+--------
+
+- `(background h s v)`
+- `(frames-per-second)`
+- `(mouse-x)`
+- `(mouse-y)`
+- `(rotate-x angle)`
+- `(rotate-y angle)`
+- `(rotate-z angle)`
+- `(tetrahedron)`
+- `(width)`
