@@ -23,6 +23,7 @@ namespace procdraw {
         SetGlobalCFunction("car", lisp_Car);
         SetGlobalCFunction("cdr", lisp_Cdr);
         SetGlobalCFunction("eq", lisp_Eq);
+        SetGlobalCFunction("map-range", lisp_MapRange);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }
@@ -111,6 +112,16 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Caddr(LispObjectPtr obj)
     {
         return Car(Cdr(Cdr(obj)));
+    }
+
+    LispObjectPtr LispInterpreter::Cadddr(LispObjectPtr obj)
+    {
+        return Car(Cdr(Cdr(Cdr(obj))));
+    }
+
+    LispObjectPtr LispInterpreter::Caddddr(LispObjectPtr obj)
+    {
+        return Car(Cdr(Cdr(Cdr(Cdr(obj)))));
     }
 
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)

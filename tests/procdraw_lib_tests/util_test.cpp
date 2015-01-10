@@ -29,6 +29,26 @@ TEST_CASE("Clamp") {
 
 }
 
+TEST_CASE("MapRange") {
+
+    SECTION("should map values as expected given the ranges [0, 10] and [-1, 0]") {
+        REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 0.0) == -1.0);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 2.5) == -0.75);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 5.0) == -0.5);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 7.5) == -0.25);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 10.0) == 0.0);
+    }
+
+    SECTION("should map values as expected given the ranges [0, 10] and [1, -1]") {
+        REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 0.0) == 1.0);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 2.5) == 0.5);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 5.0) == 0.0);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 7.5) == -0.5);
+        REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 10.0) == -1.0);
+    }
+
+}
+
 TEST_CASE("SimpleMovingAverage") {
 
     procdraw::SimpleMovingAverage<int> sma(4);

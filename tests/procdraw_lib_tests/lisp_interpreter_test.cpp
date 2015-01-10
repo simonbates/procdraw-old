@@ -386,4 +386,24 @@ TEST_CASE("LispInterpreter::Eval") {
         REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
     }
 
+    SECTION("MAP-RANGE") {
+
+        SECTION("should map values as expected given the ranges [0, 10] and [-1, 0]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 0)"))) == -1.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 10 4))"))) == -0.75);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 5)"))) == -0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 30 4))"))) == -0.25);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 10)"))) == 0.0);
+        }
+
+        SECTION("should map values as expected given the ranges [0, 10] and [1, -1]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 0)"))) == 1.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 10 4))"))) == 0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 5)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 30 4))"))) == -0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 10)"))) == -1.0);
+        }
+
+    }
+
 }

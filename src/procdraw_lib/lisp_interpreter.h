@@ -45,6 +45,8 @@ namespace procdraw {
         LispObjectPtr Cadr(LispObjectPtr obj);
         LispObjectPtr Cdar(LispObjectPtr obj);
         LispObjectPtr Caddr(LispObjectPtr obj);
+        LispObjectPtr Cadddr(LispObjectPtr obj);
+        LispObjectPtr Caddddr(LispObjectPtr obj);
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Eval(LispObjectPtr exp);
         LispObjectPtr Evif(LispObjectPtr arglist, LispObjectPtr env);

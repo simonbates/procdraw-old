@@ -23,6 +23,7 @@ Special-forms and functions
 - `(eq obj1 obj2)`
 - `(if test then else)`
 - `(lambda arg-list body)`
+- `(map-range a1 a2 b1 b2 s)`
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`
