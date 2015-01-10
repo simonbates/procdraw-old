@@ -1,4 +1,5 @@
 $excludeDirs = ".git", "third_party", "build"
+$excludeFiles = ,"*.sublime-workspace"
 
 function Get-SourceFiles ($path = $pwd, $includes = (,"*"))
 {
@@ -14,6 +15,7 @@ function Get-SourceFiles ($path = $pwd, $includes = (,"*"))
         else
         {
             $includeItem = $false
+
             foreach ($includePattern in $includes)
             {
                 if ($item.Name -like $includePattern)
@@ -22,6 +24,16 @@ function Get-SourceFiles ($path = $pwd, $includes = (,"*"))
                     break
                 }
             }
+
+            foreach ($excludeFilePattern in $excludeFiles)
+            {
+                if ($item.Name -like $excludeFilePattern)
+                {
+                    $includeItem = $false
+                    break
+                }
+            }
+
             if ($includeItem)
             {
                 Write-Output $item
