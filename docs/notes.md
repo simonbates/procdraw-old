@@ -294,6 +294,7 @@ Journals, Conferences, and such
     - [POPL 2015 papers](https://github.com/yallop/popl2015-papers)
 - [PROCJAM](http://www.procjam.com/)
     - [PROCJAM 2014 talks](http://www.youtube.com/playlist?list=PLxGbBc3OuMgiHnQfqerWtgJRA3fMzasra)
+- [ReCode Project](http://recodeproject.com/)
 - [Resonate](http://resonate.io/)
 - [Roguelike Radio](http://www.roguelikeradio.com/)
 - [TOPLAP](http://toplap.org/)
