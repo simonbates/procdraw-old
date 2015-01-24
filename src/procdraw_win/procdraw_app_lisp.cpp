@@ -61,9 +61,29 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_Scale(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number and type of args
+        auto x = L->Car(args);
+        auto y = L->Cadr(args);
+        auto z = L->Caddr(args);
+        app->Graphics()->Scale(L->NumVal(x), L->NumVal(y), L->NumVal(z));
+        return L->Nil;
+    }
+
     static LispObjectPtr lisp_Tetrahedron(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         app->Graphics()->Tetrahedron();
+        return L->Nil;
+    }
+
+    static LispObjectPtr lisp_Translate(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number and type of args
+        auto x = L->Car(args);
+        auto y = L->Cadr(args);
+        auto z = L->Caddr(args);
+        app->Graphics()->Translate(L->NumVal(x), L->NumVal(y), L->NumVal(z));
         return L->Nil;
     }
 
@@ -85,7 +105,9 @@ namespace procdraw {
         L->SetGlobalCFunction("rotate-x", lisp_RotateX);
         L->SetGlobalCFunction("rotate-y", lisp_RotateY);
         L->SetGlobalCFunction("rotate-z", lisp_RotateZ);
+        L->SetGlobalCFunction("scale", lisp_Scale);
         L->SetGlobalCFunction("tetrahedron", lisp_Tetrahedron);
+        L->SetGlobalCFunction("translate", lisp_Translate);
         L->SetGlobalCFunction("triangle", lisp_Triangle);
     }
 

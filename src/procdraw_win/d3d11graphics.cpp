@@ -92,6 +92,20 @@ namespace procdraw {
         DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
+    void D3D11Graphics::Translate(float x, float y, float z)
+    {
+        auto translationMatrix = DirectX::XMMatrixTranslation(x, y, z);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&worldMatrix_, translationMatrix * worldMatrix);
+    }
+
+    void D3D11Graphics::Scale(float x, float y, float z)
+    {
+        auto scalingMatrix = DirectX::XMMatrixScaling(x, y, z);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&worldMatrix_, scalingMatrix * worldMatrix);
+    }
+
     void D3D11Graphics::InitD3D()
     {
         // Device, context, and swap chain

@@ -39,5 +39,7 @@ Graphics
 - `(rotate-x angle)`
 - `(rotate-y angle)`
 - `(rotate-z angle)`
+- `(scale x y z)`
 - `(tetrahedron)`
+- `(translate x y z)`
 - `(width)`

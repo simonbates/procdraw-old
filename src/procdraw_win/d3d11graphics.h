@@ -51,6 +51,8 @@ namespace procdraw {
         void RotateX(float angle);
         void RotateY(float angle);
         void RotateZ(float angle);
+        void Translate(float x, float y, float z);
+        void Scale(float x, float y, float z);
     private:
         HWND hWnd_;
         D3D_FEATURE_LEVEL d3dFeatureLevel_;
