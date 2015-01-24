@@ -80,6 +80,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
         REQUIRE(L.PrintString(L.False) == "false");
     }
 
+    SECTION("String") {
+        REQUIRE(L.PrintString(L.MakeString("some string")) == "\"some string\"");
+    }
+
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()") {
@@ -181,6 +185,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             // Boolean
             REQUIRE(std::isnan(L.NumVal(L.True)));
             REQUIRE(std::isnan(L.NumVal(L.False)));
+            // String
+            REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
         }
     }
 
@@ -199,6 +205,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             // Boolean
             REQUIRE(L.BoolVal(L.True));
             REQUIRE_FALSE(L.BoolVal(L.False));
+            // String
+            REQUIRE(L.BoolVal(L.MakeString("some string")));
         }
     }
 
@@ -228,6 +236,10 @@ TEST_CASE("LispInterpreter::Eval") {
     SECTION("should evaluate a bound symbol to the bound value") {
         auto env = L.MakeList({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
         REQUIRE(L.NumVal(L.Eval(L.SymbolRef("a"), env)) == 42);
+    }
+
+    SECTION("should evaluate a string to itself") {
+        REQUIRE(L.StringVal(L.Eval(L.MakeString("some string"))) == "some string");
     }
 
     SECTION("QUOTE") {
@@ -384,6 +396,26 @@ TEST_CASE("LispInterpreter::Eval") {
                 (f 5))
         )";
         REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
+    }
+
+    SECTION("MAP-RANGE") {
+
+        SECTION("should map values as expected given the ranges [0, 10] and [-1, 0]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 0)"))) == -1.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 10 4))"))) == -0.75);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 5)"))) == -0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 30 4))"))) == -0.25);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 10)"))) == 0.0);
+        }
+
+        SECTION("should map values as expected given the ranges [0, 10] and [1, -1]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 0)"))) == 1.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 10 4))"))) == 0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 5)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 30 4))"))) == -0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 10)"))) == -1.0);
+        }
+
     }
 
 }

@@ -53,6 +53,14 @@ namespace procdraw {
         bool val_;
     };
 
+    class LispString : public LispObject {
+    public:
+        LispString(const std::string &str) :
+            LispObject(LispObjectType::String),
+            str_(str) { }
+        std::string str_;
+    };
+
     void LispInterpreter::InitSymbolLiterals()
     {
         Nil = std::make_shared<LispObject>(LispObjectType::Nil);
@@ -78,6 +86,11 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::MakeCFunction(lisp_CFunction cfun)
     {
         return std::make_shared<LispCFunction>(cfun);
+    }
+
+    LispObjectPtr LispInterpreter::MakeString(const std::string &str)
+    {
+        return std::make_shared<LispString>(str);
     }
 
     LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
@@ -165,6 +178,17 @@ namespace procdraw {
             return false;
         default:
             return true;
+        }
+    }
+
+    std::string LispInterpreter::StringVal(LispObjectPtr obj)
+    {
+        if (obj->Type == LispObjectType::String) {
+            return static_cast<LispString*>(obj.get())->str_;
+        }
+        else {
+            // TODO or throw bad type exception?
+            return "";
         }
     }
 

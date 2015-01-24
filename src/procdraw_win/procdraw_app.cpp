@@ -25,6 +25,9 @@ namespace procdraw {
         workspace_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Workspace", false, this));
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
         RegisterProcDrawAppFunctionsForLisp(this, &L_);
+
+        workspace_->AddLine("To evaluate a Lisp expression, select it and press Ctrl+Return");
+        workspace_->AddLine("");
     }
 
     int ProcDrawApp::MainLoop()

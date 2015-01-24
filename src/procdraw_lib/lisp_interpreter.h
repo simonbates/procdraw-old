@@ -7,7 +7,7 @@
 
 namespace procdraw {
 
-    enum class LispObjectType { Nil, Number, Symbol, Cons, CFunction, Boolean };
+    enum class LispObjectType { Nil, Number, Symbol, Cons, CFunction, Boolean, String };
 
     typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
 
@@ -21,6 +21,7 @@ namespace procdraw {
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
+        LispObjectPtr MakeString(const std::string &str);
         // Memory access
         LispObjectType TypeOf(LispObjectPtr obj);
         bool Null(LispObjectPtr obj);
@@ -30,6 +31,7 @@ namespace procdraw {
         LispObjectPtr Car(LispObjectPtr obj);
         LispObjectPtr Cdr(LispObjectPtr obj);
         bool BoolVal(LispObjectPtr obj);
+        std::string StringVal(LispObjectPtr obj);
         bool Eq(LispObjectPtr x, LispObjectPtr y);
         LispObjectPtr Rplaca(LispObjectPtr cons, LispObjectPtr obj);
         LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
@@ -45,6 +47,8 @@ namespace procdraw {
         LispObjectPtr Cadr(LispObjectPtr obj);
         LispObjectPtr Cdar(LispObjectPtr obj);
         LispObjectPtr Caddr(LispObjectPtr obj);
+        LispObjectPtr Cadddr(LispObjectPtr obj);
+        LispObjectPtr Caddddr(LispObjectPtr obj);
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Eval(LispObjectPtr exp);
         LispObjectPtr Evif(LispObjectPtr arglist, LispObjectPtr env);

@@ -24,22 +24,43 @@ namespace procdraw {
             GetCh();
         }
 
-        if (ch_ == EOF) {
+        switch (ch_) {
+        case EOF:
             token_ = LispTokenType::EndOfInput;
+            break;
+        case '"':
+        {
+            std::string str;
+            GetCh();
+            while (true) {
+                if (ch_ == '"') {
+                    break;
+                }
+                if (ch_ == EOF) {
+                    throw std::runtime_error("Non-closed string at LispReader::Read()");
+                }
+                str += ch_;
+                GetCh();
+            }
+            // move past the closing '"'
+            GetCh();
+            token_ = LispTokenType::String;
+            stringVal_ = str;
+            break;
         }
-        else if (ch_ == '(') {
+        case '(':
             token_ = LispTokenType::LParen;
             GetCh();
-        }
-        else if (ch_ == ')') {
+            break;
+        case ')':
             token_ = LispTokenType::RParen;
             GetCh();
-        }
-        else if (ch_ == '*') {
+            break;
+        case '*':
             token_ = LispTokenType::Star;
             GetCh();
-        }
-        else if (ch_ == '+') {
+            break;
+        case '+':
             GetCh();
             if (IsStartOfNumber()) {
                 GetNumber();
@@ -47,8 +68,8 @@ namespace procdraw {
             else {
                 token_ = LispTokenType::Plus;
             }
-        }
-        else if (ch_ == '-') {
+            break;
+        case '-':
             GetCh();
             if (IsStartOfNumber()) {
                 GetNumber();
@@ -57,29 +78,31 @@ namespace procdraw {
             else {
                 token_ = LispTokenType::HyphenMinus;
             }
-        }
-        else if (ch_ == '.') {
+            break;
+        case '.':
             token_ = LispTokenType::Dot;
             GetCh();
-        }
-        else if (ch_ == '/') {
+            break;
+        case '/':
             token_ = LispTokenType::Slash;
             GetCh();
-        }
-        else if (IsStartOfNumber()) {
-            GetNumber();
-        }
-        else if (isalpha(ch_)) {
-            std::string str;
-            while (isalnum(ch_) || ch_ == '-') {
-                str += ch_;
-                GetCh();
+            break;
+        default:
+            if (IsStartOfNumber()) {
+                GetNumber();
             }
-            token_ = LispTokenType::Symbol;
-            symbolVal_ = str;
-        }
-        else {
-            token_ = LispTokenType::Undefined;
+            else if (isalpha(ch_)) {
+                std::string str;
+                while (isalnum(ch_) || ch_ == '-') {
+                    str += ch_;
+                    GetCh();
+                }
+                token_ = LispTokenType::Symbol;
+                symbolVal_ = str;
+            }
+            else {
+                token_ = LispTokenType::Undefined;
+            }
         }
     }
 
@@ -101,16 +124,18 @@ namespace procdraw {
 
     LispObjectPtr LispReader::Read(LispInterpreter *L)
     {
-        if (token_ == LispTokenType::LParen) {
+        switch (token_) {
+        case LispTokenType::LParen:
             GetToken();
             return ReadCons(L);
-        }
-        else if (token_ == LispTokenType::Number) {
+        case LispTokenType::Number:
+        {
             auto intObj = L->MakeNumber(numVal_);
             GetToken();
             return intObj;
         }
-        else if (token_ == LispTokenType::Symbol) {
+        case LispTokenType::Symbol:
+        {
             LispObjectPtr obj;
             if (symbolVal_ == "nil") {
                 obj = L->Nil;
@@ -127,19 +152,22 @@ namespace procdraw {
             GetToken();
             return obj;
         }
-        else if (token_ == LispTokenType::Star) {
+        case LispTokenType::String:
+        {
+            auto strObj = L->MakeString(stringVal_);
+            GetToken();
+            return strObj;
+        }
+        case LispTokenType::Star:
             GetToken();
             return L->SymbolRef("*");
-        }
-        else if (token_ == LispTokenType::Plus) {
+        case LispTokenType::Plus:
             GetToken();
             return L->SymbolRef("+");
-        }
-        else if (token_ == LispTokenType::HyphenMinus) {
+        case LispTokenType::HyphenMinus:
             GetToken();
             return L->SymbolRef("-");
-        }
-        else if (token_ == LispTokenType::Slash) {
+        case LispTokenType::Slash:
             GetToken();
             return L->SymbolRef("/");
         }

@@ -139,4 +139,29 @@ TEST_CASE("LispReader") {
         REQUIRE_FALSE(L.BoolVal(obj));
     }
 
+    SECTION("non-empty String") {
+        auto obj = reader.Read(&L, "\"some string\"");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::String);
+        REQUIRE(L.StringVal(obj) == "some string");
+    }
+
+    SECTION("empty String") {
+        auto obj = reader.Read(&L, "\"\"");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::String);
+        REQUIRE(L.StringVal(obj) == "");
+    }
+
+    SECTION("List of strings and numbers") {
+        auto obj = reader.Read(&L, "(\"some string\" 42 \"\" 2)");
+        REQUIRE(L.StringVal(L.Car(obj)) == "some string");
+        REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
+        REQUIRE(L.StringVal(L.Caddr(obj)) == "");
+        REQUIRE(L.NumVal(L.Cadddr(obj)) == 2);
+    }
+
+    SECTION("non-closed String") {
+        REQUIRE_THROWS(reader.Read(&L, "\""));
+        REQUIRE_THROWS(reader.Read(&L, "\"a"));
+    }
+
 }

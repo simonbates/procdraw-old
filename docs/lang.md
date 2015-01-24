@@ -7,6 +7,7 @@ Types
 - Numbers
 - Booleans
 - Symbols
+- Strings
 - Pairs and lists
 - CFunctions
 
@@ -23,6 +24,20 @@ Special-forms and functions
 - `(eq obj1 obj2)`
 - `(if test then else)`
 - `(lambda arg-list body)`
+- `(map-range a1 a2 b1 b2 s)`
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`
+
+Graphics
+--------
+
+- `(background h s v)`
+- `(frames-per-second)`
+- `(mouse-x)`
+- `(mouse-y)`
+- `(rotate-x angle)`
+- `(rotate-y angle)`
+- `(rotate-z angle)`
+- `(tetrahedron)`
+- `(width)`

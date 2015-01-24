@@ -1,4 +1,5 @@
 #include "lisp_functions.h"
+#include "util.h"
 
 #define FOR_EACH(L, n, lst) \
     for (LispObjectPtr n = lst; !L->Null(n); n = L->Cdr(n))
@@ -54,6 +55,18 @@ namespace procdraw {
     {
         // TODO check number of args?
         return L->Eq(L->Car(args), L->Cadr(args)) ? L->True : L->False;
+    }
+
+    LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        double a1 = L->NumVal(L->Car(args));
+        double a2 = L->NumVal(L->Cadr(args));
+        double b1 = L->NumVal(L->Caddr(args));
+        double b2 = L->NumVal(L->Cadddr(args));
+        double s = L->NumVal(L->Caddddr(args));
+
+        return L->MakeNumber(MapRange(a1, a2, b1, b2, s));
     }
 
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)

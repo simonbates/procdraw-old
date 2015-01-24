@@ -17,6 +17,8 @@ namespace procdraw {
         return value;
     }
 
+    double MapRange(double a1, double a2, double b1, double b2, double s);
+
     template <typename T> class SimpleMovingAverage {
     public:
         SimpleMovingAverage(int numDataPoints);
