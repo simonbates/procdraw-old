@@ -23,6 +23,7 @@ namespace procdraw {
 
         InitViewProjectionMatrix();
         ResetMatrix();
+        InitLighting();
     }
 
     D3D11Graphics::~D3D11Graphics()
@@ -46,7 +47,7 @@ namespace procdraw {
 
     void D3D11Graphics::Triangle()
     {
-        UpdateConstantBuffer();
+        UpdateConstantBufferForObject();
 
         d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -59,7 +60,7 @@ namespace procdraw {
 
     void D3D11Graphics::Tetrahedron()
     {
-        UpdateConstantBuffer();
+        UpdateConstantBufferForObject();
 
         d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -73,22 +74,22 @@ namespace procdraw {
     void D3D11Graphics::RotateX(float angle)
     {
         auto rotationMatrix = DirectX::XMMatrixRotationX(angle);
-        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
-        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
     void D3D11Graphics::RotateY(float angle)
     {
         auto rotationMatrix = DirectX::XMMatrixRotationY(angle);
-        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
-        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
     void D3D11Graphics::RotateZ(float angle)
     {
         auto rotationMatrix = DirectX::XMMatrixRotationZ(angle);
-        auto matrix = DirectX::XMLoadFloat4x4(&matrix_);
-        DirectX::XMStoreFloat4x4(&matrix_, rotationMatrix * matrix);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
     void D3D11Graphics::InitD3D()
@@ -183,7 +184,7 @@ namespace procdraw {
     {
         // Create shader
 
-        ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "vertex_shader", "vs_4_0");
+        ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\flat.hlsl", "vertex_shader", "vs_4_0");
         ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
             vs->GetBufferSize(), nullptr, &vertexShader_));
         d3dContext_->VSSetShader(vertexShader_, 0, 0);
@@ -193,6 +194,8 @@ namespace procdraw {
         D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+            D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
             D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
@@ -205,7 +208,7 @@ namespace procdraw {
 
     void D3D11Graphics::CreatePixelShader()
     {
-        ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\shaders1.hlsl", "pixel_shader", "ps_4_0");
+        ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\flat.hlsl", "pixel_shader", "ps_4_0");
         ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
             ps->GetBufferSize(), nullptr, &pixelShader_));
         d3dContext_->PSSetShader(pixelShader_, 0, 0);
@@ -250,14 +253,17 @@ namespace procdraw {
 
     void D3D11Graphics::CreateTriangleVertexBuffer()
     {
+        auto vertex1 = DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f);
+        auto vertex2 = DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f);
+        auto vertex3 = DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f);
+        DirectX::XMFLOAT3 normal;
+        TriangleNormal(&normal, &vertex1, &vertex2, &vertex3);
+
         ShaderVertex vertices[] =
         {
-            ShaderVertex(DirectX::XMFLOAT4(-1.0f, 1.0f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
-            ShaderVertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
-            ShaderVertex(DirectX::XMFLOAT4(-1.0f, -1.0f, 0.0f, 1.0f),
-                DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
+            ShaderVertex(vertex1, normal, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
+            ShaderVertex(vertex2, normal, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
+            ShaderVertex(vertex3, normal, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
         };
 
         triangleVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
@@ -265,30 +271,44 @@ namespace procdraw {
 
     void D3D11Graphics::CreateTetrahedronVertexBuffer()
     {
-        auto vertex1 = DirectX::XMFLOAT4(1, 0, -M_SQRT1_2, 1);
-        auto vertex2 = DirectX::XMFLOAT4(0, 1, M_SQRT1_2, 1);
-        auto vertex3 = DirectX::XMFLOAT4(0, -1, M_SQRT1_2, 1);
-        auto vertex4 = DirectX::XMFLOAT4(-1, 0, -M_SQRT1_2, 1);
+        auto vertex1 = DirectX::XMFLOAT3(1.0f, 0.0f, -M_SQRT1_2);
+        auto vertex2 = DirectX::XMFLOAT3(0.0f, 1.0f, M_SQRT1_2);
+        auto vertex3 = DirectX::XMFLOAT3(0.0f, -1.0f, M_SQRT1_2);
+        auto vertex4 = DirectX::XMFLOAT3(-1.0f, 0.0f, -M_SQRT1_2);
 
         auto red = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
         auto green = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
         auto blue = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
         auto yellow = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 
+        DirectX::XMFLOAT3 face1Normal;
+        DirectX::XMFLOAT3 face2Normal;
+        DirectX::XMFLOAT3 face3Normal;
+        DirectX::XMFLOAT3 face4Normal;
+
+        TriangleNormal(&face1Normal, &vertex1, &vertex4, &vertex2);
+        TriangleNormal(&face2Normal, &vertex1, &vertex3, &vertex4);
+        TriangleNormal(&face3Normal, &vertex1, &vertex2, &vertex3);
+        TriangleNormal(&face4Normal, &vertex2, &vertex4, &vertex3);
+
         ShaderVertex vertices[] =
         {
-            ShaderVertex(vertex1, red),
-            ShaderVertex(vertex4, red),
-            ShaderVertex(vertex2, red),
-            ShaderVertex(vertex1, blue),
-            ShaderVertex(vertex3, blue),
-            ShaderVertex(vertex4, blue),
-            ShaderVertex(vertex1, green),
-            ShaderVertex(vertex2, green),
-            ShaderVertex(vertex3, green),
-            ShaderVertex(vertex2, yellow),
-            ShaderVertex(vertex4, yellow),
-            ShaderVertex(vertex3, yellow)
+            // Face 1
+            ShaderVertex(vertex1, face1Normal, red),
+            ShaderVertex(vertex4, face1Normal, red),
+            ShaderVertex(vertex2, face1Normal, red),
+            // Face 2
+            ShaderVertex(vertex1, face2Normal, blue),
+            ShaderVertex(vertex3, face2Normal, blue),
+            ShaderVertex(vertex4, face2Normal, blue),
+            // Face 3
+            ShaderVertex(vertex1, face3Normal, green),
+            ShaderVertex(vertex2, face3Normal, green),
+            ShaderVertex(vertex3, face3Normal, green),
+            // Face 4
+            ShaderVertex(vertex2, face4Normal, yellow),
+            ShaderVertex(vertex4, face4Normal, yellow),
+            ShaderVertex(vertex3, face4Normal, yellow)
         };
 
         tetrahedronVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
@@ -314,13 +334,30 @@ namespace procdraw {
 
     void D3D11Graphics::ResetMatrix()
     {
-        matrix_ = viewProjectionMatrix_;
+        DirectX::XMStoreFloat4x4(&worldMatrix_, DirectX::XMMatrixIdentity());
     }
 
-    void D3D11Graphics::UpdateConstantBuffer()
+    void D3D11Graphics::InitLighting()
     {
-        // TODO remove matrix_ and just use cbData_.WorldViewProjection?
-        cbData_.WorldViewProjection = matrix_;
+        lightDirection_ = DirectX::XMFLOAT4(1.0f, 1.0f, -1.0f, 0.0f);
+        lightColor_ = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f);
+        ambientColor_ = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f);
+    }
+
+    void D3D11Graphics::UpdateConstantBufferForObject()
+    {
+        auto viewProjectionMatrix = DirectX::XMLoadFloat4x4(&viewProjectionMatrix_);
+        auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
+        DirectX::XMStoreFloat4x4(&cbData_.WorldViewProjection, worldMatrix * viewProjectionMatrix);
+
+        auto inverseWorldMatrix = DirectX::XMMatrixInverse(nullptr, worldMatrix);
+
+        auto lightDirection = DirectX::XMLoadFloat4(&lightDirection_);
+        DirectX::XMStoreFloat4(&cbData_.LightDirection,
+            DirectX::XMVector4Normalize(DirectX::XMVector4Transform(lightDirection, inverseWorldMatrix)));
+
+        cbData_.LightColor = lightColor_;
+        cbData_.AmbientColor = ambientColor_;
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         ZeroMemory(&mappedResource, sizeof(mappedResource));

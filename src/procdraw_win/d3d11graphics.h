@@ -24,13 +24,20 @@ _COM_SMARTPTR_TYPEDEF(ID3D11VertexShader, __uuidof(ID3D11VertexShader));
 namespace procdraw {
 
     struct ShaderVertex {
-        DirectX::XMFLOAT4 Position;
-        DirectX::XMFLOAT4 Color;
-        ShaderVertex(DirectX::XMFLOAT4 pos, DirectX::XMFLOAT4 color) : Position(pos), Color(color) { }
+        DirectX::XMFLOAT4 pos;
+        DirectX::XMFLOAT3 normal;
+        DirectX::XMFLOAT4 color;
+        ShaderVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 normal, DirectX::XMFLOAT4 color) : normal(normal), color(color)
+        {
+            this->pos = DirectX::XMFLOAT4(pos.x, pos.y, pos.z, 1.0f);
+        }
     };
 
     struct CBufferPerObject {
         DirectX::XMFLOAT4X4 WorldViewProjection;
+        DirectX::XMFLOAT4 LightDirection;
+        DirectX::XMFLOAT4 LightColor;
+        DirectX::XMFLOAT4 AmbientColor;
     };
 
     class D3D11Graphics {
@@ -60,7 +67,10 @@ namespace procdraw {
         ID3D11BufferPtr triangleVertexBuffer_;
         ID3D11BufferPtr tetrahedronVertexBuffer_;
         DirectX::XMFLOAT4X4 viewProjectionMatrix_;
-        DirectX::XMFLOAT4X4 matrix_;
+        DirectX::XMFLOAT4X4 worldMatrix_;
+        DirectX::XMFLOAT4 lightDirection_;
+        DirectX::XMFLOAT4 lightColor_;
+        DirectX::XMFLOAT4 ambientColor_;
         void InitD3D();
         ID3D10BlobPtr CompileShaderFromFile(_In_ LPCWSTR pFileName,
             _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
@@ -72,7 +82,8 @@ namespace procdraw {
         void CreateTetrahedronVertexBuffer();
         void InitViewProjectionMatrix();
         void ResetMatrix();
-        void UpdateConstantBuffer();
+        void InitLighting();
+        void UpdateConstantBufferForObject();
     };
 
 }
