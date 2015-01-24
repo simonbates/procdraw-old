@@ -10,6 +10,11 @@ namespace procdraw {
         return L->MakeNumber(app->FramesPerSecond());
     }
 
+    static LispObjectPtr lisp_Height(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return L->MakeNumber(app->Height());
+    }
+
     static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         return L->MakeNumber(app->MouseX());
@@ -97,6 +102,7 @@ namespace procdraw {
     {
         app = a;
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond);
+        L->SetGlobalCFunction("height", lisp_Height);
         L->SetGlobalCFunction("mouse-x", lisp_MouseX);
         L->SetGlobalCFunction("mouse-y", lisp_MouseY);
         L->SetGlobalCFunction("width", lisp_Width);

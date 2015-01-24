@@ -34,6 +34,7 @@ Graphics
 
 - `(background h s v)`
 - `(frames-per-second)`
+- `(height)`
 - `(mouse-x)`
 - `(mouse-y)`
 - `(rotate-x angle)`
