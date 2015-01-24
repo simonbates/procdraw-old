@@ -418,4 +418,32 @@ TEST_CASE("LispInterpreter::Eval") {
 
     }
 
+    SECTION("WRAP-RANGE") {
+
+        SECTION("should wrap values as expected given the range [0, 10]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 0)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 10)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 20)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 -10)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 8)"))) == 8.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 12)"))) == 2.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 23)"))) == 3.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 -2)"))) == 8.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range 0 10 -13)"))) == 7.0);
+        }
+
+        SECTION("should wrap values as expected given the range [-20, -10]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -20)"))) == -20.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -10)"))) == -20.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 0)"))) == -20.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -30)"))) == -20.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -12)"))) == -12.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -8)"))) == -18.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 13)"))) == -17.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -22)"))) == -12.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -33)"))) == -13.0);
+        }
+
+    }
+
 }

@@ -104,4 +104,14 @@ namespace procdraw {
         return L->MakeNumber(sum);
     }
 
+    LispObjectPtr lisp_WrapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        double min = L->NumVal(L->Car(args));
+        double max = L->NumVal(L->Cadr(args));
+        double x = L->NumVal(L->Caddr(args));
+
+        return L->MakeNumber(WrapRange(min, max, x));
+    }
+
 }

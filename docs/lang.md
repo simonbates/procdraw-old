@@ -28,6 +28,7 @@ Special-forms and functions
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`
+- `(wrap-range min max x)`
 
 Graphics
 --------

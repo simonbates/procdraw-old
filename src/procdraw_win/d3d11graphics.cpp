@@ -42,7 +42,8 @@ namespace procdraw {
 
     void D3D11Graphics::Present()
     {
-        swapChain_->Present(0, 0);
+        UINT SyncInterval = 1;
+        swapChain_->Present(SyncInterval, 0);
     }
 
     void D3D11Graphics::Triangle()
@@ -143,6 +144,7 @@ namespace procdraw {
         sd.SampleDesc.Count = 1;
         sd.SampleDesc.Quality = 0;
         sd.Windowed = TRUE;
+        sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
         HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
             createDeviceFlags, feature_levels, num_feature_levels,

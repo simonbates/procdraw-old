@@ -24,6 +24,7 @@ namespace procdraw {
         SetGlobalCFunction("cdr", lisp_Cdr);
         SetGlobalCFunction("eq", lisp_Eq);
         SetGlobalCFunction("map-range", lisp_MapRange);
+        SetGlobalCFunction("wrap-range", lisp_WrapRange);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }

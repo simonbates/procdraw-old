@@ -49,6 +49,34 @@ TEST_CASE("MapRange") {
 
 }
 
+TEST_CASE("WrapRange") {
+
+    SECTION("should wrap values as expected given the range [0, 10]") {
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 0.0) == 0.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 10.0) == 0.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 20.0) == 0.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, -10.0) == 0.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 8.0) == 8.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 12.0) == 2.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, 23.0) == 3.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, -2.0) == 8.0);
+        REQUIRE(procdraw::WrapRange(0.0, 10.0, -13.0) == 7.0);
+    }
+
+    SECTION("should wrap values as expected given the range [-20, -10]") {
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -20.0) == -20.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -10.0) == -20.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, 0.0) == -20.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -30.0) == -20.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -12.0) == -12.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -8.0) == -18.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, 13.0) == -17.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -22.0) == -12.0);
+        REQUIRE(procdraw::WrapRange(-20.0, -10.0, -33.0) == -13.0);
+    }
+
+}
+
 TEST_CASE("SimpleMovingAverage") {
 
     procdraw::SimpleMovingAverage<int> sma(4);
