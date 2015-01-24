@@ -80,6 +80,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
         REQUIRE(L.PrintString(L.False) == "false");
     }
 
+    SECTION("String") {
+        REQUIRE(L.PrintString(L.MakeString("some string")) == "\"some string\"");
+    }
+
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()") {
@@ -181,6 +185,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             // Boolean
             REQUIRE(std::isnan(L.NumVal(L.True)));
             REQUIRE(std::isnan(L.NumVal(L.False)));
+            // String
+            REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
         }
     }
 
@@ -199,6 +205,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             // Boolean
             REQUIRE(L.BoolVal(L.True));
             REQUIRE_FALSE(L.BoolVal(L.False));
+            // String
+            REQUIRE(L.BoolVal(L.MakeString("some string")));
         }
     }
 
@@ -228,6 +236,10 @@ TEST_CASE("LispInterpreter::Eval") {
     SECTION("should evaluate a bound symbol to the bound value") {
         auto env = L.MakeList({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
         REQUIRE(L.NumVal(L.Eval(L.SymbolRef("a"), env)) == 42);
+    }
+
+    SECTION("should evaluate a string to itself") {
+        REQUIRE(L.StringVal(L.Eval(L.MakeString("some string"))) == "some string");
     }
 
     SECTION("QUOTE") {

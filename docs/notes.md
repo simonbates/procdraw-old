@@ -237,6 +237,7 @@ Data formats
 
 - OBJ
 - [PLY](http://paulbourke.net/dataformats/ply/)
+- STL
 
 Hardware
 --------
@@ -248,6 +249,7 @@ Hardware
 - [Digital Warrior](http://digitalwarrior.co/)
 - [FIGnition](https://sites.google.com/site/libby8dev/fignition)
 - [FRAMED*](https://www.kickstarter.com/projects/1353046055/framed-a-revolutionary-platform-for-digital-art)
+- Korg SQ-1 hardware sequencer
 - Lemur
 - [littleBits](http://littlebits.cc/)
 - [Leap Motion](https://www.leapmotion.com)

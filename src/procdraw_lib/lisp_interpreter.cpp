@@ -131,6 +131,7 @@ namespace procdraw {
             case LispObjectType::Boolean:
             case LispObjectType::Nil:
             case LispObjectType::Number:
+            case LispObjectType::String:
                 return exp;
             default:
                 return Value(exp, env);
@@ -229,6 +230,8 @@ namespace procdraw {
             return "<CFunction>";
         case LispObjectType::Boolean:
             return BoolVal(obj) ? "true" : "false";
+        case LispObjectType::String:
+            return "\"" + StringVal(obj) + "\"";
         default:
             return "";
         }

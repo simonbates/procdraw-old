@@ -27,6 +27,24 @@ namespace procdraw {
         if (ch_ == EOF) {
             token_ = LispTokenType::EndOfInput;
         }
+        else if (ch_ == '"') {
+            std::string str;
+            GetCh();
+            while (true) {
+                if (ch_ == '"') {
+                    break;
+                }
+                if (ch_ == EOF) {
+                    throw std::runtime_error("Non-closed string at LispReader::Read()");
+                }
+                str += ch_;
+                GetCh();
+            }
+            // move past the closing '"'
+            GetCh();
+            token_ = LispTokenType::String;
+            stringVal_ = str;
+        }
         else if (ch_ == '(') {
             token_ = LispTokenType::LParen;
             GetCh();
@@ -126,6 +144,11 @@ namespace procdraw {
             }
             GetToken();
             return obj;
+        }
+        else if (token_ == LispTokenType::String) {
+            auto strObj = L->MakeString(stringVal_);
+            GetToken();
+            return strObj;
         }
         else if (token_ == LispTokenType::Star) {
             GetToken();

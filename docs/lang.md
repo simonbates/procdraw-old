@@ -7,6 +7,7 @@ Types
 - Numbers
 - Booleans
 - Symbols
+- Strings
 - Pairs and lists
 - CFunctions
 
