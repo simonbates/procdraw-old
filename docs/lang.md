@@ -33,9 +33,12 @@ Special-forms and functions
 Graphics
 --------
 
+- `(ambient-light-color h s v)`
 - `(background h s v)`
+- `(color h s v)`
 - `(frames-per-second)`
 - `(height)`
+- `(light-color h s v)`
 - `(mouse-x)`
 - `(mouse-y)`
 - `(rotate-x angle)`

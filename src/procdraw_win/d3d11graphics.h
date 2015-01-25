@@ -26,8 +26,7 @@ namespace procdraw {
     struct ShaderVertex {
         DirectX::XMFLOAT4 pos;
         DirectX::XMFLOAT3 normal;
-        DirectX::XMFLOAT4 color;
-        ShaderVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 normal, DirectX::XMFLOAT4 color) : normal(normal), color(color)
+        ShaderVertex(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 normal) : normal(normal)
         {
             this->pos = DirectX::XMFLOAT4(pos.x, pos.y, pos.z, 1.0f);
         }
@@ -37,7 +36,8 @@ namespace procdraw {
         DirectX::XMFLOAT4X4 WorldViewProjection;
         DirectX::XMFLOAT4 LightDirection;
         DirectX::XMFLOAT4 LightColor;
-        DirectX::XMFLOAT4 AmbientColor;
+        DirectX::XMFLOAT4 AmbientLightColor;
+        DirectX::XMFLOAT4 MaterialColor;
     };
 
     class D3D11Graphics {
@@ -45,8 +45,10 @@ namespace procdraw {
         D3D11Graphics(HWND hWnd);
         ~D3D11Graphics();
         void Background(float h, float s, float v);
+        void LightColor(float h, float s, float v);
+        void AmbientLightColor(float h, float s, float v);
+        void Color(float h, float s, float v);
         void Present();
-        void Triangle();
         void Tetrahedron();
         void RotateX(float angle);
         void RotateY(float angle);
@@ -66,13 +68,13 @@ namespace procdraw {
         ID3D11InputLayoutPtr inputLayout_;
         CBufferPerObject cbData_;
         ID3D11BufferPtr constantBuffer_;
-        ID3D11BufferPtr triangleVertexBuffer_;
         ID3D11BufferPtr tetrahedronVertexBuffer_;
         DirectX::XMFLOAT4X4 viewProjectionMatrix_;
         DirectX::XMFLOAT4X4 worldMatrix_;
         DirectX::XMFLOAT4 lightDirection_;
         DirectX::XMFLOAT4 lightColor_;
-        DirectX::XMFLOAT4 ambientColor_;
+        DirectX::XMFLOAT4 ambientLightColor_;
+        DirectX::XMFLOAT4 materialColor_;
         void InitD3D();
         ID3D10BlobPtr CompileShaderFromFile(_In_ LPCWSTR pFileName,
             _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
@@ -80,11 +82,11 @@ namespace procdraw {
         void CreatePixelShader();
         void CreateConstantBuffer();
         ID3D11BufferPtr CreateVertexBuffer(ShaderVertex *vertices, int numVertices);
-        void CreateTriangleVertexBuffer();
         void CreateTetrahedronVertexBuffer();
         void InitViewProjectionMatrix();
         void ResetMatrix();
         void InitLighting();
+        void InitMaterial();
         void UpdateConstantBufferForObject();
     };
 

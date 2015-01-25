@@ -4,14 +4,14 @@ cbuffer CBufferPerObject
     // direction to light in model space
     float4 LightDirection;
     float4 LightColor;
-    float4 AmbientColor;
+    float4 AmbientLightColor;
+    float4 MaterialColor;
 }
 
 struct VertexShaderInput
 {
     float4 pos : POSITION;
     float3 normal : NORMAL;
-    float4 color : COLOR;
 };
 
 struct VertexShaderOutput
@@ -27,10 +27,10 @@ VertexShaderOutput vertex_shader(VertexShaderInput input)
     output.pos = mul(input.pos, WorldViewProjection);
     
     float diffFactor = max(dot(input.normal, LightDirection.xyz), 0);
-    float4 diffComponent = (input.color * diffFactor * LightColor);
-    float4 ambientComponent = (input.color * AmbientColor);
+    float4 diffComponent = (LightColor * MaterialColor * diffFactor);
+    float4 ambientComponent = (AmbientLightColor * MaterialColor);
     output.color.rgb = diffComponent.rgb + ambientComponent.rgb;
-    output.color.a = input.color.a;
+    output.color.a = MaterialColor.a;
 
     return output;
 }

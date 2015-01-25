@@ -18,12 +18,12 @@ namespace procdraw {
         DirectX::XMStoreFloat4x4(&cbData_.WorldViewProjection, DirectX::XMMatrixIdentity());
         CreateConstantBuffer();
 
-        CreateTriangleVertexBuffer();
         CreateTetrahedronVertexBuffer();
 
         InitViewProjectionMatrix();
         ResetMatrix();
         InitLighting();
+        InitMaterial();
     }
 
     D3D11Graphics::~D3D11Graphics()
@@ -40,23 +40,40 @@ namespace procdraw {
         ResetMatrix();
     }
 
+    void D3D11Graphics::LightColor(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        lightColor_.x = r;
+        lightColor_.y = g;
+        lightColor_.z = b;
+        lightColor_.w = 0.0f;
+    }
+
+    void D3D11Graphics::AmbientLightColor(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        ambientLightColor_.x = r;
+        ambientLightColor_.y = g;
+        ambientLightColor_.z = b;
+        ambientLightColor_.w = 0.0f;
+    }
+
+    void D3D11Graphics::Color(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        materialColor_.x = r;
+        materialColor_.y = g;
+        materialColor_.z = b;
+        materialColor_.w = 1.0f;
+    }
+
     void D3D11Graphics::Present()
     {
         UINT SyncInterval = 1;
         swapChain_->Present(SyncInterval, 0);
-    }
-
-    void D3D11Graphics::Triangle()
-    {
-        UpdateConstantBufferForObject();
-
-        d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-        UINT stride = sizeof(ShaderVertex);
-        UINT offset = 0;
-        d3dContext_->IASetVertexBuffers(0, 1, &triangleVertexBuffer_.GetInterfacePtr(), &stride, &offset);
-
-        d3dContext_->Draw(3, 0);
     }
 
     void D3D11Graphics::Tetrahedron()
@@ -267,35 +284,12 @@ namespace procdraw {
         return vertexBuffer;
     }
 
-    void D3D11Graphics::CreateTriangleVertexBuffer()
-    {
-        auto vertex1 = DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f);
-        auto vertex2 = DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f);
-        auto vertex3 = DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f);
-        DirectX::XMFLOAT3 normal;
-        TriangleNormal(&normal, &vertex1, &vertex2, &vertex3);
-
-        ShaderVertex vertices[] =
-        {
-            ShaderVertex(vertex1, normal, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
-            ShaderVertex(vertex2, normal, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)),
-            ShaderVertex(vertex3, normal, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f))
-        };
-
-        triangleVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
-    }
-
     void D3D11Graphics::CreateTetrahedronVertexBuffer()
     {
         auto vertex1 = DirectX::XMFLOAT3(1.0f, 0.0f, -M_SQRT1_2);
         auto vertex2 = DirectX::XMFLOAT3(0.0f, 1.0f, M_SQRT1_2);
         auto vertex3 = DirectX::XMFLOAT3(0.0f, -1.0f, M_SQRT1_2);
         auto vertex4 = DirectX::XMFLOAT3(-1.0f, 0.0f, -M_SQRT1_2);
-
-        auto red = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-        auto green = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-        auto blue = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-        auto yellow = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 
         DirectX::XMFLOAT3 face1Normal;
         DirectX::XMFLOAT3 face2Normal;
@@ -310,21 +304,21 @@ namespace procdraw {
         ShaderVertex vertices[] =
         {
             // Face 1
-            ShaderVertex(vertex1, face1Normal, red),
-            ShaderVertex(vertex4, face1Normal, red),
-            ShaderVertex(vertex2, face1Normal, red),
+            ShaderVertex(vertex1, face1Normal),
+            ShaderVertex(vertex4, face1Normal),
+            ShaderVertex(vertex2, face1Normal),
             // Face 2
-            ShaderVertex(vertex1, face2Normal, blue),
-            ShaderVertex(vertex3, face2Normal, blue),
-            ShaderVertex(vertex4, face2Normal, blue),
+            ShaderVertex(vertex1, face2Normal),
+            ShaderVertex(vertex3, face2Normal),
+            ShaderVertex(vertex4, face2Normal),
             // Face 3
-            ShaderVertex(vertex1, face3Normal, green),
-            ShaderVertex(vertex2, face3Normal, green),
-            ShaderVertex(vertex3, face3Normal, green),
+            ShaderVertex(vertex1, face3Normal),
+            ShaderVertex(vertex2, face3Normal),
+            ShaderVertex(vertex3, face3Normal),
             // Face 4
-            ShaderVertex(vertex2, face4Normal, yellow),
-            ShaderVertex(vertex4, face4Normal, yellow),
-            ShaderVertex(vertex3, face4Normal, yellow)
+            ShaderVertex(vertex2, face4Normal),
+            ShaderVertex(vertex4, face4Normal),
+            ShaderVertex(vertex3, face4Normal)
         };
 
         tetrahedronVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
@@ -357,7 +351,12 @@ namespace procdraw {
     {
         lightDirection_ = DirectX::XMFLOAT4(1.0f, 1.0f, -1.0f, 0.0f);
         lightColor_ = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f);
-        ambientColor_ = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f);
+        ambientLightColor_ = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f);
+    }
+
+    void D3D11Graphics::InitMaterial()
+    {
+        materialColor_ = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     }
 
     void D3D11Graphics::UpdateConstantBufferForObject()
@@ -373,7 +372,8 @@ namespace procdraw {
             DirectX::XMVector4Normalize(DirectX::XMVector4Transform(lightDirection, inverseWorldMatrix)));
 
         cbData_.LightColor = lightColor_;
-        cbData_.AmbientColor = ambientColor_;
+        cbData_.AmbientLightColor = ambientLightColor_;
+        cbData_.MaterialColor = materialColor_;
 
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         ZeroMemory(&mappedResource, sizeof(mappedResource));
