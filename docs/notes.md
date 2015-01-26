@@ -261,6 +261,7 @@ Hardware
 - [Raspberry Pi](http://www.raspberrypi.org/) [@shiftrunstop62]
 - [Teensy](https://www.pjrc.com/teensy/)
 - [TinkerKit](http://www.tinkerkit.com/)
+- Video Synthesizers [@collopy:2014]
 
 Communication Protocols
 -----------------------
