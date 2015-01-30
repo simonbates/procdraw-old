@@ -19,6 +19,7 @@ Existing Languages and Software Systems
 - [Cinder](http://libcinder.org/)
 - [ChucK](http://chuck.cs.princeton.edu/)
 - [CodeChisel3D](http://robert.kra.hn/projects/live-programming-with-three-and-webvr)
+- [CLM](https://ccrma.stanford.edu/software/clm/)
 - [Common Music](http://commonmusic.sourceforge.net/)
 - [Conception](https://github.com/shurcooL/Conception)
 - [Context Free](http://www.contextfreeart.org/)
@@ -31,6 +32,7 @@ Existing Languages and Software Systems
 - Factor
 - [fish shell](http://fishshell.com/)
 - [Flocking](http://flockingjs.org/)
+- [Flowhub](https://flowhub.io/)
 - [Fluxus](http://www.pawfal.org/fluxus/)
 - Forth
 - [GAmuza](http://gamuza.d3cod3.org/)
