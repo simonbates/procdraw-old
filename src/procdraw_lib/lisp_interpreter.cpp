@@ -23,7 +23,10 @@ namespace procdraw {
         SetGlobalCFunction("car", lisp_Car);
         SetGlobalCFunction("cdr", lisp_Cdr);
         SetGlobalCFunction("eq", lisp_Eq);
+        SetGlobalCFunction("get", lisp_Get);
+        SetGlobalCFunction("make-table", lisp_MakeTable);
         SetGlobalCFunction("map-range", lisp_MapRange);
+        SetGlobalCFunction("put", lisp_Put);
         SetGlobalCFunction("wrap-range", lisp_WrapRange);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
@@ -51,11 +54,16 @@ namespace procdraw {
 
     LispObjectPtr LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
     {
-        if (TypeOf(fun) == LispObjectType::CFunction) {
+        switch (TypeOf(fun)) {
+        case LispObjectType::CFunction:
             return ApplyCFunction(fun, args, env);
-        }
-        else {
+        case LispObjectType::Cons:
             return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
+        case LispObjectType::Symbol:
+            return Apply(Get(Car(args), fun), args, env);
+        default:
+            // TODO complain
+            return Nil;
         }
     }
 
@@ -233,6 +241,9 @@ namespace procdraw {
             return BoolVal(obj) ? "true" : "false";
         case LispObjectType::String:
             return "\"" + StringVal(obj) + "\"";
+        case LispObjectType::Table:
+            // TODO Table serialization
+            return "<Table>";
         default:
             return "";
         }

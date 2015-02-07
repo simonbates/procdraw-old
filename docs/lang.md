@@ -9,6 +9,7 @@ Types
 - Symbols
 - Strings
 - Pairs and lists
+- Tables
 - CFunctions
 
 Special-forms and functions
@@ -29,6 +30,20 @@ Special-forms and functions
 - `(quote arg)`
 - `(setq identifier value)`
 - `(wrap-range min max x)`
+
+Tables
+------
+
+- `(make-table)`
+- `(get table key)`
+- `(put table key val)`
+- `(key table ...)`
+
+Signals
+-------
+
+- `(make-signal stepfun)`
+- `((quote step) signal)`
 
 Graphics
 --------

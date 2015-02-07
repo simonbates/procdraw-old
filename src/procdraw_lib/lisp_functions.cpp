@@ -57,6 +57,18 @@ namespace procdraw {
         return L->Eq(L->Car(args), L->Cadr(args)) ? L->True : L->False;
     }
 
+    LispObjectPtr lisp_Get(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto table = L->Car(args);
+        auto key = L->Cadr(args);
+        return L->Get(table, key);
+    }
+
+    LispObjectPtr lisp_MakeTable(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return L->MakeTable();
+    }
+
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         // TODO check number of args?
@@ -74,6 +86,14 @@ namespace procdraw {
         double product = 1;
         REDUCE_NUM(L, product, x, product * x, args);
         return L->MakeNumber(product);
+    }
+
+    LispObjectPtr lisp_Put(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto table = L->Car(args);
+        auto key = L->Cadr(args);
+        auto val = L->Caddr(args);
+        return L->Put(table, key, val);
     }
 
     LispObjectPtr lisp_Quotient(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)

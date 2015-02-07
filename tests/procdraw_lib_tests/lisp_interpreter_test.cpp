@@ -84,6 +84,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
         REQUIRE(L.PrintString(L.MakeString("some string")) == "\"some string\"");
     }
 
+    SECTION("Table") {
+        REQUIRE(L.PrintString(L.MakeTable()) == "<Table>");
+    }
+
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()") {
@@ -166,6 +170,20 @@ TEST_CASE("LispInterpreter::Rplacd()") {
     REQUIRE(L.Eq(cons, result));
 }
 
+TEST_CASE("Tables") {
+
+    procdraw::LispInterpreter L;
+
+    auto table = L.MakeTable();
+    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
+    REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42))) == 42);
+    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 42);
+    REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(10))) == 10);
+    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
+    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
+
+}
+
 TEST_CASE("LispInterpreter implicit type conversion") {
 
     procdraw::LispInterpreter L;
@@ -187,6 +205,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             REQUIRE(std::isnan(L.NumVal(L.False)));
             // String
             REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
+            // Table
+            REQUIRE(std::isnan(L.NumVal(L.MakeTable())));
         }
     }
 
@@ -207,6 +227,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
             REQUIRE_FALSE(L.BoolVal(L.False));
             // String
             REQUIRE(L.BoolVal(L.MakeString("some string")));
+            // Table
+            REQUIRE(L.BoolVal(L.MakeTable()));
         }
     }
 
@@ -389,11 +411,11 @@ TEST_CASE("LispInterpreter::Eval") {
     SECTION("Recursion") {
         auto exp = R"(
             (progn
-                (setq f (lambda (n)
-                    (if (eq n 0)
-                        1
-                        (* n (f (- n 1))))))
-                (f 5))
+              (setq f (lambda (n)
+                (if (eq n 0)
+                  1
+                  (* n (f (- n 1))))))
+              (f 5))
         )";
         REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
     }
@@ -444,6 +466,35 @@ TEST_CASE("LispInterpreter::Eval") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap-range -20 -10 -33)"))) == -13.0);
         }
 
+    }
+
+    SECTION("Tables") {
+        L.Eval(L.Read("(setq t1 (make-table))"));
+
+        SECTION("should provide getting and putting of key, value pairs") {
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 (quote key1))"))));
+            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 (quote key1) 42)"))) == 42);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 (quote key1))"))) == 42);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 (quote key1) 10)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 (quote key1))"))) == 10);
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 (quote key2))"))));
+        }
+
+        SECTION("should provide method calls") {
+            auto exp = R"(
+                (progn
+                  (put t1 (quote x) 10)
+                  (put t1 (quote get-x)
+                    (lambda (self) (get self (quote x))))
+                  (put t1 (quote plus-x)
+                    (lambda (self n) (+ (get self (quote x)) n))))
+            )";
+            L.Eval(L.Read(exp));
+            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 (quote get-x)) t1)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 (quote plus-x)) t1 2)"))) == 12);
+            REQUIRE(L.NumVal(L.Eval(L.Read("((quote get-x) t1)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("((quote plus-x) t1 4)"))) == 14);
+        }
     }
 
 }

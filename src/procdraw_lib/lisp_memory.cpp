@@ -1,6 +1,7 @@
 #include "lisp_memory.h"
 #include "lisp_interpreter.h"
 #include <limits>
+#include <unordered_map>
 
 namespace procdraw {
 
@@ -61,6 +62,12 @@ namespace procdraw {
         std::string str_;
     };
 
+    class LispTable : public LispObject {
+    public:
+        LispTable() : LispObject(LispObjectType::Table) { }
+        std::unordered_map<LispObjectPtr, LispObjectPtr> tableData;
+    };
+
     void LispInterpreter::InitSymbolLiterals()
     {
         Nil = std::make_shared<LispObject>(LispObjectType::Nil);
@@ -91,6 +98,11 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::MakeString(const std::string &str)
     {
         return std::make_shared<LispString>(str);
+    }
+
+    LispObjectPtr LispInterpreter::MakeTable()
+    {
+        return std::make_shared<LispTable>();
     }
 
     LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
@@ -221,6 +233,32 @@ namespace procdraw {
         }
         // TODO if not LispObjectType::Cons?
         return cons;
+    }
+
+    LispObjectPtr LispInterpreter::Get(LispObjectPtr table, LispObjectPtr key)
+    {
+        if (table->Type == LispObjectType::Table && key->Type == LispObjectType::Symbol) {
+            auto tableData = static_cast<LispTable*>(table.get())->tableData;
+            auto found = tableData.find(key);
+            if (found != tableData.end()) {
+                return found->second;
+            }
+            else {
+                return Nil;
+            }
+        }
+        // TODO if not LispObjectType::Table and LispObjectType::Symbol?
+        return Nil;
+    }
+
+    LispObjectPtr LispInterpreter::Put(LispObjectPtr table, LispObjectPtr key, LispObjectPtr val)
+    {
+        if (table->Type == LispObjectType::Table && key->Type == LispObjectType::Symbol) {
+            static_cast<LispTable*>(table.get())->tableData[key] = val;
+            return val;
+        }
+        // TODO if not LispObjectType::Table and LispObjectType::Symbol?
+        return Nil;
     }
 
     LispObjectPtr LispInterpreter::ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env)
