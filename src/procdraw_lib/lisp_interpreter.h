@@ -38,6 +38,7 @@ namespace procdraw {
         LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
         LispObjectPtr Get(LispObjectPtr table, LispObjectPtr key);
         LispObjectPtr Put(LispObjectPtr table, LispObjectPtr key, LispObjectPtr val);
+        LispObjectPtr Clear(LispObjectPtr table);
         // Symbols
         LispObjectPtr SymbolRef(const std::string &name);
         LispObjectPtr SetGlobalCFunction(const std::string &name, lisp_CFunction cfun);

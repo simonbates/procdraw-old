@@ -30,6 +30,12 @@ namespace procdraw {
         return L->Cdar(args);
     }
 
+    LispObjectPtr lisp_Clear(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        return L->Clear(L->Car(args));
+    }
+
     LispObjectPtr lisp_Difference(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         // TODO difference with 0 args? return a value or complain that not enough args?

@@ -185,6 +185,12 @@ TEST_CASE("Tables") {
     REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(10))) == 10);
     REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
     REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
+    L.Put(table, L.SymbolRef("key2"), L.MakeNumber(100));
+    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key2"))) == 100);
+    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
+    L.Clear(table);
+    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
+    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
 
 }
 
@@ -482,6 +488,12 @@ TEST_CASE("LispInterpreter::Eval") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 42);
             REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 'key1 10)"))) == 10);
             REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 10);
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
+            L.Eval(L.Read("(put t1 'key2 100)"));
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key2)"))) == 100);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 10);
+            L.Eval(L.Read("(clear t1)"));
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key1)"))));
             REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
         }
 
