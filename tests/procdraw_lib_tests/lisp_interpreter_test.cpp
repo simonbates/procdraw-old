@@ -269,7 +269,8 @@ TEST_CASE("LispInterpreter::Eval") {
     }
 
     SECTION("QUOTE") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(quote 42)"))) == 42);
+        REQUIRE(L.SymbolName(L.Eval(L.Read("(quote foo)"))) == "foo");
+        REQUIRE(L.SymbolName(L.Eval(L.Read("'foo"))) == "foo");
     }
 
     SECTION("SUM") {
@@ -476,28 +477,28 @@ TEST_CASE("LispInterpreter::Eval") {
         L.Eval(L.Read("(setq t1 (make-table))"));
 
         SECTION("should provide getting and putting of key, value pairs") {
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 (quote key1))"))));
-            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 (quote key1) 42)"))) == 42);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 (quote key1))"))) == 42);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 (quote key1) 10)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 (quote key1))"))) == 10);
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 (quote key2))"))));
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key1)"))));
+            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 'key1 42)"))) == 42);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 42);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 'key1 10)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 10);
+            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
         }
 
         SECTION("should provide method calls") {
             auto exp = R"(
                 (progn
-                  (put t1 (quote x) 10)
-                  (put t1 (quote get-x)
-                    (lambda (self) (get self (quote x))))
-                  (put t1 (quote plus-x)
-                    (lambda (self n) (+ (get self (quote x)) n))))
+                  (put t1 'x 10)
+                  (put t1 'get-x
+                    (lambda (self) (get self 'x)))
+                  (put t1 'plus-x
+                    (lambda (self n) (+ (get self 'x) n))))
             )";
             L.Eval(L.Read(exp));
-            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 (quote get-x)) t1)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 (quote plus-x)) t1 2)"))) == 12);
-            REQUIRE(L.NumVal(L.Eval(L.Read("((quote get-x) t1)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("((quote plus-x) t1 4)"))) == 14);
+            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'get-x) t1)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'plus-x) t1 2)"))) == 12);
+            REQUIRE(L.NumVal(L.Eval(L.Read("('get-x t1)"))) == 10);
+            REQUIRE(L.NumVal(L.Eval(L.Read("('plus-x t1 4)"))) == 14);
         }
     }
 

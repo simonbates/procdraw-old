@@ -43,7 +43,7 @@ Signals
 -------
 
 - `(make-signal stepfun)`
-- `((quote step) signal)`
+- `('step signal)`
 
 Graphics
 --------

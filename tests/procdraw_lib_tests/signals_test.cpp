@@ -10,16 +10,16 @@ TEST_CASE("Signals") {
     SECTION("step") {
         auto exp = R"(
             (setq s (make-signal (lambda (self)
-              (put self (quote val) (+ (get self (quote val)) (get self (quote incr)))))))
+              (put self 'val (+ (get self 'val) (get self 'incr))))))
         )";
         L.Eval(L.Read(exp));
-        L.Eval(L.Read("(put s (quote val) 1)"));
-        L.Eval(L.Read("(put s (quote incr) 2)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get s (quote val))"))) == 1);
-        L.Eval(L.Read("((quote step) s)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get s (quote val))"))) == 3);
-        L.Eval(L.Read("((quote step) s)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get s (quote val))"))) == 5);
+        L.Eval(L.Read("(put s 'val 1)"));
+        L.Eval(L.Read("(put s 'incr 2)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get s 'val)"))) == 1);
+        L.Eval(L.Read("('step s)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get s 'val)"))) == 3);
+        L.Eval(L.Read("('step s)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get s 'val)"))) == 5);
     }
 
 }
