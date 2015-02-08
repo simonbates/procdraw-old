@@ -21,6 +21,7 @@ namespace procdraw {
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
+        LispObjectPtr MakeCFunction(lisp_CFunction cfun);
         LispObjectPtr MakeString(const std::string &str);
         LispObjectPtr MakeTable();
         // Memory access
@@ -75,7 +76,6 @@ namespace procdraw {
         void InitSymbolLiterals();
         LispObjectPtr ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);
-        LispObjectPtr MakeCFunction(lisp_CFunction cfun);
         LispObjectPtr MakeSymbol(const std::string &name, LispObjectPtr value);
         LispObjectPtr SetSymbolValue(LispObjectPtr symbol, LispObjectPtr value);
     };

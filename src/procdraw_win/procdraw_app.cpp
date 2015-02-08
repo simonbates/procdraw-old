@@ -3,6 +3,7 @@
 #include "procdraw_app_lisp.h"
 #include "util.h"
 #include "win_util.h"
+#include "signals.h"
 
 namespace procdraw {
 
@@ -24,6 +25,8 @@ namespace procdraw {
         Workspace::RegisterWindowClass(hInstance);
         workspace_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Workspace", false, this));
         transcript_ = std::unique_ptr<Workspace>(new Workspace(hInstance, nCmdShow, L"Transcript", true, this));
+
+        RegisterSignals(&L_);
         RegisterProcDrawAppFunctionsForLisp(this, &L_);
 
         workspace_->AddLine("To evaluate a Lisp expression, select it and press Ctrl+Return");
@@ -164,6 +167,7 @@ namespace procdraw {
 
     void ProcDrawApp::Draw()
     {
+        L_.Apply("clear-stepped-signals");
         L_.Apply("draw");
     }
 

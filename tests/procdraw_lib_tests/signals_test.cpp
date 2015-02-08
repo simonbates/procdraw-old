@@ -30,4 +30,25 @@ TEST_CASE("Signals") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval s)"))) == 5);
     }
 
+    SECTION("saw") {
+        L.Eval(L.Read("(setq saw1 (saw))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get saw1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get saw1 'val1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0);
+
+        L.Eval(L.Read("(put saw1 'freq (/ 3 8))"));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.375);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.75);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.125);
+
+        L.Eval(L.Read("(put saw1 'freq (/ -5 8))"));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.5);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.875);
+    }
+
 }

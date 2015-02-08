@@ -46,6 +46,7 @@ Signals
 - `(make-signal stepfun)`
 - `('step signal)`
 - `(sigval signal)`
+- `(saw)`
 
 Graphics
 --------
