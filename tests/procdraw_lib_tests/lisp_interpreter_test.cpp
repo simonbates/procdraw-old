@@ -84,6 +84,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
         REQUIRE(L.PrintString(L.MakeString("some string")) == "\"some string\"");
     }
 
+    SECTION("Quote") {
+        REQUIRE(L.PrintString(L.MakeList({ L.SymbolRef("quote"), L.MakeNumber(42) })) == "'42");
+    }
+
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()") {
