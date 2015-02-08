@@ -48,6 +48,10 @@ namespace procdraw {
             stringVal_ = str;
             break;
         }
+        case '\'':
+            token_ = LispTokenType::SingleQuote;
+            GetCh();
+            break;
         case '(':
             token_ = LispTokenType::LParen;
             GetCh();
@@ -125,6 +129,9 @@ namespace procdraw {
     LispObjectPtr LispReader::Read(LispInterpreter *L)
     {
         switch (token_) {
+        case LispTokenType::SingleQuote:
+            GetToken();
+            return L->Cons(L->SymbolRef("quote"), L->Cons(Read(L), L->Nil));
         case LispTokenType::LParen:
             GetToken();
             return ReadCons(L);

@@ -9,6 +9,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
     config.vm.provision "shell", inline: "sudo apt-get -y install build-essential cmake"
 
-    config.vm.provision "shell", path: "dotfiles.sh", privileged: false
+    config.vm.provision "shell", path: "install-user-files.sh", privileged: false
 
 end

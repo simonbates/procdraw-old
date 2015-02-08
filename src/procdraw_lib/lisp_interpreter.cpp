@@ -118,6 +118,11 @@ namespace procdraw {
         return Cdr(Car(obj));
     }
 
+    LispObjectPtr LispInterpreter::Cddr(LispObjectPtr obj)
+    {
+        return Cdr(Cdr(obj));
+    }
+
     LispObjectPtr LispInterpreter::Caddr(LispObjectPtr obj)
     {
         return Car(Cdr(Cdr(obj)));
@@ -218,22 +223,27 @@ namespace procdraw {
             return SymbolName(obj);
         case LispObjectType::Cons:
         {
-            std::string s("(");
-            LispObjectPtr n = obj;
-            while (!Null(n)) {
-                s.append(PrintString(Car(n)));
-                n = Cdr(n);
-                if (!Null(n) && Atom(n)) {
-                    s.append(" . ");
-                    s.append(PrintString(n));
-                    n = LispInterpreter::Nil;
-                }
-                if (!Null(n)) {
-                    s.append(" ");
-                }
+            if (Eq(Car(obj), S_QUOTE)) {
+                return "'" + PrintString(Cadr(obj));
             }
-            s.append(")");
-            return s;
+            else {
+                std::string s("(");
+                LispObjectPtr n = obj;
+                while (!Null(n)) {
+                    s.append(PrintString(Car(n)));
+                    n = Cdr(n);
+                    if (!Null(n) && Atom(n)) {
+                        s.append(" . ");
+                        s.append(PrintString(n));
+                        n = LispInterpreter::Nil;
+                    }
+                    if (!Null(n)) {
+                        s.append(" ");
+                    }
+                }
+                s.append(")");
+                return s;
+            }
         }
         case LispObjectType::CFunction:
             return "<CFunction>";

@@ -31,6 +31,14 @@ TEST_CASE("LispReader") {
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
+    SECTION("Quote") {
+        auto obj = reader.Read(&L, "'42");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);
+        REQUIRE(L.SymbolName(L.Car(obj)) == "quote");
+        REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
+        REQUIRE(L.Null(L.Cddr(obj)));
+    }
+
     SECTION("Star") {
         auto obj = reader.Read(&L, "*");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
