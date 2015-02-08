@@ -90,3 +90,10 @@ To run the tests (in the `build` directory):
 ```
 make test
 ```
+
+### Testing the Linux build with Vagrant
+
+- `cd tools\vagrantfiles\trusty64`
+- `vagrant up`
+- `vagrant ssh -c ./make-test-procdraw.sh`
+- `vagrant halt`
