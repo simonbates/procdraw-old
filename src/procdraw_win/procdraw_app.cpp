@@ -71,40 +71,40 @@ namespace procdraw {
         return frameCounter_.GetFramesPerSecond();
     }
 
-    float ProcDrawApp::Width()
+    double ProcDrawApp::Width()
     {
         int width = 0;
         RECT rect;
         if (GetClientRect(hWnd_, &rect)) {
             width = rect.right - rect.left;
         }
-        return static_cast<float>(width);
+        return static_cast<double>(width);
     }
 
-    float ProcDrawApp::Height()
+    double ProcDrawApp::Height()
     {
         int height = 0;
         RECT rect;
         if (GetClientRect(hWnd_, &rect)) {
             height = rect.bottom - rect.top;
         }
-        return static_cast<float>(height);
+        return static_cast<double>(height);
     }
 
-    float ProcDrawApp::MouseX()
+    double ProcDrawApp::MouseX()
     {
         POINT pt;
         GetCursorPos(&pt);
         ScreenToClient(hWnd_, &pt);
-        return Clamp(static_cast<float>(pt.x), 0.0f, Width() - 1);
+        return Clamp(static_cast<double>(pt.x) / (Width() - 1), 0.0, 1.0);
     }
 
-    float ProcDrawApp::MouseY()
+    double ProcDrawApp::MouseY()
     {
         POINT pt;
         GetCursorPos(&pt);
         ScreenToClient(hWnd_, &pt);
-        return Clamp(static_cast<float>(pt.y), 0.0f, Height() - 1);
+        return Clamp(static_cast<double>(pt.y) / (Height() - 1), 0.0, 1.0);
     }
 
     void ProcDrawApp::CreateAppWindow()

@@ -21,10 +21,10 @@ namespace procdraw {
         int MainLoop();
         void DoCommand(const std::string &cmd) override;
         double FramesPerSecond();
-        float Width();
-        float Height();
-        float MouseX();
-        float MouseY();
+        double Width();
+        double Height();
+        double MouseX();
+        double MouseY();
     private:
         HINSTANCE hInstance_;
         int nCmdShow_;

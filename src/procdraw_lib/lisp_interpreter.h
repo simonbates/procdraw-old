@@ -46,6 +46,7 @@ namespace procdraw {
         // Functions
         LispObjectPtr Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Apply(const std::string &name);
+        LispObjectPtr ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Assoc(LispObjectPtr key, LispObjectPtr alist);
         bool Atom(LispObjectPtr obj);
         LispObjectPtr Caar(LispObjectPtr obj);

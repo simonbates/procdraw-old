@@ -73,6 +73,11 @@ namespace procdraw {
         return Apply(Value(SymbolRef(name), Nil), Nil, Nil);
     }
 
+    LispObjectPtr LispInterpreter::ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args, LispObjectPtr env)
+    {
+        return Apply(key, Cons(table, args), env);
+    }
+
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
     {
         LispObjectPtr n = alist;

@@ -26,7 +26,7 @@ namespace procdraw {
         auto steppedSignals = GetSteppedSignals(L);
 
         if (L->Null(L->Get(steppedSignals, signal))) {
-            L->Apply(L->SymbolRef("step"), L->Cons(signal, L->Nil), env);
+            L->ApplyTableMethod(L->SymbolRef("step"), signal, L->Nil, env);
             L->Put(steppedSignals, signal, L->True);
         }
 
