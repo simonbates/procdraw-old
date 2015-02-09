@@ -5,7 +5,7 @@ ProcDraw is a work-in-progress live programming system.
 
 It consists of:
 
-- a cross-platform core with an interpreter for a Lisp-like language
+- a cross-platform core with an embeddable interpreter for a Lisp-like language
 - a GUI and graphics engine for Windows
 
 Videos: https://vimeo.com/channels/858277
@@ -41,9 +41,9 @@ Dependencies:
 Run CMake to generate the Visual Studio solution:
 
 ```
-mkdir build
-cd build
-cmake -G "Visual Studio 12" ..
+> mkdir build
+> cd build
+> cmake -G "Visual Studio 12" ..
 ```
 
 To build in Visual Studio:
@@ -74,26 +74,28 @@ Dependencies:
 Run CMake to generate a Makefile:
 
 ```
-mkdir build
-cd build
-cmake ..
+> mkdir build
+> cd build
+> cmake ..
 ```
 
 To build (in the `build` directory):
 
 ```
-make
+> make
 ```
 
 To run the tests (in the `build` directory):
 
 ```
-make test
+> make test
 ```
 
 ### Testing the Linux build with Vagrant
 
-- `cd tools\vagrantfiles\trusty64`
-- `vagrant up`
-- `vagrant ssh -c ./make-test-procdraw.sh`
-- `vagrant halt`
+```
+> cd tools\vagrantfiles\trusty64
+> vagrant up
+> vagrant ssh -c ./make-test-procdraw.sh
+> vagrant halt
+```
