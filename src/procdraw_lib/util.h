@@ -19,7 +19,7 @@ namespace procdraw {
 
     double MapRange(double a1, double a2, double b1, double b2, double s);
 
-    double WrapRange(double min, double max, double x);
+    double Wrap(double start, double stop, double val);
 
     template <typename T> class SimpleMovingAverage {
     public:

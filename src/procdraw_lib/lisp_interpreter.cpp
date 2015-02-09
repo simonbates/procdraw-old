@@ -28,7 +28,7 @@ namespace procdraw {
         SetGlobalCFunction("make-table", lisp_MakeTable);
         SetGlobalCFunction("map-range", lisp_MapRange);
         SetGlobalCFunction("put", lisp_Put);
-        SetGlobalCFunction("wrap-range", lisp_WrapRange);
+        SetGlobalCFunction("wrap", lisp_Wrap);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }

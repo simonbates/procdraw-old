@@ -44,10 +44,7 @@ namespace procdraw {
         auto self = L->Car(args);
         auto val1Key = L->SymbolRef("val1");
         double val1 = L->NumVal(L->Get(self, val1Key));
-        val1 += L->NumVal(L->Get(self, L->SymbolRef("freq")));
-        if (val1 > 1.0 || val1 < 0.0) {
-            val1 = WrapRange(0.0, 1.0, val1);
-        }
+        val1 = Wrap(0.0, 1.0, val1 + L->NumVal(L->Get(self, L->SymbolRef("freq"))));
         auto val1Num = L->MakeNumber(val1);
         L->Put(self, val1Key, val1Num);
         return val1Num;

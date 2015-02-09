@@ -8,9 +8,9 @@ namespace procdraw {
         return b1 + ((s - a1) * (b2 - b1)) / (a2 - a1);
     }
 
-    double WrapRange(double min, double max, double x)
+    double Wrap(double start, double stop, double val)
     {
-        return x - floor((x - min) / (max - min)) * (max - min);
+        return val - floor((val - start) / (stop - start)) * (stop - start);
     }
 
 }
