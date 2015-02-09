@@ -5,7 +5,7 @@ ProcDraw is a work-in-progress live programming system.
 
 It consists of:
 
-- a cross-platform core with an interpreter for a Lisp-like language
+- a cross-platform core with an embeddable interpreter for a Lisp-like language
 - a GUI and graphics engine for Windows
 
 Videos: https://vimeo.com/channels/858277
