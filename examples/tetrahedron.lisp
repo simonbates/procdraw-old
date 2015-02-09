@@ -1,6 +1,6 @@
 (progn
   (setq mouse-angle (lambda (pos)
-    (map-range 0 1 (* 2 pi) (* -2 pi) pos)))
+    (lerp (* 2 pi) (* -2 pi) pos)))
 
   (setq draw (lambda ()
     (progn

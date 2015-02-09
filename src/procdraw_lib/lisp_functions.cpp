@@ -70,6 +70,16 @@ namespace procdraw {
         return L->Get(table, key);
     }
 
+    LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        // TODO check number of args?
+        double start = L->NumVal(L->Car(args));
+        double stop = L->NumVal(L->Cadr(args));
+        double val = L->NumVal(L->Caddr(args));
+
+        return L->MakeNumber(Lerp(start, stop, val));
+    }
+
     LispObjectPtr lisp_MakeTable(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         return L->MakeTable();
@@ -78,13 +88,13 @@ namespace procdraw {
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         // TODO check number of args?
-        double a1 = L->NumVal(L->Car(args));
-        double a2 = L->NumVal(L->Cadr(args));
-        double b1 = L->NumVal(L->Caddr(args));
-        double b2 = L->NumVal(L->Cadddr(args));
-        double s = L->NumVal(L->Caddddr(args));
+        double start1 = L->NumVal(L->Car(args));
+        double stop1 = L->NumVal(L->Cadr(args));
+        double start2 = L->NumVal(L->Caddr(args));
+        double stop2 = L->NumVal(L->Cadddr(args));
+        double val = L->NumVal(L->Caddddr(args));
 
-        return L->MakeNumber(MapRange(a1, a2, b1, b2, s));
+        return L->MakeNumber(MapRange(start1, stop1, start2, stop2, val));
     }
 
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)

@@ -25,7 +25,8 @@ Special-forms and functions
 - `(eq obj1 obj2)`
 - `(if test then else)`
 - `(lambda arg-list body)`
-- `(map-range a1 a2 b1 b2 s)`
+- `(lerp start stop val)`
+- `(map-range start1 stop1 start2 stop2 val)`
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`

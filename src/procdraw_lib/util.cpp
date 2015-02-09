@@ -3,9 +3,13 @@
 
 namespace procdraw {
 
-    double MapRange(double a1, double a2, double b1, double b2, double s)
+    double Lerp(double start, double stop, double val) {
+        return (1 - val) * start + val * stop;
+    }
+
+    double MapRange(double start1, double stop1, double start2, double stop2, double val)
     {
-        return b1 + ((s - a1) * (b2 - b1)) / (a2 - a1);
+        return start2 + ((val - start1) * (stop2 - start2)) / (stop1 - start1);
     }
 
     double Wrap(double start, double stop, double val)

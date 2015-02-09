@@ -6,11 +6,9 @@
   (setq rot-y (saw))
   (setq draw (lambda ()
     (progn
-      (put rot-x 'freq
-        (map-range 0 1 (/ 60) (/ -60) (mouse-y)))
-      (put rot-y 'freq
-        (map-range 0 1 (/ 60) (/ -60) (mouse-x)))
+      (put rot-x 'freq (lerp (/ 60) (/ -60) (mouse-y)))
+      (put rot-y 'freq (lerp (/ 60) (/ -60) (mouse-x)))
       (background 200 (/ 7 10) (/ 9 10))
-      (rotate-y (map-range 0 1 0 (* 2 pi) (sigval rot-y)))
-      (rotate-x (map-range 0 1 0 (* 2 pi) (sigval rot-x)))
+      (rotate-y (lerp 0 (* 2 pi) (sigval rot-y)))
+      (rotate-x (lerp 0 (* 2 pi) (sigval rot-x)))
       (tetrahedron)))))

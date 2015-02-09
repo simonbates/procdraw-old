@@ -17,7 +17,9 @@ namespace procdraw {
         return value;
     }
 
-    double MapRange(double a1, double a2, double b1, double b2, double s);
+    double Lerp(double start, double stop, double val);
+
+    double MapRange(double start1, double stop1, double start2, double stop2, double val);
 
     double Wrap(double start, double stop, double val);
 

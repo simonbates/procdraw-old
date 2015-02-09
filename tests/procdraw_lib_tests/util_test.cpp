@@ -29,9 +29,29 @@ TEST_CASE("Clamp") {
 
 }
 
+TEST_CASE("Lerp") {
+
+    SECTION("should interpolate values for [0, 8]") {
+        REQUIRE(procdraw::Lerp(0.0, 8.0, 0.0) == 0.0);
+        REQUIRE(procdraw::Lerp(0.0, 8.0, 0.25) == 2.0);
+        REQUIRE(procdraw::Lerp(0.0, 8.0, 0.5) == 4.0);
+        REQUIRE(procdraw::Lerp(0.0, 8.0, 0.75) == 6.0);
+        REQUIRE(procdraw::Lerp(0.0, 8.0, 1.0) == 8.0);
+    }
+
+    SECTION("should interpolate values for [4, -4]") {
+        REQUIRE(procdraw::Lerp(4.0, -4.0, 0.0) == 4.0);
+        REQUIRE(procdraw::Lerp(4.0, -4.0, 0.25) == 2.0);
+        REQUIRE(procdraw::Lerp(4.0, -4.0, 0.5) == 0.0);
+        REQUIRE(procdraw::Lerp(4.0, -4.0, 0.75) == -2.0);
+        REQUIRE(procdraw::Lerp(4.0, -4.0, 1.0) == -4.0);
+    }
+
+}
+
 TEST_CASE("MapRange") {
 
-    SECTION("should map values as expected given the ranges [0, 10] and [-1, 0]") {
+    SECTION("should map values from [0, 10] to [-1, 0]") {
         REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 0.0) == -1.0);
         REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 2.5) == -0.75);
         REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 5.0) == -0.5);
@@ -39,7 +59,7 @@ TEST_CASE("MapRange") {
         REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 10.0) == 0.0);
     }
 
-    SECTION("should map values as expected given the ranges [0, 10] and [1, -1]") {
+    SECTION("should map values from [0, 10] to [1, -1]") {
         REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 0.0) == 1.0);
         REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 2.5) == 0.5);
         REQUIRE(procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 5.0) == 0.0);
@@ -51,7 +71,7 @@ TEST_CASE("MapRange") {
 
 TEST_CASE("Wrap") {
 
-    SECTION("should wrap values as expected given the range [0, 10]") {
+    SECTION("should wrap values for [0, 10]") {
         REQUIRE(procdraw::Wrap(0.0, 10.0, 0.0) == 0.0);
         REQUIRE(procdraw::Wrap(0.0, 10.0, 10.0) == 0.0);
         REQUIRE(procdraw::Wrap(0.0, 10.0, 20.0) == 0.0);
@@ -63,7 +83,7 @@ TEST_CASE("Wrap") {
         REQUIRE(procdraw::Wrap(0.0, 10.0, -13.0) == 7.0);
     }
 
-    SECTION("should wrap values as expected given the range [-20, -10]") {
+    SECTION("should wrap values for [-20, -10]") {
         REQUIRE(procdraw::Wrap(-20.0, -10.0, -20.0) == -20.0);
         REQUIRE(procdraw::Wrap(-20.0, -10.0, -10.0) == -20.0);
         REQUIRE(procdraw::Wrap(-20.0, -10.0, 0.0) == -20.0);

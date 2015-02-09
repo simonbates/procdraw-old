@@ -431,9 +431,29 @@ TEST_CASE("LispInterpreter::Eval") {
         REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
     }
 
+    SECTION("LERP") {
+
+        SECTION("should interpolate values for [0, 8]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 0)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 (/ 4))"))) == 2.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 (/ 2))"))) == 4.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 (/ 3 4))"))) == 6.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 1)"))) == 8.0);
+        }
+
+        SECTION("should interpolate values for [4, -4]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 0)"))) == 4.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 (/ 4))"))) == 2.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 (/ 2 ))"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 (/ 3 4))"))) == -2.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 1)"))) == -4.0);
+        }
+
+    }
+
     SECTION("MAP-RANGE") {
 
-        SECTION("should map values as expected given the ranges [0, 10] and [-1, 0]") {
+        SECTION("should map values from [0, 10] to [-1, 0]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 0)"))) == -1.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 10 4))"))) == -0.75);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 5)"))) == -0.5);
@@ -441,7 +461,7 @@ TEST_CASE("LispInterpreter::Eval") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 10)"))) == 0.0);
         }
 
-        SECTION("should map values as expected given the ranges [0, 10] and [1, -1]") {
+        SECTION("should map values from [0, 10] to [1, -1]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 0)"))) == 1.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 10 4))"))) == 0.5);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 5)"))) == 0.0);
@@ -453,7 +473,7 @@ TEST_CASE("LispInterpreter::Eval") {
 
     SECTION("WRAP") {
 
-        SECTION("should wrap values as expected given the range [0, 10]") {
+        SECTION("should wrap values for [0, 10]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 0)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 10)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 20)"))) == 0.0);
@@ -465,7 +485,7 @@ TEST_CASE("LispInterpreter::Eval") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 -13)"))) == 7.0);
         }
 
-        SECTION("should wrap values as expected given the range [-20, -10]") {
+        SECTION("should wrap values for [-20, -10]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 -20)"))) == -20.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 -10)"))) == -20.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 0)"))) == -20.0);
