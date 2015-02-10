@@ -18,9 +18,8 @@ namespace procdraw {
     }
 
     double Lerp(double start, double stop, double val);
-
     double MapRange(double start1, double stop1, double start2, double stop2, double val);
-
+    double Norm(double start, double stop, double val);
     double Wrap(double start, double stop, double val);
 
     template <typename T> class SimpleMovingAverage {

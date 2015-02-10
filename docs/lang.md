@@ -27,6 +27,7 @@ Special-forms and functions
 - `(lambda arg-list body)`
 - `(lerp start stop val)`
 - `(map-range start1 stop1 start2 stop2 val)`
+- `(norm start stop val)`
 - `(progn action ...)`
 - `(quote arg)`
 - `(setq identifier value)`

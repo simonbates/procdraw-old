@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "procdraw_app_lisp.h"
 
+// TODO check number and types of arguments in Lisp wrapper functions?
+
 namespace procdraw {
 
     static ProcDrawApp *app;
@@ -34,75 +36,67 @@ namespace procdraw {
 
     static LispObjectPtr lisp_AmbientLightColor(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto h = L->Car(args);
-        auto s = L->Cadr(args);
-        auto v = L->Caddr(args);
-        app->Graphics()->AmbientLightColor(L->NumVal(h), L->NumVal(s), L->NumVal(v));
+        auto h = L->NumVal(L->Car(args));
+        auto s = L->NumVal(L->Cadr(args));
+        auto v = L->NumVal(L->Caddr(args));
+        app->Graphics()->AmbientLightColor(h, s, v);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Background(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto h = L->Car(args);
-        auto s = L->Cadr(args);
-        auto v = L->Caddr(args);
-        app->Graphics()->Background(L->NumVal(h), L->NumVal(s), L->NumVal(v));
+        auto h = L->NumVal(L->Car(args));
+        auto s = L->NumVal(L->Cadr(args));
+        auto v = L->NumVal(L->Caddr(args));
+        app->Graphics()->Background(h, s, v);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Color(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto h = L->Car(args);
-        auto s = L->Cadr(args);
-        auto v = L->Caddr(args);
-        app->Graphics()->Color(L->NumVal(h), L->NumVal(s), L->NumVal(v));
+        auto h = L->NumVal(L->Car(args));
+        auto s = L->NumVal(L->Cadr(args));
+        auto v = L->NumVal(L->Caddr(args));
+        app->Graphics()->Color(h, s, v);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_LightColor(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto h = L->Car(args);
-        auto s = L->Cadr(args);
-        auto v = L->Caddr(args);
-        app->Graphics()->LightColor(L->NumVal(h), L->NumVal(s), L->NumVal(v));
+        auto h = L->NumVal(L->Car(args));
+        auto s = L->NumVal(L->Cadr(args));
+        auto v = L->NumVal(L->Caddr(args));
+        app->Graphics()->LightColor(h, s, v);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto angle = L->Car(args);
-        app->Graphics()->RotateX(L->NumVal(angle));
+        auto angle = L->NumVal(L->Car(args));
+        app->Graphics()->RotateX(angle);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto angle = L->Car(args);
-        app->Graphics()->RotateY(L->NumVal(angle));
+        auto angle = L->NumVal(L->Car(args));
+        app->Graphics()->RotateY(angle);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto angle = L->Car(args);
-        app->Graphics()->RotateZ(L->NumVal(angle));
+        auto angle = L->NumVal(L->Car(args));
+        app->Graphics()->RotateZ(angle);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Scale(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto x = L->Car(args);
-        auto y = L->Cadr(args);
-        auto z = L->Caddr(args);
-        app->Graphics()->Scale(L->NumVal(x), L->NumVal(y), L->NumVal(z));
+        auto x = L->NumVal(L->Car(args));
+        auto y = L->NumVal(L->Cadr(args));
+        auto z = L->NumVal(L->Caddr(args));
+        app->Graphics()->Scale(x, y, z);
         return L->Nil;
     }
 
@@ -114,11 +108,10 @@ namespace procdraw {
 
     static LispObjectPtr lisp_Translate(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number and type of args
-        auto x = L->Car(args);
-        auto y = L->Cadr(args);
-        auto z = L->Caddr(args);
-        app->Graphics()->Translate(L->NumVal(x), L->NumVal(y), L->NumVal(z));
+        auto x = L->NumVal(L->Car(args));
+        auto y = L->NumVal(L->Cadr(args));
+        auto z = L->NumVal(L->Caddr(args));
+        app->Graphics()->Translate(x, y, z);
         return L->Nil;
     }
 

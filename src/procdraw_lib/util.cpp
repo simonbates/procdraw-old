@@ -12,6 +12,11 @@ namespace procdraw {
         return start2 + ((val - start1) * (stop2 - start2)) / (stop1 - start1);
     }
 
+    double Norm(double start, double stop, double val)
+    {
+        return (val - start) / (stop - start);
+    }
+
     double Wrap(double start, double stop, double val)
     {
         return val - floor((val - start) / (stop - start)) * (stop - start);

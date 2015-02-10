@@ -14,6 +14,7 @@ namespace procdraw {
     LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr lisp_MakeTable(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
+    LispObjectPtr lisp_Norm(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr lisp_Put(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr lisp_Quotient(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);

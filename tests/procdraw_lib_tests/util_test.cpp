@@ -69,6 +69,26 @@ TEST_CASE("MapRange") {
 
 }
 
+TEST_CASE("Norm") {
+
+    SECTION("should normalize values for [0, 8]") {
+        REQUIRE(procdraw::Norm(0.0, 8.0, 0.0) == 0.0);
+        REQUIRE(procdraw::Norm(0.0, 8.0, 2.0) == 0.25);
+        REQUIRE(procdraw::Norm(0.0, 8.0, 4.0) == 0.5);
+        REQUIRE(procdraw::Norm(0.0, 8.0, 6.0) == 0.75);
+        REQUIRE(procdraw::Norm(0.0, 8.0, 8.0) == 1.0);
+    }
+
+    SECTION("should normalize values for [4, -4]") {
+        REQUIRE(procdraw::Norm(4.0, -4.0, 4.0) == 0.0);
+        REQUIRE(procdraw::Norm(4.0, -4.0, 2.0) == 0.25);
+        REQUIRE(procdraw::Norm(4.0, -4.0, 0.0) == 0.5);
+        REQUIRE(procdraw::Norm(4.0, -4.0, -2.0) == 0.75);
+        REQUIRE(procdraw::Norm(4.0, -4.0, -4.0) == 1.0);
+    }
+
+}
+
 TEST_CASE("Wrap") {
 
     SECTION("should wrap values for [0, 10]") {

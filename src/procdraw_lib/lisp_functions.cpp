@@ -10,29 +10,27 @@
         acc = exp; \
     }
 
+// TODO check number and types of arguments in Lisp wrapper functions?
+
 namespace procdraw {
 
     LispObjectPtr lisp_Apply(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
         return L->Apply(L->Car(args), L->Cadr(args), env);
     }
 
     LispObjectPtr lisp_Car(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
         return L->Caar(args);
     }
 
     LispObjectPtr lisp_Cdr(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
         return L->Cdar(args);
     }
 
     LispObjectPtr lisp_Clear(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
         return L->Clear(L->Car(args));
     }
 
@@ -59,7 +57,6 @@ namespace procdraw {
 
     LispObjectPtr lisp_Eq(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
         return L->Eq(L->Car(args), L->Cadr(args)) ? L->True : L->False;
     }
 
@@ -72,11 +69,9 @@ namespace procdraw {
 
     LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
-        double start = L->NumVal(L->Car(args));
-        double stop = L->NumVal(L->Cadr(args));
-        double val = L->NumVal(L->Caddr(args));
-
+        auto start = L->NumVal(L->Car(args));
+        auto stop = L->NumVal(L->Cadr(args));
+        auto val = L->NumVal(L->Caddr(args));
         return L->MakeNumber(Lerp(start, stop, val));
     }
 
@@ -87,14 +82,20 @@ namespace procdraw {
 
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
-        double start1 = L->NumVal(L->Car(args));
-        double stop1 = L->NumVal(L->Cadr(args));
-        double start2 = L->NumVal(L->Caddr(args));
-        double stop2 = L->NumVal(L->Cadddr(args));
-        double val = L->NumVal(L->Caddddr(args));
-
+        auto start1 = L->NumVal(L->Car(args));
+        auto stop1 = L->NumVal(L->Cadr(args));
+        auto start2 = L->NumVal(L->Caddr(args));
+        auto stop2 = L->NumVal(L->Cadddr(args));
+        auto val = L->NumVal(L->Caddddr(args));
         return L->MakeNumber(MapRange(start1, stop1, start2, stop2, val));
+    }
+
+    LispObjectPtr lisp_Norm(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto start = L->NumVal(L->Car(args));
+        auto stop = L->NumVal(L->Cadr(args));
+        auto val = L->NumVal(L->Caddr(args));
+        return L->MakeNumber(Norm(start, stop, val));
     }
 
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
@@ -142,11 +143,9 @@ namespace procdraw {
 
     LispObjectPtr lisp_Wrap(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO check number of args?
-        double start = L->NumVal(L->Car(args));
-        double stop = L->NumVal(L->Cadr(args));
-        double val = L->NumVal(L->Caddr(args));
-
+        auto start = L->NumVal(L->Car(args));
+        auto stop = L->NumVal(L->Cadr(args));
+        auto val = L->NumVal(L->Caddr(args));
         return L->MakeNumber(Wrap(start, stop, val));
     }
 

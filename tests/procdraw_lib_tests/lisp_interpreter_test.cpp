@@ -471,6 +471,26 @@ TEST_CASE("LispInterpreter::Eval") {
 
     }
 
+    SECTION("NORM") {
+
+        SECTION("should normalize values for [0, 8]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 0)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 2)"))) == 0.25);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 4)"))) == 0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 6)"))) == 0.75);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 8)"))) == 1.0);
+        }
+
+        SECTION("should normalize values for [4, -4]") {
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 4)"))) == 0.0);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 2)"))) == 0.25);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 0)"))) == 0.5);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 -2)"))) == 0.75);
+            REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 -4)"))) == 1.0);
+        }
+
+    }
+
     SECTION("WRAP") {
 
         SECTION("should wrap values for [0, 10]") {

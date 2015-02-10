@@ -28,6 +28,7 @@ namespace procdraw {
         SetGlobalCFunction("lerp", lisp_Lerp);
         SetGlobalCFunction("make-table", lisp_MakeTable);
         SetGlobalCFunction("map-range", lisp_MapRange);
+        SetGlobalCFunction("norm", lisp_Norm);
         SetGlobalCFunction("put", lisp_Put);
         SetGlobalCFunction("wrap", lisp_Wrap);
         // Constants
