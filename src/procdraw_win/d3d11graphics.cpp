@@ -89,23 +89,23 @@ namespace procdraw {
         d3dContext_->Draw(12, 0);
     }
 
-    void D3D11Graphics::RotateX(float angle)
+    void D3D11Graphics::RotateX(float turns)
     {
-        auto rotationMatrix = DirectX::XMMatrixRotationX(angle);
+        auto rotationMatrix = DirectX::XMMatrixRotationX(turns * 2 * M_PI);
         auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
         DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
-    void D3D11Graphics::RotateY(float angle)
+    void D3D11Graphics::RotateY(float turns)
     {
-        auto rotationMatrix = DirectX::XMMatrixRotationY(angle);
+        auto rotationMatrix = DirectX::XMMatrixRotationY(turns * 2 * M_PI);
         auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
         DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }
 
-    void D3D11Graphics::RotateZ(float angle)
+    void D3D11Graphics::RotateZ(float turns)
     {
-        auto rotationMatrix = DirectX::XMMatrixRotationZ(angle);
+        auto rotationMatrix = DirectX::XMMatrixRotationZ(turns * 2 * M_PI);
         auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
         DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
     }

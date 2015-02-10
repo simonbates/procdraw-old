@@ -61,9 +61,9 @@ Graphics
 - `(light-color h s v)`
 - `(mouse-x)`
 - `(mouse-y)`
-- `(rotate-x angle)`
-- `(rotate-y angle)`
-- `(rotate-z angle)`
+- `(rotate-x turns)`
+- `(rotate-y turns)`
+- `(rotate-z turns)`
 - `(scale x y z)`
 - `(tetrahedron)`
 - `(translate x y z)`

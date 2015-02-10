@@ -5,5 +5,5 @@
     ((lambda (scale-val)
         (scale scale-val scale-val scale-val))
       (lerp 2 (/ 4) (mouse-y)))
-    (rotate-y (lerp 0 (* 4 pi) (mouse-y)))
+    (rotate-y (lerp 0 2 (mouse-y)))
     (tetrahedron)))))

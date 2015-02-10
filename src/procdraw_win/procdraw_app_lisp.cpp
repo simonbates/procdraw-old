@@ -72,22 +72,19 @@ namespace procdraw {
 
     static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto angle = L->NumVal(L->Car(args));
-        app->Graphics()->RotateX(angle);
+        app->Graphics()->RotateX(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto angle = L->NumVal(L->Car(args));
-        app->Graphics()->RotateY(angle);
+        app->Graphics()->RotateY(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto angle = L->NumVal(L->Car(args));
-        app->Graphics()->RotateZ(angle);
+        app->Graphics()->RotateZ(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
