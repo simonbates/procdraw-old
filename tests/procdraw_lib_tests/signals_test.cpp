@@ -2,7 +2,8 @@
 #include "lisp_interpreter.h"
 #include "catch.hpp"
 
-TEST_CASE("Signals") {
+TEST_CASE("Signals")
+{
 
     procdraw::LispInterpreter L;
     procdraw::RegisterSignals(&L);

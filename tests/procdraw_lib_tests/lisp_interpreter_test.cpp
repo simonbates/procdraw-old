@@ -2,7 +2,8 @@
 #include "catch.hpp"
 #include <cmath>
 
-TEST_CASE("LispInterpreter::MakeList()") {
+TEST_CASE("LispInterpreter::MakeList()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -52,7 +53,8 @@ TEST_CASE("LispInterpreter::MakeList()") {
     }
 }
 
-TEST_CASE("LispInterpreter::PrintString()") {
+TEST_CASE("LispInterpreter::PrintString()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -67,8 +69,10 @@ TEST_CASE("LispInterpreter::PrintString()") {
     SECTION("List") {
         REQUIRE(L.PrintString(L.MakeList({})) == "nil");
         REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(42) })) == "(42)");
-        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) == "(1 2 3 4)");
-        REQUIRE(L.PrintString(L.MakeList({ L.MakeList({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) })) == "((1 2) 3 4)");
+        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) ==
+                "(1 2 3 4)");
+        REQUIRE(L.PrintString(L.MakeList({ L.MakeList({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) }))
+                == "((1 2) 3 4)");
     }
 
     SECTION("Dotted pair") {
@@ -94,7 +98,8 @@ TEST_CASE("LispInterpreter::PrintString()") {
 
 }
 
-TEST_CASE("LispInterpreter::SymbolRef()") {
+TEST_CASE("LispInterpreter::SymbolRef()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -108,7 +113,8 @@ TEST_CASE("LispInterpreter::SymbolRef()") {
     REQUIRE(hello1.get() == hello2.get());
 }
 
-TEST_CASE("LispInterpreter::Eq()") {
+TEST_CASE("LispInterpreter::Eq()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -126,7 +132,8 @@ TEST_CASE("LispInterpreter::Eq()") {
     REQUIRE(L.Eq(list1, list1));
 }
 
-TEST_CASE("LispInterpreter::Assoc()") {
+TEST_CASE("LispInterpreter::Assoc()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -152,7 +159,8 @@ TEST_CASE("LispInterpreter::Assoc()") {
 
 }
 
-TEST_CASE("LispInterpreter::Rplaca()") {
+TEST_CASE("LispInterpreter::Rplaca()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -163,7 +171,8 @@ TEST_CASE("LispInterpreter::Rplaca()") {
     REQUIRE(L.Eq(cons, result));
 }
 
-TEST_CASE("LispInterpreter::Rplacd()") {
+TEST_CASE("LispInterpreter::Rplacd()")
+{
 
     procdraw::LispInterpreter L;
 
@@ -174,7 +183,8 @@ TEST_CASE("LispInterpreter::Rplacd()") {
     REQUIRE(L.Eq(cons, result));
 }
 
-TEST_CASE("Tables") {
+TEST_CASE("Tables")
+{
 
     procdraw::LispInterpreter L;
 
@@ -207,13 +217,14 @@ TEST_CASE("Tables") {
         auto twoKeys = L.Keys(table);
         REQUIRE(L.Null(L.Cddr(twoKeys)));
         auto foundExpectedKeys = (L.SymbolName(L.Car(twoKeys)) == "key1" && L.SymbolName(L.Cadr(twoKeys)) == "key2")
-            || (L.SymbolName(L.Car(twoKeys)) == "key2" && L.SymbolName(L.Cadr(twoKeys)) == "key1");
+                                 || (L.SymbolName(L.Car(twoKeys)) == "key2" && L.SymbolName(L.Cadr(twoKeys)) == "key1");
         REQUIRE(foundExpectedKeys);
     }
 
 }
 
-TEST_CASE("LispInterpreter implicit type conversion") {
+TEST_CASE("LispInterpreter implicit type conversion")
+{
 
     procdraw::LispInterpreter L;
 
@@ -263,7 +274,8 @@ TEST_CASE("LispInterpreter implicit type conversion") {
 
 }
 
-TEST_CASE("LispInterpreter::Eval") {
+TEST_CASE("LispInterpreter::Eval")
+{
 
     procdraw::LispInterpreter L;
 

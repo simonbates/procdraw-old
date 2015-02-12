@@ -1,7 +1,8 @@
 #include "lsystem.h"
 #include "catch.hpp"
 
-TEST_CASE("Lsystem Algae") {
+TEST_CASE("Lsystem Algae")
+{
     // Algae -- variables only
 
     procdraw::Lsystem algae("A", { { 'A', "AB" }, { 'B', "A" } });
@@ -17,7 +18,8 @@ TEST_CASE("Lsystem Algae") {
     REQUIRE(algae.GetString() == std::string("ABAABABA"));
 }
 
-TEST_CASE("Lsystem Koch Curve") {
+TEST_CASE("Lsystem Koch Curve")
+{
     // Koch Curve -- variables and constants
 
     procdraw::Lsystem kochCurve("F", { { 'F', "F-F++F-F" } });

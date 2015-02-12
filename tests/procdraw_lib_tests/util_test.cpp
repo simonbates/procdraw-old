@@ -1,7 +1,8 @@
 #include "util.h"
 #include "catch.hpp"
 
-TEST_CASE("Clamp") {
+TEST_CASE("Clamp")
+{
 
     SECTION("<int>") {
         SECTION("should return the lower bound for a value below the range") {
@@ -29,7 +30,8 @@ TEST_CASE("Clamp") {
 
 }
 
-TEST_CASE("Lerp") {
+TEST_CASE("Lerp")
+{
 
     SECTION("should interpolate values for [0, 8]") {
         REQUIRE(procdraw::Lerp(0.0, 8.0, 0.0) == 0.0);
@@ -49,7 +51,8 @@ TEST_CASE("Lerp") {
 
 }
 
-TEST_CASE("MapRange") {
+TEST_CASE("MapRange")
+{
 
     SECTION("should map values from [0, 10] to [-1, 0]") {
         REQUIRE(procdraw::MapRange(0.0, 10.0, -1.0, 0.0, 0.0) == -1.0);
@@ -69,7 +72,8 @@ TEST_CASE("MapRange") {
 
 }
 
-TEST_CASE("Norm") {
+TEST_CASE("Norm")
+{
 
     SECTION("should normalize values for [0, 8]") {
         REQUIRE(procdraw::Norm(0.0, 8.0, 0.0) == 0.0);
@@ -89,7 +93,8 @@ TEST_CASE("Norm") {
 
 }
 
-TEST_CASE("Wrap") {
+TEST_CASE("Wrap")
+{
 
     SECTION("should wrap values for [0, 10]") {
         REQUIRE(procdraw::Wrap(0.0, 10.0, 0.0) == 0.0);
@@ -117,7 +122,8 @@ TEST_CASE("Wrap") {
 
 }
 
-TEST_CASE("SimpleMovingAverage") {
+TEST_CASE("SimpleMovingAverage")
+{
 
     procdraw::SimpleMovingAverage<int> sma(4);
 

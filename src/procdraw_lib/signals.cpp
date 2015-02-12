@@ -22,7 +22,7 @@ namespace procdraw {
     }
 
     static LispObjectPtr Sigval(LispInterpreter *L, LispObjectPtr signal,
-        LispObjectPtr steppedSignals, LispObjectPtr env)
+                                LispObjectPtr steppedSignals, LispObjectPtr env)
     {
         if (L->Null(L->Get(steppedSignals, signal))) {
             // apply inputs

@@ -263,11 +263,12 @@ namespace procdraw {
         return Nil;
     }
 
-    LispObjectPtr LispInterpreter::Keys(LispObjectPtr table) {
+    LispObjectPtr LispInterpreter::Keys(LispObjectPtr table)
+    {
         LispObjectPtr keys = Nil;
         if (table->Type == LispObjectType::Table) {
             auto tableData = static_cast<LispTable*>(table.get())->tableData;
-            for (auto it = tableData.rbegin(); it != tableData.rend(); ++it) {
+            for (auto it = tableData.begin(); it != tableData.end(); ++it) {
                 keys = Cons(it->first, keys);
             }
         }

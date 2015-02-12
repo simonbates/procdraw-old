@@ -2,7 +2,8 @@
 #include "lisp_interpreter.h"
 #include "catch.hpp"
 
-TEST_CASE("LispReader") {
+TEST_CASE("LispReader")
+{
 
     procdraw::LispReader reader;
     procdraw::LispInterpreter L;

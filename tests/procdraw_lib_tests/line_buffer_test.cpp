@@ -1,7 +1,8 @@
 #include "line_buffer.h"
 #include "catch.hpp"
 
-TEST_CASE("LineBuffer void constructor") {
+TEST_CASE("LineBuffer void constructor")
+{
     procdraw::LineBuffer b;
     REQUIRE(b.GetLine() == std::wstring(L""));
     REQUIRE(b.GetUserText() == std::wstring(L""));
@@ -10,19 +11,22 @@ TEST_CASE("LineBuffer void constructor") {
     REQUIRE(b.GetUserText() == std::wstring(L"a"));
 }
 
-TEST_CASE("LineBuffer empty prompt") {
+TEST_CASE("LineBuffer empty prompt")
+{
     procdraw::LineBuffer b(L"");
     REQUIRE(b.GetLine() == std::wstring(L""));
     REQUIRE(b.GetUserText() == std::wstring(L""));
 }
 
-TEST_CASE("LineBuffer non empty prompt") {
+TEST_CASE("LineBuffer non empty prompt")
+{
     procdraw::LineBuffer b(L"> ");
     REQUIRE(b.GetLine() == std::wstring(L"> "));
     REQUIRE(b.GetUserText() == std::wstring(L""));
 }
 
-TEST_CASE("LineBuffer insert and delete") {
+TEST_CASE("LineBuffer insert and delete")
+{
     procdraw::LineBuffer b(L"> ");
     REQUIRE(b.GetLine() == std::wstring(L"> "));
     REQUIRE(b.GetUserText() == std::wstring(L""));
@@ -40,7 +44,8 @@ TEST_CASE("LineBuffer insert and delete") {
     REQUIRE(b.GetUserText() == std::wstring(L""));
 }
 
-TEST_CASE("LineBuffer cannot delete prompt") {
+TEST_CASE("LineBuffer cannot delete prompt")
+{
     procdraw::LineBuffer b(L"> ");
     REQUIRE(b.GetLine() == std::wstring(L"> "));
     REQUIRE(b.GetUserText() == std::wstring(L""));
@@ -55,7 +60,8 @@ TEST_CASE("LineBuffer cannot delete prompt") {
     REQUIRE(b.GetUserText() == std::wstring(L""));
 }
 
-TEST_CASE("LineBuffer clear") {
+TEST_CASE("LineBuffer clear")
+{
     procdraw::LineBuffer b(L"> ");
     b.Insert('a');
     REQUIRE(b.GetLine() == std::wstring(L"> a"));

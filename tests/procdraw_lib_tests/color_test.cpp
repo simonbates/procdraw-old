@@ -1,7 +1,8 @@
 #include "color.h"
 #include "catch.hpp"
 
-TEST_CASE("Hsv2Rgb red") {
+TEST_CASE("Hsv2Rgb red")
+{
     float r, g, b;
     procdraw::Hsv2Rgb(0.0f, 1.0f, 1.0f, r, g, b);
     REQUIRE(r == 1.0f);
@@ -9,7 +10,8 @@ TEST_CASE("Hsv2Rgb red") {
     REQUIRE(b == 0.0f);
 }
 
-TEST_CASE("Hsv2Rgb green") {
+TEST_CASE("Hsv2Rgb green")
+{
     float r, g, b;
     procdraw::Hsv2Rgb(120.0f, 1.0f, 1.0f, r, g, b);
     REQUIRE(r == 0.0f);
@@ -17,7 +19,8 @@ TEST_CASE("Hsv2Rgb green") {
     REQUIRE(b == 0.0f);
 }
 
-TEST_CASE("Hsv2Rgb blue") {
+TEST_CASE("Hsv2Rgb blue")
+{
     float r, g, b;
     procdraw::Hsv2Rgb(240.0f, 1.0f, 1.0f, r, g, b);
     REQUIRE(r == 0.0f);
