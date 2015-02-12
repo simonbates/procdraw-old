@@ -47,7 +47,7 @@ Signals
 -------
 
 - `(make-signal stepfun)`
-- `(=> source dest-signal dest-key)`
+- `(=> source dest-signal dest-key &optional mapfun)`
 - `('step signal)`
 - `(sigval signal)`
 - `(saw)`

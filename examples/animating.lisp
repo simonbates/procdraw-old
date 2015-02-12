@@ -4,8 +4,8 @@
   (color 40 (/ 3 10) (/ 6 10))
   (setq saw-x (saw))
   (setq saw-y (saw))
-  (=> (lambda () (lerp (/ 60) (/ -60) (mouse-y))) saw-x 'freq)
-  (=> (lambda () (lerp (/ 60) (/ -60) (mouse-x))) saw-y 'freq)
+  (=> mouse-y saw-x 'freq (lambda (y) (lerp (/ 60) (/ -60) y)))
+  (=> mouse-x saw-y 'freq (lambda (x) (lerp (/ 60) (/ -60) x)))
   (setq draw (lambda ()
     (progn
       (background 200 (/ 7 10) (/ 9 10))

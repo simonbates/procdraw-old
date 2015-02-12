@@ -29,13 +29,27 @@ namespace procdraw {
             auto inputs = GetSignalInputs(L, signal);
             for (LispObjectPtr n = L->Keys(inputs); !L->Null(n); n = L->Cdr(n)) {
                 auto key = L->Car(n);
-                auto source = L->Get(inputs, key);
-                auto sourceType = L->TypeOf(source);
-                if (sourceType == LispObjectType::Table) {
-                    L->Put(signal, key, Sigval(L, source, steppedSignals, env));
+                auto sourceSpec = L->Get(inputs, key);
+                auto source = L->Car(sourceSpec);
+                auto mapFun = L->Cdr(sourceSpec);
+
+                LispObjectPtr sourceVal = L->Nil;
+
+                switch (L->TypeOf(source)) {
+                case LispObjectType::Table:
+                    sourceVal = Sigval(L, source, steppedSignals, env);
+                    break;
+                case LispObjectType::Cons:
+                case LispObjectType::CFunction:
+                    sourceVal = L->Apply(source, L->Nil, env);
+                    break;
                 }
-                else if (sourceType == LispObjectType::Cons) {
-                    L->Put(signal, key, L->Apply(source, L->Nil, env));
+
+                if (L->Null(mapFun)) {
+                    L->Put(signal, key, sourceVal);
+                }
+                else {
+                    L->Put(signal, key, L->Apply(mapFun, L->Cons(sourceVal, L->Nil), env));
                 }
             }
             // step
@@ -56,8 +70,9 @@ namespace procdraw {
         auto source = L->Car(args);
         auto destSignal = L->Cadr(args);
         auto destKey = L->Caddr(args);
+        auto mapFun = L->Cadddr(args);
 
-        return L->Put(GetSignalInputs(L, destSignal), destKey, source);
+        return L->Put(GetSignalInputs(L, destSignal), destKey, L->Cons(source, mapFun));
     }
 
     static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
