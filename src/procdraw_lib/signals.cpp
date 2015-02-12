@@ -29,8 +29,14 @@ namespace procdraw {
             auto inputs = GetSignalInputs(L, signal);
             for (LispObjectPtr n = L->Keys(inputs); !L->Null(n); n = L->Cdr(n)) {
                 auto key = L->Car(n);
-                auto srcSignal = L->Get(inputs, key);
-                L->Put(signal, key, Sigval(L, srcSignal, steppedSignals, env));
+                auto source = L->Get(inputs, key);
+                auto sourceType = L->TypeOf(source);
+                if (sourceType == LispObjectType::Table) {
+                    L->Put(signal, key, Sigval(L, source, steppedSignals, env));
+                }
+                else if (sourceType == LispObjectType::Cons) {
+                    L->Put(signal, key, L->Apply(source, L->Nil, env));
+                }
             }
             // step
             L->ApplyTableMethod(L->SymbolRef("step"), signal, L->Nil, env);
@@ -47,11 +53,11 @@ namespace procdraw {
 
     static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto srcSignal = L->Car(args);
+        auto source = L->Car(args);
         auto destSignal = L->Cadr(args);
         auto destKey = L->Caddr(args);
 
-        return L->Put(GetSignalInputs(L, destSignal), destKey, srcSignal);
+        return L->Put(GetSignalInputs(L, destSignal), destKey, source);
     }
 
     static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)

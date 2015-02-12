@@ -38,7 +38,7 @@ Dependencies:
 - Visual Studio Community 2013
 - CMake
 
-Optional Dependencies:
+Optional dependencies:
 
 - [Artistic Style](http://astyle.sourceforge.net/)
 - [Pandoc](http://pandoc.org/)

@@ -4,7 +4,6 @@
 
 TEST_CASE("Signals")
 {
-
     procdraw::LispInterpreter L;
     procdraw::RegisterSignals(&L);
 
@@ -28,7 +27,7 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 5);
     }
 
-    SECTION("=>") {
+    SECTION("=> signal source") {
         // sig1        sig2
         // incr  val1  incr val1
         // 2     1     0    1     before
@@ -45,6 +44,17 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 9);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 5);
+    }
+
+    SECTION("=> function source") {
+        L.Eval(L.Read("(setq sig-func-source (make-signal step-incr))"));
+        L.Eval(L.Read("(put sig-func-source 'val1 4)"));
+        L.Eval(L.Read("(put sig-func-source 'incr 0)"));
+        L.Eval(L.Read("(=> (lambda () 10) sig-func-source 'incr)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
     }
 
     SECTION("saw") {
@@ -67,5 +77,4 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.875);
     }
-
 }
