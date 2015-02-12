@@ -25,6 +25,7 @@ namespace procdraw {
         SetGlobalCFunction("clear", lisp_Clear);
         SetGlobalCFunction("eq", lisp_Eq);
         SetGlobalCFunction("get", lisp_Get);
+        SetGlobalCFunction("keys", lisp_Keys);
         SetGlobalCFunction("lerp", lisp_Lerp);
         SetGlobalCFunction("make-table", lisp_MakeTable);
         SetGlobalCFunction("map-range", lisp_MapRange);

@@ -39,6 +39,7 @@ Tables
 - `(make-table)`
 - `(get table key)`
 - `(put table key val)`
+- `(keys table)`
 - `(clear table)`
 - `(key table ...)`
 
@@ -46,6 +47,7 @@ Signals
 -------
 
 - `(make-signal stepfun)`
+- `(=> src-signal dest-signal dest-key)`
 - `('step signal)`
 - `(sigval signal)`
 - `(saw)`

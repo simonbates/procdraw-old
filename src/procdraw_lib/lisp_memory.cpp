@@ -265,10 +265,22 @@ namespace procdraw {
         return Nil;
     }
 
+    LispObjectPtr LispInterpreter::Keys(LispObjectPtr table) {
+        LispObjectPtr keys = Nil;
+        if (table->Type == LispObjectType::Table) {
+            auto tableData = static_cast<LispTable*>(table.get())->tableData;
+            for (auto it = tableData.rbegin(); it != tableData.rend(); ++it) {
+                keys = Cons(it->first, keys);
+            }
+        }
+        return keys;
+    }
+
     LispObjectPtr LispInterpreter::Clear(LispObjectPtr table)
     {
         if (table->Type == LispObjectType::Table) {
             static_cast<LispTable*>(table.get())->tableData.clear();
+            return table;
         }
         // TODO else if not a Table, complain?
         return Nil;

@@ -67,6 +67,13 @@ TEST_CASE("LispReader") {
         REQUIRE(L.SymbolName(obj) == "/");
     }
 
+    SECTION("=>") {
+        auto obj = reader.Read(&L, "(=>42)");
+        REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
+        REQUIRE(L.SymbolName(L.Car(obj)) == "=>");
+        REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
+    }
+
     SECTION("Nil") {
         auto obj = reader.Read(&L, "nil");
         REQUIRE(L.Null(obj));

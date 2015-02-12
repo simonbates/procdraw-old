@@ -6,8 +6,14 @@ namespace procdraw {
     static LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
     {
         auto signal = L->MakeTable();
+        L->Put(signal, L->SymbolRef("inputs"), L->MakeTable());
         L->Put(signal, L->SymbolRef("step"), stepFun);
         return signal;
+    }
+
+    static LispObjectPtr GetSignalInputs(LispInterpreter *L, LispObjectPtr signal)
+    {
+        return L->Get(signal, L->SymbolRef("inputs"));
     }
 
     static LispObjectPtr GetSteppedSignals(LispInterpreter *L)
@@ -15,22 +21,42 @@ namespace procdraw {
         return L->SymbolValue(L->SymbolRef("stepped-signals"));
     }
 
-    static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr Sigval(LispInterpreter *L, LispObjectPtr signal,
+        LispObjectPtr steppedSignals, LispObjectPtr env)
     {
-        return MakeSignal(L, L->Car(args));
-    }
-
-    static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
-    {
-        auto signal = L->Car(args);
-        auto steppedSignals = GetSteppedSignals(L);
-
         if (L->Null(L->Get(steppedSignals, signal))) {
+            // apply inputs
+            auto inputs = GetSignalInputs(L, signal);
+            for (LispObjectPtr n = L->Keys(inputs); !L->Null(n); n = L->Cdr(n)) {
+                auto key = L->Car(n);
+                auto srcSignal = L->Get(inputs, key);
+                L->Put(signal, key, Sigval(L, srcSignal, steppedSignals, env));
+            }
+            // step
             L->ApplyTableMethod(L->SymbolRef("step"), signal, L->Nil, env);
             L->Put(steppedSignals, signal, L->True);
         }
 
         return L->Get(signal, L->SymbolRef("val1"));
+    }
+
+    static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return MakeSignal(L, L->Car(args));
+    }
+
+    static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto srcSignal = L->Car(args);
+        auto destSignal = L->Cadr(args);
+        auto destKey = L->Caddr(args);
+
+        return L->Put(GetSignalInputs(L, destSignal), destKey, srcSignal);
+    }
+
+    static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return Sigval(L, L->Car(args), GetSteppedSignals(L), env);
     }
 
     static LispObjectPtr lisp_ClearSteppedSignals(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
@@ -62,6 +88,7 @@ namespace procdraw {
     {
         L->Set(L->SymbolRef("stepped-signals"), L->MakeTable(), L->Nil);
         L->SetGlobalCFunction("make-signal", lisp_MakeSignal);
+        L->SetGlobalCFunction("=>", lisp_Connect);
         L->SetGlobalCFunction("sigval", lisp_Sigval);
         L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals);
         L->SetGlobalCFunction("saw", lisp_Saw);

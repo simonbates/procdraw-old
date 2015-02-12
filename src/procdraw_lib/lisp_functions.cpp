@@ -67,6 +67,11 @@ namespace procdraw {
         return L->Get(table, key);
     }
 
+    LispObjectPtr lisp_Keys(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return L->Keys(L->Car(args));
+    }
+
     LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         auto start = L->NumVal(L->Car(args));

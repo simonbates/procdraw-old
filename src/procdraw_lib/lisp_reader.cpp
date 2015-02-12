@@ -91,6 +91,16 @@ namespace procdraw {
             token_ = LispTokenType::Slash;
             GetCh();
             break;
+        case '=':
+            GetCh();
+            if (ch_ == '>') {
+                token_ = LispTokenType::Connect;
+                GetCh();
+            }
+            else {
+                token_ = LispTokenType::Undefined;
+            }
+            break;
         default:
             if (IsStartOfNumber()) {
                 GetNumber();
@@ -177,6 +187,9 @@ namespace procdraw {
         case LispTokenType::Slash:
             GetToken();
             return L->SymbolRef("/");
+        case LispTokenType::Connect:
+            GetToken();
+            return L->SymbolRef("=>");
         }
         // TODO LispTokenType::EndOfInput
         // TODO badly formed input

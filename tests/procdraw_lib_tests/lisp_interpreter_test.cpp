@@ -179,18 +179,37 @@ TEST_CASE("Tables") {
     procdraw::LispInterpreter L;
 
     auto table = L.MakeTable();
-    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
-    REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42))) == 42);
-    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 42);
-    REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(10))) == 10);
-    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
-    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
-    L.Put(table, L.SymbolRef("key2"), L.MakeNumber(100));
-    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key2"))) == 100);
-    REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
-    L.Clear(table);
-    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
-    REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
+
+    SECTION("Get, Put, and Clear") {
+        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
+        REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42))) == 42);
+        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 42);
+        REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(10))) == 10);
+        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
+        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
+        L.Put(table, L.SymbolRef("key2"), L.MakeNumber(100));
+        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key2"))) == 100);
+        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
+        L.Clear(table);
+        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
+        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
+    }
+
+    SECTION("Keys") {
+        REQUIRE(L.Null(L.Keys(table)));
+
+        L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42));
+        auto singleKey = L.Keys(table);
+        REQUIRE(L.SymbolName(L.Car(singleKey)) == "key1");
+        REQUIRE(L.Null(L.Cdr(singleKey)));
+
+        L.Put(table, L.SymbolRef("key2"), L.MakeNumber(10));
+        auto twoKeys = L.Keys(table);
+        REQUIRE(L.Null(L.Cddr(twoKeys)));
+        auto foundExpectedKeys = (L.SymbolName(L.Car(twoKeys)) == "key1" && L.SymbolName(L.Cadr(twoKeys)) == "key2")
+            || (L.SymbolName(L.Car(twoKeys)) == "key2" && L.SymbolName(L.Cadr(twoKeys)) == "key1");
+        REQUIRE(foundExpectedKeys);
+    }
 
 }
 
@@ -535,6 +554,14 @@ TEST_CASE("LispInterpreter::Eval") {
             L.Eval(L.Read("(clear t1)"));
             REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key1)"))));
             REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
+        }
+
+        SECTION("keys") {
+            REQUIRE(L.Null(L.Eval(L.Read("(keys t1)"))));
+
+            L.Eval(L.Read("(put t1 'key1 42)"));
+            REQUIRE(L.SymbolName(L.Car(L.Eval(L.Read("(keys t1)")))) == "key1");
+            REQUIRE(L.Null(L.Cdr(L.Eval(L.Read("(keys t1)")))));
         }
 
         SECTION("should provide method calls") {
