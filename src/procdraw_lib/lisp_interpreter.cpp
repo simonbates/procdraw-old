@@ -76,7 +76,8 @@ namespace procdraw {
         return Apply(Value(SymbolRef(name), Nil), Nil, Nil);
     }
 
-    LispObjectPtr LispInterpreter::ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args, LispObjectPtr env)
+    LispObjectPtr LispInterpreter::ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args,
+            LispObjectPtr env)
     {
         return Apply(key, Cons(table, args), env);
     }
@@ -190,7 +191,8 @@ namespace procdraw {
         return Eval(exp, Nil);
     }
 
-    LispObjectPtr LispInterpreter::Evif(LispObjectPtr arglist, LispObjectPtr env) {
+    LispObjectPtr LispInterpreter::Evif(LispObjectPtr arglist, LispObjectPtr env)
+    {
         if (BoolVal(Eval(Car(arglist), env))) {
             return Eval(Cadr(arglist), env);
         }
@@ -199,7 +201,8 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env) {
+    LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env)
+    {
         if (Null(arglist)) {
             return Nil;
         }
@@ -222,16 +225,14 @@ namespace procdraw {
         switch (TypeOf(obj)) {
         case LispObjectType::Nil:
             return "nil";
-        case LispObjectType::Number:
-        {
+        case LispObjectType::Number: {
             std::ostringstream s;
             s << NumVal(obj);
             return s.str();
         }
         case LispObjectType::Symbol:
             return SymbolName(obj);
-        case LispObjectType::Cons:
-        {
+        case LispObjectType::Cons: {
             if (Eq(Car(obj), S_QUOTE)) {
                 return "'" + PrintString(Cadr(obj));
             }

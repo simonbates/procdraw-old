@@ -1,0 +1,10 @@
+add-brackets
+break-closing-brackets
+indent-col1-comments
+indent-namespaces
+indent=spaces=4
+max-code-length=120
+max-instatement-indent=40
+pad-header
+style=stroustrup
+suffix=none

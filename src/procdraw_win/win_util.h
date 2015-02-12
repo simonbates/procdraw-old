@@ -21,6 +21,6 @@ namespace procdraw {
     std::string Utf16ToUtf8(LPCWSTR utf16str, int count);
 
     void TriangleNormal(DirectX::XMFLOAT3 *normal, const DirectX::XMFLOAT3 *vertex1,
-        const DirectX::XMFLOAT3 *vertex2, const DirectX::XMFLOAT3 *vertex3);
+                        const DirectX::XMFLOAT3 *vertex2, const DirectX::XMFLOAT3 *vertex3);
 
 }

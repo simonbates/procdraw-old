@@ -14,7 +14,7 @@ namespace procdraw {
     {
         IAccessiblePtr ppvObject;
         ThrowOnFail(AccessibleObjectFromWindow(hwnd, OBJID_WINDOW, __uuidof(IAccessible),
-            reinterpret_cast<void**>(&ppvObject)));
+                                               reinterpret_cast<void**>(&ppvObject)));
 
         VARIANT self;
         self.vt = VT_I4;

@@ -238,8 +238,7 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Get(LispObjectPtr table, LispObjectPtr key)
     {
         if (table->Type == LispObjectType::Table
-            && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table))
-        {
+                && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table)) {
             auto tableData = static_cast<LispTable*>(table.get())->tableData;
             auto found = tableData.find(key);
             if (found != tableData.end()) {
@@ -256,8 +255,7 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Put(LispObjectPtr table, LispObjectPtr key, LispObjectPtr val)
     {
         if (table->Type == LispObjectType::Table
-            && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table))
-        {
+                && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table)) {
             static_cast<LispTable*>(table.get())->tableData[key] = val;
             return val;
         }

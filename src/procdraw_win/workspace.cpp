@@ -9,7 +9,7 @@
 namespace procdraw {
 
     Workspace::Workspace(HINSTANCE hInstance, int nCmdShow,
-            const std::wstring &name, bool readonly, CommandProcessor *cmdProcessor) :
+                         const std::wstring &name, bool readonly, CommandProcessor *cmdProcessor) :
         hInstance_(hInstance),
         hwnd_(nullptr),
         hwndEdit_(nullptr),
@@ -47,9 +47,9 @@ namespace procdraw {
         RECT rc = { 0, 0, 800, 600 };
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
         hwnd_ = CreateWindow(L"ProcDrawWorkspace", name.c_str(), WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,
-            rc.bottom - rc.top, nullptr, nullptr, hInstance_,
-            this);
+                             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,
+                             rc.bottom - rc.top, nullptr, nullptr, hInstance_,
+                             this);
 
         if (!hwnd_) {
             throw std::runtime_error("Failed to create window");
@@ -64,28 +64,27 @@ namespace procdraw {
         Workspace *workspace = reinterpret_cast<Workspace*>(ptr);
 
         switch (message) {
-        case WM_CREATE:
-        {
+        case WM_CREATE: {
             CREATESTRUCT *pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
             workspace = reinterpret_cast<Workspace*>(pCreate->lpCreateParams);
             SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)workspace);
 
             DWORD style = WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
-                ES_LEFT | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL;
+                          ES_LEFT | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL;
             if (workspace->readonly_) {
                 style |= ES_READONLY;
             }
 
             workspace->hwndEdit_ = CreateWindow(L"EDIT", NULL, style,
-                0, 0, 0, 0, hwnd, (HMENU)ID_EDIT,
-                pCreate->hInstance, NULL);
+                                                0, 0, 0, 0, hwnd, (HMENU)ID_EDIT,
+                                                pCreate->hInstance, NULL);
 
             HDC hdc = GetDC(hwnd);
             int fontHeight = -MulDiv(11, GetDeviceCaps(hdc, LOGPIXELSY), 72);
 
             HFONT hFont = CreateFont(fontHeight, 0, 0, 0, FW_REGULAR, FALSE, FALSE,
-                FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS,
-                CLEARTYPE_QUALITY, FIXED_PITCH, TEXT("Consolas"));
+                                     FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS,
+                                     CLEARTYPE_QUALITY, FIXED_PITCH, TEXT("Consolas"));
 
             SendMessage(workspace->hwndEdit_, WM_SETFONT, (WPARAM)hFont, MAKELPARAM(TRUE, 0));
             return 0;
@@ -97,8 +96,7 @@ namespace procdraw {
             MoveWindow(workspace->hwndEdit_, 0, 0, LOWORD(lParam), HIWORD(lParam), TRUE);
             return 0;
         case WM_COMMAND:
-            if (LOWORD(wParam) == IDM_DO_COMMAND)
-            {
+            if (LOWORD(wParam) == IDM_DO_COMMAND) {
                 // Get the current selection and send it to DoCommand
                 DWORD selStart;
                 DWORD selEnd;

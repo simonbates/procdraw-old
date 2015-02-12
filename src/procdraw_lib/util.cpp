@@ -3,7 +3,8 @@
 
 namespace procdraw {
 
-    double Lerp(double start, double stop, double val) {
+    double Lerp(double start, double stop, double val)
+    {
         return (1 - val) * start + val * stop;
     }
 

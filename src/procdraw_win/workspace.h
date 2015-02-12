@@ -6,11 +6,10 @@
 
 namespace procdraw {
 
-    class Workspace
-    {
+    class Workspace {
     public:
         Workspace(HINSTANCE hInstance, int nCmdShow,
-            const std::wstring &name, bool readonly, CommandProcessor *cmdProcessor);
+                  const std::wstring &name, bool readonly, CommandProcessor *cmdProcessor);
         static void RegisterWindowClass(HINSTANCE hInstance);
         static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
         HWND GetHwnd();
