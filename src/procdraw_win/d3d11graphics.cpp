@@ -164,22 +164,22 @@ namespace procdraw {
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
         HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
-            createDeviceFlags, feature_levels, num_feature_levels,
-            D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-            &d3dFeatureLevel_, &d3dContext_);
+                     createDeviceFlags, feature_levels, num_feature_levels,
+                     D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
+                     &d3dFeatureLevel_, &d3dContext_);
         if (hr == E_INVALIDARG) {
             // Try again without D3D_FEATURE_LEVEL_11_1
             hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
-                createDeviceFlags, &feature_levels[1], num_feature_levels - 1,
-                D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-                &d3dFeatureLevel_, &d3dContext_);
+                                               createDeviceFlags, &feature_levels[1], num_feature_levels - 1,
+                                               D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
+                                               &d3dFeatureLevel_, &d3dContext_);
         }
         ThrowOnFail(hr);
 
         // Render Target View
 
         ThrowOnFail(swapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
-            reinterpret_cast<void**>(&backBuffer_)));
+                                          reinterpret_cast<void**>(&backBuffer_)));
 
         ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_, nullptr, &renderTargetView_));
 
@@ -200,12 +200,12 @@ namespace procdraw {
     }
 
     ID3D10BlobPtr D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
-        _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget)
+            _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget)
     {
         ID3D10BlobPtr compiledShader;
         ID3D10BlobPtr errorMessages;
         HRESULT hr = D3DCompileFromFile(pFileName, nullptr, nullptr,
-            pEntrypoint, pTarget, 0, 0, &compiledShader, &errorMessages);
+                                        pEntrypoint, pTarget, 0, 0, &compiledShader, &errorMessages);
         if (errorMessages != nullptr) {
             throw std::runtime_error(static_cast<char*>(errorMessages->GetBufferPointer()));
         }
@@ -219,23 +219,26 @@ namespace procdraw {
 
         ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\flat.hlsl", "vertex_shader", "vs_4_0");
         ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
-            vs->GetBufferSize(), nullptr, &vertexShader_));
+                    vs->GetBufferSize(), nullptr, &vertexShader_));
         d3dContext_->VSSetShader(vertexShader_, 0, 0);
 
         // Input layout
 
-        D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] =
-        {
+        D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] = {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            {
+                "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+                D3D11_INPUT_PER_VERTEX_DATA, 0
+            },
+            {
+                "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+                D3D11_INPUT_PER_VERTEX_DATA, 0
+            }
         };
 
         ThrowOnFail(d3dDevice_->CreateInputLayout(inputElementDescriptions,
-            ARRAYSIZE(inputElementDescriptions), vs->GetBufferPointer(),
-            vs->GetBufferSize(), &inputLayout_));
+                    ARRAYSIZE(inputElementDescriptions), vs->GetBufferPointer(),
+                    vs->GetBufferSize(), &inputLayout_));
         d3dContext_->IASetInputLayout(inputLayout_);
     }
 
@@ -243,7 +246,7 @@ namespace procdraw {
     {
         ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\flat.hlsl", "pixel_shader", "ps_4_0");
         ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
-            ps->GetBufferSize(), nullptr, &pixelShader_));
+                    ps->GetBufferSize(), nullptr, &pixelShader_));
         d3dContext_->PSSetShader(pixelShader_, 0, 0);
     }
 
@@ -279,7 +282,7 @@ namespace procdraw {
 
         ID3D11BufferPtr vertexBuffer;
         ThrowOnFail(d3dDevice_->CreateBuffer(&vertexBufferDesc,
-            &vertexSubresourceData, &vertexBuffer));
+                                             &vertexSubresourceData, &vertexBuffer));
 
         return vertexBuffer;
     }
@@ -301,8 +304,7 @@ namespace procdraw {
         TriangleNormal(&face3Normal, &vertex1, &vertex2, &vertex3);
         TriangleNormal(&face4Normal, &vertex2, &vertex4, &vertex3);
 
-        ShaderVertex vertices[] =
-        {
+        ShaderVertex vertices[] = {
             // Face 1
             ShaderVertex(vertex1, face1Normal),
             ShaderVertex(vertex4, face1Normal),
@@ -369,7 +371,7 @@ namespace procdraw {
 
         auto lightDirection = DirectX::XMLoadFloat4(&lightDirection_);
         DirectX::XMStoreFloat4(&cbData_.LightDirection,
-            DirectX::XMVector4Normalize(DirectX::XMVector4Transform(lightDirection, inverseWorldMatrix)));
+                               DirectX::XMVector4Normalize(DirectX::XMVector4Transform(lightDirection, inverseWorldMatrix)));
 
         cbData_.LightColor = lightColor_;
         cbData_.AmbientLightColor = ambientLightColor_;

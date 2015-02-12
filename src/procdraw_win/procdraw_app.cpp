@@ -16,8 +16,7 @@ namespace procdraw {
         CreateAppWindow();
 
         hAccel_ = LoadAccelerators(hInstance, L"ProcDraw");
-        if (!hAccel_)
-        {
+        if (!hAccel_) {
             throw std::runtime_error("Failed to load accelerators");
         }
 
@@ -131,9 +130,9 @@ namespace procdraw {
         RECT rc = { 0, 0, 640, 640 };
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
         hWnd_ = CreateWindow(L"ProcDrawWindowClass", L"ProcDraw", WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,
-            rc.bottom - rc.top, nullptr, nullptr, hInstance_,
-            nullptr);
+                             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left,
+                             rc.bottom - rc.top, nullptr, nullptr, hInstance_,
+                             nullptr);
 
         if (!hWnd_) {
             throw std::runtime_error("Failed to create window");

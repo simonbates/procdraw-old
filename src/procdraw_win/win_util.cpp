@@ -30,7 +30,7 @@ namespace procdraw {
     }
 
     void TriangleNormal(DirectX::XMFLOAT3 *normal, const DirectX::XMFLOAT3 *vertex1,
-        const DirectX::XMFLOAT3 *vertex2, const DirectX::XMFLOAT3 *vertex3)
+                        const DirectX::XMFLOAT3 *vertex2, const DirectX::XMFLOAT3 *vertex3)
     {
         auto v1 = XMLoadFloat3(vertex1);
         auto v2 = XMLoadFloat3(vertex2);

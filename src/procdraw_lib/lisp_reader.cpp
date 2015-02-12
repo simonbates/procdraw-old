@@ -28,8 +28,7 @@ namespace procdraw {
         case EOF:
             token_ = LispTokenType::EndOfInput;
             break;
-        case '"':
-        {
+        case '"': {
             std::string str;
             GetCh();
             while (true) {
@@ -135,14 +134,12 @@ namespace procdraw {
         case LispTokenType::LParen:
             GetToken();
             return ReadCons(L);
-        case LispTokenType::Number:
-        {
+        case LispTokenType::Number: {
             auto intObj = L->MakeNumber(numVal_);
             GetToken();
             return intObj;
         }
-        case LispTokenType::Symbol:
-        {
+        case LispTokenType::Symbol: {
             LispObjectPtr obj;
             if (symbolVal_ == "nil") {
                 obj = L->Nil;
@@ -159,8 +156,7 @@ namespace procdraw {
             GetToken();
             return obj;
         }
-        case LispTokenType::String:
-        {
+        case LispTokenType::String: {
             auto strObj = L->MakeString(stringVal_);
             GetToken();
             return strObj;

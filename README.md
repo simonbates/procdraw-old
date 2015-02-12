@@ -38,6 +38,12 @@ Dependencies:
 - Visual Studio Community 2013
 - CMake
 
+Optional Dependencies:
+
+- [Artistic Style](http://astyle.sourceforge.net/)
+- [Pandoc](http://pandoc.org/)
+- [Vagrant](https://www.vagrantup.com/)
+
 Run CMake to generate the Visual Studio solution:
 
 ```

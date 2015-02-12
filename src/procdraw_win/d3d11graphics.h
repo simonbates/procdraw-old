@@ -77,7 +77,7 @@ namespace procdraw {
         DirectX::XMFLOAT4 materialColor_;
         void InitD3D();
         ID3D10BlobPtr CompileShaderFromFile(_In_ LPCWSTR pFileName,
-            _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
+                                            _In_ LPCSTR pEntrypoint, _In_ LPCSTR pTarget);
         void CreateVertexShader();
         void CreatePixelShader();
         void CreateConstantBuffer();
