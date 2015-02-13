@@ -9,6 +9,7 @@ namespace procdraw {
         InitSymbolLiterals();
         symbols_ = Nil;
         // Special forms
+        S_DEF = SymbolRef("def");
         S_IF = SymbolRef("if");
         S_LAMBDA = SymbolRef("lambda");
         S_PROGN = SymbolRef("progn");
@@ -163,7 +164,10 @@ namespace procdraw {
         }
         else {
             auto first = Car(exp);
-            if (Eq(first, S_IF)) {
+            if (Eq(first, S_DEF)) {
+                return Set(Cadr(exp), Cons(S_LAMBDA, Cddr(exp)), env);
+            }
+            else if (Eq(first, S_IF)) {
                 return Evif(Cdr(exp), env);
             }
             else if (Eq(first, S_LAMBDA)) {

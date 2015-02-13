@@ -399,6 +399,20 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("c"))) == 3);
     }
 
+    SECTION("DEF no args") {
+        auto defReturn = L.Eval(L.Read("(def f () (+ 1 2))"));
+        REQUIRE(L.TypeOf(defReturn) == procdraw::LispObjectType::Cons);
+        REQUIRE(L.SymbolName(L.Car(defReturn)) == "lambda");
+        REQUIRE(L.NumVal(L.Eval(L.Read("(f)"))) == 3);
+    }
+
+    SECTION("DEF 1 arg") {
+        auto defReturn = L.Eval(L.Read("(def f (n) (+ n 1))"));
+        REQUIRE(L.TypeOf(defReturn) == procdraw::LispObjectType::Cons);
+        REQUIRE(L.SymbolName(L.Car(defReturn)) == "lambda");
+        REQUIRE(L.NumVal(L.Eval(L.Read("(f 1)"))) == 2);
+    }
+
     SECTION("APPLY no args") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(apply (lambda () (+ 1 2)) (quote ()))"))) == 3);
     }

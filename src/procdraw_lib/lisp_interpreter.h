@@ -70,6 +70,7 @@ namespace procdraw {
     private:
         LispObjectPtr symbols_;
         LispReader reader_;
+        LispObjectPtr S_DEF;
         LispObjectPtr S_IF;
         LispObjectPtr S_LAMBDA;
         LispObjectPtr S_PROGN;

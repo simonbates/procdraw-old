@@ -22,6 +22,7 @@ Special-forms and functions
 - `(apply function argument-list)`
 - `(car obj)`
 - `(cdr obj)`
+- `(def function-name arg-list body)`
 - `(eq obj1 obj2)`
 - `(if test then else)`
 - `(lambda arg-list body)`
