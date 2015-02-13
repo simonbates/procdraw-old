@@ -7,8 +7,7 @@
   (=> mouse-y saw-x 'freq (lambda (y) (lerp (/ 60) (/ -60) y)))
   (=> mouse-x saw-y 'freq (lambda (x) (lerp (/ 60) (/ -60) x)))
   (setq draw (lambda ()
-    (progn
-      (background 200 (/ 7 10) (/ 9 10))
-      (rotate-y (sigval saw-y))
-      (rotate-x (sigval saw-x))
-      (tetrahedron)))))
+    (background 200 (/ 7 10) (/ 9 10))
+    (rotate-y (sigval saw-y))
+    (rotate-x (sigval saw-x))
+    (tetrahedron))))

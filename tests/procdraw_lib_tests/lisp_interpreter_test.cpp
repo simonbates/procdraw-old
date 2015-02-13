@@ -369,6 +369,13 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (m n) (+ m n 10)) 30 2)"))) == 42);
     }
 
+    SECTION("LAMBDA should return the value of the last expression") {
+        REQUIRE(L.Null(L.Eval(L.Read("((lambda ()))"))));
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (n) n) 1)"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (n) 1 2 n) 3)"))) == 3);
+        REQUIRE(L.NumVal(L.Eval(L.Read("((lambda () 1 2 3 (+ 40 2)))"))) == 42);
+    }
+
     SECTION("PROGN should return the value of the last expression") {
         REQUIRE(L.Null(L.Eval(L.Read("(progn)"))));
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1)"))) == 1);

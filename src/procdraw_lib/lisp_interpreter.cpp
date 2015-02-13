@@ -62,7 +62,7 @@ namespace procdraw {
         case LispObjectType::CFunction:
             return ApplyCFunction(fun, args, env);
         case LispObjectType::Cons:
-            return Eval(Caddr(fun), Bind(Cadr(fun), args, env));
+            return Progn(Cddr(fun), Bind(Cadr(fun), args, env));
         case LispObjectType::Symbol:
             return Apply(Get(Car(args), fun), args, env);
         default:
@@ -272,10 +272,8 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Progn(LispObjectPtr actions, LispObjectPtr env)
     {
         LispObjectPtr result = Nil;
-        LispObjectPtr n = actions;
-        while (!Null(n)) {
+        for (LispObjectPtr n = actions; !Null(n); n = Cdr(n)) {
             result = Eval(Car(n), env);
-            n = Cdr(n);
         }
         return result;
     }
