@@ -13,6 +13,7 @@ _COM_SMARTPTR_TYPEDEF(IDXGISwapChain, __uuidof(IDXGISwapChain));
 _COM_SMARTPTR_TYPEDEF(ID3D10Blob, __uuidof(ID3D10Blob));
 // D3D11
 _COM_SMARTPTR_TYPEDEF(ID3D11Buffer, __uuidof(ID3D11Buffer));
+_COM_SMARTPTR_TYPEDEF(ID3D11DepthStencilView, __uuidof(ID3D11DepthStencilView));
 _COM_SMARTPTR_TYPEDEF(ID3D11Device, __uuidof(ID3D11Device));
 _COM_SMARTPTR_TYPEDEF(ID3D11DeviceContext, __uuidof(ID3D11DeviceContext));
 _COM_SMARTPTR_TYPEDEF(ID3D11InputLayout, __uuidof(ID3D11InputLayout));
@@ -63,6 +64,8 @@ namespace procdraw {
         ID3D11DeviceContextPtr d3dContext_;
         ID3D11Texture2DPtr backBuffer_;
         ID3D11RenderTargetViewPtr renderTargetView_;
+        ID3D11Texture2DPtr depthStencilBuffer_;
+        ID3D11DepthStencilViewPtr depthStencilView_;
         ID3D11VertexShaderPtr vertexShader_;
         ID3D11PixelShaderPtr pixelShader_;
         ID3D11InputLayoutPtr inputLayout_;

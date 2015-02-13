@@ -36,6 +36,7 @@ namespace procdraw {
         float r, g, b;
         Hsv2Rgb(h, s, v, r, g, b);
         FLOAT c[4] = { r, g, b, 1.0f };
+        d3dContext_->ClearDepthStencilView(depthStencilView_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
         d3dContext_->ClearRenderTargetView(renderTargetView_, c);
         ResetMatrix();
     }
@@ -183,9 +184,28 @@ namespace procdraw {
 
         ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_, nullptr, &renderTargetView_));
 
+        // Depth Stencil View
+
+        D3D11_TEXTURE2D_DESC depthStencilDesc;
+        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+        depthStencilDesc.Width = width;
+        depthStencilDesc.Height = height;
+        depthStencilDesc.MipLevels = 1;
+        depthStencilDesc.ArraySize = 1;
+        depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depthStencilDesc.SampleDesc.Count = 1;
+        depthStencilDesc.SampleDesc.Quality = 0;
+        depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+        depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        depthStencilDesc.CPUAccessFlags = 0;
+        depthStencilDesc.MiscFlags = 0;
+        ThrowOnFail(d3dDevice_->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer_));
+
+        ThrowOnFail(d3dDevice_->CreateDepthStencilView(depthStencilBuffer_, nullptr, &depthStencilView_));
+
         // Configure Output-Merger
 
-        d3dContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), nullptr);
+        d3dContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), depthStencilView_);
 
         // Viewport
 
