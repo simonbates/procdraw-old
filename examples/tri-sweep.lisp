@@ -1,0 +1,11 @@
+(progn
+  (setq tri1 (tri))
+  (put tri1 'freq (/ 120))
+  (setq saw1 (saw))
+  (put saw1 'freq (/ 120))
+  (def draw ()
+    (background 0 0 0)
+    (translate (lerp -3 3 (sigval saw1))
+               (lerp -3 3 (sigval tri1))
+               0)
+    (tetrahedron)))

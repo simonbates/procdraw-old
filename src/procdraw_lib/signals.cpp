@@ -1,7 +1,19 @@
 #include "signals.h"
 #include "util.h"
+#include <cmath>
+
+#define TRI_WAVETABLE_LEN 3
 
 namespace procdraw {
+
+    static double triWavetable[TRI_WAVETABLE_LEN];
+
+    static void InitTriWavetable()
+    {
+        triWavetable[0] = 0;
+        triWavetable[1] = 1;
+        triWavetable[2] = 0;
+    }
 
     static LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
     {
@@ -105,14 +117,44 @@ namespace procdraw {
         return saw;
     }
 
+    static LispObjectPtr lisp_StepTri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto self = L->Car(args);
+        int wavetableEnd = (TRI_WAVETABLE_LEN - 1);
+        double incr = L->NumVal(L->Get(self, L->SymbolRef("freq"))) * wavetableEnd;
+        auto indexKey = L->SymbolRef("index");
+        double index = L->NumVal(L->Get(self, indexKey));
+        index = Wrap(0.0, wavetableEnd, index + incr);
+        if (index >= wavetableEnd || index < 0.0) {
+            index = 0.0;
+        }
+        L->Put(self, indexKey, L->MakeNumber(index));
+        int indexBefore = floor(index);
+        double val1 = Lerp(triWavetable[indexBefore], triWavetable[indexBefore + 1], index - indexBefore);
+        auto val1Num = L->MakeNumber(val1);
+        L->Put(self, L->SymbolRef("val1"), val1Num);
+        return val1Num;
+    }
+
+    static LispObjectPtr lisp_Tri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        auto tri = MakeSignal(L, L->MakeCFunction(lisp_StepTri));
+        L->Put(tri, L->SymbolRef("freq"), L->MakeNumber(0));
+        L->Put(tri, L->SymbolRef("index"), L->MakeNumber(0));
+        L->Put(tri, L->SymbolRef("val1"), L->MakeNumber(0));
+        return tri;
+    }
+
     void RegisterSignals(LispInterpreter *L)
     {
+        InitTriWavetable();
         L->Set(L->SymbolRef("stepped-signals"), L->MakeTable(), L->Nil);
         L->SetGlobalCFunction("make-signal", lisp_MakeSignal);
         L->SetGlobalCFunction("=>", lisp_Connect);
         L->SetGlobalCFunction("sigval", lisp_Sigval);
         L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals);
         L->SetGlobalCFunction("saw", lisp_Saw);
+        L->SetGlobalCFunction("tri", lisp_Tri);
     }
 
 }

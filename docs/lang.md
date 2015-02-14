@@ -52,6 +52,7 @@ Signals
 - `('step signal)`
 - `(sigval signal)`
 - `(saw)`
+- `(tri)`
 
 Graphics
 --------

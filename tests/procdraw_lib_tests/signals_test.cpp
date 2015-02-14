@@ -107,4 +107,34 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.875);
     }
+
+    SECTION("tri") {
+        L.Eval(L.Read("(setq tri1 (tri))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get tri1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get tri1 'val1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0);
+
+        L.Eval(L.Read("(put tri1 'freq (/ 4))"));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 1);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
+
+        L.Eval(L.Read("(put tri1 'freq (/ -3 8))"));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.25);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 1);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.25);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
+
+    }
 }
