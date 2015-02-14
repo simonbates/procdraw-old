@@ -3,6 +3,11 @@
 
 namespace procdraw {
 
+    bool ApproximatelyEqual(double a, double b, double epsilon)
+    {
+        return fabs(a - b) < epsilon;
+    }
+
     double Lerp(double start, double stop, double val)
     {
         return (1 - val) * start + val * stop;

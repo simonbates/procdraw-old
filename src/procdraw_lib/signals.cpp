@@ -3,16 +3,27 @@
 #include <cmath>
 
 #define TRI_WAVETABLE_LEN 3
+#define SIN_WAVETABLE_LEN 1024
 
 namespace procdraw {
 
     static double triWavetable[TRI_WAVETABLE_LEN];
+    static double sinWavetable[SIN_WAVETABLE_LEN];
 
     static void InitTriWavetable()
     {
         triWavetable[0] = 0;
         triWavetable[1] = 1;
         triWavetable[2] = 0;
+    }
+
+    static void InitSinWavetable()
+    {
+        int wavetableEnd = SIN_WAVETABLE_LEN - 1;
+        for (int i = 0; i < SIN_WAVETABLE_LEN; ++i) {
+            double x = (static_cast<double>(i) / static_cast<double>(wavetableEnd)) * 2 * M_PI;
+            sinWavetable[i] = (sin(x) + 1) / 2;
+        }
     }
 
     static LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
@@ -72,6 +83,34 @@ namespace procdraw {
         return L->Get(signal, L->SymbolRef("val1"));
     }
 
+    static LispObjectPtr MakeWavetableOscillator(LispInterpreter *L, LispObjectPtr stepFun)
+    {
+        auto sig = MakeSignal(L, stepFun);
+        L->Put(sig, L->SymbolRef("freq"), L->MakeNumber(0));
+        L->Put(sig, L->SymbolRef("index"), L->MakeNumber(0));
+        L->Put(sig, L->SymbolRef("val1"), L->MakeNumber(0));
+        return sig;
+    }
+
+    static LispObjectPtr StepWavetableOscillator(LispInterpreter *L, LispObjectPtr signal, double wavetable[],
+            int wavetableLen)
+    {
+        int wavetableEnd = wavetableLen - 1;
+        double incr = L->NumVal(L->Get(signal, L->SymbolRef("freq"))) * wavetableEnd;
+        auto indexKey = L->SymbolRef("index");
+        double index = L->NumVal(L->Get(signal, indexKey));
+        index = Wrap(0.0, wavetableEnd, index + incr);
+        if (index >= wavetableEnd || index < 0.0) {
+            index = 0.0;
+        }
+        L->Put(signal, indexKey, L->MakeNumber(index));
+        int indexBefore = floor(index);
+        double val1 = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
+        auto val1Num = L->MakeNumber(val1);
+        L->Put(signal, L->SymbolRef("val1"), val1Num);
+        return val1Num;
+    }
+
     static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         return MakeSignal(L, L->Car(args));
@@ -119,41 +158,35 @@ namespace procdraw {
 
     static LispObjectPtr lisp_StepTri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto self = L->Car(args);
-        int wavetableEnd = (TRI_WAVETABLE_LEN - 1);
-        double incr = L->NumVal(L->Get(self, L->SymbolRef("freq"))) * wavetableEnd;
-        auto indexKey = L->SymbolRef("index");
-        double index = L->NumVal(L->Get(self, indexKey));
-        index = Wrap(0.0, wavetableEnd, index + incr);
-        if (index >= wavetableEnd || index < 0.0) {
-            index = 0.0;
-        }
-        L->Put(self, indexKey, L->MakeNumber(index));
-        int indexBefore = floor(index);
-        double val1 = Lerp(triWavetable[indexBefore], triWavetable[indexBefore + 1], index - indexBefore);
-        auto val1Num = L->MakeNumber(val1);
-        L->Put(self, L->SymbolRef("val1"), val1Num);
-        return val1Num;
+        return StepWavetableOscillator(L, L->Car(args), triWavetable, TRI_WAVETABLE_LEN);
     }
 
     static LispObjectPtr lisp_Tri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        auto tri = MakeSignal(L, L->MakeCFunction(lisp_StepTri));
-        L->Put(tri, L->SymbolRef("freq"), L->MakeNumber(0));
-        L->Put(tri, L->SymbolRef("index"), L->MakeNumber(0));
-        L->Put(tri, L->SymbolRef("val1"), L->MakeNumber(0));
-        return tri;
+        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepTri));
+    }
+
+    static LispObjectPtr lisp_StepSinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return StepWavetableOscillator(L, L->Car(args), sinWavetable, SIN_WAVETABLE_LEN);
+    }
+
+    static LispObjectPtr lisp_SinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepSinOsc));
     }
 
     void RegisterSignals(LispInterpreter *L)
     {
         InitTriWavetable();
+        InitSinWavetable();
         L->Set(L->SymbolRef("stepped-signals"), L->MakeTable(), L->Nil);
         L->SetGlobalCFunction("make-signal", lisp_MakeSignal);
         L->SetGlobalCFunction("=>", lisp_Connect);
         L->SetGlobalCFunction("sigval", lisp_Sigval);
         L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals);
         L->SetGlobalCFunction("saw", lisp_Saw);
+        L->SetGlobalCFunction("sin-osc", lisp_SinOsc);
         L->SetGlobalCFunction("tri", lisp_Tri);
     }
 

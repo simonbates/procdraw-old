@@ -1,5 +1,6 @@
 #include "signals.h"
 #include "lisp_interpreter.h"
+#include "util.h"
 #include "catch.hpp"
 
 TEST_CASE("Signals")
@@ -135,6 +136,24 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.25);
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
+    }
 
+    SECTION("sin-osc") {
+        L.Eval(L.Read("(setq sin1 (sin-osc))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get sin1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get sin1 'val1)"))) == 0);
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0.5, 0.01));
+
+        L.Eval(L.Read("(put sin1 'freq (/ 4))"));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 1, 0.01));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0.5, 0.01));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0, 0.01));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0.5, 0.01));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 1, 0.01));
     }
 }

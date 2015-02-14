@@ -30,6 +30,13 @@ TEST_CASE("Clamp")
 
 }
 
+TEST_CASE("ApproximatelyEqual")
+{
+    REQUIRE_FALSE(procdraw::ApproximatelyEqual(1, 1.05, 0.001));
+    REQUIRE_FALSE(procdraw::ApproximatelyEqual(1, 1.05, 0.01));
+    REQUIRE(procdraw::ApproximatelyEqual(1, 1.05, 0.1));
+}
+
 TEST_CASE("Lerp")
 {
 
