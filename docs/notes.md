@@ -241,6 +241,10 @@ Data formats
 - [PLY](http://paulbourke.net/dataformats/ply/)
 - STL
 
+### Voxel formats
+
+- [BINVOX](http://www.cs.princeton.edu/~min/binvox/binvox.html)
+
 Hardware
 --------
 
