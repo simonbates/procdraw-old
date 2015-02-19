@@ -61,6 +61,12 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_Cube(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    {
+        app->Graphics()->Cube();
+        return L->Nil;
+    }
+
     static LispObjectPtr lisp_LightColor(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         auto h = L->NumVal(L->Car(args));
@@ -124,6 +130,7 @@ namespace procdraw {
         L->SetGlobalCFunction("ambient-light-color", lisp_AmbientLightColor);
         L->SetGlobalCFunction("background", lisp_Background);
         L->SetGlobalCFunction("color", lisp_Color);
+        L->SetGlobalCFunction("cube", lisp_Cube);
         L->SetGlobalCFunction("light-color", lisp_LightColor);
         L->SetGlobalCFunction("rotate-x", lisp_RotateX);
         L->SetGlobalCFunction("rotate-y", lisp_RotateY);

@@ -61,6 +61,7 @@ Graphics
 - `(ambient-light-color h s v)`
 - `(background h s v)`
 - `(color h s v)`
+- `(cube)`
 - `(frames-per-second)`
 - `(height)`
 - `(light-color h s v)`

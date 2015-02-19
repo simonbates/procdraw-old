@@ -92,7 +92,7 @@ namespace procdraw {
         return sig;
     }
 
-    static LispObjectPtr StepWavetableOscillator(LispInterpreter *L, LispObjectPtr signal, double wavetable[],
+    static LispObjectPtr StepWavetableOscillator(LispInterpreter *L, LispObjectPtr signal, double *wavetable,
             int wavetableLen)
     {
         int wavetableEnd = wavetableLen - 1;

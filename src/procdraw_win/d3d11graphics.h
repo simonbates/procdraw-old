@@ -51,6 +51,7 @@ namespace procdraw {
         void Color(float h, float s, float v);
         void Present();
         void Tetrahedron();
+        void Cube();
         void RotateX(float angle);
         void RotateY(float angle);
         void RotateZ(float angle);
@@ -72,6 +73,8 @@ namespace procdraw {
         CBufferPerObject cbData_;
         ID3D11BufferPtr constantBuffer_;
         ID3D11BufferPtr tetrahedronVertexBuffer_;
+        ID3D11BufferPtr cubeVertexBuffer_;
+        ID3D11BufferPtr cubeIndexBuffer_;
         DirectX::XMFLOAT4X4 viewProjectionMatrix_;
         DirectX::XMFLOAT4X4 worldMatrix_;
         DirectX::XMFLOAT4 lightDirection_;
@@ -85,7 +88,9 @@ namespace procdraw {
         void CreatePixelShader();
         void CreateConstantBuffer();
         ID3D11BufferPtr CreateVertexBuffer(ShaderVertex *vertices, int numVertices);
+        ID3D11BufferPtr CreateIndexBuffer(UINT *indices, int numIndices);
         void CreateTetrahedronVertexBuffer();
+        void CreateCubeBuffers();
         void InitViewProjectionMatrix();
         void ResetMatrix();
         void InitLighting();

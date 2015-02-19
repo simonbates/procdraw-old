@@ -19,6 +19,7 @@ namespace procdraw {
         CreateConstantBuffer();
 
         CreateTetrahedronVertexBuffer();
+        CreateCubeBuffers();
 
         InitViewProjectionMatrix();
         ResetMatrix();
@@ -90,6 +91,20 @@ namespace procdraw {
         d3dContext_->Draw(12, 0);
     }
 
+    void D3D11Graphics::Cube()
+    {
+        UpdateConstantBufferForObject();
+
+        d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        UINT stride = sizeof(ShaderVertex);
+        UINT offset = 0;
+        d3dContext_->IASetVertexBuffers(0, 1, &cubeVertexBuffer_.GetInterfacePtr(), &stride, &offset);
+        d3dContext_->IASetIndexBuffer(cubeIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+
+        d3dContext_->DrawIndexed(36, 0, 0);
+    }
+
     void D3D11Graphics::RotateX(float turns)
     {
         auto rotationMatrix = DirectX::XMMatrixRotationX(turns * 2 * M_PI);
@@ -155,6 +170,9 @@ namespace procdraw {
         sd.BufferDesc.Width = width;
         sd.BufferDesc.Height = height;
         sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        // TODO RefreshRate is ignored in windowed mode
+        // TODO and in full-screen mode, it must be set to a rate supported by the display
+        // TODO for full-screen mode, get the available display refresh rates using IDXGIOutput::GetDisplayModeList
         sd.BufferDesc.RefreshRate.Numerator = 60;
         sd.BufferDesc.RefreshRate.Denominator = 1;
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -307,6 +325,24 @@ namespace procdraw {
         return vertexBuffer;
     }
 
+    ID3D11BufferPtr D3D11Graphics::CreateIndexBuffer(UINT *indices, int numIndices)
+    {
+        D3D11_BUFFER_DESC indexBufferDesc;
+        ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
+        indexBufferDesc.ByteWidth = sizeof(UINT) * numIndices;
+        indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+        D3D11_SUBRESOURCE_DATA indexSubresourceData;
+        ZeroMemory(&indexSubresourceData, sizeof(indexSubresourceData));
+        indexSubresourceData.pSysMem = indices;
+
+        ID3D11BufferPtr indexBuffer;
+        ThrowOnFail(d3dDevice_->CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer));
+
+        return indexBuffer;
+    }
+
     void D3D11Graphics::CreateTetrahedronVertexBuffer()
     {
         auto vertex1 = DirectX::XMFLOAT3(1.0f, 0.0f, -M_SQRT1_2);
@@ -344,6 +380,89 @@ namespace procdraw {
         };
 
         tetrahedronVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
+    }
+
+    void D3D11Graphics::CreateCubeBuffers()
+    {
+        auto vertex1 = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+        auto vertex2 = DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f);
+        auto vertex3 = DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f);
+        auto vertex4 = DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f);
+        auto vertex5 = DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f);
+        auto vertex6 = DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f);
+        auto vertex7 = DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f);
+        auto vertex8 = DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f);
+
+        DirectX::XMFLOAT3 face1Normal;
+        DirectX::XMFLOAT3 face2Normal;
+        DirectX::XMFLOAT3 face3Normal;
+        DirectX::XMFLOAT3 face4Normal;
+        DirectX::XMFLOAT3 face5Normal;
+        DirectX::XMFLOAT3 face6Normal;
+
+        TriangleNormal(&face1Normal, &vertex2, &vertex5, &vertex8);
+        TriangleNormal(&face2Normal, &vertex1, &vertex6, &vertex5);
+        TriangleNormal(&face3Normal, &vertex1, &vertex4, &vertex7);
+        TriangleNormal(&face4Normal, &vertex3, &vertex8, &vertex7);
+        TriangleNormal(&face5Normal, &vertex1, &vertex2, &vertex3);
+        TriangleNormal(&face6Normal, &vertex5, &vertex6, &vertex7);
+
+        ShaderVertex vertices[] = {
+            // Face 1
+            ShaderVertex(vertex2, face1Normal),
+            ShaderVertex(vertex5, face1Normal),
+            ShaderVertex(vertex8, face1Normal),
+            ShaderVertex(vertex3, face1Normal),
+            // Face 2
+            ShaderVertex(vertex1, face2Normal),
+            ShaderVertex(vertex6, face2Normal),
+            ShaderVertex(vertex5, face2Normal),
+            ShaderVertex(vertex2, face2Normal),
+            // Face 3
+            ShaderVertex(vertex1, face3Normal),
+            ShaderVertex(vertex4, face3Normal),
+            ShaderVertex(vertex7, face3Normal),
+            ShaderVertex(vertex6, face3Normal),
+            // Face 4
+            ShaderVertex(vertex3, face4Normal),
+            ShaderVertex(vertex8, face4Normal),
+            ShaderVertex(vertex7, face4Normal),
+            ShaderVertex(vertex4, face4Normal),
+            // Face 5
+            ShaderVertex(vertex1, face5Normal),
+            ShaderVertex(vertex2, face5Normal),
+            ShaderVertex(vertex3, face5Normal),
+            ShaderVertex(vertex4, face5Normal),
+            // Face 6
+            ShaderVertex(vertex5, face6Normal),
+            ShaderVertex(vertex6, face6Normal),
+            ShaderVertex(vertex7, face6Normal),
+            ShaderVertex(vertex8, face6Normal)
+        };
+
+        UINT indices[] = {
+            // Face 1
+            0, 1, 2,
+            0, 2, 3,
+            // Face 2
+            4, 5, 6,
+            4, 6, 7,
+            // Face 3
+            8, 9, 10,
+            8, 10, 11,
+            // Face 4
+            12, 13, 14,
+            12, 14, 15,
+            // Face 5
+            16, 17, 18,
+            16, 18, 19,
+            // Face 6
+            20, 21, 22,
+            20, 22, 23
+        };
+
+        cubeVertexBuffer_ = CreateVertexBuffer(vertices, ARRAYSIZE(vertices));
+        cubeIndexBuffer_ = CreateIndexBuffer(indices, ARRAYSIZE(indices));
     }
 
     void D3D11Graphics::InitViewProjectionMatrix()
