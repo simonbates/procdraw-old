@@ -1,4 +1,11 @@
 /build
-*.sublime-workspace
 .vagrant
+
+# Emacs
+\#*\#
+
+# Sublime Text
+*.sublime-workspace
+
+# Visual Studio
 procdraw.aps
