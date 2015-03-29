@@ -472,14 +472,12 @@ TEST_CASE("LispInterpreter::Eval")
     }
 
     SECTION("Recursion") {
-        auto exp = R"(
-            (progn
-              (setq f (lambda (n)
-                (if (eq n 0)
-                  1
-                  (* n (f (- n 1))))))
-              (f 5))
-        )";
+        auto exp = "(progn"
+                   "  (setq f (lambda (n)"
+                   "    (if (eq n 0)"
+                   "      1"
+                   "      (* n (f (- n 1))))))"
+                   "  (f 5))";
         REQUIRE(L.NumVal(L.Eval(L.Read(exp))) == 120);
     }
 
@@ -598,14 +596,12 @@ TEST_CASE("LispInterpreter::Eval")
         }
 
         SECTION("should provide method calls") {
-            auto exp = R"(
-                (progn
-                  (put t1 'x 10)
-                  (put t1 'get-x
-                    (lambda (self) (get self 'x)))
-                  (put t1 'plus-x
-                    (lambda (self n) (+ (get self 'x) n))))
-            )";
+            auto exp = "(progn"
+                       "  (put t1 'x 10)"
+                       "  (put t1 'get-x"
+                       "    (lambda (self) (get self 'x)))"
+                       "  (put t1 'plus-x"
+                       "    (lambda (self n) (+ (get self 'x) n))))";
             L.Eval(L.Read(exp));
             REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'get-x) t1)"))) == 10);
             REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'plus-x) t1 2)"))) == 12);
