@@ -76,6 +76,7 @@ Dependencies:
 
 - GNU C++ compiler
 - CMake
+- SDL2
 
 Run CMake to generate a Makefile:
 
