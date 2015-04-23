@@ -1,6 +1,20 @@
+#include "color.h"
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+
+void Background(float h, float s, float v)
+{
+    float r, g, b;
+    procdraw::Hsv2Rgb(h, s, v, r, g, b);
+    glClearColor(r, g, b, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Draw()
+{
+    Background(200.0f, 0.6f, 0.9f);
+}
 
 int main()
 {
@@ -9,23 +23,19 @@ int main()
         return 1;
     }
 
-    SDL_Window *win = SDL_CreateWindow("ProcDraw", SDL_WINDOWPOS_UNDEFINED,
+    SDL_Window *window = SDL_CreateWindow("ProcDraw", SDL_WINDOWPOS_UNDEFINED,
                                        SDL_WINDOWPOS_UNDEFINED, 640, 480,
                                        SDL_WINDOW_OPENGL);
-    if (win == nullptr) {
+    if (window == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    SDL_GLContext glcontext = SDL_GL_CreateContext(win);
-    if (glcontext == nullptr) {
+    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+    if (glcontext == NULL) {
         std::cout << "SDL_GL_CreateContext Error: " << SDL_GetError() << std::endl;
         return 1;
     }
-
-    glClearColor(0, 0, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(win);
 
     SDL_Event e;
     bool quit = false;
@@ -36,11 +46,13 @@ int main()
                 quit = true;
             }
         }
-        SDL_Delay(20);
+        Draw();
+        SDL_GL_SwapWindow(window);
+        SDL_Delay(50);
     }
 
     SDL_GL_DeleteContext(glcontext);
-    SDL_DestroyWindow(win);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
     return 0;
