@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(ProcDraw)
 
-add_custom_target(test)
+enable_testing()
 
 # Platform-specific compiler settings
 
