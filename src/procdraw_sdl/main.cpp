@@ -1,25 +1,9 @@
 #include "color.h"
 #include <iostream>
+#include <stdexcept>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-
-static const GLchar *vertexShaderSource[] = {
-    "#version 430 core                              \n"
-    "void main(void)                                \n"
-    "{                                              \n"
-    "    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);    \n"
-    "}                                              \n"
-};
-
-static const GLchar *fragmentShaderSource[] = {
-    "#version 430 core                              \n"
-    "out vec4 color;                                \n"
-    "void main(void)                                \n"
-    "{                                              \n"
-    "    color = vec4(1.0, 0.0, 0.0, 1.0);          \n"
-    "}                                              \n"
-};
 
 void Background(float h, float s, float v)
 {
@@ -41,43 +25,36 @@ void Draw()
     Point();
 }
 
-int main()
+void ThrowSdlError()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        return 1;
-    }
+    throw std::runtime_error(SDL_GetError());
+}
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
-    SDL_Window *window = SDL_CreateWindow("ProcDraw", SDL_WINDOWPOS_UNDEFINED,
-                                       SDL_WINDOWPOS_UNDEFINED, 640, 480,
-                                       SDL_WINDOW_OPENGL);
-    if (window == nullptr) {
-        std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-    if (glcontext == NULL) {
-        std::cerr << "SDL_GL_CreateContext Error: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
+void ThrowOnGlewError(GLenum err)
+{
     if (err != GLEW_OK) {
-        std::cerr << "GLEW Error: " << glewGetErrorString(err) << std::endl;
+        throw std::runtime_error(reinterpret_cast<const char*>(glewGetErrorString(err)));
     }
+}
 
-    std::cout << "GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
+GLuint CompileShaders()
+{
+    static const GLchar *vertexShaderSource[] = {
+        "#version 430 core                              \n"
+        "void main(void)                                \n"
+        "{                                              \n"
+        "    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);    \n"
+        "}                                              \n"
+    };
 
-    std::cout << "OpenGL vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "OpenGL renderer: " << glGetString(GL_RENDERER) << std::endl;
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    static const GLchar *fragmentShaderSource[] = {
+        "#version 430 core                              \n"
+        "out vec4 color;                                \n"
+        "void main(void)                                \n"
+        "{                                              \n"
+        "    color = vec4(1.0, 0.0, 0.0, 1.0);          \n"
+        "}                                              \n"
+    };
 
     // Vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -94,10 +71,47 @@ int main()
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
-    glUseProgram(program);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    return program;
+}
+
+int main()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        ThrowSdlError();
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+    SDL_Window *window = SDL_CreateWindow("ProcDraw", SDL_WINDOWPOS_UNDEFINED,
+                                       SDL_WINDOWPOS_UNDEFINED, 640, 480,
+                                       SDL_WINDOW_OPENGL);
+    if (window == nullptr) {
+        ThrowSdlError();
+    }
+
+    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+    if (glcontext == NULL) {
+        ThrowSdlError();
+    }
+
+    glewExperimental = GL_TRUE;
+    ThrowOnGlewError(glewInit());
+
+    std::cout << "GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
+
+    std::cout << "OpenGL vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "OpenGL renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+    GLuint program = CompileShaders();
+    glUseProgram(program);
 
     // Vertex array object
     GLuint vertexArrayObject;
