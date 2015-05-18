@@ -10,7 +10,7 @@ namespace procdraw {
         window_(nullptr),
         glcontext_(NULL),
         program_(0),
-        vertexArrayObjectAllocated_(false)
+        vertexArrayObject_(0)
     {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
             ThrowSdlError();
@@ -23,18 +23,13 @@ namespace procdraw {
 
         // Vertex array object
         glGenVertexArrays(1, &vertexArrayObject_);
-        vertexArrayObjectAllocated_ = true;
         glBindVertexArray(vertexArrayObject_);
     }
 
     ProcDrawAppSdl::~ProcDrawAppSdl()
     {
-        if (vertexArrayObjectAllocated_) {
-            glDeleteVertexArrays(1, &vertexArrayObject_);
-        }
-        if (program_ != 0) {
-            glDeleteProgram(program_);
-        }
+        glDeleteVertexArrays(1, &vertexArrayObject_);
+        glDeleteProgram(program_);
         if (glcontext_ != NULL) {
             SDL_GL_DeleteContext(glcontext_);
         }

@@ -18,7 +18,6 @@ namespace procdraw {
         SDL_GLContext glcontext_;
         GLuint program_;
         GLuint vertexArrayObject_;
-        bool vertexArrayObjectAllocated_;
         void CreateWindowAndGlContext();
         GLuint CompileShaders();
         void Draw();
