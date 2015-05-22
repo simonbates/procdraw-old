@@ -10,7 +10,10 @@ namespace procdraw {
         window_(nullptr),
         glcontext_(NULL),
         program_(0),
-        vertexArrayObject_(0)
+        pointBuffer_(0),
+        pointVao_(0),
+        triangleBuffer_(0),
+        triangleVao_(0)
     {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
             ThrowSdlError();
@@ -21,14 +24,18 @@ namespace procdraw {
         program_ = CompileShaders();
         glUseProgram(program_);
 
-        // Vertex array object
-        glGenVertexArrays(1, &vertexArrayObject_);
-        glBindVertexArray(vertexArrayObject_);
+        MakePointVao();
+        MakeTriangleVao();
     }
 
     ProcDrawAppSdl::~ProcDrawAppSdl()
     {
-        glDeleteVertexArrays(1, &vertexArrayObject_);
+        glDeleteVertexArrays(1, &pointVao_);
+        glDeleteBuffers(1, &pointBuffer_);
+
+        glDeleteVertexArrays(1, &triangleVao_);
+        glDeleteBuffers(1, &triangleBuffer_);
+
         glDeleteProgram(program_);
         if (glcontext_ != NULL) {
             SDL_GL_DeleteContext(glcontext_);
@@ -47,10 +54,25 @@ namespace procdraw {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
+    void ProcDrawAppSdl::Colour(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        // TODO use glGetUniformLocation
+        glUniform4f(1, r, g, b, 1.0f);
+    }
+
     void ProcDrawAppSdl::Point()
     {
+        glBindVertexArray(pointVao_);
         glPointSize(20.0f);
         glDrawArrays(GL_POINTS, 0, 1);
+    }
+
+    void ProcDrawAppSdl::Triangle()
+    {
+        glBindVertexArray(triangleVao_);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 
     int ProcDrawAppSdl::MainLoop()
@@ -104,18 +126,23 @@ namespace procdraw {
     {
         static const GLchar *vertexShaderSource[] = {
             "#version 430 core                              \n"
+            "layout (location = 0) in vec4 position;        \n"
+            "layout (location = 1) uniform vec4 color;      \n"
+            "out vec4 vs_color;                             \n"
             "void main(void)                                \n"
             "{                                              \n"
-            "    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);    \n"
+            "    gl_Position = position;                    \n"
+            "    vs_color = color;                          \n"
             "}                                              \n"
         };
 
         static const GLchar *fragmentShaderSource[] = {
             "#version 430 core                              \n"
+            "in vec4 vs_color;                              \n"
             "out vec4 color;                                \n"
             "void main(void)                                \n"
             "{                                              \n"
-            "    color = vec4(1.0, 0.0, 0.0, 1.0);          \n"
+            "    color = vs_color;                          \n"
             "}                                              \n"
         };
 
@@ -141,9 +168,46 @@ namespace procdraw {
         return program;
     }
 
+    void ProcDrawAppSdl::MakePointVao()
+    {
+        GLfloat position[] = { 0.5f, 0.0f, 0.5f, 1.0f };
+
+        glGenBuffers(1, &pointBuffer_);
+        glBindBuffer(GL_ARRAY_BUFFER, pointBuffer_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(position), position, GL_STATIC_DRAW);
+
+        glGenVertexArrays(1, &pointVao_);
+        glBindVertexArray(pointVao_);
+
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(0);
+    }
+
+    void ProcDrawAppSdl::MakeTriangleVao()
+    {
+        GLfloat positions[] = {
+            -0.5f, 0.0f, 0.5f, 1.0f,
+            0.5f, 0.0f, 0.5f, 1.0f,
+            0.0f, 0.5f, 0.5f, 1.0f
+        };
+
+        glGenBuffers(1, &triangleBuffer_);
+        glBindBuffer(GL_ARRAY_BUFFER, triangleBuffer_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+
+        glGenVertexArrays(1, &triangleVao_);
+        glBindVertexArray(triangleVao_);
+
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(0);
+    }
+
     void ProcDrawAppSdl::Draw()
     {
         Background(200.0f, 0.6f, 0.9f);
+        Colour(9.0f, 0.7f, 0.7f);
+        Triangle();
+        Colour(100.0f, 0.7f, 0.7f);
         Point();
     }
 
