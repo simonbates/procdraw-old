@@ -78,6 +78,7 @@ Dependencies:
 - CMake
 - SDL2
 - GLEW
+- GLM
 
 Run CMake to generate a Makefile:
 

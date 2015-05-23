@@ -1,6 +1,8 @@
 #include "procdraw_app_sdl.h"
 #include "color.h"
 #include "sdl_util.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -46,12 +48,41 @@ namespace procdraw {
         SDL_Quit();
     }
 
+    double ProcDrawAppSdl::Width()
+    {
+        int w, h;
+        SDL_GetWindowSize(window_, &w, &h);
+        return static_cast<double>(w);
+    }
+
+    double ProcDrawAppSdl::Height()
+    {
+        int w, h;
+        SDL_GetWindowSize(window_, &w, &h);
+        return static_cast<double>(h);
+    }
+
+    double ProcDrawAppSdl::MouseX()
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        return static_cast<double>(x) / (Width() - 1);
+    }
+
+    double ProcDrawAppSdl::MouseY()
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        return static_cast<double>(y) / (Height() - 1);
+    }
+
     void ProcDrawAppSdl::Background(float h, float s, float v)
     {
         float r, g, b;
         Hsv2Rgb(h, s, v, r, g, b);
         glClearColor(r, g, b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        ResetMatrix();
     }
 
     void ProcDrawAppSdl::Colour(float h, float s, float v)
@@ -59,11 +90,12 @@ namespace procdraw {
         float r, g, b;
         Hsv2Rgb(h, s, v, r, g, b);
         // TODO use glGetUniformLocation
-        glUniform4f(1, r, g, b, 1.0f);
+        glUniform4f(2, r, g, b, 1.0f);
     }
 
     void ProcDrawAppSdl::Point()
     {
+        UpdateUniformsForObject();
         glBindVertexArray(pointVao_);
         glPointSize(20.0f);
         glDrawArrays(GL_POINTS, 0, 1);
@@ -71,8 +103,16 @@ namespace procdraw {
 
     void ProcDrawAppSdl::Triangle()
     {
+        UpdateUniformsForObject();
         glBindVertexArray(triangleVao_);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
+
+    void ProcDrawAppSdl::RotateZ(float turns)
+    {
+        worldMatrix_ = glm::rotate(worldMatrix_,
+                                   turns * 2 * static_cast<float>(M_PI),
+                                   glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
     int ProcDrawAppSdl::MainLoop()
@@ -125,25 +165,26 @@ namespace procdraw {
     GLuint ProcDrawAppSdl::CompileShaders()
     {
         static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                              \n"
-            "layout (location = 0) in vec4 position;        \n"
-            "layout (location = 1) uniform vec4 color;      \n"
-            "out vec4 vs_color;                             \n"
-            "void main(void)                                \n"
-            "{                                              \n"
-            "    gl_Position = position;                    \n"
-            "    vs_color = color;                          \n"
-            "}                                              \n"
+            "#version 430 core                                  \n"
+            "layout (location = 0) in vec4 position;            \n"
+            "layout (location = 1) uniform mat4 world_matrix;   \n"
+            "layout (location = 2) uniform vec4 colour;         \n"
+            "out vec4 vs_color;                                 \n"
+            "void main(void)                                    \n"
+            "{                                                  \n"
+            "    gl_Position = world_matrix * position;         \n"
+            "    vs_color = colour;                             \n"
+            "}                                                  \n"
         };
 
         static const GLchar *fragmentShaderSource[] = {
-            "#version 430 core                              \n"
-            "in vec4 vs_color;                              \n"
-            "out vec4 color;                                \n"
-            "void main(void)                                \n"
-            "{                                              \n"
-            "    color = vs_color;                          \n"
-            "}                                              \n"
+            "#version 430 core                                  \n"
+            "in vec4 vs_color;                                  \n"
+            "out vec4 color;                                    \n"
+            "void main(void)                                    \n"
+            "{                                                  \n"
+            "    color = vs_color;                              \n"
+            "}                                                  \n"
         };
 
         // Vertex shader
@@ -202,9 +243,21 @@ namespace procdraw {
         glEnableVertexAttribArray(0);
     }
 
+    void ProcDrawAppSdl::ResetMatrix()
+    {
+        worldMatrix_ = glm::mat4(1.0f);
+    }
+
+    void ProcDrawAppSdl::UpdateUniformsForObject()
+    {
+        // TODO use glGetUniformLocation
+        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(worldMatrix_));
+    }
+
     void ProcDrawAppSdl::Draw()
     {
         Background(200.0f, 0.6f, 0.9f);
+        RotateZ(MouseX());
         Colour(9.0f, 0.7f, 0.7f);
         Triangle();
         Colour(100.0f, 0.7f, 0.7f);
