@@ -1,4 +1,5 @@
 #include "procdraw_app_sdl.h"
+#include "procdraw_app_sdl_lisp.h"
 #include "sdl_util.h"
 #include <SDL2/SDL.h>
 
@@ -11,6 +12,9 @@ namespace procdraw {
         }
 
         renderer_ = std::unique_ptr<GlRenderer>(new GlRenderer());
+
+        RegisterProcDrawAppSdlFunctionsForLisp(this, &L_);
+        EvalExampleProg();
     }
 
     ProcDrawAppSdl::~ProcDrawAppSdl()
@@ -29,21 +33,23 @@ namespace procdraw {
                     quit = true;
                 }
             }
-            Draw();
+            L_.Apply("draw");
             renderer_->DoSwap();
         }
 
         return 0;
     }
 
-    void ProcDrawAppSdl::Draw()
+    void ProcDrawAppSdl::EvalExampleProg()
     {
-        renderer_->Background(200.0f, 0.6f, 0.9f);
-        renderer_->RotateZ(renderer_->MouseX());
-        renderer_->Colour(9.0f, 0.7f, 0.7f);
-        renderer_->Triangle();
-        renderer_->Colour(100.0f, 0.7f, 0.7f);
-        renderer_->Point();
+        auto prog = "(def draw ()"
+                    "  (background 200 (/ 6 10) (/ 9 10))"
+                    "  (rotate-z (mouse-x))"
+                    "  (colour 9 (/ 7 10) (/ 7 10))"
+                    "  (triangle)"
+                    "  (colour 100 (/ 7 10) (/ 7 10))"
+                    "  (point))";
+        L_.Eval(L_.Read(prog));
     }
 
 }

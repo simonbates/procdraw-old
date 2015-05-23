@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glrenderer.h"
+#include "lisp_interpreter.h"
 #include <memory>
 
 namespace procdraw {
@@ -16,7 +17,8 @@ namespace procdraw {
         int MainLoop();
     private:
         std::unique_ptr<GlRenderer> renderer_;
-        void Draw();
+        LispInterpreter L_;
+        void EvalExampleProg();
     };
 
 }
