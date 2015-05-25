@@ -79,6 +79,7 @@ Dependencies:
 - SDL2
 - GLEW
 - GLM
+- Readline
 
 Run CMake to generate a Makefile:
 

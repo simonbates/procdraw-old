@@ -29,6 +29,7 @@ namespace procdraw {
 
     GlRenderer::~GlRenderer()
     {
+        // TODO The constructor/destructor design here is not safe -- if the constructor throws an exception, the destructor will not be called
         glDeleteVertexArrays(1, &pointVao_);
         glDeleteBuffers(1, &pointBuffer_);
 

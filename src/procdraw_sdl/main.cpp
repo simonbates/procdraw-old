@@ -3,5 +3,5 @@
 int main()
 {
     procdraw::ProcDrawAppSdl app;
-    return app.MainLoop();
+    return app.Run();
 }

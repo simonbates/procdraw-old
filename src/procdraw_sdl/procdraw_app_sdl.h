@@ -14,10 +14,13 @@ namespace procdraw {
         {
             return renderer_.get();
         }
-        int MainLoop();
+        int Run();
+        bool IsQuit();
     private:
+        bool quit_;
         std::unique_ptr<GlRenderer> renderer_;
         LispInterpreter L_;
+        void MainLoop();
         void EvalExampleProg();
     };
 

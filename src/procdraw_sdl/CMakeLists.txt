@@ -11,4 +11,9 @@ include_directories(${PROJECT_SOURCE_DIR}/src/procdraw_lib
                     ${GLEW_INCLUDE_DIRS})
 
 add_executable(procdraw ${PROCDRAW_SDL_SOURCES})
-target_link_libraries(procdraw procdraw_lib ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(procdraw
+                      procdraw_lib
+                      ${SDL2_LIBRARIES}
+                      ${OPENGL_LIBRARIES}
+                      ${GLEW_LIBRARIES}
+                      readline)
