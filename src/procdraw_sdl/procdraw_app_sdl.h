@@ -9,7 +9,6 @@ namespace procdraw {
     class ProcDrawAppSdl {
     public:
         ProcDrawAppSdl();
-        ~ProcDrawAppSdl();
         inline GlRenderer* Renderer()
         {
             return renderer_.get();

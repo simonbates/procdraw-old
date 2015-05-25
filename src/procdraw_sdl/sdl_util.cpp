@@ -1,6 +1,5 @@
 #include "sdl_util.h"
 #include <stdexcept>
-#include <SDL2/SDL.h>
 
 namespace procdraw {
 
@@ -14,6 +13,18 @@ namespace procdraw {
         if (err != GLEW_OK) {
             throw std::runtime_error(reinterpret_cast<const char*>(glewGetErrorString(err)));
         }
+    }
+
+    SDL::SDL(Uint32 flags)
+    {
+        if (SDL_Init(flags) != 0) {
+            ThrowSdlError();
+        }
+    }
+
+    SDL::~SDL()
+    {
+        SDL_Quit();
     }
 
 }

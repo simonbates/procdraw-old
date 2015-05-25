@@ -12,26 +12,16 @@ namespace procdraw {
 
     ProcDrawAppSdl::ProcDrawAppSdl() : quit_(false)
     {
-        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            ThrowSdlError();
-        }
-
         renderer_ = std::unique_ptr<GlRenderer>(new GlRenderer());
-
         RegisterProcDrawAppSdlFunctionsForLisp(this, &L_);
         EvalExampleProg();
-    }
-
-    ProcDrawAppSdl::~ProcDrawAppSdl()
-    {
-        // TODO The constructor/destructor design here is not safe -- if the constructor throws an exception, the destructor will not be called
-        SDL_Quit();
     }
 
     int ProcDrawAppSdl::Run()
     {
         SDL_Thread *cliThread = SDL_CreateThread(CliThreadFunction, "CliThread", this);
 
+        // TODO if MainLoop throws an exception, we will fail to wait for the cliThread to shutdown cleanly
         MainLoop();
 
         int threadReturnValue;
