@@ -1,15 +1,14 @@
 #include "procdraw_app_sdl_lisp.h"
+#include "globals.h"
 
 namespace procdraw {
-
-    static ProcDrawAppSdl *app;
 
     static LispObjectPtr lisp_Background(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
         auto h = L->NumVal(L->Car(args));
         auto s = L->NumVal(L->Cadr(args));
         auto v = L->NumVal(L->Caddr(args));
-        app->Renderer()->Background(h, s, v);
+        pd_app->Renderer()->Background(h, s, v);
         return L->Nil;
     }
 
@@ -18,51 +17,50 @@ namespace procdraw {
         auto h = L->NumVal(L->Car(args));
         auto s = L->NumVal(L->Cadr(args));
         auto v = L->NumVal(L->Caddr(args));
-        app->Renderer()->Colour(h, s, v);
+        pd_app->Renderer()->Colour(h, s, v);
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Height(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return L->MakeNumber(app->Renderer()->Height());
+        return L->MakeNumber(pd_app->Renderer()->Height());
     }
 
     static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return L->MakeNumber(app->Renderer()->MouseX());
+        return L->MakeNumber(pd_app->Renderer()->MouseX());
     }
 
     static LispObjectPtr lisp_MouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return L->MakeNumber(app->Renderer()->MouseY());
+        return L->MakeNumber(pd_app->Renderer()->MouseY());
     }
 
     static LispObjectPtr lisp_Point(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        app->Renderer()->Point();
+        pd_app->Renderer()->Point();
         return L->Nil;
     }
 
     static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        app->Renderer()->RotateZ(L->NumVal(L->Car(args)));
+        pd_app->Renderer()->RotateZ(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Triangle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        app->Renderer()->Triangle();
+        pd_app->Renderer()->Triangle();
         return L->Nil;
     }
 
     static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
     {
-        return L->MakeNumber(app->Renderer()->Width());
+        return L->MakeNumber(pd_app->Renderer()->Width());
     }
 
-    void RegisterProcDrawAppSdlFunctionsForLisp(ProcDrawAppSdl *a, LispInterpreter *L)
+    void RegisterProcDrawAppSdlFunctions(LispInterpreter *L)
     {
-        app = a;
         L->SetGlobalCFunction("background", lisp_Background);
         L->SetGlobalCFunction("colour", lisp_Colour);
         L->SetGlobalCFunction("height", lisp_Height);

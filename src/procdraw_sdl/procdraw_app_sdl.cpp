@@ -13,7 +13,7 @@ namespace procdraw {
     ProcDrawAppSdl::ProcDrawAppSdl() : quit_(false)
     {
         renderer_ = std::unique_ptr<GlRenderer>(new GlRenderer());
-        RegisterProcDrawAppSdlFunctionsForLisp(this, &L_);
+        RegisterProcDrawAppSdlFunctions(&L_);
         EvalExampleProg();
     }
 
@@ -97,7 +97,7 @@ namespace procdraw {
         // TODO support quit with ^D by testing for line == NULL
         // TODO send line to the app for processing, rather than just echoing
         if (line != NULL) {
-            std::cout << line << std::endl;
+            std::cout << "***" << line << "***" << std::endl;
             free (line);
         }
     }

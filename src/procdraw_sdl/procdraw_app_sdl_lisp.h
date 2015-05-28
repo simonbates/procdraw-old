@@ -5,6 +5,6 @@
 
 namespace procdraw {
 
-    void RegisterProcDrawAppSdlFunctionsForLisp(ProcDrawAppSdl *a, LispInterpreter *L);
+    void RegisterProcDrawAppSdlFunctions(LispInterpreter *L);
 
 }
