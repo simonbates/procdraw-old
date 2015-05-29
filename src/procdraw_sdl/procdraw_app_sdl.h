@@ -1,8 +1,7 @@
 #pragma once
 
-#include "glrenderer.h"
 #include "lisp_interpreter.h"
-#include <memory>
+#include "glrenderer.h"
 
 namespace procdraw {
 
@@ -11,14 +10,14 @@ namespace procdraw {
         ProcDrawAppSdl();
         inline GlRenderer* Renderer()
         {
-            return renderer_.get();
+            return &renderer_;
         }
         int Run();
-        bool IsQuit();
+        bool IsQuit() const;
     private:
         bool quit_;
-        std::unique_ptr<GlRenderer> renderer_;
         LispInterpreter L_;
+        GlRenderer renderer_;
         void MainLoop();
         void EvalExampleProg();
     };

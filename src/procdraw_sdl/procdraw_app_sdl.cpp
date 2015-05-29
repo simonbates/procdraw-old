@@ -1,36 +1,34 @@
 #include "procdraw_app_sdl.h"
 #include "procdraw_app_sdl_lisp.h"
-#include "sdl_util.h"
+#include "repl.h"
 #include <SDL2/SDL.h>
-#include <readline/readline.h>
-#include <iostream>
 
 namespace procdraw {
 
-    static int CliThreadFunction(void *data);
-    static void LineHandler(char *line);
-
     ProcDrawAppSdl::ProcDrawAppSdl() : quit_(false)
     {
-        renderer_ = std::unique_ptr<GlRenderer>(new GlRenderer());
         RegisterProcDrawAppSdlFunctions(&L_);
-        EvalExampleProg();
     }
 
     int ProcDrawAppSdl::Run()
     {
-        SDL_Thread *cliThread = SDL_CreateThread(CliThreadFunction, "CliThread", this);
+        ReplThread repl("repl");
 
-        // TODO if MainLoop throws an exception, we will fail to wait for the cliThread to shutdown cleanly
-        MainLoop();
-
-        int threadReturnValue;
-        SDL_WaitThread(cliThread, &threadReturnValue);
+        try {
+            EvalExampleProg();
+            MainLoop();
+        }
+        catch (...) {
+            // signal to other threads that we are shutting down
+            quit_ = true;
+            // and rethrow the exception
+            throw;
+        }
 
         return 0;
     }
 
-    bool ProcDrawAppSdl::IsQuit()
+    bool ProcDrawAppSdl::IsQuit() const
     {
         return quit_;
     }
@@ -45,7 +43,7 @@ namespace procdraw {
                 }
             }
             L_.Apply("draw");
-            renderer_->DoSwap();
+            renderer_.DoSwap();
         }
     }
 
@@ -59,47 +57,6 @@ namespace procdraw {
                     "  (colour 100 (/ 7 10) (/ 7 10))"
                     "  (point))";
         L_.Eval(L_.Read(prog));
-    }
-
-    static int CliThreadFunction(void *data)
-    {
-        ProcDrawAppSdl *app = reinterpret_cast<ProcDrawAppSdl*>(data);
-        fd_set fds;
-        struct timeval timeout;
-
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 10000;
-
-        rl_callback_handler_install("> ", LineHandler);
-
-        while (!app->IsQuit()) {
-            FD_ZERO(&fds);
-            FD_SET(fileno(rl_instream), &fds);
-
-            int ready = select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
-            if (ready < 0) {
-                perror("select");
-                break;
-            }
-
-            if (FD_ISSET(fileno(rl_instream), &fds)) {
-                rl_callback_read_char();
-            }
-        }
-
-        rl_callback_handler_remove();
-
-        return 0;
-    }
-
-    static void LineHandler(char *line)
-    {
-        // TODO support quit with ^D by testing for line == NULL
-        // TODO send line to the app for processing, rather than just echoing
-        if (line != NULL) {
-            std::cout << "***" << line << "***" << std::endl;
-            free (line);
-        }
     }
 
 }
