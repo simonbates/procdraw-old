@@ -1,4 +1,4 @@
-ProcDraw
+Procdraw
 ========
 
 Building on Linux
@@ -13,22 +13,12 @@ Dependencies:
 - GLEW
 - GLM
 
-Run CMake to generate a Makefile:
+To build:
 
 ```
-> mkdir build
-> cd build
-> cmake ..
-```
-
-To build (in the `build` directory):
-
-```
-> make
-```
-
-To run the tests (in the `build` directory):
-
-```
-> ctest --output-on-failure
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ctest --output-on-failure
 ```

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(ProcDraw)
+project(Procdraw)
 
 enable_testing()
 
@@ -17,7 +17,6 @@ endif()
 # Projects
 
 add_subdirectory(src/procdraw_lib)
-add_subdirectory(src/procrepl)
 add_subdirectory(tests/procdraw_lib_tests)
 
 if (WIN32)
