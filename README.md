@@ -13,7 +13,7 @@ Dependencies:
 - GLEW
 - GLM
 
-To build:
+You can build Procdraw and run the tests with these steps:
 
 ```
 $ mkdir build

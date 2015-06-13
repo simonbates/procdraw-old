@@ -17,11 +17,5 @@ endif()
 # Projects
 
 add_subdirectory(src/procdraw_lib)
+add_subdirectory(src/procdraw_sdl)
 add_subdirectory(tests/procdraw_lib_tests)
-
-if (WIN32)
-    add_subdirectory(src/procdraw_win)
-    add_subdirectory(src/procdraw_winmain)
-else()
-    add_subdirectory(src/procdraw_sdl)
-endif()
