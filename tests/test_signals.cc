@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include "signals.h"
 #include "lisp_interpreter.h"
 #include "util.h"

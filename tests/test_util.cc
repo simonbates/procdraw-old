@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include "util.h"
 #include "catch.hpp"
 

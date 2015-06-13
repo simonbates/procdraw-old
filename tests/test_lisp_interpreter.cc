@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include "lisp_interpreter.h"
 #include "catch.hpp"
 #include <cmath>

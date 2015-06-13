@@ -1,0 +1,16 @@
+include_directories(${PROJECT_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/third_party/catch)
+
+function(add_libprocdraw_test test_name)
+    add_executable(${test_name} "${test_name}.cc")
+    target_link_libraries(${test_name} libprocdraw)
+    add_test(${test_name} ${test_name})
+endfunction()
+
+add_libprocdraw_test(test_color)
+add_libprocdraw_test(test_line_buffer)
+add_libprocdraw_test(test_lisp_interpreter)
+add_libprocdraw_test(test_lisp_reader)
+add_libprocdraw_test(test_lsystem)
+add_libprocdraw_test(test_signals)
+add_libprocdraw_test(test_util)

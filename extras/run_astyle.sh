@@ -1,3 +1,3 @@
 #!/bin/sh
 
-astyle --options=extras/astylerc --recursive 'src/*.cpp' 'src/*.h' 'tests/*.cpp' 'tests/*.h'
+astyle --options=extras/astylerc '*.cc' '*.h' 'tests/*.cc'
