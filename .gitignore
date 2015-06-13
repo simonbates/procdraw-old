@@ -1,12 +1,11 @@
-/build
+/build/
 .vagrant
 
 # Emacs
 \#*\#
 *~
 
-# Sublime Text
-*.sublime-workspace
-
-# Visual Studio
-procdraw.aps
+# GNU GLOBAL
+/GPATH
+/GRTAGS
+/GTAGS
