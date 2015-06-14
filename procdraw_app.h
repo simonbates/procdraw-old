@@ -8,10 +8,10 @@ namespace procdraw {
 
     class ReplThread;
 
-    class ProcDrawAppSdl {
+    class ProcdrawApp {
     public:
-        ProcDrawAppSdl();
-        ~ProcDrawAppSdl();
+        ProcdrawApp();
+        ~ProcdrawApp();
         inline GlRenderer* Renderer()
         {
             return &renderer_;

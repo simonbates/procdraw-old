@@ -7,7 +7,7 @@ namespace procdraw {
     static int ReplThreadFunction(void *data);
     static void LineHandler(char *line);
 
-    ReplThread::ReplThread(const char *name, ProcDrawAppSdl *app)
+    ReplThread::ReplThread(const char *name, ProcdrawApp *app)
     {
         thread_ = SDL_CreateThread(ReplThreadFunction, name, app);
     }
@@ -21,7 +21,7 @@ namespace procdraw {
 
     static int ReplThreadFunction(void *data)
     {
-        auto app = static_cast<ProcDrawAppSdl*>(data);
+        auto app = static_cast<ProcdrawApp*>(data);
         fd_set fds;
         struct timeval timeout;
 

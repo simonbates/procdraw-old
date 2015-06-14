@@ -123,7 +123,7 @@ namespace procdraw {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
-        window_ = SDL_CreateWindow("ProcDraw", SDL_WINDOWPOS_UNDEFINED,
+        window_ = SDL_CreateWindow("Procdraw", SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED, 640, 480,
                                    SDL_WINDOW_OPENGL);
         if (window_ == nullptr) {

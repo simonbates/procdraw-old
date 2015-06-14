@@ -1,24 +1,24 @@
-#include "procdraw_app_sdl.h"
-#include "procdraw_app_sdl_lisp.h"
+#include "procdraw_app.h"
+#include "procdraw_app_lisp.h"
 #include "repl.h"
 #include <SDL2/SDL.h>
 
 namespace procdraw {
 
-    ProcDrawAppSdl::ProcDrawAppSdl() : quit_(false)
+    ProcdrawApp::ProcdrawApp() : quit_(false)
     {
-        RegisterProcDrawAppSdlFunctions(this, &L_);
+        RegisterProcdrawAppFunctions(this, &L_);
         EvalExampleProg();
         repl_ = std::unique_ptr<ReplThread>(new ReplThread("repl", this));
     }
 
-    ProcDrawAppSdl::~ProcDrawAppSdl()
+    ProcdrawApp::~ProcdrawApp()
     {
         // Signal to other threads that we are shutting down
         quit_ = true;
     }
 
-    int ProcDrawAppSdl::MainLoop()
+    int ProcdrawApp::MainLoop()
     {
         SDL_Event e;
         while (!quit_) {
@@ -33,12 +33,12 @@ namespace procdraw {
         return 0;
     }
 
-    bool ProcDrawAppSdl::IsQuit() const
+    bool ProcdrawApp::IsQuit() const
     {
         return quit_;
     }
 
-    void ProcDrawAppSdl::EvalExampleProg()
+    void ProcdrawApp::EvalExampleProg()
     {
         auto prog = "(def draw ()"
                     "  (background 200 (/ 6 10) (/ 9 10))"

@@ -19,5 +19,5 @@ Pre-commit checklist
 --------------------
 
 - Build and run the tests
-- Run ProcDraw
+- Run Procdraw
 - Run Astyle to format the source code

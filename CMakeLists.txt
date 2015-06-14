@@ -36,8 +36,8 @@ add_library(libprocdraw
             lisp_memory.cc
             lisp_reader.cc
             lsystem.cc
-            procdraw_app_sdl.cc
-            procdraw_app_sdl_lisp.cc
+            procdraw_app.cc
+            procdraw_app_lisp.cc
             repl.cc
             sdl_util.cc
             signals.cc
