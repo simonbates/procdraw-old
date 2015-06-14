@@ -111,12 +111,12 @@ namespace procdraw {
         return val1Num;
     }
 
-    static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return MakeSignal(L, L->Car(args));
     }
 
-    static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto source = L->Car(args);
         auto destSignal = L->Cadr(args);
@@ -126,18 +126,18 @@ namespace procdraw {
         return L->Put(GetSignalInputs(L, destSignal), destKey, L->Cons(source, mapFun));
     }
 
-    static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return Sigval(L, L->Car(args), GetSteppedSignals(L), env);
     }
 
-    static LispObjectPtr lisp_ClearSteppedSignals(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_ClearSteppedSignals(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto steppedSignals = GetSteppedSignals(L);
         return L->Clear(steppedSignals);
     }
 
-    static LispObjectPtr lisp_StepSaw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_StepSaw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto self = L->Car(args);
         auto val1Key = L->SymbolRef("val1");
@@ -148,32 +148,32 @@ namespace procdraw {
         return val1Num;
     }
 
-    static LispObjectPtr lisp_Saw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Saw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        auto saw = MakeSignal(L, L->MakeCFunction(lisp_StepSaw));
+        auto saw = MakeSignal(L, L->MakeCFunction(lisp_StepSaw, nullptr));
         L->Put(saw, L->SymbolRef("freq"), L->MakeNumber(0));
         L->Put(saw, L->SymbolRef("val1"), L->MakeNumber(0));
         return saw;
     }
 
-    static LispObjectPtr lisp_StepTri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_StepTri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return StepWavetableOscillator(L, L->Car(args), triWavetable, TRI_WAVETABLE_LEN);
     }
 
-    static LispObjectPtr lisp_Tri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Tri(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepTri));
+        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepTri, nullptr));
     }
 
-    static LispObjectPtr lisp_StepSinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_StepSinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return StepWavetableOscillator(L, L->Car(args), sinWavetable, SIN_WAVETABLE_LEN);
     }
 
-    static LispObjectPtr lisp_SinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_SinOsc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepSinOsc));
+        return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepSinOsc, nullptr));
     }
 
     void RegisterSignals(LispInterpreter *L)
@@ -181,13 +181,13 @@ namespace procdraw {
         InitTriWavetable();
         InitSinWavetable();
         L->Set(L->SymbolRef("stepped-signals"), L->MakeTable(), L->Nil);
-        L->SetGlobalCFunction("make-signal", lisp_MakeSignal);
-        L->SetGlobalCFunction("=>", lisp_Connect);
-        L->SetGlobalCFunction("sigval", lisp_Sigval);
-        L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals);
-        L->SetGlobalCFunction("saw", lisp_Saw);
-        L->SetGlobalCFunction("sin-osc", lisp_SinOsc);
-        L->SetGlobalCFunction("tri", lisp_Tri);
+        L->SetGlobalCFunction("make-signal", lisp_MakeSignal, nullptr);
+        L->SetGlobalCFunction("=>", lisp_Connect, nullptr);
+        L->SetGlobalCFunction("sigval", lisp_Sigval, nullptr);
+        L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals, nullptr);
+        L->SetGlobalCFunction("saw", lisp_Saw, nullptr);
+        L->SetGlobalCFunction("sin-osc", lisp_SinOsc, nullptr);
+        L->SetGlobalCFunction("tri", lisp_Tri, nullptr);
     }
 
 }

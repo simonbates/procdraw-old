@@ -241,7 +241,7 @@ TEST_CASE("LispInterpreter implicit type conversion")
             // Cons
             REQUIRE(std::isnan(L.NumVal(L.Cons(L.MakeNumber(1), L.MakeNumber(2)))));
             // CFunction
-            REQUIRE(std::isnan(L.NumVal(L.SetGlobalCFunction("cfunction", nullptr))));
+            REQUIRE(std::isnan(L.NumVal(L.MakeCFunction(nullptr, nullptr))));
             // Boolean
             REQUIRE(std::isnan(L.NumVal(L.True)));
             REQUIRE(std::isnan(L.NumVal(L.False)));
@@ -263,7 +263,7 @@ TEST_CASE("LispInterpreter implicit type conversion")
             // Cons
             REQUIRE(L.BoolVal(L.Cons(L.MakeNumber(1), L.MakeNumber(2))));
             // CFunction
-            REQUIRE(L.BoolVal(L.SetGlobalCFunction("cfunction", nullptr)));
+            REQUIRE(L.BoolVal(L.MakeCFunction(nullptr, nullptr)));
             // Boolean
             REQUIRE(L.BoolVal(L.True));
             REQUIRE_FALSE(L.BoolVal(L.False));
@@ -612,4 +612,27 @@ TEST_CASE("LispInterpreter::Eval")
         }
     }
 
+}
+
+static int testCfunData = 42;
+
+static procdraw::LispObjectPtr TestCfun(procdraw::LispInterpreter *L,
+                                        procdraw::LispObjectPtr args,
+                                        procdraw::LispObjectPtr env,
+                                        void *data)
+{
+    REQUIRE(data == &testCfunData);
+    int dataval = *(static_cast<int*>(data));
+    REQUIRE(dataval == 42);
+    return L->MakeNumber(L->NumVal(L->Car(args)) + dataval);
+}
+
+TEST_CASE("LispInterpreter::SetGlobalCFunction")
+{
+    procdraw::LispInterpreter L;
+
+    SECTION("test-cfun should return the sum of its first argument and testCfunData") {
+        L.SetGlobalCFunction("test-cfun", TestCfun, &testCfunData);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(test-cfun 10)"))) == 52);
+    }
 }

@@ -1,75 +1,83 @@
 #include "procdraw_app_sdl_lisp.h"
-#include "globals.h"
 
 namespace procdraw {
 
-    static LispObjectPtr lisp_Background(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Background(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
+        auto app = static_cast<ProcDrawAppSdl*>(data);
         auto h = L->NumVal(L->Car(args));
         auto s = L->NumVal(L->Cadr(args));
         auto v = L->NumVal(L->Caddr(args));
-        pd_app->Renderer()->Background(h, s, v);
+        app->Renderer()->Background(h, s, v);
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Colour(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Colour(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
+        auto app = static_cast<ProcDrawAppSdl*>(data);
         auto h = L->NumVal(L->Car(args));
         auto s = L->NumVal(L->Cadr(args));
         auto v = L->NumVal(L->Caddr(args));
-        pd_app->Renderer()->Colour(h, s, v);
+        app->Renderer()->Colour(h, s, v);
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Height(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Height(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->MakeNumber(pd_app->Renderer()->Height());
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        return L->MakeNumber(app->Renderer()->Height());
     }
 
-    static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->MakeNumber(pd_app->Renderer()->MouseX());
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        return L->MakeNumber(app->Renderer()->MouseX());
     }
 
-    static LispObjectPtr lisp_MouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_MouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->MakeNumber(pd_app->Renderer()->MouseY());
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        return L->MakeNumber(app->Renderer()->MouseY());
     }
 
-    static LispObjectPtr lisp_Point(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Point(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        pd_app->Renderer()->Point();
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        app->Renderer()->Point();
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_RotateZ(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        pd_app->Renderer()->RotateZ(L->NumVal(L->Car(args)));
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        app->Renderer()->RotateZ(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Triangle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Triangle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        pd_app->Renderer()->Triangle();
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        app->Renderer()->Triangle();
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env)
+    static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->MakeNumber(pd_app->Renderer()->Width());
+        auto app = static_cast<ProcDrawAppSdl*>(data);
+        return L->MakeNumber(app->Renderer()->Width());
     }
 
-    void RegisterProcDrawAppSdlFunctions(LispInterpreter *L)
+    void RegisterProcDrawAppSdlFunctions(ProcDrawAppSdl *app, LispInterpreter *L)
     {
-        L->SetGlobalCFunction("background", lisp_Background);
-        L->SetGlobalCFunction("colour", lisp_Colour);
-        L->SetGlobalCFunction("height", lisp_Height);
-        L->SetGlobalCFunction("mouse-x", lisp_MouseX);
-        L->SetGlobalCFunction("mouse-y", lisp_MouseY);
-        L->SetGlobalCFunction("point", lisp_Point);
-        L->SetGlobalCFunction("rotate-z", lisp_RotateZ);
-        L->SetGlobalCFunction("triangle", lisp_Triangle);
-        L->SetGlobalCFunction("width", lisp_Width);
+        L->SetGlobalCFunction("background", lisp_Background, app);
+        L->SetGlobalCFunction("colour", lisp_Colour, app);
+        L->SetGlobalCFunction("height", lisp_Height, app);
+        L->SetGlobalCFunction("mouse-x", lisp_MouseX, app);
+        L->SetGlobalCFunction("mouse-y", lisp_MouseY, app);
+        L->SetGlobalCFunction("point", lisp_Point, app);
+        L->SetGlobalCFunction("rotate-z", lisp_RotateZ, app);
+        L->SetGlobalCFunction("triangle", lisp_Triangle, app);
+        L->SetGlobalCFunction("width", lisp_Width, app);
     }
 
 }

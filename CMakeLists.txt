@@ -29,7 +29,6 @@ endif()
 
 add_library(libprocdraw
             color.cc
-            globals.cc
             glrenderer.cc
             line_buffer.cc
             lisp_functions.cc

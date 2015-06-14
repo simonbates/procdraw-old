@@ -16,23 +16,23 @@ namespace procdraw {
         S_QUOTE = SymbolRef("quote");
         S_SETQ = SymbolRef("setq");
         // Functions
-        SetGlobalCFunction("*", lisp_Product);
-        SetGlobalCFunction("+", lisp_Sum);
-        SetGlobalCFunction("-", lisp_Difference);
-        SetGlobalCFunction("/", lisp_Quotient);
-        SetGlobalCFunction("apply", lisp_Apply);
-        SetGlobalCFunction("car", lisp_Car);
-        SetGlobalCFunction("cdr", lisp_Cdr);
-        SetGlobalCFunction("clear", lisp_Clear);
-        SetGlobalCFunction("eq", lisp_Eq);
-        SetGlobalCFunction("get", lisp_Get);
-        SetGlobalCFunction("keys", lisp_Keys);
-        SetGlobalCFunction("lerp", lisp_Lerp);
-        SetGlobalCFunction("make-table", lisp_MakeTable);
-        SetGlobalCFunction("map-range", lisp_MapRange);
-        SetGlobalCFunction("norm", lisp_Norm);
-        SetGlobalCFunction("put", lisp_Put);
-        SetGlobalCFunction("wrap", lisp_Wrap);
+        SetGlobalCFunction("*", lisp_Product, nullptr);
+        SetGlobalCFunction("+", lisp_Sum, nullptr);
+        SetGlobalCFunction("-", lisp_Difference, nullptr);
+        SetGlobalCFunction("/", lisp_Quotient, nullptr);
+        SetGlobalCFunction("apply", lisp_Apply, nullptr);
+        SetGlobalCFunction("car", lisp_Car, nullptr);
+        SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
+        SetGlobalCFunction("clear", lisp_Clear, nullptr);
+        SetGlobalCFunction("eq", lisp_Eq, nullptr);
+        SetGlobalCFunction("get", lisp_Get, nullptr);
+        SetGlobalCFunction("keys", lisp_Keys, nullptr);
+        SetGlobalCFunction("lerp", lisp_Lerp, nullptr);
+        SetGlobalCFunction("make-table", lisp_MakeTable, nullptr);
+        SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
+        SetGlobalCFunction("norm", lisp_Norm, nullptr);
+        SetGlobalCFunction("put", lisp_Put, nullptr);
+        SetGlobalCFunction("wrap", lisp_Wrap, nullptr);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
     }
@@ -52,9 +52,11 @@ namespace procdraw {
         return symbol;
     }
 
-    LispObjectPtr LispInterpreter::SetGlobalCFunction(const std::string &name, lisp_CFunction cfun)
+    LispObjectPtr LispInterpreter::SetGlobalCFunction(const std::string &name,
+            lisp_CFunction cfun,
+            void *data)
     {
-        return Set(SymbolRef(name), MakeCFunction(cfun), Nil);
+        return Set(SymbolRef(name), MakeCFunction(cfun, data), Nil);
     }
 
     LispObjectPtr LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)

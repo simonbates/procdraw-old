@@ -40,10 +40,12 @@ namespace procdraw {
 
     class LispCFunction : public LispObject {
     public:
-        LispCFunction(lisp_CFunction cfun) :
+        LispCFunction(lisp_CFunction cfun, void *data) :
             LispObject(LispObjectType::CFunction),
-            cfun_(cfun) { }
+            cfun_(cfun),
+            data_(data) { }
         lisp_CFunction cfun_;
+        void *data_;
     };
 
     class LispBoolean : public LispObject {
@@ -90,9 +92,9 @@ namespace procdraw {
         return std::make_shared<LispCons>(car, cdr);
     }
 
-    LispObjectPtr LispInterpreter::MakeCFunction(lisp_CFunction cfun)
+    LispObjectPtr LispInterpreter::MakeCFunction(lisp_CFunction cfun, void *data)
     {
-        return std::make_shared<LispCFunction>(cfun);
+        return std::make_shared<LispCFunction>(cfun, data);
     }
 
     LispObjectPtr LispInterpreter::MakeString(const std::string &str)
@@ -288,7 +290,8 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env)
     {
         if (cfun->Type == LispObjectType::CFunction) {
-            return static_cast<LispCFunction*>(cfun.get())->cfun_(this, args, env);
+            LispCFunction *f = static_cast<LispCFunction*>(cfun.get());
+            return f->cfun_(this, args, env, f->data_);
         }
         else {
             // TODO or throw bad type exception?

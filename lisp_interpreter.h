@@ -11,7 +11,8 @@ namespace procdraw {
         Nil, Number, Symbol, Cons, CFunction, Boolean, String, Table
     };
 
-    typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args, LispObjectPtr env);
+    typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args,
+                                            LispObjectPtr env, void *data);
 
     class LispInterpreter {
     public:
@@ -23,7 +24,7 @@ namespace procdraw {
         // Memory allocation
         LispObjectPtr MakeNumber(double val);
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
-        LispObjectPtr MakeCFunction(lisp_CFunction cfun);
+        LispObjectPtr MakeCFunction(lisp_CFunction cfun, void *data);
         LispObjectPtr MakeString(const std::string &str);
         LispObjectPtr MakeTable();
         // Memory access
@@ -45,7 +46,7 @@ namespace procdraw {
         LispObjectPtr Clear(LispObjectPtr table);
         // Symbols
         LispObjectPtr SymbolRef(const std::string &name);
-        LispObjectPtr SetGlobalCFunction(const std::string &name, lisp_CFunction cfun);
+        LispObjectPtr SetGlobalCFunction(const std::string &name, lisp_CFunction cfun, void *data);
         // Functions
         LispObjectPtr Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Apply(const std::string &name);

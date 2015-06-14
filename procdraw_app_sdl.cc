@@ -7,33 +7,18 @@ namespace procdraw {
 
     ProcDrawAppSdl::ProcDrawAppSdl() : quit_(false)
     {
-        RegisterProcDrawAppSdlFunctions(&L_);
+        RegisterProcDrawAppSdlFunctions(this, &L_);
+        EvalExampleProg();
+        repl_ = std::unique_ptr<ReplThread>(new ReplThread("repl", this));
     }
 
-    int ProcDrawAppSdl::Run()
+    ProcDrawAppSdl::~ProcDrawAppSdl()
     {
-        ReplThread repl("repl");
-
-        try {
-            EvalExampleProg();
-            MainLoop();
-        }
-        catch (...) {
-            // signal to other threads that we are shutting down
-            quit_ = true;
-            // and rethrow the exception
-            throw;
-        }
-
-        return 0;
+        // Signal to other threads that we are shutting down
+        quit_ = true;
     }
 
-    bool ProcDrawAppSdl::IsQuit() const
-    {
-        return quit_;
-    }
-
-    void ProcDrawAppSdl::MainLoop()
+    int ProcDrawAppSdl::MainLoop()
     {
         SDL_Event e;
         while (!quit_) {
@@ -45,6 +30,12 @@ namespace procdraw {
             L_.Apply("draw");
             renderer_.DoSwap();
         }
+        return 0;
+    }
+
+    bool ProcDrawAppSdl::IsQuit() const
+    {
+        return quit_;
     }
 
     void ProcDrawAppSdl::EvalExampleProg()
