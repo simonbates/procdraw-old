@@ -28,6 +28,7 @@ endif()
 # libprocdraw
 
 add_library(libprocdraw
+            cli.cc
             color.cc
             glrenderer.cc
             line_buffer.cc
@@ -38,7 +39,6 @@ add_library(libprocdraw
             lsystem.cc
             procdraw_app.cc
             procdraw_app_lisp.cc
-            repl.cc
             sdl_util.cc
             signals.cc
             util.cc)

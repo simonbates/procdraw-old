@@ -1,41 +1,43 @@
 #include "procdraw_app.h"
 #include "procdraw_app_lisp.h"
-#include "repl.h"
 #include <SDL2/SDL.h>
 
 namespace procdraw {
 
-    ProcdrawApp::ProcdrawApp() : quit_(false)
+    ProcdrawApp::ProcdrawApp()
     {
         RegisterProcdrawAppFunctions(this, &L_);
         EvalExampleProg();
-        repl_ = std::unique_ptr<ReplThread>(new ReplThread("repl", this));
-    }
-
-    ProcdrawApp::~ProcdrawApp()
-    {
-        // Signal to other threads that we are shutting down
-        quit_ = true;
+        cli_ = std::unique_ptr<CLI>(new CLI(this));
     }
 
     int ProcdrawApp::MainLoop()
     {
+        bool quit = false;
         SDL_Event e;
-        while (!quit_) {
+        while (!quit) {
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT) {
-                    quit_ = true;
+                    quit = true;
                 }
             }
+            cli_->Poll();
             L_.Apply("draw");
             renderer_.DoSwap();
         }
         return 0;
     }
 
-    bool ProcdrawApp::IsQuit() const
+    std::string ProcdrawApp::Eval(const std::string &expr)
     {
-        return quit_;
+        std::string val;
+        try {
+            val = L_.PrintString(L_.Eval(L_.Read(expr)));
+        }
+        catch (std::exception e) {
+            val = e.what();
+        }
+        return val;
     }
 
     void ProcdrawApp::EvalExampleProg()

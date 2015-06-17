@@ -1,28 +1,26 @@
 #pragma once
 
-#include "lisp_interpreter.h"
 #include "glrenderer.h"
+#include "lisp_interpreter.h"
+#include "cli.h"
 #include <memory>
+#include <string>
 
 namespace procdraw {
-
-    class ReplThread;
 
     class ProcdrawApp {
     public:
         ProcdrawApp();
-        ~ProcdrawApp();
         inline GlRenderer* Renderer()
         {
             return &renderer_;
         }
         int MainLoop();
-        bool IsQuit() const;
+        std::string Eval(const std::string &expr);
     private:
-        bool quit_;
         GlRenderer renderer_;
         LispInterpreter L_;
-        std::unique_ptr<ReplThread> repl_;
+        std::unique_ptr<CLI> cli_;
         void EvalExampleProg();
     };
 
