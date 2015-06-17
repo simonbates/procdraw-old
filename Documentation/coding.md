@@ -18,6 +18,6 @@ C++ Conventions
 Pre-commit checklist
 --------------------
 
+- Run Astyle to format the source code
 - Build and run the tests
 - Run Procdraw
-- Run Astyle to format the source code
