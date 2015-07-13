@@ -136,7 +136,8 @@ namespace procdraw {
         numVal_ = atoi(number.c_str());
     }
 
-    void LispReader::Expect(LispTokenType t) {
+    void LispReader::Expect(LispTokenType t)
+    {
         if (token_ == t) {
             GetToken();
         }

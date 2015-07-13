@@ -156,7 +156,7 @@ namespace procdraw {
         if (Atom(exp)) {
             switch (TypeOf(exp)) {
             case LispObjectType::Boolean:
-            case LispObjectType::Nil:
+            case LispObjectType::Null:
             case LispObjectType::Number:
             case LispObjectType::String:
             case LispObjectType::Eof:
@@ -230,7 +230,7 @@ namespace procdraw {
     std::string LispInterpreter::PrintString(LispObjectPtr obj)
     {
         switch (TypeOf(obj)) {
-        case LispObjectType::Nil:
+        case LispObjectType::Null:
             return "nil";
         case LispObjectType::Number: {
             std::ostringstream s;

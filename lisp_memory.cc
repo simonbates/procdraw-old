@@ -72,7 +72,7 @@ namespace procdraw {
 
     void LispInterpreter::InitSymbolLiterals()
     {
-        Nil = std::make_shared<LispObject>(LispObjectType::Nil);
+        Nil = std::make_shared<LispObject>(LispObjectType::Null);
         True = std::make_shared<LispBoolean>(true);
         False = std::make_shared<LispBoolean>(false);
         Eof = std::make_shared<LispObject>(LispObjectType::Eof);
@@ -115,7 +115,7 @@ namespace procdraw {
 
     bool LispInterpreter::Null(LispObjectPtr obj)
     {
-        return obj->Type == LispObjectType::Nil;
+        return obj->Type == LispObjectType::Null;
     }
 
     bool LispInterpreter::IsEof(LispObjectPtr obj)
@@ -194,7 +194,7 @@ namespace procdraw {
         switch (obj->Type) {
         case LispObjectType::Boolean:
             return static_cast<LispBoolean*>(obj.get())->val_;
-        case LispObjectType::Nil:
+        case LispObjectType::Null:
             return false;
         default:
             return true;
@@ -217,7 +217,7 @@ namespace procdraw {
         if (x->Type == LispObjectType::Number && y->Type == LispObjectType::Number) {
             return static_cast<LispNumber*>(x.get())->val_ == static_cast<LispNumber*>(y.get())->val_;
         }
-        else if (x->Type == LispObjectType::Nil && y->Type == LispObjectType::Nil) {
+        else if (x->Type == LispObjectType::Null && y->Type == LispObjectType::Null) {
             return true;
         }
         else {

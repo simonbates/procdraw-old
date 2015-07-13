@@ -8,7 +8,7 @@
 namespace procdraw {
 
     enum class LispObjectType {
-        Nil, Number, Symbol, Cons, CFunction, Boolean, String, Table, Eof
+        Null, Number, Symbol, Cons, CFunction, Boolean, String, Table, Eof
     };
 
     typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args,
