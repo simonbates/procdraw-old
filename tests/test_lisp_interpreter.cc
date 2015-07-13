@@ -249,6 +249,8 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
             // Table
             REQUIRE(std::isnan(L.NumVal(L.MakeTable())));
+            // Eof
+            REQUIRE(std::isnan(L.NumVal(L.Eof)));
         }
     }
 
@@ -271,6 +273,8 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE(L.BoolVal(L.MakeString("some string")));
             // Table
             REQUIRE(L.BoolVal(L.MakeTable()));
+            // Eof
+            REQUIRE(L.BoolVal(L.Eof));
         }
     }
 
@@ -305,6 +309,10 @@ TEST_CASE("LispInterpreter::Eval")
 
     SECTION("should evaluate a string to itself") {
         REQUIRE(L.StringVal(L.Eval(L.MakeString("some string"))) == "some string");
+    }
+
+    SECTION("should evaluate Eof to itself") {
+        REQUIRE(L.IsEof(L.Eval(L.Eof)));
     }
 
     SECTION("QUOTE") {

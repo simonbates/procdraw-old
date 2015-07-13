@@ -25,23 +25,18 @@ namespace procdraw {
         }
 
         switch (ch_) {
-        case EOF:
-            token_ = LispTokenType::EndOfInput;
-            break;
         case '"': {
             std::string str;
             GetCh();
-            while (true) {
-                if (ch_ == '"') {
-                    break;
-                }
+            while (ch_ != '"') {
                 if (ch_ == EOF) {
+                    // TODO custom syntax error type
                     throw std::runtime_error("Non-closed string at LispReader::Read()");
                 }
                 str += ch_;
                 GetCh();
             }
-            // move past the closing '"'
+            // Consume the closing '"'
             GetCh();
             token_ = LispTokenType::String;
             stringVal_ = str;
@@ -59,17 +54,14 @@ namespace procdraw {
             token_ = LispTokenType::RParen;
             GetCh();
             break;
-        case '*':
-            token_ = LispTokenType::Star;
-            GetCh();
-            break;
         case '+':
             GetCh();
             if (IsStartOfNumber()) {
                 GetNumber();
             }
             else {
-                token_ = LispTokenType::Plus;
+                token_ = LispTokenType::Symbol;
+                symbolVal_ = "+";
             }
             break;
         case '-':
@@ -79,26 +71,34 @@ namespace procdraw {
                 numVal_ = -numVal_;
             }
             else {
-                token_ = LispTokenType::HyphenMinus;
+                token_ = LispTokenType::Symbol;
+                symbolVal_ = "-";
             }
             break;
         case '.':
             token_ = LispTokenType::Dot;
             GetCh();
             break;
-        case '/':
-            token_ = LispTokenType::Slash;
-            GetCh();
-            break;
         case '=':
             GetCh();
             if (ch_ == '>') {
-                token_ = LispTokenType::Connect;
+                token_ = LispTokenType::Symbol;
+                symbolVal_ = "=>";
                 GetCh();
             }
             else {
                 token_ = LispTokenType::Undefined;
             }
+            break;
+        // Single char symbols
+        case '*':
+        case '/':
+            token_ = LispTokenType::Symbol;
+            symbolVal_ = std::string(1, ch_);
+            GetCh();
+            break;
+        case EOF:
+            token_ = LispTokenType::EndOfInput;
             break;
         default:
             if (IsStartOfNumber()) {
@@ -116,6 +116,7 @@ namespace procdraw {
             else {
                 token_ = LispTokenType::Undefined;
             }
+            break;
         }
     }
 
@@ -135,6 +136,16 @@ namespace procdraw {
         numVal_ = atoi(number.c_str());
     }
 
+    void LispReader::Expect(LispTokenType t) {
+        if (token_ == t) {
+            GetToken();
+        }
+        else {
+            // TODO custom syntax error type
+            throw std::runtime_error("Syntax error");
+        }
+    }
+
     LispObjectPtr LispReader::Read(LispInterpreter *L)
     {
         switch (token_) {
@@ -142,7 +153,6 @@ namespace procdraw {
             GetToken();
             return L->Cons(L->SymbolRef("quote"), L->Cons(Read(L), L->Nil));
         case LispTokenType::LParen:
-            GetToken();
             return ReadCons(L);
         case LispTokenType::Number: {
             auto intObj = L->MakeNumber(numVal_);
@@ -171,48 +181,47 @@ namespace procdraw {
             GetToken();
             return strObj;
         }
-        case LispTokenType::Star:
-            GetToken();
-            return L->SymbolRef("*");
-        case LispTokenType::Plus:
-            GetToken();
-            return L->SymbolRef("+");
-        case LispTokenType::HyphenMinus:
-            GetToken();
-            return L->SymbolRef("-");
-        case LispTokenType::Slash:
-            GetToken();
-            return L->SymbolRef("/");
-        case LispTokenType::Connect:
-            GetToken();
-            return L->SymbolRef("=>");
+        case LispTokenType::EndOfInput:
+            return L->Eof;
         }
-        // TODO LispTokenType::EndOfInput
-        // TODO badly formed input
-        // TODO error reporting strategy
+        // TODO custom syntax error type
         throw std::runtime_error("Bad input at LispReader::Read()");
     }
 
     LispObjectPtr LispReader::ReadCons(LispInterpreter *L)
     {
+        Expect(LispTokenType::LParen);
+
         if (token_ == LispTokenType::RParen) {
-            // Empty list
             GetToken();
+            // Empty list
             return L->Nil;
         }
-        auto car = Read(L);
-        if (token_ == LispTokenType::RParen) {
-            GetToken();
-            return L->Cons(car, L->Nil);
+
+        auto head = L->Cons(Read(L), L->Nil);
+        auto prev = head;
+
+        while (token_ != LispTokenType::EndOfInput) {
+            if (token_ == LispTokenType::RParen) {
+                GetToken();
+                return head;
+            }
+            else if (token_ == LispTokenType::Dot) {
+                GetToken();
+                if (token_ == LispTokenType::EndOfInput) {
+                    return L->Eof;
+                }
+                auto cdr = Read(L);
+                Expect(LispTokenType::RParen);
+                L->Rplacd(prev, cdr);
+                return head;
+            }
+            auto next = L->Cons(Read(L), L->Nil);
+            L->Rplacd(prev, next);
+            prev = next;
         }
-        else if (token_ == LispTokenType::Dot) {
-            GetToken();
-            return L->Cons(car, Read(L));
-        }
-        else {
-            // TODO I am recursing for each list item -- instead iterate to reduce stack usage?
-            return L->Cons(car, ReadCons(L));
-        }
+
+        return L->Eof;
     }
 
 }

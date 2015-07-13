@@ -159,6 +159,7 @@ namespace procdraw {
             case LispObjectType::Nil:
             case LispObjectType::Number:
             case LispObjectType::String:
+            case LispObjectType::Eof:
                 return exp;
             default:
                 return Value(exp, env);
@@ -270,6 +271,8 @@ namespace procdraw {
         case LispObjectType::Table:
             // TODO Table serialization
             return "<Table>";
+        case LispObjectType::Eof:
+            return "<Eof>";
         default:
             return "";
         }

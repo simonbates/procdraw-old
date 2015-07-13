@@ -75,6 +75,7 @@ namespace procdraw {
         Nil = std::make_shared<LispObject>(LispObjectType::Nil);
         True = std::make_shared<LispBoolean>(true);
         False = std::make_shared<LispBoolean>(false);
+        Eof = std::make_shared<LispObject>(LispObjectType::Eof);
     }
 
     LispObjectPtr LispInterpreter::MakeNumber(double val)
@@ -115,6 +116,11 @@ namespace procdraw {
     bool LispInterpreter::Null(LispObjectPtr obj)
     {
         return obj->Type == LispObjectType::Nil;
+    }
+
+    bool LispInterpreter::IsEof(LispObjectPtr obj)
+    {
+        return obj->Type == LispObjectType::Eof;
     }
 
     double LispInterpreter::NumVal(LispObjectPtr obj)

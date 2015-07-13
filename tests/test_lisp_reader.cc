@@ -4,37 +4,37 @@
 #include "lisp_interpreter.h"
 #include "catch.hpp"
 
-TEST_CASE("LispReader")
+TEST_CASE("Lisp reader")
 {
 
     procdraw::LispReader reader;
     procdraw::LispInterpreter L;
 
-    SECTION("Integer without sign") {
+    SECTION("An integer without a sign is read as a number") {
         auto obj = reader.Read(&L, "42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
         REQUIRE(L.NumVal(obj) == 42);
     }
 
-    SECTION("Integer with positive sign") {
+    SECTION("An integer with a positive sign is read as a number") {
         auto obj = reader.Read(&L, "+42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
         REQUIRE(L.NumVal(obj) == 42);
     }
 
-    SECTION("Integer with negative sign") {
+    SECTION("An integer with a negative sign is read as a number") {
         auto obj = reader.Read(&L, "-42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Number);
         REQUIRE(L.NumVal(obj) == -42);
     }
 
-    SECTION("Symbol") {
+    SECTION("An identifier starting with a letter is read as a symbol") {
         auto obj = reader.Read(&L, "HELLO-WORLD-1");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
-    SECTION("Quote") {
+    SECTION("An expression starting with ' is read as a quote") {
         auto obj = reader.Read(&L, "'42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);
         REQUIRE(L.SymbolName(L.Car(obj)) == "quote");
@@ -42,13 +42,13 @@ TEST_CASE("LispReader")
         REQUIRE(L.Null(L.Cddr(obj)));
     }
 
-    SECTION("Star") {
+    SECTION("A star char is read as a symbol") {
         auto obj = reader.Read(&L, "*");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(obj) == "*");
     }
 
-    SECTION("Plus symbol") {
+    SECTION("A plus char is read as a symbol") {
         auto obj = reader.Read(&L, "(+ 42)");
         REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(L.Car(obj)) == "+");
@@ -56,7 +56,7 @@ TEST_CASE("LispReader")
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
-    SECTION("Hyphen-minus symbol") {
+    SECTION("A hyphen-minus char is read as a symbol") {
         auto obj = reader.Read(&L, "(- 42)");
         REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(L.Car(obj)) == "-");
@@ -64,30 +64,30 @@ TEST_CASE("LispReader")
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
-    SECTION("Slash") {
+    SECTION("A slash char is read as a symbol") {
         auto obj = reader.Read(&L, "/");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(obj) == "/");
     }
 
-    SECTION("=>") {
+    SECTION("\"=>\" is read as a symbol") {
         auto obj = reader.Read(&L, "(=>42)");
         REQUIRE(L.TypeOf(L.Car(obj)) == procdraw::LispObjectType::Symbol);
         REQUIRE(L.SymbolName(L.Car(obj)) == "=>");
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
     }
 
-    SECTION("Nil") {
+    SECTION("\"nil\" is read as nil") {
         auto obj = reader.Read(&L, "nil");
         REQUIRE(L.Null(obj));
     }
 
-    SECTION("Empty list") {
+    SECTION("Empty list is read as nil") {
         auto obj = reader.Read(&L, "()");
         REQUIRE(L.Null(obj));
     }
 
-    SECTION("List with single item") {
+    SECTION("A list with a single item can be read") {
         auto obj = reader.Read(&L, "(42)");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(obj)) == 42);
@@ -98,7 +98,7 @@ TEST_CASE("LispReader")
     // |1|*|->|2|*|->|3|*|->|4|/|
     // +---+  +---+  +---+  +---+
     //
-    SECTION("List with multiple items") {
+    SECTION("A list with multiple items can be read") {
         auto list1 = reader.Read(&L, "(1 2 3 4)");
         REQUIRE(L.TypeOf(list1) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(list1)) == 1);
@@ -117,7 +117,7 @@ TEST_CASE("LispReader")
     // |1|*|->|2|/|
     // +---+  +---+
     //
-    SECTION("List with embedded list") {
+    SECTION("A list with an embedded list can be read") {
         auto list1 = reader.Read(&L, "((1 2) 3 4)");
         REQUIRE(L.TypeOf(list1) == procdraw::LispObjectType::Cons);
         REQUIRE(L.NumVal(L.Car(L.Car(list1))) == 1);
@@ -128,13 +128,41 @@ TEST_CASE("LispReader")
         REQUIRE(L.Null(L.Cdr(L.Cdr(L.Cdr(list1)))));
     }
 
-    SECTION("Dotted pair") {
+    SECTION("A dotted pair can be read by itself") {
         auto obj = reader.Read(&L, "(2 . 3)");
         REQUIRE(L.NumVal(L.Car(obj)) == 2);
         REQUIRE(L.NumVal(L.Cdr(obj)) == 3);
     }
 
-    SECTION("Multiple reads") {
+    // +---+  +---+
+    // |*|*|->|4|/|
+    // +---+  +---+
+    //  |
+    //  v
+    // +---+
+    // |2|3|
+    // +---+
+    //
+    SECTION("A dotted pair can be read within a list") {
+        auto obj = reader.Read(&L, "((2 . 3) 4)");
+        REQUIRE(L.NumVal(L.Car(L.Car(obj))) == 2);
+        REQUIRE(L.NumVal(L.Cdr(L.Car(obj))) == 3);
+        REQUIRE(L.NumVal(L.Car(L.Cdr(obj))) == 4);
+        REQUIRE(L.Null(L.Cdr(L.Cdr(obj))));
+    }
+
+    // +---+  +---+
+    // |2|*|->|3|4|
+    // +---+  +---+
+    //
+    SECTION("A dotted pair can be read at the end of a list") {
+        auto obj = reader.Read(&L, "(2 3 . 4)");
+        REQUIRE(L.NumVal(L.Car(obj)) == 2);
+        REQUIRE(L.NumVal(L.Car(L.Cdr(obj))) == 3);
+        REQUIRE(L.NumVal(L.Cdr(L.Cdr(obj))) == 4);
+    }
+
+    SECTION("A reader may be used for multiple serial reads") {
         auto a = reader.Read(&L, "HELLO");
         REQUIRE(L.SymbolName(a) == "HELLO");
         auto b = reader.Read(&L, "42");
@@ -145,31 +173,31 @@ TEST_CASE("LispReader")
         REQUIRE(L.NumVal(L.Car(L.Cdr(L.Cdr(c)))) == 20);
     }
 
-    SECTION("true") {
+    SECTION("\"true\" is read as Boolean true") {
         auto obj = reader.Read(&L, "true");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Boolean);
         REQUIRE(L.BoolVal(obj));
     }
 
-    SECTION("false") {
+    SECTION("\"false\" is read as Boolean false") {
         auto obj = reader.Read(&L, "false");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Boolean);
         REQUIRE_FALSE(L.BoolVal(obj));
     }
 
-    SECTION("non-empty String") {
+    SECTION("A non-empty String can be read") {
         auto obj = reader.Read(&L, "\"some string\"");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::String);
         REQUIRE(L.StringVal(obj) == "some string");
     }
 
-    SECTION("empty String") {
+    SECTION("An empty String is read is an empty string") {
         auto obj = reader.Read(&L, "\"\"");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::String);
         REQUIRE(L.StringVal(obj) == "");
     }
 
-    SECTION("List of strings and numbers") {
+    SECTION("A list of strings and numbers can be read") {
         auto obj = reader.Read(&L, "(\"some string\" 42 \"\" 2)");
         REQUIRE(L.StringVal(L.Car(obj)) == "some string");
         REQUIRE(L.NumVal(L.Cadr(obj)) == 42);
@@ -177,9 +205,17 @@ TEST_CASE("LispReader")
         REQUIRE(L.NumVal(L.Cadddr(obj)) == 2);
     }
 
-    SECTION("non-closed String") {
+    SECTION("Reading a non-closed String throws an exception") {
         REQUIRE_THROWS(reader.Read(&L, "\""));
         REQUIRE_THROWS(reader.Read(&L, "\"a"));
+    }
+
+    SECTION("Reading an incomplete expression returns eof") {
+        REQUIRE(L.TypeOf(reader.Read(&L, "")) == procdraw::LispObjectType::Eof);
+        REQUIRE(L.TypeOf(reader.Read(&L, "(")) == procdraw::LispObjectType::Eof);
+        REQUIRE(L.TypeOf(reader.Read(&L, "(1")) == procdraw::LispObjectType::Eof);
+        REQUIRE(L.TypeOf(reader.Read(&L, "(1 2")) == procdraw::LispObjectType::Eof);
+        REQUIRE(L.TypeOf(reader.Read(&L, "(1 (2")) == procdraw::LispObjectType::Eof);
     }
 
 }

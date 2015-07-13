@@ -9,8 +9,8 @@ namespace procdraw {
     class LispInterpreter;
 
     enum class LispTokenType {
-        SingleQuote, LParen, RParen, Star, Plus, HyphenMinus, Dot, Slash,
-        Connect, Number, Symbol, String, EndOfInput, Undefined
+        SingleQuote, LParen, RParen, Dot,
+        Number, Symbol, String, EndOfInput, Undefined
     };
 
     class LispReader {
@@ -27,6 +27,7 @@ namespace procdraw {
         void GetToken();
         bool IsStartOfNumber();
         void GetNumber();
+        void Expect(LispTokenType t);
         LispObjectPtr Read(LispInterpreter *L);
         LispObjectPtr ReadCons(LispInterpreter *L);
     };
