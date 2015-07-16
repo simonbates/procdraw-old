@@ -23,7 +23,6 @@ namespace procdraw {
         GlRenderer renderer_;
         LispInterpreter L_;
         std::unique_ptr<CLI> cli_;
-        void EvalExampleProg();
     };
 
 }

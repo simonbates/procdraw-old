@@ -7,7 +7,6 @@ namespace procdraw {
     ProcdrawApp::ProcdrawApp()
     {
         RegisterProcdrawAppFunctions(this, &L_);
-        EvalExampleProg();
         cli_ = std::unique_ptr<CLI>(new CLI(this));
     }
 
@@ -43,18 +42,6 @@ namespace procdraw {
     BalancedState ProcdrawApp::CheckCommand(const std::string &cmd)
     {
         return L_.CheckBalanced(cmd);
-    }
-
-    void ProcdrawApp::EvalExampleProg()
-    {
-        auto prog = "(def draw ()"
-                    "  (background 200 (/ 6 10) (/ 9 10))"
-                    "  (rotate-z (mouse-x))"
-                    "  (colour 9 (/ 7 10) (/ 7 10))"
-                    "  (triangle)"
-                    "  (colour 100 (/ 7 10) (/ 7 10))"
-                    "  (point))";
-        L_.Eval(L_.Read(prog));
     }
 
 }
