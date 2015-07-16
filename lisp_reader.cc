@@ -6,11 +6,46 @@ namespace procdraw {
 
     LispObjectPtr LispReader::Read(LispInterpreter *L, const std::string &str)
     {
+        SetInput(str);
+        return Read(L);
+    }
+
+    BalancedState LispReader::CheckBalanced(const std::string &str)
+    {
+        SetInput(str);
+        int parenCount = 0;
+
+        while (token_ != LispTokenType::EndOfInput
+                && token_ != LispTokenType::NonClosedString) {
+            switch (token_) {
+            case LispTokenType::LParen:
+                ++parenCount;
+                break;
+            case LispTokenType::RParen:
+                --parenCount;
+                break;
+            }
+            GetToken();
+        };
+
+        if (token_ == LispTokenType::NonClosedString) {
+            return BalancedState::NotClosed;
+        }
+        else if (parenCount > 0) {
+            return BalancedState::NotClosed;
+        }
+        else if (parenCount < 0) {
+            return BalancedState::TooManyClosingParens;
+        }
+        return BalancedState::Balanced;
+    }
+
+    void LispReader::SetInput(const std::string &str)
+    {
         input_.str(str);
         input_.clear();
         GetCh();
         GetToken();
-        return Read(L);
     }
 
     void LispReader::GetCh()
@@ -26,20 +61,7 @@ namespace procdraw {
 
         switch (ch_) {
         case '"': {
-            std::string str;
-            GetCh();
-            while (ch_ != '"') {
-                if (ch_ == EOF) {
-                    // TODO custom syntax error type
-                    throw std::runtime_error("Non-closed string at LispReader::Read()");
-                }
-                str += ch_;
-                GetCh();
-            }
-            // Consume the closing '"'
-            GetCh();
-            token_ = LispTokenType::String;
-            stringVal_ = str;
+            GetString();
             break;
         }
         case '\'':
@@ -120,6 +142,25 @@ namespace procdraw {
         }
     }
 
+    void LispReader::GetString()
+    {
+        std::string str;
+        // Consume the opening '"'
+        GetCh();
+        while (ch_ != '"') {
+            if (ch_ == EOF) {
+                token_ = LispTokenType::NonClosedString;
+                return;
+            }
+            str += ch_;
+            GetCh();
+        }
+        // Consume the closing '"'
+        GetCh();
+        token_ = LispTokenType::String;
+        stringVal_ = str;
+    }
+
     bool LispReader::IsStartOfNumber()
     {
         return isdigit(ch_);
@@ -186,7 +227,7 @@ namespace procdraw {
             return L->Eof;
         }
         // TODO custom syntax error type
-        throw std::runtime_error("Bad input at LispReader::Read()");
+        throw std::runtime_error("Syntax error");
     }
 
     LispObjectPtr LispReader::ReadCons(LispInterpreter *L)

@@ -11,6 +11,7 @@ C++ Conventions
 - Types, functions, and methods are in PascalCase
 - Local variables and parameters are in lowerCamelCase
 - Private member variables are in lowerCamelCase_ with a trailing underscore
+- When splitting expressions across lines, break before a binary operator
 - Order of header #includes: for this cpp file, within project, system
 - Use RAII (Resource Acquisition Is Initialization)
 - For text, use UTF-8 in std::string

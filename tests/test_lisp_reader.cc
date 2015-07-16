@@ -218,4 +218,39 @@ TEST_CASE("Lisp reader")
         REQUIRE(L.TypeOf(reader.Read(&L, "(1 (2")) == procdraw::LispObjectType::Eof);
     }
 
+    SECTION("Checking a balanced expression returns balanced") {
+        REQUIRE(reader.CheckBalanced("") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("42") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("()") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("(A B C)") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("(A (1 2))") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("\"\"") == procdraw::BalancedState::Balanced);
+        REQUIRE(reader.CheckBalanced("\"abc\"") == procdraw::BalancedState::Balanced);
+    }
+
+    SECTION("Checking a non-closed expression returns not closed") {
+        REQUIRE(reader.CheckBalanced("(") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("((") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(42") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(A B C") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(A (1 2") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(A (1 2)") == procdraw::BalancedState::NotClosed);
+    }
+
+    SECTION("Checking a non-closed string returns not closed") {
+        REQUIRE(reader.CheckBalanced("\"") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("\"abc") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(\"") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(42 \"") == procdraw::BalancedState::NotClosed);
+        REQUIRE(reader.CheckBalanced("(42 (\"") == procdraw::BalancedState::NotClosed);
+    }
+
+    SECTION("Checking an expression with too many closing parens returns too many closing parens") {
+        REQUIRE(reader.CheckBalanced(")") == procdraw::BalancedState::TooManyClosingParens);
+        REQUIRE(reader.CheckBalanced("))") == procdraw::BalancedState::TooManyClosingParens);
+        REQUIRE(reader.CheckBalanced("(42))") == procdraw::BalancedState::TooManyClosingParens);
+        REQUIRE(reader.CheckBalanced("(A B C))") == procdraw::BalancedState::TooManyClosingParens);
+        REQUIRE(reader.CheckBalanced("(A (1 2)))") == procdraw::BalancedState::TooManyClosingParens);
+    }
+
 }
