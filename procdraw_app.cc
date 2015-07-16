@@ -28,16 +28,21 @@ namespace procdraw {
         return 0;
     }
 
-    std::string ProcdrawApp::Eval(const std::string &expr)
+    std::string ProcdrawApp::DoCommand(const std::string &cmd)
     {
         std::string val;
         try {
-            val = L_.PrintString(L_.Eval(L_.Read(expr)));
+            val = L_.PrintString(L_.Eval(L_.Read(cmd)));
         }
         catch (std::exception e) {
             val = e.what();
         }
         return val;
+    }
+
+    BalancedState ProcdrawApp::CheckCommand(const std::string &cmd)
+    {
+        return L_.CheckBalanced(cmd);
     }
 
     void ProcdrawApp::EvalExampleProg()

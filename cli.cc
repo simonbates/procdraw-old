@@ -1,26 +1,46 @@
 #include "cli.h"
-#include "procdraw_app.h"
 #include <readline/readline.h>
 #include <iostream>
 
+#define TOP_LEVEL_PROMPT "> "
+#define CONTINUED_LINE_PROMPT ""
+
 namespace procdraw {
 
-    static ProcdrawApp *app = NULL;
+    static CommandProcessor *cmdProcessor = NULL;
+
+    static std::string cmd("");
 
     static void LineHandler(char *line)
     {
         // TODO support quit with ^D by testing for line == NULL
+        // TODO if line is all white space, ignore it
         if (line != NULL) {
-            std::string expr(line);
+            cmd += "\n";
+            cmd += line;
             free(line);
-            std::cout << app->Eval(expr) << std::endl;
+            switch (cmdProcessor->CheckCommand(cmd)) {
+            case BalancedState::Balanced:
+                std::cout << cmdProcessor->DoCommand(cmd) << std::endl;
+                cmd = "";
+                rl_set_prompt(TOP_LEVEL_PROMPT);
+                break;
+            case BalancedState::TooManyClosingParens:
+                std::cout << "Too many closing parens" << std::endl;
+                cmd = "";
+                rl_set_prompt(TOP_LEVEL_PROMPT);
+                break;
+            case BalancedState::NotClosed:
+                rl_set_prompt(CONTINUED_LINE_PROMPT);
+                break;
+            }
         }
     }
 
-    CLI::CLI(ProcdrawApp *a)
+    CLI::CLI(CommandProcessor *p)
     {
-        app = a;
-        rl_callback_handler_install("> ", LineHandler);
+        cmdProcessor = p;
+        rl_callback_handler_install(TOP_LEVEL_PROMPT, LineHandler);
     }
 
     CLI::~CLI()

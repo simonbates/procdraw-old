@@ -151,6 +151,11 @@ namespace procdraw {
         return Car(Cdr(Cdr(Cdr(Cdr(obj)))));
     }
 
+    BalancedState LispInterpreter::CheckBalanced(const std::string &str)
+    {
+        return reader_.CheckBalanced(str);
+    }
+
     LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)
     {
         if (Atom(exp)) {

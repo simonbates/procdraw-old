@@ -137,6 +137,7 @@ namespace procdraw {
             }
             else {
                 token_ = LispTokenType::Undefined;
+                GetCh();
             }
             break;
         }

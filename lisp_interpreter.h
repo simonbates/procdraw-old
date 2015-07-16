@@ -62,6 +62,7 @@ namespace procdraw {
         LispObjectPtr Caddr(LispObjectPtr obj);
         LispObjectPtr Cadddr(LispObjectPtr obj);
         LispObjectPtr Caddddr(LispObjectPtr obj);
+        BalancedState CheckBalanced(const std::string &str);
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Eval(LispObjectPtr exp);
         LispObjectPtr Evif(LispObjectPtr arglist, LispObjectPtr env);

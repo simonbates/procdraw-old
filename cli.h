@@ -1,12 +1,12 @@
 #pragma once
 
-namespace procdraw {
+#include "command_processor.h"
 
-    class ProcdrawApp;
+namespace procdraw {
 
     class CLI {
     public:
-        CLI(ProcdrawApp *a);
+        CLI(CommandProcessor *p);
         ~CLI();
         void Poll();
     };
