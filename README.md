@@ -13,7 +13,7 @@ Dependencies:
 - GLEW
 - GLM
 
-Build Procdraw and run the tests with these steps:
+You can build Procdraw and run the tests with these steps:
 
 ```
 $ mkdir build
@@ -23,10 +23,10 @@ $ make
 $ ctest --output-on-failure
 ```
 
-Running procdraw from Emacs
+Running Procdraw from Emacs
 ---------------------------
 
-Configure procdraw as the inferior lisp program:
+Configure Procdraw as the inferior lisp program:
 
 ```
 (setq inferior-lisp-program "/path/to/procdraw")
@@ -39,7 +39,7 @@ M-x run-lisp
 ```
 
 When expressions are evaluated in Lisp major mode buffers, they will
-be sent to procdraw. To make a Lisp buffer, open a Lisp file, or
+be sent to Procdraw. To make a Lisp buffer, you can open a Lisp file, or
 create a new buffer with:
 
 ```
