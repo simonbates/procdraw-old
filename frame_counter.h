@@ -1,7 +1,7 @@
 #pragma once
 
 #include "util.h"
-#include <Windows.h>
+#include <SDL2/SDL.h>
 
 namespace procdraw {
 
@@ -12,8 +12,8 @@ namespace procdraw {
         double GetFramesPerSecond();
     private:
         double perfCountsPerSec_;
-        LARGE_INTEGER lastPerfCount_;
-        SimpleMovingAverage<decltype(LARGE_INTEGER::QuadPart)> frameTimes_;
+        Uint64 lastPerfCount_;
+        SimpleMovingAverage<Uint64> frameTimes_;
     };
 
 }

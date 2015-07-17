@@ -30,6 +30,7 @@ endif()
 add_library(libprocdraw
             cli.cc
             color.cc
+            frame_counter.cc
             glrenderer.cc
             line_buffer.cc
             lisp_functions.cc

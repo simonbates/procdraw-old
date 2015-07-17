@@ -1,21 +1,17 @@
-#include "stdafx.h"
 #include "frame_counter.h"
 
 namespace procdraw {
 
     FrameCounter::FrameCounter() : frameTimes_(100)
     {
-        LARGE_INTEGER freq;
-        QueryPerformanceFrequency(&freq);
-        perfCountsPerSec_ = freq.QuadPart;
-        QueryPerformanceCounter(&lastPerfCount_);
+        perfCountsPerSec_ = SDL_GetPerformanceFrequency();
+        lastPerfCount_ = SDL_GetPerformanceCounter();
     };
 
     void FrameCounter::RecordFrame()
     {
-        LARGE_INTEGER perfCount;
-        QueryPerformanceCounter(&perfCount);
-        frameTimes_.AddDataPoint(perfCount.QuadPart - lastPerfCount_.QuadPart);
+        Uint64 perfCount = SDL_GetPerformanceCounter();
+        frameTimes_.AddDataPoint(perfCount - lastPerfCount_);
         lastPerfCount_ = perfCount;
     }
 

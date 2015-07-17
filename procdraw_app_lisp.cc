@@ -22,6 +22,12 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_FramesPerSecond(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto app = static_cast<ProcdrawApp*>(data);
+        return L->MakeNumber(app->FramesPerSecond());
+    }
+
     static LispObjectPtr lisp_Height(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
@@ -71,6 +77,7 @@ namespace procdraw {
     {
         L->SetGlobalCFunction("background", lisp_Background, app);
         L->SetGlobalCFunction("colour", lisp_Colour, app);
+        L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond, app);
         L->SetGlobalCFunction("height", lisp_Height, app);
         L->SetGlobalCFunction("mouse-x", lisp_MouseX, app);
         L->SetGlobalCFunction("mouse-y", lisp_MouseY, app);

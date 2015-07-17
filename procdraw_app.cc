@@ -23,6 +23,7 @@ namespace procdraw {
             cli_->Poll();
             L_.Apply("draw");
             renderer_.DoSwap();
+            frameCounter_.RecordFrame();
         }
         return 0;
     }
@@ -42,6 +43,11 @@ namespace procdraw {
     BalancedState ProcdrawApp::CheckCommand(const std::string &cmd)
     {
         return L_.CheckBalanced(cmd);
+    }
+
+    double ProcdrawApp::FramesPerSecond()
+    {
+        return frameCounter_.GetFramesPerSecond();
     }
 
 }
