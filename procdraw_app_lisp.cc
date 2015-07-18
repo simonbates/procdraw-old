@@ -32,6 +32,13 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_Cube(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto app = static_cast<ProcdrawApp*>(data);
+        app->Renderer()->Cube();
+        return L->Nil;
+    }
+
     static LispObjectPtr lisp_FramesPerSecond(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
@@ -125,6 +132,7 @@ namespace procdraw {
         L->SetGlobalCFunction("ambient-light-color", lisp_AmbientLightColor, app);
         L->SetGlobalCFunction("background", lisp_Background, app);
         L->SetGlobalCFunction("color", lisp_Color, app);
+        L->SetGlobalCFunction("cube", lisp_Cube, app);
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond, app);
         L->SetGlobalCFunction("height", lisp_Height, app);
         L->SetGlobalCFunction("light-color", lisp_LightColor, app);

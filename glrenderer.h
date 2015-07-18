@@ -17,6 +17,7 @@ namespace procdraw {
         void AmbientLightColor(float h, float s, float v);
         void Background(float h, float s, float v);
         void Color(float h, float s, float v);
+        void Cube();
         void DoSwap();
         double Height();
         void LightColor(float h, float s, float v);
@@ -35,6 +36,9 @@ namespace procdraw {
         GLuint program_;
         GLuint tetrahedronBuffers_[2];
         GLuint tetrahedronVao_;
+        GLuint cubeIndexBuffer_;
+        GLuint cubeBuffers_[2];
+        GLuint cubeVao_;
         Camera camera_;
         glm::mat4 worldMatrix_;
         glm::vec4 lightDirection_;
@@ -46,6 +50,7 @@ namespace procdraw {
         void CreateWindowAndGlContext();
         GLuint CompileShaders();
         void MakeTetrahedronVao();
+        void MakeCubeVao();
         void ResetMatrix();
         void InitLighting();
         void InitMaterial();

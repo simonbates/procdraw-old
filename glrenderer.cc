@@ -12,7 +12,8 @@ namespace procdraw {
         window_(nullptr),
         glcontext_(NULL),
         program_(0),
-        tetrahedronBuffers_ {0, 0}, tetrahedronVao_(0)
+        tetrahedronBuffers_ {0, 0}, tetrahedronVao_(0),
+        cubeIndexBuffer_(0), cubeBuffers_ {0, 0}, cubeVao_(0)
     {
         CreateWindowAndGlContext();
 
@@ -20,6 +21,7 @@ namespace procdraw {
         glUseProgram(program_);
 
         MakeTetrahedronVao();
+        MakeCubeVao();
 
         ResetMatrix();
         InitLighting();
@@ -29,8 +31,13 @@ namespace procdraw {
     GlRenderer::~GlRenderer()
     {
         // TODO The constructor/destructor design here is not safe -- if the constructor throws an exception, the destructor will not be called
+
         glDeleteVertexArrays(1, &tetrahedronVao_);
         glDeleteBuffers(2, tetrahedronBuffers_);
+
+        glDeleteVertexArrays(1, &cubeVao_);
+        glDeleteBuffers(2, cubeBuffers_);
+        glDeleteBuffers(1, &cubeIndexBuffer_);
 
         glDeleteProgram(program_);
 
@@ -65,6 +72,13 @@ namespace procdraw {
     void GlRenderer::Color(float h, float s, float v)
     {
         Hsv2Rgb(h, s, v, materialR_, materialG_, materialB_);
+    }
+
+    void GlRenderer::Cube()
+    {
+        UpdateUniformsForObject();
+        glBindVertexArray(cubeVao_);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
     }
 
     void GlRenderer::DoSwap()
@@ -296,6 +310,134 @@ namespace procdraw {
         glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
         glEnableVertexAttribArray(1);
+    }
+
+    void GlRenderer::MakeCubeVao()
+    {
+        auto vertex1 = glm::vec3(1.0f, 1.0f, 1.0f);
+        auto vertex2 = glm::vec3(1.0f, 1.0f, -1.0f);
+        auto vertex3 = glm::vec3(-1.0f, 1.0f, -1.0f);
+        auto vertex4 = glm::vec3(-1.0f, 1.0f, 1.0f);
+        auto vertex5 = glm::vec3(1.0f, -1.0f, 1.0f);
+        auto vertex6 = glm::vec3(1.0f, -1.0f, -1.0f);
+        auto vertex7 = glm::vec3(-1.0f, -1.0f, -1.0f);
+        auto vertex8 = glm::vec3(-1.0f, -1.0f, 1.0f);
+
+        auto face1Normal = TriangleNormal(vertex1, vertex4, vertex8);
+        auto face2Normal = TriangleNormal(vertex1, vertex5, vertex6);
+        auto face3Normal = TriangleNormal(vertex2, vertex6, vertex7);
+        auto face4Normal = TriangleNormal(vertex3, vertex7, vertex8);
+        auto face5Normal = TriangleNormal(vertex1, vertex2, vertex3);
+        auto face6Normal = TriangleNormal(vertex5, vertex8, vertex7);
+
+        GLfloat positions[] = {
+            // Face 1
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f,
+            vertex8.x, vertex8.y, vertex8.z, 1.0f,
+            vertex5.x, vertex5.y, vertex5.z, 1.0f,
+            // Face 2
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex5.x, vertex5.y, vertex5.z, 1.0f,
+            vertex6.x, vertex6.y, vertex6.z, 1.0f,
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            // Face 3
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            vertex6.x, vertex6.y, vertex6.z, 1.0f,
+            vertex7.x, vertex7.y, vertex7.z, 1.0f,
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            // Face 4
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            vertex7.x, vertex7.y, vertex7.z, 1.0f,
+            vertex8.x, vertex8.y, vertex8.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f,
+            // Face 5
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f,
+            // Face 6
+            vertex5.x, vertex5.y, vertex5.z, 1.0f,
+            vertex8.x, vertex8.y, vertex8.z, 1.0f,
+            vertex7.x, vertex7.y, vertex7.z, 1.0f,
+            vertex6.x, vertex6.y, vertex6.z, 1.0f
+        };
+
+        GLfloat normals[] = {
+            // Face 1
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            // Face 2
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            // Face 3
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            // Face 4
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            // Face 5
+            face5Normal.x, face5Normal.y, face5Normal.z,
+            face5Normal.x, face5Normal.y, face5Normal.z,
+            face5Normal.x, face5Normal.y, face5Normal.z,
+            face5Normal.x, face5Normal.y, face5Normal.z,
+            // Face 6
+            face6Normal.x, face6Normal.y, face6Normal.z,
+            face6Normal.x, face6Normal.y, face6Normal.z,
+            face6Normal.x, face6Normal.y, face6Normal.z,
+            face6Normal.x, face6Normal.y, face6Normal.z
+        };
+
+        GLushort indices[] = {
+            // Face 1
+            0, 1, 2,
+            0, 2, 3,
+            // Face 2
+            4, 5, 6,
+            4, 6, 7,
+            // Face 3
+            8, 9, 10,
+            8, 10, 11,
+            // Face 4
+            12, 13, 14,
+            12, 14, 15,
+            // Face 5
+            16, 17, 18,
+            16, 18, 19,
+            // Face 6
+            20, 21, 22,
+            20, 22, 23
+        };
+
+        glGenVertexArrays(1, &cubeVao_);
+        glBindVertexArray(cubeVao_);
+
+        glGenBuffers(2, cubeBuffers_);
+
+        // Positions
+        glBindBuffer(GL_ARRAY_BUFFER, cubeBuffers_[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(0);
+
+        // Normals
+        glBindBuffer(GL_ARRAY_BUFFER, cubeBuffers_[1]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(1);
+
+        // Indices
+        glGenBuffers(1, &cubeIndexBuffer_);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeIndexBuffer_);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     }
 
     void GlRenderer::ResetMatrix()
