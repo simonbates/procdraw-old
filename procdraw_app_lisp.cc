@@ -12,13 +12,13 @@ namespace procdraw {
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Colour(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    static LispObjectPtr lisp_Color(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
         auto h = L->NumVal(L->Car(args));
         auto s = L->NumVal(L->Cadr(args));
         auto v = L->NumVal(L->Caddr(args));
-        app->Renderer()->Colour(h, s, v);
+        app->Renderer()->Color(h, s, v);
         return L->Nil;
     }
 
@@ -46,10 +46,17 @@ namespace procdraw {
         return L->MakeNumber(app->Renderer()->MouseY());
     }
 
-    static LispObjectPtr lisp_Point(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
-        app->Renderer()->Point();
+        app->Renderer()->RotateX(L->NumVal(L->Car(args)));
+        return L->Nil;
+    }
+
+    static LispObjectPtr lisp_RotateY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto app = static_cast<ProcdrawApp*>(data);
+        app->Renderer()->RotateY(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 
@@ -60,10 +67,10 @@ namespace procdraw {
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_Triangle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    static LispObjectPtr lisp_Tetrahedron(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
-        app->Renderer()->Triangle();
+        app->Renderer()->Tetrahedron();
         return L->Nil;
     }
 
@@ -76,14 +83,15 @@ namespace procdraw {
     void RegisterProcdrawAppFunctions(ProcdrawApp *app, LispInterpreter *L)
     {
         L->SetGlobalCFunction("background", lisp_Background, app);
-        L->SetGlobalCFunction("colour", lisp_Colour, app);
+        L->SetGlobalCFunction("color", lisp_Color, app);
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond, app);
         L->SetGlobalCFunction("height", lisp_Height, app);
         L->SetGlobalCFunction("mouse-x", lisp_MouseX, app);
         L->SetGlobalCFunction("mouse-y", lisp_MouseY, app);
-        L->SetGlobalCFunction("point", lisp_Point, app);
+        L->SetGlobalCFunction("rotate-x", lisp_RotateX, app);
+        L->SetGlobalCFunction("rotate-y", lisp_RotateY, app);
         L->SetGlobalCFunction("rotate-z", lisp_RotateZ, app);
-        L->SetGlobalCFunction("triangle", lisp_Triangle, app);
+        L->SetGlobalCFunction("tetrahedron", lisp_Tetrahedron, app);
         L->SetGlobalCFunction("width", lisp_Width, app);
     }
 

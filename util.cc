@@ -28,4 +28,9 @@ namespace procdraw {
         return val - floor((val - start) / (stop - start)) * (stop - start);
     }
 
+    glm::vec3 TriangleNormal(const glm::vec3 a, const glm::vec3 b, const glm::vec3 c)
+    {
+        return glm::normalize(glm::cross(b - a, c - a));
+    }
+
 }

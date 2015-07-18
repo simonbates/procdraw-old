@@ -2,6 +2,7 @@
 
 #define GLM_FORCE_RADIANS
 
+#include "camera.h"
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -13,30 +14,37 @@ namespace procdraw {
     public:
         GlRenderer();
         ~GlRenderer();
-        double Width();
+        void Background(float h, float s, float v);
+        void Color(float h, float s, float v);
+        void DoSwap();
         double Height();
         double MouseX();
         double MouseY();
-        void DoSwap();
-        void Background(float h, float s, float v);
-        void Colour(float h, float s, float v);
-        void Point();
-        void Triangle();
+        void RotateX(float turns);
+        void RotateY(float turns);
         void RotateZ(float turns);
+        void Tetrahedron();
+        double Width();
     private:
         SDL_Window *window_;
         SDL_GLContext glcontext_;
         GLuint program_;
-        GLuint pointBuffer_;
-        GLuint pointVao_;
-        GLuint triangleBuffer_;
-        GLuint triangleVao_;
+        GLuint tetrahedronBuffers_[2];
+        GLuint tetrahedronVao_;
+        Camera camera_;
         glm::mat4 worldMatrix_;
+        glm::vec4 lightDirection_;
+        glm::vec4 lightColor_;
+        glm::vec4 ambientLightColor_;
+        float materialR_;
+        float materialG_;
+        float materialB_;
         void CreateWindowAndGlContext();
         GLuint CompileShaders();
-        void MakePointVao();
-        void MakeTriangleVao();
+        void MakeTetrahedronVao();
         void ResetMatrix();
+        void InitLighting();
+        void InitMaterial();
         void UpdateUniformsForObject();
     };
 

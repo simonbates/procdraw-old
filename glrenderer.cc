@@ -1,6 +1,7 @@
 #include "glrenderer.h"
 #include "color.h"
 #include "sdl_util.h"
+#include "util.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
@@ -11,45 +12,54 @@ namespace procdraw {
         window_(nullptr),
         glcontext_(NULL),
         program_(0),
-        pointBuffer_(0),
-        pointVao_(0),
-        triangleBuffer_(0),
-        triangleVao_(0)
+        tetrahedronBuffers_ {0, 0}, tetrahedronVao_(0)
     {
         CreateWindowAndGlContext();
 
         program_ = CompileShaders();
         glUseProgram(program_);
 
-        MakePointVao();
-        MakeTriangleVao();
+        MakeTetrahedronVao();
 
         ResetMatrix();
+        InitLighting();
+        InitMaterial();
     }
 
     GlRenderer::~GlRenderer()
     {
         // TODO The constructor/destructor design here is not safe -- if the constructor throws an exception, the destructor will not be called
-        glDeleteVertexArrays(1, &pointVao_);
-        glDeleteBuffers(1, &pointBuffer_);
-
-        glDeleteVertexArrays(1, &triangleVao_);
-        glDeleteBuffers(1, &triangleBuffer_);
+        glDeleteVertexArrays(1, &tetrahedronVao_);
+        glDeleteBuffers(2, tetrahedronBuffers_);
 
         glDeleteProgram(program_);
+
         if (glcontext_ != NULL) {
             SDL_GL_DeleteContext(glcontext_);
         }
+
         if (window_ != nullptr) {
             SDL_DestroyWindow(window_);
         }
     }
 
-    double GlRenderer::Width()
+    void GlRenderer::Background(float h, float s, float v)
     {
-        int w, h;
-        SDL_GetWindowSize(window_, &w, &h);
-        return static_cast<double>(w);
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        glClearColor(r, g, b, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ResetMatrix();
+    }
+
+    void GlRenderer::Color(float h, float s, float v)
+    {
+        Hsv2Rgb(h, s, v, materialR_, materialG_, materialB_);
+    }
+
+    void GlRenderer::DoSwap()
+    {
+        SDL_GL_SwapWindow(window_);
     }
 
     double GlRenderer::Height()
@@ -73,41 +83,18 @@ namespace procdraw {
         return static_cast<double>(y) / (Height() - 1);
     }
 
-    void GlRenderer::DoSwap()
+    void GlRenderer::RotateX(float turns)
     {
-        SDL_GL_SwapWindow(window_);
+        worldMatrix_ = glm::rotate(worldMatrix_,
+                                   turns * 2 * static_cast<float>(M_PI),
+                                   glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
-    void GlRenderer::Background(float h, float s, float v)
+    void GlRenderer::RotateY(float turns)
     {
-        float r, g, b;
-        Hsv2Rgb(h, s, v, r, g, b);
-        glClearColor(r, g, b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ResetMatrix();
-    }
-
-    void GlRenderer::Colour(float h, float s, float v)
-    {
-        float r, g, b;
-        Hsv2Rgb(h, s, v, r, g, b);
-        // TODO use glGetUniformLocation
-        glUniform4f(2, r, g, b, 1.0f);
-    }
-
-    void GlRenderer::Point()
-    {
-        UpdateUniformsForObject();
-        glBindVertexArray(pointVao_);
-        glPointSize(20.0f);
-        glDrawArrays(GL_POINTS, 0, 1);
-    }
-
-    void GlRenderer::Triangle()
-    {
-        UpdateUniformsForObject();
-        glBindVertexArray(triangleVao_);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        worldMatrix_ = glm::rotate(worldMatrix_,
+                                   turns * 2 * static_cast<float>(M_PI),
+                                   glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
     void GlRenderer::RotateZ(float turns)
@@ -117,6 +104,20 @@ namespace procdraw {
                                    glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
+    void GlRenderer::Tetrahedron()
+    {
+        UpdateUniformsForObject();
+        glBindVertexArray(tetrahedronVao_);
+        glDrawArrays(GL_TRIANGLES, 0, 12);
+    }
+
+    double GlRenderer::Width()
+    {
+        int w, h;
+        SDL_GetWindowSize(window_, &w, &h);
+        return static_cast<double>(w);
+    }
+
     void GlRenderer::CreateWindowAndGlContext()
     {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -124,7 +125,7 @@ namespace procdraw {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
         window_ = SDL_CreateWindow("Procdraw", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, 640, 480,
+                                   SDL_WINDOWPOS_UNDEFINED, 640, 640,
                                    SDL_WINDOW_OPENGL);
         if (window_ == nullptr) {
             ThrowSdlError();
@@ -143,21 +144,31 @@ namespace procdraw {
         std::cout << "OpenGL renderer: " << glGetString(GL_RENDERER) << std::endl;
         std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
         std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+        glEnable(GL_CULL_FACE);
     }
 
     GLuint GlRenderer::CompileShaders()
     {
         static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                                  \n"
-            "layout (location = 0) in vec4 position;            \n"
-            "layout (location = 1) uniform mat4 world_matrix;   \n"
-            "layout (location = 2) uniform vec4 colour;         \n"
-            "out vec4 vs_color;                                 \n"
-            "void main(void)                                    \n"
-            "{                                                  \n"
-            "    gl_Position = world_matrix * position;         \n"
-            "    vs_color = colour;                             \n"
-            "}                                                  \n"
+            "#version 430 core                                                          \n"
+            "layout (location = 0) in vec4 position;                                    \n"
+            "layout (location = 1) in vec3 normal;                                      \n"
+            "layout (location = 2) uniform mat4 world_view_projection;                  \n"
+            "layout (location = 3) uniform vec4 light_direction;                        \n"
+            "layout (location = 4) uniform vec4 light_color;                            \n"
+            "layout (location = 5) uniform vec4 ambient_light_color;                    \n"
+            "layout (location = 6) uniform vec4 material_color;                         \n"
+            "out vec4 vs_color;                                                         \n"
+            "void main(void)                                                            \n"
+            "{                                                                          \n"
+            "    gl_Position = world_view_projection * position;                        \n"
+            "    float diff_factor = max(dot(normal, light_direction.xyz), 0);          \n"
+            "    vec4 diff_component = (light_color * material_color * diff_factor);    \n"
+            "    vec4 ambient_component = (ambient_light_color * material_color);       \n"
+            "    vs_color.rgb = diff_component.rgb + ambient_component.rgb;             \n"
+            "    vs_color.a = material_color.a;                                         \n"
+            "}                                                                          \n"
         };
 
         static const GLchar *fragmentShaderSource[] = {
@@ -192,38 +203,68 @@ namespace procdraw {
         return program;
     }
 
-    void GlRenderer::MakePointVao()
+    void GlRenderer::MakeTetrahedronVao()
     {
-        GLfloat position[] = { 0.5f, 0.0f, 0.5f, 1.0f };
+        auto vertex1 = glm::vec3(1.0f, 0.0f, M_SQRT1_2);
+        auto vertex2 = glm::vec3(0.0f, 1.0f, -M_SQRT1_2);
+        auto vertex3 = glm::vec3(0.0f, -1.0f, -M_SQRT1_2);
+        auto vertex4 = glm::vec3(-1.0f, 0.0f, M_SQRT1_2);
 
-        glGenBuffers(1, &pointBuffer_);
-        glBindBuffer(GL_ARRAY_BUFFER, pointBuffer_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(position), position, GL_STATIC_DRAW);
+        auto face1Normal = TriangleNormal(vertex1, vertex2, vertex4);
+        auto face2Normal = TriangleNormal(vertex1, vertex4, vertex3);
+        auto face3Normal = TriangleNormal(vertex1, vertex3, vertex2);
+        auto face4Normal = TriangleNormal(vertex2, vertex3, vertex4);
 
-        glGenVertexArrays(1, &pointVao_);
-        glBindVertexArray(pointVao_);
-
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
-        glEnableVertexAttribArray(0);
-    }
-
-    void GlRenderer::MakeTriangleVao()
-    {
         GLfloat positions[] = {
-            -0.5f, 0.0f, 0.5f, 1.0f,
-            0.5f, 0.0f, 0.5f, 1.0f,
-            0.0f, 0.5f, 0.5f, 1.0f
+            // Face 1
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f,
+            // Face 2
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f,
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            // Face 3
+            vertex1.x, vertex1.y, vertex1.z, 1.0f,
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            // Face 4
+            vertex2.x, vertex2.y, vertex2.z, 1.0f,
+            vertex3.x, vertex3.y, vertex3.z, 1.0f,
+            vertex4.x, vertex4.y, vertex4.z, 1.0f
         };
 
-        glGenBuffers(1, &triangleBuffer_);
-        glBindBuffer(GL_ARRAY_BUFFER, triangleBuffer_);
+        GLfloat normals[] = {
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face1Normal.x, face1Normal.y, face1Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face2Normal.x, face2Normal.y, face2Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face3Normal.x, face3Normal.y, face3Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z,
+            face4Normal.x, face4Normal.y, face4Normal.z
+        };
+
+        glGenVertexArrays(1, &tetrahedronVao_);
+        glBindVertexArray(tetrahedronVao_);
+
+        glGenBuffers(2, tetrahedronBuffers_);
+
+        // Positions
+        glBindBuffer(GL_ARRAY_BUFFER, tetrahedronBuffers_[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-
-        glGenVertexArrays(1, &triangleVao_);
-        glBindVertexArray(triangleVao_);
-
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
         glEnableVertexAttribArray(0);
+
+        // Normals
+        glBindBuffer(GL_ARRAY_BUFFER, tetrahedronBuffers_[1]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(1);
     }
 
     void GlRenderer::ResetMatrix()
@@ -231,10 +272,32 @@ namespace procdraw {
         worldMatrix_ = glm::mat4(1.0f);
     }
 
+    void GlRenderer::InitLighting()
+    {
+        lightDirection_ = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+        lightColor_ = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
+        ambientLightColor_ = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
+    }
+
+    void GlRenderer::InitMaterial()
+    {
+        materialR_ = 0.8f;
+        materialG_ = 0.8f;
+        materialB_ = 0.8f;
+    }
+
     void GlRenderer::UpdateUniformsForObject()
     {
+        auto worldViewProjection = camera_.ViewProjectionMatrix() * worldMatrix_;
+        auto inverseWorldMatrix = glm::inverse(worldMatrix_);
+        auto modelSpaceLightDirection = inverseWorldMatrix * lightDirection_;
+
         // TODO use glGetUniformLocation
-        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(worldMatrix_));
+        glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
+        glUniform4fv(3, 1, glm::value_ptr(modelSpaceLightDirection));
+        glUniform4fv(4, 1, glm::value_ptr(lightColor_));
+        glUniform4fv(5, 1, glm::value_ptr(ambientLightColor_));
+        glUniform4f(6, materialR_, materialG_, materialB_, 1.0f);
     }
 
 }

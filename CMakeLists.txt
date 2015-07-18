@@ -28,6 +28,7 @@ endif()
 # libprocdraw
 
 add_library(libprocdraw
+            camera.cc
             cli.cc
             color.cc
             frame_counter.cc

@@ -1,7 +1,0 @@
-(def draw ()
-  (background 200 (/ 6 10) (/ 9 10))
-  (rotate-z (mouse-x))
-  (colour 9 (/ 7 10) (/ 7 10))
-  (triangle)
-  (colour 100 (/ 7 10) (/ 7 10))
-  (point))
