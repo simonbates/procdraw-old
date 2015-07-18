@@ -10,6 +10,29 @@
 
 namespace procdraw {
 
+    struct Vertex {
+        // Position
+        float x;
+        float y;
+        float z;
+        float w;
+        // Normal
+        float nx;
+        float ny;
+        float nz;
+        Vertex(glm::vec3 pos, glm::vec3 normal)
+        {
+            this->x = pos.x;
+            this->y = pos.y;
+            this->z = pos.z;
+            this->w = 1.0f;
+            this->nx = normal.x;
+            this->ny = normal.y;
+            this->nz = normal.z;
+        }
+    };
+
+
     class GlRenderer {
     public:
         GlRenderer();
@@ -34,10 +57,10 @@ namespace procdraw {
         SDL_Window *window_;
         SDL_GLContext glcontext_;
         GLuint program_;
-        GLuint tetrahedronBuffers_[2];
+        GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;
-        GLuint cubeBuffers_[2];
+        GLuint cubeVertexBuffer_;
         GLuint cubeVao_;
         Camera camera_;
         glm::mat4 worldMatrix_;
