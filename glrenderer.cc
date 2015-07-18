@@ -43,6 +43,16 @@ namespace procdraw {
         }
     }
 
+    void GlRenderer::AmbientLightColor(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        ambientLightColor_.x = r;
+        ambientLightColor_.y = g;
+        ambientLightColor_.z = b;
+        ambientLightColor_.w = 0.0f;
+    }
+
     void GlRenderer::Background(float h, float s, float v)
     {
         float r, g, b;
@@ -67,6 +77,16 @@ namespace procdraw {
         int w, h;
         SDL_GetWindowSize(window_, &w, &h);
         return static_cast<double>(h);
+    }
+
+    void GlRenderer::LightColor(float h, float s, float v)
+    {
+        float r, g, b;
+        Hsv2Rgb(h, s, v, r, g, b);
+        lightColor_.x = r;
+        lightColor_.y = g;
+        lightColor_.z = b;
+        lightColor_.w = 0.0f;
     }
 
     double GlRenderer::MouseX()
@@ -102,6 +122,11 @@ namespace procdraw {
         worldMatrix_ = glm::rotate(worldMatrix_,
                                    turns * 2 * static_cast<float>(M_PI),
                                    glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
+    void GlRenderer::Scale(float x, float y, float z)
+    {
+        worldMatrix_ = glm::scale(worldMatrix_, glm::vec3(x, y, z));
     }
 
     void GlRenderer::Tetrahedron()
@@ -295,7 +320,7 @@ namespace procdraw {
     {
         auto worldViewProjection = camera_.ViewProjectionMatrix() * worldMatrix_;
         auto inverseWorldMatrix = glm::inverse(worldMatrix_);
-        auto modelSpaceLightDirection = inverseWorldMatrix * lightDirection_;
+        auto modelSpaceLightDirection = glm::normalize(inverseWorldMatrix * lightDirection_);
 
         // TODO use glGetUniformLocation
         glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(worldViewProjection));

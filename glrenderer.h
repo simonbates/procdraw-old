@@ -14,15 +14,18 @@ namespace procdraw {
     public:
         GlRenderer();
         ~GlRenderer();
+        void AmbientLightColor(float h, float s, float v);
         void Background(float h, float s, float v);
         void Color(float h, float s, float v);
         void DoSwap();
         double Height();
+        void LightColor(float h, float s, float v);
         double MouseX();
         double MouseY();
         void RotateX(float turns);
         void RotateY(float turns);
         void RotateZ(float turns);
+        void Scale(float x, float y, float z);
         void Tetrahedron();
         void Translate(float x, float y, float z);
         double Width();
