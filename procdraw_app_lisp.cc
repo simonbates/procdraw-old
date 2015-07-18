@@ -74,6 +74,16 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_Translate(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto app = static_cast<ProcdrawApp*>(data);
+        auto x = L->NumVal(L->Car(args));
+        auto y = L->NumVal(L->Cadr(args));
+        auto z = L->NumVal(L->Caddr(args));
+        app->Renderer()->Translate(x, y, z);
+        return L->Nil;
+    }
+
     static LispObjectPtr lisp_Width(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
@@ -92,6 +102,7 @@ namespace procdraw {
         L->SetGlobalCFunction("rotate-y", lisp_RotateY, app);
         L->SetGlobalCFunction("rotate-z", lisp_RotateZ, app);
         L->SetGlobalCFunction("tetrahedron", lisp_Tetrahedron, app);
+        L->SetGlobalCFunction("translate", lisp_Translate, app);
         L->SetGlobalCFunction("width", lisp_Width, app);
     }
 

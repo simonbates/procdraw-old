@@ -24,6 +24,7 @@ namespace procdraw {
         void RotateY(float turns);
         void RotateZ(float turns);
         void Tetrahedron();
+        void Translate(float x, float y, float z);
         double Width();
     private:
         SDL_Window *window_;

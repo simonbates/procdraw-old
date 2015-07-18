@@ -1,11 +1,13 @@
 #include "procdraw_app.h"
 #include "procdraw_app_lisp.h"
+#include "signals.h"
 #include <SDL2/SDL.h>
 
 namespace procdraw {
 
     ProcdrawApp::ProcdrawApp()
     {
+        RegisterSignals(&L_);
         RegisterProcdrawAppFunctions(this, &L_);
         cli_ = std::unique_ptr<CLI>(new CLI(this));
     }
@@ -21,6 +23,7 @@ namespace procdraw {
                 }
             }
             cli_->Poll();
+            L_.Apply("clear-stepped-signals");
             L_.Apply("draw");
             renderer_.DoSwap();
             frameCounter_.RecordFrame();

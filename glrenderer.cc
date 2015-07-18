@@ -111,6 +111,11 @@ namespace procdraw {
         glDrawArrays(GL_TRIANGLES, 0, 12);
     }
 
+    void GlRenderer::Translate(float x, float y, float z)
+    {
+        worldMatrix_ = glm::translate(worldMatrix_, glm::vec3(x, y, z));
+    }
+
     double GlRenderer::Width()
     {
         int w, h;
