@@ -58,7 +58,7 @@ namespace procdraw {
         float r, g, b;
         Hsv2Rgb(h, s, v, r, g, b);
         glClearColor(r, g, b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         ResetMatrix();
     }
 
@@ -176,6 +176,7 @@ namespace procdraw {
         std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
         glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
     }
 
     GLuint GlRenderer::CompileShaders()
