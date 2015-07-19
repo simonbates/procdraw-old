@@ -38,7 +38,7 @@ Procdraw can then be started from Emacs with:
 M-x run-lisp
 ```
 
-When expressions are evaluated in Lisp major mode buffers, they will
+When expressions are evaluated (C-x C-e) in Lisp mode, they will
 be sent to Procdraw. To make a Lisp buffer, you can open a Lisp file, or
 create a new buffer with:
 
