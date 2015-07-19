@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN
-
 #include "line_buffer.h"
 #include "catch.hpp"
 
