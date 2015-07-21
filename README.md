@@ -1,8 +1,8 @@
 Procdraw
 ========
 
-Procdraw is/will be a platform for exploring programming language and
-interaction design for live programming.
+Procdraw is/will be a platform for exploring programming language
+design and interaction design for live programming.
 
 In its current form, it consists of:
 
