@@ -9,7 +9,7 @@ In its current form, it consists of:
 * An interpreter for a Lisp-like language with:
     * s-expression syntax
     * list-structured memory
-    * code is stored as list structures and is always recoverable and
+    * code stored as list structures and always recoverable and
       modifiable at run time
     * a simple object model ("tables")
 * A simple data-flow model ("signals")
