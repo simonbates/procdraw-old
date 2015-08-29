@@ -35,7 +35,7 @@ namespace procdraw {
     {
         std::string val;
         try {
-            val = L_.PrintString(L_.Eval(L_.Read(cmd)));
+            val = L_.PrintToString(L_.Eval(L_.Read(cmd)));
         }
         catch (std::exception e) {
             val = e.what();

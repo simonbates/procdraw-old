@@ -232,55 +232,9 @@ namespace procdraw {
         return list1;
     }
 
-    std::string LispInterpreter::PrintString(LispObjectPtr obj)
+    std::string LispInterpreter::PrintToString(LispObjectPtr obj)
     {
-        switch (TypeOf(obj)) {
-        case LispObjectType::Null:
-            return "nil";
-        case LispObjectType::Number: {
-            std::ostringstream s;
-            s << NumVal(obj);
-            return s.str();
-        }
-        case LispObjectType::Symbol:
-            return SymbolName(obj);
-        case LispObjectType::Cons: {
-            if (Eq(Car(obj), S_QUOTE)) {
-                return "'" + PrintString(Cadr(obj));
-            }
-            else {
-                std::string s("(");
-                LispObjectPtr n = obj;
-                while (!Null(n)) {
-                    s.append(PrintString(Car(n)));
-                    n = Cdr(n);
-                    if (!Null(n) && Atom(n)) {
-                        s.append(" . ");
-                        s.append(PrintString(n));
-                        n = LispInterpreter::Nil;
-                    }
-                    if (!Null(n)) {
-                        s.append(" ");
-                    }
-                }
-                s.append(")");
-                return s;
-            }
-        }
-        case LispObjectType::CFunction:
-            return "<CFunction>";
-        case LispObjectType::Boolean:
-            return BoolVal(obj) ? "true" : "false";
-        case LispObjectType::String:
-            return "\"" + StringVal(obj) + "\"";
-        case LispObjectType::Table:
-            // TODO Table serialization
-            return "<Table>";
-        case LispObjectType::Eof:
-            return "<Eof>";
-        default:
-            return "";
-        }
+        return printer_.PrintToString(this, obj);
     }
 
     LispObjectPtr LispInterpreter::Progn(LispObjectPtr actions, LispObjectPtr env)

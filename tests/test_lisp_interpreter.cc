@@ -53,49 +53,11 @@ TEST_CASE("LispInterpreter::MakeList()")
     }
 }
 
-TEST_CASE("LispInterpreter::PrintString()")
+TEST_CASE("LispInterpreter::PrintToString()")
 {
-
     procdraw::LispInterpreter L;
 
-    SECTION("Integer") {
-        REQUIRE(L.PrintString(L.MakeNumber(42)) == "42");
-    }
-
-    SECTION("Symbol") {
-        REQUIRE(L.PrintString(L.SymbolRef("HELLO")) == "HELLO");
-    }
-
-    SECTION("List") {
-        REQUIRE(L.PrintString(L.MakeList({})) == "nil");
-        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(42) })) == "(42)");
-        REQUIRE(L.PrintString(L.MakeList({ L.MakeNumber(1), L.MakeNumber(2), L.MakeNumber(3), L.MakeNumber(4) })) ==
-                "(1 2 3 4)");
-        REQUIRE(L.PrintString(L.MakeList({ L.MakeList({ L.MakeNumber(1), L.MakeNumber(2) }), L.MakeNumber(3), L.MakeNumber(4) }))
-                == "((1 2) 3 4)");
-    }
-
-    SECTION("Dotted pair") {
-        REQUIRE(L.PrintString(L.Cons(L.MakeNumber(1), L.MakeNumber(2))) == "(1 . 2)");
-    }
-
-    SECTION("Boolean") {
-        REQUIRE(L.PrintString(L.True) == "true");
-        REQUIRE(L.PrintString(L.False) == "false");
-    }
-
-    SECTION("String") {
-        REQUIRE(L.PrintString(L.MakeString("some string")) == "\"some string\"");
-    }
-
-    SECTION("Table") {
-        REQUIRE(L.PrintString(L.MakeTable()) == "<Table>");
-    }
-
-    SECTION("Quote") {
-        REQUIRE(L.PrintString(L.MakeList({ L.SymbolRef("quote"), L.MakeNumber(42) })) == "'42");
-    }
-
+    REQUIRE(L.PrintToString(L.MakeList({ L.MakeNumber(42) })) == "(42)");
 }
 
 TEST_CASE("LispInterpreter::SymbolRef()")
@@ -362,7 +324,7 @@ TEST_CASE("LispInterpreter::Eval")
     }
 
     SECTION("should evaluate a LAMBDA expression to itself") {
-        REQUIRE(L.PrintString(L.Eval(L.Read("(lambda (n) (+ n 1))"))) == "(lambda (n) (+ n 1))");
+        REQUIRE(L.PrintToString(L.Eval(L.Read("(lambda (n) (+ n 1))"))) == "(lambda (n) (+ n 1))");
     }
 
     SECTION("LAMBDA call no args") {

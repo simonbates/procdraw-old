@@ -37,6 +37,7 @@ add_library(libprocdraw
             lisp_functions.cc
             lisp_interpreter.cc
             lisp_memory.cc
+            lisp_printer.cc
             lisp_reader.cc
             lsystem.cc
             procdraw_app.cc

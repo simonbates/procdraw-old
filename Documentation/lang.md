@@ -31,7 +31,7 @@ Special-forms and functions
 - `(norm start stop val)`
 - `(progn action ...)`
 - `(quote arg)`
-- `(setq identifier value)`
+- `(setq name value)`
 - `(wrap start stop val)`
 
 Tables
