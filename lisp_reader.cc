@@ -17,13 +17,11 @@ namespace procdraw {
 
         while (token_ != LispTokenType::EndOfInput
                 && token_ != LispTokenType::NonClosedString) {
-            switch (token_) {
-            case LispTokenType::LParen:
+            if (token_ == LispTokenType::LParen) {
                 ++parenCount;
-                break;
-            case LispTokenType::RParen:
+            }
+            else if (token_ == LispTokenType::RParen) {
                 --parenCount;
-                break;
             }
             GetToken();
         };
@@ -226,9 +224,10 @@ namespace procdraw {
         }
         case LispTokenType::EndOfInput:
             return L->Eof;
+        default:
+            // TODO custom syntax error type
+            throw std::runtime_error("Syntax error");
         }
-        // TODO custom syntax error type
-        throw std::runtime_error("Syntax error");
     }
 
     LispObjectPtr LispReader::ReadCons(LispInterpreter *L)

@@ -21,6 +21,7 @@ namespace procdraw {
         SetGlobalCFunction("-", lisp_Difference, nullptr);
         SetGlobalCFunction("/", lisp_Quotient, nullptr);
         SetGlobalCFunction("apply", lisp_Apply, nullptr);
+        SetGlobalCFunction("assoc", lisp_Assoc, nullptr);
         SetGlobalCFunction("car", lisp_Car, nullptr);
         SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
         SetGlobalCFunction("clear", lisp_Clear, nullptr);
@@ -32,6 +33,7 @@ namespace procdraw {
         SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
         SetGlobalCFunction("norm", lisp_Norm, nullptr);
         SetGlobalCFunction("put", lisp_Put, nullptr);
+        SetGlobalCFunction("putassoc", lisp_Putassoc, nullptr);
         SetGlobalCFunction("wrap", lisp_Wrap, nullptr);
         // Constants
         Set(SymbolRef("pi"), MakeNumber(M_PI), Nil);
@@ -85,17 +87,33 @@ namespace procdraw {
         return Apply(key, Cons(table, args), env);
     }
 
+    LispObjectPtr LispInterpreter::Assoc1(LispObjectPtr key, LispObjectPtr alist, bool *found)
+    {
+        LispObjectPtr next = alist;
+        LispObjectPtr prev = alist;
+        while (!Null(next)) {
+            auto association = Car(next);
+            if (Eq(key, Car(association))) {
+                *found = true;
+                return association;
+            }
+            prev = next;
+            next = Cdr(next);
+        }
+        *found = false;
+        return prev;
+    }
+
     LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
     {
-        LispObjectPtr n = alist;
-        while (!Null(n)) {
-            auto pair = Car(n);
-            if (Eq(key, Car(pair))) {
-                return pair;
-            }
-            n = Cdr(n);
+        bool found;
+        auto pair = Assoc1(key, alist, &found);
+        if (found) {
+            return pair;
         }
-        return Nil;
+        else {
+            return Nil;
+        }
     }
 
     bool LispInterpreter::Atom(LispObjectPtr obj)
@@ -244,6 +262,26 @@ namespace procdraw {
             result = Eval(Car(n), env);
         }
         return result;
+    }
+
+    LispObjectPtr LispInterpreter::Putassoc(LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist)
+    {
+        if (TypeOf(alist) == LispObjectType::Cons) {
+            bool found;
+            auto pair = Assoc1(key, alist, &found);
+            if (found) {
+                Rplacd(pair, val);
+            }
+            else {
+                // The object returned from Assoc1 is the last element in the list
+                // Add the new (key, val) association onto the end
+                Rplacd(pair, Cons(Cons(key, val), Nil));
+            }
+        }
+        else {
+            // TODO complain
+        }
+        return val;
     }
 
     LispObjectPtr LispInterpreter::Read(const std::string &str)

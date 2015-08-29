@@ -71,6 +71,7 @@ namespace procdraw {
         LispObjectPtr MakeList(std::vector<LispObjectPtr> objs);
         std::string PrintToString(LispObjectPtr obj);
         LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);
+        LispObjectPtr Putassoc(LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist);
         LispObjectPtr Read(const std::string &str);
         LispObjectPtr Set(LispObjectPtr symbol, LispObjectPtr value, LispObjectPtr env);
         LispObjectPtr Value(LispObjectPtr symbol, LispObjectPtr env);
@@ -86,6 +87,7 @@ namespace procdraw {
         LispObjectPtr S_SETQ;
         void InitSymbolLiterals();
         LispObjectPtr ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
+        LispObjectPtr Assoc1(LispObjectPtr key, LispObjectPtr alist, bool *found);
         LispObjectPtr Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr MakeSymbol(const std::string &name, LispObjectPtr value);
         LispObjectPtr SetSymbolValue(LispObjectPtr symbol, LispObjectPtr value);

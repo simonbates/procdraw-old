@@ -29,7 +29,7 @@ Dependencies:
 * GLEW
 * GLM
 
-You can build Procdraw and run the tests with these steps:
+You can build Procdraw and run the tests using CMake:
 
 ```
 $ mkdir build
@@ -39,10 +39,16 @@ $ make
 $ ctest --output-on-failure
 ```
 
+To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
+
+```
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
 Running Procdraw from Emacs
 ---------------------------
 
-Configure Procdraw as the inferior lisp program:
+Start by configuring Procdraw as the inferior lisp program:
 
 ```
 (setq inferior-lisp-program "/path/to/procdraw")

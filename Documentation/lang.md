@@ -20,6 +20,7 @@ Special-forms and functions
 - `(- number ...)`
 - `(/ number ...)`
 - `(apply function argument-list)`
+- `(assoc key alist)`
 - `(car obj)`
 - `(cdr obj)`
 - `(def function-name arg-list body)`
@@ -30,6 +31,7 @@ Special-forms and functions
 - `(map-range start1 stop1 start2 stop2 val)`
 - `(norm start stop val)`
 - `(progn action ...)`
+- `(putassoc key val alist)`
 - `(quote arg)`
 - `(setq name value)`
 - `(wrap start stop val)`

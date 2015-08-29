@@ -6,7 +6,7 @@ namespace procdraw {
     {
         perfCountsPerSec_ = SDL_GetPerformanceFrequency();
         lastPerfCount_ = SDL_GetPerformanceCounter();
-    };
+    }
 
     void FrameCounter::RecordFrame()
     {

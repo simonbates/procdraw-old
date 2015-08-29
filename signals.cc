@@ -58,14 +58,12 @@ namespace procdraw {
 
                 LispObjectPtr sourceVal = L->Nil;
 
-                switch (L->TypeOf(source)) {
-                case LispObjectType::Table:
+                auto sourceType = L->TypeOf(source);
+                if (sourceType == LispObjectType::Table) {
                     sourceVal = Sigval(L, source, steppedSignals, env);
-                    break;
-                case LispObjectType::Cons:
-                case LispObjectType::CFunction:
+                }
+                else if (sourceType == LispObjectType::Cons || sourceType == LispObjectType::CFunction) {
                     sourceVal = L->Apply(source, L->Nil, env);
-                    break;
                 }
 
                 if (L->Null(mapFun)) {

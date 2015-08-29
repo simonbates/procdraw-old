@@ -19,6 +19,11 @@ namespace procdraw {
         return L->Apply(L->Car(args), L->Cadr(args), env);
     }
 
+    LispObjectPtr lisp_Assoc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Assoc(L->Car(args), L->Cadr(args));
+    }
+
     LispObjectPtr lisp_Car(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return L->Caar(args);
@@ -116,6 +121,11 @@ namespace procdraw {
         auto key = L->Cadr(args);
         auto val = L->Caddr(args);
         return L->Put(table, key, val);
+    }
+
+    LispObjectPtr lisp_Putassoc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Putassoc(L->Car(args), L->Cadr(args), L->Caddr(args));
     }
 
     LispObjectPtr lisp_Quotient(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)

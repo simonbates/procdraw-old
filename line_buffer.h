@@ -17,7 +17,7 @@ namespace procdraw {
         void DeleteBack();
     private:
         std::wstring line_;
-        int promptLen_;
+        std::wstring::size_type promptLen_;
     };
 
 }

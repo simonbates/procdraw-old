@@ -243,52 +243,58 @@ TEST_CASE("LispInterpreter implicit type conversion")
 TEST_CASE("LispInterpreter::Eval")
 {
 
+    // TODO Rework these tests as lists of [input, expected output, expected type]
+    // For each input, call L.PrintToString(L.Eval(L.Read(input))) and check the result
+
     procdraw::LispInterpreter L;
 
-    SECTION("should evaluate NIL to itself") {
+    SECTION("NIL evaluates to itself") {
         REQUIRE(L.Null(L.Eval(L.Nil)));
     }
 
-    SECTION("should evaluate a number to itself") {
+    SECTION("A number evaluates to itself") {
         REQUIRE(L.NumVal(L.Eval(L.MakeNumber(42))) == 42);
     }
 
-    SECTION("should evaluate booleans to themselves") {
+    SECTION("Booleans evaluate to themselves") {
         REQUIRE(L.BoolVal(L.Eval(L.True)));
         REQUIRE_FALSE(L.BoolVal(L.Eval(L.False)));
     }
 
-    SECTION("should evaluate an unbound symbol to nil") {
+    SECTION("An unbound symbol evaluates to nil") {
         REQUIRE(L.Null(L.Eval(L.SymbolRef("a"))));
     }
 
-    SECTION("should evaluate a bound symbol to the bound value") {
+    SECTION("A bound symbol evaluates to the bound value") {
         auto env = L.MakeList({ L.Cons(L.SymbolRef("a"), L.MakeNumber(42)) });
         REQUIRE(L.NumVal(L.Eval(L.SymbolRef("a"), env)) == 42);
     }
 
-    SECTION("should evaluate a string to itself") {
+    SECTION("A string evaluates to itself") {
         REQUIRE(L.StringVal(L.Eval(L.MakeString("some string"))) == "some string");
     }
 
-    SECTION("should evaluate Eof to itself") {
+    SECTION("Eof evaluates to itself") {
         REQUIRE(L.IsEof(L.Eval(L.Eof)));
     }
 
-    SECTION("QUOTE") {
+    SECTION("A QUOTE form evaluates to its argument, unevaluated") {
         REQUIRE(L.SymbolName(L.Eval(L.Read("(quote foo)"))) == "foo");
         REQUIRE(L.SymbolName(L.Eval(L.Read("'foo"))) == "foo");
     }
 
-    SECTION("SUM") {
+    SECTION("SUM of zero arguments is 0") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(+)"))) == 0);
+    }
+
+    SECTION("SUM of one or more arguments is the sum of all arguments") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(+ 0)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2)"))) == 2);
         REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3)"))) == 5);
         REQUIRE(L.NumVal(L.Eval(L.Read("(+ 2 3 4)"))) == 9);
     }
 
-    SECTION("SUM with subexpressions") {
+    SECTION("SUM works with subexpressions") {
         auto env = L.MakeList({
             L.Cons(L.SymbolRef("a"), L.MakeNumber(1)),
             L.Cons(L.SymbolRef("b"), L.MakeNumber(2)),
@@ -297,16 +303,26 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("(+ (+ a b 8) 16 c)"), env)) == 31);
     }
 
-    SECTION("DIFFERENCE") {
+    SECTION("DIFFERENCE of zero arguments is 0") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(-)"))) == 0);
+    }
+
+    SECTION("DIFFERENCE of one argument is the negation of the argument") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(- 0)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(- 2)"))) == -2);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(- -2)"))) == 2);
+    }
+
+    SECTION("DIFFERENCE of two or more arguments is the first minus the others") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2)"))) == 3);
         REQUIRE(L.NumVal(L.Eval(L.Read("(- 5 2 7)"))) == -4);
     }
 
-    SECTION("PRODUCT") {
+    SECTION("PRODUCT of zero arguments is 1") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(*)"))) == 1);
+    }
+
+    SECTION("PRODUCT of one or more arguments is the product of all arguments") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(* 0)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(* 1)"))) == 1);
         REQUIRE(L.NumVal(L.Eval(L.Read("(* 2)"))) == 2);
@@ -314,16 +330,25 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("(* 2 3 4)"))) == 24);
     }
 
-    SECTION("QUOTIENT") {
+    SECTION("QUOTIENT of zero arguments is 1") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(/)"))) == 1);
+    }
+
+    SECTION("QUOTIENT of one argument is its reciprocal") {
+        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 2)"))) == 0.5);
+    }
+
+    SECTION("QUOTIENT of 0 is infinity") {
         REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 0)")))));
         REQUIRE(std::isinf(L.NumVal(L.Eval(L.Read("(/ 1 0)")))));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(/ 2)"))) == 0.5);
+    }
+
+    SECTION("QUOTIENT of two or more arguments is the first divided by the others") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(/ 8 5)"))) == 1.6);
         REQUIRE(L.NumVal(L.Eval(L.Read("(/ 360 4 3)"))) == 30);
     }
 
-    SECTION("should evaluate a LAMBDA expression to itself") {
+    SECTION("A LAMBDA expression evaluates to itself") {
         REQUIRE(L.PrintToString(L.Eval(L.Read("(lambda (n) (+ n 1))"))) == "(lambda (n) (+ n 1))");
     }
 
@@ -339,14 +364,14 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (m n) (+ m n 10)) 30 2)"))) == 42);
     }
 
-    SECTION("LAMBDA should return the value of the last expression") {
+    SECTION("LAMBDA returns the value of the last expression") {
         REQUIRE(L.Null(L.Eval(L.Read("((lambda ()))"))));
         REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (n) n) 1)"))) == 1);
         REQUIRE(L.NumVal(L.Eval(L.Read("((lambda (n) 1 2 n) 3)"))) == 3);
         REQUIRE(L.NumVal(L.Eval(L.Read("((lambda () 1 2 3 (+ 40 2)))"))) == 42);
     }
 
-    SECTION("PROGN should return the value of the last expression") {
+    SECTION("PROGN returns the value of the last expression") {
         REQUIRE(L.Null(L.Eval(L.Read("(progn)"))));
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1)"))) == 1);
         REQUIRE(L.NumVal(L.Eval(L.Read("(progn 1 2 3)"))) == 3);
@@ -359,7 +384,7 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.NumVal(L.Eval(L.Read("a"))) == 10);
     }
 
-    SECTION("SETQ in LAMBDA should modify the environment") {
+    SECTION("SETQ in LAMBDA modifies the environment") {
         auto setqReturn = L.Eval(L.Read("(setq a 1)"));
         REQUIRE(L.NumVal(setqReturn) == 1);
         L.Eval(L.Read("(setq f (lambda (a) (progn (setq b a) (setq a 3) (setq c a))))"));
@@ -453,7 +478,7 @@ TEST_CASE("LispInterpreter::Eval")
 
     SECTION("LERP") {
 
-        SECTION("should interpolate values for [0, 8]") {
+        SECTION("interpolates values for [0, 8]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 0)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 (/ 4))"))) == 2.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 (/ 2))"))) == 4.0);
@@ -461,7 +486,7 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 0 8 1)"))) == 8.0);
         }
 
-        SECTION("should interpolate values for [4, -4]") {
+        SECTION("interpolates values for [4, -4]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 0)"))) == 4.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 (/ 4))"))) == 2.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(lerp 4 -4 (/ 2 ))"))) == 0.0);
@@ -473,7 +498,7 @@ TEST_CASE("LispInterpreter::Eval")
 
     SECTION("MAP-RANGE") {
 
-        SECTION("should map values from [0, 10] to [-1, 0]") {
+        SECTION("maps values from [0, 10] to [-1, 0]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 0)"))) == -1.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 (/ 10 4))"))) == -0.75);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 5)"))) == -0.5);
@@ -481,7 +506,7 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 -1 0 10)"))) == 0.0);
         }
 
-        SECTION("should map values from [0, 10] to [1, -1]") {
+        SECTION("maps values from [0, 10] to [1, -1]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 0)"))) == 1.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 (/ 10 4))"))) == 0.5);
             REQUIRE(L.NumVal(L.Eval(L.Read("(map-range 0 10 1 -1 5)"))) == 0.0);
@@ -493,7 +518,7 @@ TEST_CASE("LispInterpreter::Eval")
 
     SECTION("NORM") {
 
-        SECTION("should normalize values for [0, 8]") {
+        SECTION("normalizes values for [0, 8]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 0)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 2)"))) == 0.25);
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 4)"))) == 0.5);
@@ -501,7 +526,7 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 0 8 8)"))) == 1.0);
         }
 
-        SECTION("should normalize values for [4, -4]") {
+        SECTION("normalizes values for [4, -4]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 4)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 2)"))) == 0.25);
             REQUIRE(L.NumVal(L.Eval(L.Read("(norm 4 -4 0)"))) == 0.5);
@@ -513,7 +538,7 @@ TEST_CASE("LispInterpreter::Eval")
 
     SECTION("WRAP") {
 
-        SECTION("should wrap values for [0, 10]") {
+        SECTION("wraps values for [0, 10]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 0)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 10)"))) == 0.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 20)"))) == 0.0);
@@ -525,7 +550,7 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap 0 10 -13)"))) == 7.0);
         }
 
-        SECTION("should wrap values for [-20, -10]") {
+        SECTION("wraps values for [-20, -10]") {
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 -20)"))) == -20.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 -10)"))) == -20.0);
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 0)"))) == -20.0);
@@ -578,6 +603,35 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("('get-x t1)"))) == 10);
             REQUIRE(L.NumVal(L.Eval(L.Read("('plus-x t1 4)"))) == 14);
         }
+    }
+
+    SECTION("ASSOC returns nil if key is not found") {
+        REQUIRE(L.Null(L.Eval(L.Read("(assoc 'a '())"))));
+        REQUIRE(L.Null(L.Eval(L.Read("(assoc 'a '((b . 1)))"))));
+        REQUIRE(L.Null(L.Eval(L.Read("(assoc 'a '((b . 1) (c . 2)))"))));
+    }
+
+    SECTION("ASSOC returns the first match") {
+        REQUIRE(L.PrintToString(L.Eval(L.Read("(assoc 'a '((a . 1)))"))) == "(a . 1)");
+        REQUIRE(L.PrintToString(L.Eval(L.Read("(assoc 'a '((b . 1) (a . 2)))"))) == "(a . 2)");
+        REQUIRE(L.PrintToString(L.Eval(L.Read("(assoc 'a '((b . 1) (a . 2) (a . 3)))"))) == "(a . 2)");
+    }
+
+    SECTION("PUTASSOC updates the first match, if one is found, and returns val") {
+        L.Eval(L.Read("(setq alist '((a . 1)))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(putassoc 'a 2 alist)"))) == 2);
+        REQUIRE(L.PrintToString(L.Eval(L.Read("alist"))) == "((a . 2))");
+        L.Eval(L.Read("(setq alist '((b . 1) (a . 2) (a . 3)))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(putassoc 'a 4 alist)"))) == 4);
+        REQUIRE(L.PrintToString(L.Eval(L.Read("alist"))) == "((b . 1) (a . 4) (a . 3))");
+    }
+
+    SECTION("PUTASSOC adds onto the end if no match is found and returns val") {
+        L.Eval(L.Read("(setq alist '((b . 1)))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(putassoc 'a 2 alist)"))) == 2);
+        REQUIRE(L.PrintToString(L.Eval(L.Read("alist"))) == "((b . 1) (a . 2))");
+        REQUIRE(L.NumVal(L.Eval(L.Read("(putassoc 'c 3 alist)"))) == 3);
+        REQUIRE(L.PrintToString(L.Eval(L.Read("alist"))) == "((b . 1) (a . 2) (c . 3))");
     }
 
 }
