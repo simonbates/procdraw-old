@@ -52,7 +52,6 @@ namespace procdraw {
         LispObjectPtr SetGlobalCFunction(const std::string &name, lisp_CFunction cfun, void *data);
         // Functions
         LispObjectPtr Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env);
-        LispObjectPtr Apply(const std::string &name);
         LispObjectPtr ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Assoc(LispObjectPtr key, LispObjectPtr alist);
         bool Atom(LispObjectPtr obj);
@@ -63,6 +62,7 @@ namespace procdraw {
         LispObjectPtr Caddr(LispObjectPtr obj);
         LispObjectPtr Cadddr(LispObjectPtr obj);
         LispObjectPtr Caddddr(LispObjectPtr obj);
+        LispObjectPtr Call(const std::string &name);
         BalancedState CheckBalanced(const std::string &str);
         LispObjectPtr Eval(LispObjectPtr exp, LispObjectPtr env);
         LispObjectPtr Eval(LispObjectPtr exp);

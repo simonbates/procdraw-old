@@ -244,7 +244,12 @@ TEST_CASE("LispInterpreter::Eval")
 {
 
     // TODO Rework these tests as lists of [input, expected output, expected type]
-    // For each input, call L.PrintToString(L.Eval(L.Read(input))) and check the result
+    // For each input, call L.PrintToString(L.Eval(L.Read(input))) and check the result.
+    // It would also be really good to connect these test cases with documentation
+    // for each function: either store the test cases in the documentation and
+    // extract, or store in some machine readable format and generate parts of the
+    // documentation from them.
+    // Like Python's doctest: https://en.wikipedia.org/wiki/Doctest
 
     procdraw::LispInterpreter L;
 

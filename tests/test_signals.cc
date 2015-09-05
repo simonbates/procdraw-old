@@ -8,6 +8,10 @@ TEST_CASE("Signals")
     procdraw::LispInterpreter L;
     procdraw::RegisterSignals(&L);
 
+    // TODO Change the step function -- return value rather than (put self 'val1 value)
+    // The signal stepping infrastructure is responsible for storing the value
+    // from step.
+
     L.Eval(L.Read("(setq step-incr (lambda (self) (put self 'val1 (+ (get self 'val1) (get self 'incr)))))"));
     L.Eval(L.Read("(setq sig1 (make-signal step-incr))"));
     L.Eval(L.Read("(put sig1 'val1 1)"));

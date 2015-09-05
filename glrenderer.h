@@ -12,14 +12,14 @@ namespace procdraw {
 
     struct Vertex {
         // Position
-        float x;
-        float y;
-        float z;
-        float w;
+        GLfloat x;
+        GLfloat y;
+        GLfloat z;
+        GLfloat w;
         // Normal
-        float nx;
-        float ny;
-        float nz;
+        GLfloat nx;
+        GLfloat ny;
+        GLfloat nz;
         Vertex(glm::vec3 pos, glm::vec3 normal)
         {
             this->x = pos.x;
@@ -39,29 +39,36 @@ namespace procdraw {
         ~GlRenderer();
         void AmbientLightColor(float h, float s, float v);
         void Background(float h, float s, float v);
+        void Begin2D();
         void Color(float h, float s, float v);
         void Cube();
         void DoSwap();
-        double Height();
+        void End2D();
+        int Height();
         void LightColor(float h, float s, float v);
         double MouseX();
         double MouseY();
+        void Rect(int x, int y, int w, int h);
         void RotateX(float turns);
         void RotateY(float turns);
         void RotateZ(float turns);
         void Scale(float x, float y, float z);
         void Tetrahedron();
         void Translate(float x, float y, float z);
-        double Width();
+        int Width();
     private:
         SDL_Window *window_;
         SDL_GLContext glcontext_;
         GLuint program_;
+        GLuint program2d_;
         GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;
         GLuint cubeVertexBuffer_;
         GLuint cubeVao_;
+        GLuint rectangleVertexBuffer_;
+        GLuint rectangleVao_;
+        GLfloat rectangleVertices_[8] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
         Camera camera_;
         glm::mat4 worldMatrix_;
         glm::vec4 lightDirection_;
@@ -72,8 +79,11 @@ namespace procdraw {
         float materialB_;
         void CreateWindowAndGlContext();
         GLuint CompileShaders();
+        GLuint CompileShaders2d();
+        GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource);
         void MakeTetrahedronVao();
         void MakeCubeVao();
+        void MakeRectangleVao();
         void ResetMatrix();
         void InitLighting();
         void InitMaterial();

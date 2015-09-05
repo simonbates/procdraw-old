@@ -76,11 +76,6 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr LispInterpreter::Apply(const std::string &name)
-    {
-        return Apply(Value(SymbolRef(name), Nil), Nil, Nil);
-    }
-
     LispObjectPtr LispInterpreter::ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args,
             LispObjectPtr env)
     {
@@ -167,6 +162,11 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::Caddddr(LispObjectPtr obj)
     {
         return Car(Cdr(Cdr(Cdr(Cdr(obj)))));
+    }
+
+    LispObjectPtr LispInterpreter::Call(const std::string &name)
+    {
+        return Apply(Value(SymbolRef(name), Nil), Nil, Nil);
     }
 
     BalancedState LispInterpreter::CheckBalanced(const std::string &str)

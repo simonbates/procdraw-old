@@ -18,10 +18,12 @@ namespace procdraw {
         CreateWindowAndGlContext();
 
         program_ = CompileShaders();
+        program2d_ = CompileShaders2d();
         glUseProgram(program_);
 
         MakeTetrahedronVao();
         MakeCubeVao();
+        MakeRectangleVao();
 
         ResetMatrix();
         InitLighting();
@@ -39,7 +41,11 @@ namespace procdraw {
         glDeleteBuffers(1, &cubeVertexBuffer_);
         glDeleteBuffers(1, &cubeIndexBuffer_);
 
+        glDeleteVertexArrays(1, &rectangleVao_);
+        glDeleteBuffers(1, &rectangleVertexBuffer_);
+
         glDeleteProgram(program_);
+        glDeleteProgram(program2d_);
 
         if (glcontext_ != NULL) {
             SDL_GL_DeleteContext(glcontext_);
@@ -69,6 +75,15 @@ namespace procdraw {
         ResetMatrix();
     }
 
+    void GlRenderer::Begin2D()
+    {
+        glUseProgram(program2d_);
+        // TODO Cache the 2d projection matrix -- no need to calculate
+        // each time, only when the renderer size changes
+        auto projection = glm::ortho(0.0f, static_cast<float>(Width()), 0.0f, static_cast<float>(Height()));
+        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(projection));
+    }
+
     void GlRenderer::Color(float h, float s, float v)
     {
         Hsv2Rgb(h, s, v, materialR_, materialG_, materialB_);
@@ -86,11 +101,16 @@ namespace procdraw {
         SDL_GL_SwapWindow(window_);
     }
 
-    double GlRenderer::Height()
+    void GlRenderer::End2D()
+    {
+        glUseProgram(program_);
+    }
+
+    int GlRenderer::Height()
     {
         int w, h;
         SDL_GetWindowSize(window_, &w, &h);
-        return static_cast<double>(h);
+        return h;
     }
 
     void GlRenderer::LightColor(float h, float s, float v)
@@ -115,6 +135,22 @@ namespace procdraw {
         int x, y;
         SDL_GetMouseState(&x, &y);
         return static_cast<double>(y) / (Height() - 1);
+    }
+
+    void GlRenderer::Rect(int x, int y, int w, int h)
+    {
+        rectangleVertices_[0] = x;
+        rectangleVertices_[1] = y;
+        rectangleVertices_[2] = x + w;
+        rectangleVertices_[3] = y;
+        rectangleVertices_[4] = x;
+        rectangleVertices_[5] = y + h;
+        rectangleVertices_[6] = x + w;
+        rectangleVertices_[7] = y + h;
+
+        glBindVertexArray(rectangleVao_);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(rectangleVertices_), rectangleVertices_);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
     void GlRenderer::RotateX(float turns)
@@ -155,11 +191,11 @@ namespace procdraw {
         worldMatrix_ = glm::translate(worldMatrix_, glm::vec3(x, y, z));
     }
 
-    double GlRenderer::Width()
+    int GlRenderer::Width()
     {
         int w, h;
         SDL_GetWindowSize(window_, &w, &h);
-        return static_cast<double>(w);
+        return w;
     }
 
     void GlRenderer::CreateWindowAndGlContext()
@@ -191,6 +227,8 @@ namespace procdraw {
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     GLuint GlRenderer::CompileShaders()
@@ -226,6 +264,35 @@ namespace procdraw {
             "}                                                  \n"
         };
 
+        return CompileProgram(vertexShaderSource, fragmentShaderSource);
+    }
+
+    GLuint GlRenderer::CompileShaders2d()
+    {
+        static const GLchar *vertexShaderSource[] = {
+            "#version 430 core                                                          \n"
+            "layout (location = 0) in vec2 position;                                    \n"
+            "layout (location = 1) uniform mat4 projection;                             \n"
+            "void main(void)                                                            \n"
+            "{                                                                          \n"
+            "    gl_Position = projection * vec4(position.x, position.y, 0.0f, 1.0f);   \n"
+            "}                                                                          \n"
+        };
+
+        static const GLchar *fragmentShaderSource[] = {
+            "#version 430 core                                  \n"
+            "out vec4 color;                                    \n"
+            "void main(void)                                    \n"
+            "{                                                  \n"
+            "    color = vec4(1.0f, 1.0f, 1.0f, 0.5f);          \n"
+            "}                                                  \n"
+        };
+
+        return CompileProgram(vertexShaderSource, fragmentShaderSource);
+    }
+
+    GLuint GlRenderer::CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource)
+    {
         // Vertex shader
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
@@ -347,6 +414,19 @@ namespace procdraw {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     }
 
+    void GlRenderer::MakeRectangleVao()
+    {
+        glGenVertexArrays(1, &rectangleVao_);
+        glBindVertexArray(rectangleVao_);
+
+        glGenBuffers(1, &rectangleVertexBuffer_);
+        glBindBuffer(GL_ARRAY_BUFFER, rectangleVertexBuffer_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices_), rectangleVertices_, GL_DYNAMIC_DRAW);
+
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(0);
+    }
+
     void GlRenderer::ResetMatrix()
     {
         worldMatrix_ = glm::mat4(1.0f);
@@ -372,7 +452,6 @@ namespace procdraw {
         auto inverseWorldMatrix = glm::inverse(worldMatrix_);
         auto modelSpaceLightDirection = glm::normalize(inverseWorldMatrix * lightDirection_);
 
-        // TODO use glGetUniformLocation
         glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
         glUniform4fv(3, 1, glm::value_ptr(modelSpaceLightDirection));
         glUniform4fv(4, 1, glm::value_ptr(lightColor_));
