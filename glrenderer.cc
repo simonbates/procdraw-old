@@ -231,14 +231,26 @@ namespace procdraw {
             g->bitmap.buffer
         );
 
+        // Top left
         textRectangleVertices_[0] = x;
         textRectangleVertices_[1] = y;
+        textRectangleVertices_[2] = 0.0f;
+        textRectangleVertices_[3] = 0.0f;
+        // Bottom left
         textRectangleVertices_[4] = x;
         textRectangleVertices_[5] = y + g->bitmap.rows;
+        textRectangleVertices_[6] = 0.0f;
+        textRectangleVertices_[7] = 1.0f;
+        // Top right
         textRectangleVertices_[8] = x + g->bitmap.width;
         textRectangleVertices_[9] = y;
+        textRectangleVertices_[10] = 1.0f;
+        textRectangleVertices_[11] = 0.0f;
+        // Bottom right
         textRectangleVertices_[12] = x + g->bitmap.width;
         textRectangleVertices_[13] = y + g->bitmap.rows;
+        textRectangleVertices_[14] = 1.0f;
+        textRectangleVertices_[15] = 1.0f;
 
         glBindVertexArray(textRectangleVao_);
         glBindBuffer(GL_ARRAY_BUFFER, textRectangleVertexBuffer_);

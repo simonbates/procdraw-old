@@ -73,15 +73,10 @@ namespace procdraw {
         GLuint cubeVao_;
         GLuint rectangleVertexBuffer_;
         GLuint rectangleVao_;
-        GLfloat rectangleVertices_[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+        GLfloat rectangleVertices_[8] = {};
         GLuint textRectangleVertexBuffer_;
         GLuint textRectangleVao_;
-        GLfloat textRectangleVertices_[16] = {
-            0.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 1.0f
-        };
+        GLfloat textRectangleVertices_[16] = {};
         GLuint textTexture_;
         Camera camera_;
         glm::mat4 worldMatrix_;
