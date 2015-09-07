@@ -43,7 +43,9 @@ namespace procdraw {
             if (L_.BoolVal(L_.Eval(s_show_repl))) {
                 renderer_.Begin2D();
                 renderer_.Rect(40, 80, 280, 240);
-                renderer_.End2D();
+                renderer_.BeginText();
+                renderer_.Text(40, 80);
+                renderer_.Begin3D();
             }
             renderer_.DoSwap();
             frameCounter_.RecordFrame();

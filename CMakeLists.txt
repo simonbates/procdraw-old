@@ -8,10 +8,12 @@ enable_testing()
 
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(FT2 REQUIRED freetype2)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS}
+                    ${FT2_INCLUDE_DIRS}
                     ${OPENGL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS})
 
@@ -32,6 +34,7 @@ add_library(libprocdraw
             cli.cc
             color.cc
             frame_counter.cc
+            ft_text_renderer.cc
             glrenderer.cc
             line_buffer.cc
             lisp_functions.cc
@@ -55,6 +58,7 @@ add_executable(procdraw main.cc)
 target_link_libraries(procdraw
                       libprocdraw
                       ${SDL2_LIBRARIES}
+                      ${FT2_LIBRARIES}
                       ${OPENGL_LIBRARIES}
                       ${GLEW_LIBRARIES}
                       readline)

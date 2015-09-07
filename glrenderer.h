@@ -3,6 +3,7 @@
 #define GLM_FORCE_RADIANS
 
 #include "camera.h"
+#include "ft_text_renderer.h"
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -40,10 +41,11 @@ namespace procdraw {
         void AmbientLightColor(float h, float s, float v);
         void Background(float h, float s, float v);
         void Begin2D();
+        void Begin3D();
+        void BeginText();
         void Color(float h, float s, float v);
         void Cube();
         void DoSwap();
-        void End2D();
         int Height();
         void LightColor(float h, float s, float v);
         double MouseX();
@@ -54,13 +56,16 @@ namespace procdraw {
         void RotateZ(float turns);
         void Scale(float x, float y, float z);
         void Tetrahedron();
+        void Text(int x, int y);
         void Translate(float x, float y, float z);
         int Width();
     private:
         SDL_Window *window_;
         SDL_GLContext glcontext_;
+        FtTextRenderer textRenderer_;
         GLuint program_;
         GLuint program2d_;
+        GLuint programText_;
         GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;
@@ -68,7 +73,16 @@ namespace procdraw {
         GLuint cubeVao_;
         GLuint rectangleVertexBuffer_;
         GLuint rectangleVao_;
-        GLfloat rectangleVertices_[8] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+        GLfloat rectangleVertices_[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+        GLuint textRectangleVertexBuffer_;
+        GLuint textRectangleVao_;
+        GLfloat textRectangleVertices_[16] = {
+            0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 1.0f
+        };
+        GLuint textTexture_;
         Camera camera_;
         glm::mat4 worldMatrix_;
         glm::vec4 lightDirection_;
@@ -80,10 +94,13 @@ namespace procdraw {
         void CreateWindowAndGlContext();
         GLuint CompileShaders();
         GLuint CompileShaders2d();
+        GLuint CompileShadersText();
         GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource);
         void MakeTetrahedronVao();
         void MakeCubeVao();
         void MakeRectangleVao();
+        void MakeTextRectangleVao();
+        void MakeTextTexture();
         void ResetMatrix();
         void InitLighting();
         void InitMaterial();
