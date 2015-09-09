@@ -69,6 +69,7 @@ namespace procdraw {
         LispObjectPtr Evif(LispObjectPtr arglist, LispObjectPtr env);
         LispObjectPtr Evlis(LispObjectPtr arglist, LispObjectPtr env);
         LispObjectPtr MakeList(std::vector<LispObjectPtr> objs);
+        LispObjectPtr Not(LispObjectPtr obj);
         std::string PrintToString(LispObjectPtr obj);
         LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);
         LispObjectPtr Putassoc(LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist);

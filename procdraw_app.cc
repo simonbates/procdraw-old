@@ -27,13 +27,7 @@ namespace procdraw {
                 }
                 else if (e.type == SDL_KEYDOWN) {
                     if ((e.key.keysym.sym == SDLK_ESCAPE) && (e.key.repeat == 0)) {
-                        // TODO L_.Set(s_show_repl, L_.Not(L_.Eval(s_show_repl)), L_.Nil)
-                        if (L_.BoolVal(L_.Eval(s_show_repl))) {
-                            L_.Set(s_show_repl, L_.False, L_.Nil);
-                        }
-                        else {
-                            L_.Set(s_show_repl, L_.True, L_.Nil);
-                        }
+                        L_.Set(s_show_repl, L_.Not(L_.Eval(s_show_repl)), L_.Nil);
                     }
                 }
             }

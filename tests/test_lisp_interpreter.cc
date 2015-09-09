@@ -639,6 +639,16 @@ TEST_CASE("LispInterpreter::Eval")
         REQUIRE(L.PrintToString(L.Eval(L.Read("alist"))) == "((b . 1) (a . 2) (c . 3))");
     }
 
+    SECTION("NOT negates the boolean value of an expression") {
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not true)"))) == false);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not false)"))) == true);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not nil)"))) == true);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not 0)"))) == false);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not 1)"))) == false);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not 2)"))) == false);
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(not 'hello)"))) == false);
+    }
+
 }
 
 static int testCfunData = 42;
