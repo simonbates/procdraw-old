@@ -32,7 +32,6 @@ namespace procdraw {
         }
     };
 
-
     class GlRenderer {
     public:
         GlRenderer();
