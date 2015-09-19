@@ -108,6 +108,11 @@ namespace procdraw {
         return L->MakeNumber(Norm(start, stop, val));
     }
 
+    LispObjectPtr lisp_Not(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Not(L->Car(args));
+    }
+
     LispObjectPtr lisp_Product(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         double product = 1;

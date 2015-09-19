@@ -32,6 +32,7 @@ namespace procdraw {
         SetGlobalCFunction("make-table", lisp_MakeTable, nullptr);
         SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
         SetGlobalCFunction("norm", lisp_Norm, nullptr);
+        SetGlobalCFunction("not", lisp_Not, nullptr);
         SetGlobalCFunction("put", lisp_Put, nullptr);
         SetGlobalCFunction("putassoc", lisp_Putassoc, nullptr);
         SetGlobalCFunction("wrap", lisp_Wrap, nullptr);
@@ -248,6 +249,16 @@ namespace procdraw {
             list1 = Cons(*it, list1);
         }
         return list1;
+    }
+
+    LispObjectPtr LispInterpreter::Not(LispObjectPtr obj)
+    {
+        if (BoolVal(obj)) {
+            return False;
+        }
+        else {
+            return True;
+        }
     }
 
     std::string LispInterpreter::PrintToString(LispObjectPtr obj)
