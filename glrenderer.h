@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace procdraw {
 
@@ -61,10 +62,9 @@ namespace procdraw {
     private:
         SDL_Window *window_;
         SDL_GLContext glcontext_;
-        FtTextRenderer textRenderer_;
+        std::unique_ptr<FtTextRenderer> textRenderer_;
         GLuint program_;
         GLuint program2d_;
-        GLuint programText_;
         GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;
@@ -73,10 +73,6 @@ namespace procdraw {
         GLuint rectangleVertexBuffer_;
         GLuint rectangleVao_;
         GLfloat rectangleVertices_[8] = {};
-        GLuint textRectangleVertexBuffer_;
-        GLuint textRectangleVao_;
-        GLfloat textRectangleVertices_[16] = {};
-        GLuint textTexture_;
         Camera camera_;
         glm::mat4 worldMatrix_;
         glm::vec4 lightDirection_;
@@ -86,15 +82,11 @@ namespace procdraw {
         float materialG_;
         float materialB_;
         void CreateWindowAndGlContext();
-        GLuint CompileShaders();
-        GLuint CompileShaders2d();
-        GLuint CompileShadersText();
-        GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource);
+        void CompileShaders();
+        void CompileShaders2d();
         void MakeTetrahedronVao();
         void MakeCubeVao();
         void MakeRectangleVao();
-        void MakeTextRectangleVao();
-        void MakeTextTexture();
         void ResetMatrix();
         void InitLighting();
         void InitMaterial();

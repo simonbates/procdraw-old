@@ -1,6 +1,7 @@
 #include "glrenderer.h"
 #include "color.h"
 #include "sdl_util.h"
+#include "gl_util.h"
 #include "util.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -17,19 +18,19 @@ namespace procdraw {
     {
         CreateWindowAndGlContext();
 
-        program_ = CompileShaders();
-        program2d_ = CompileShaders2d();
-        programText_ = CompileShadersText();
+        CompileShaders();
+        CompileShaders2d();
 
         MakeTetrahedronVao();
         MakeCubeVao();
         MakeRectangleVao();
-        MakeTextRectangleVao();
-        MakeTextTexture();
 
         ResetMatrix();
         InitLighting();
         InitMaterial();
+
+        // Create the text renderer after we have initialized OpenGL
+        textRenderer_ = std::unique_ptr<FtTextRenderer>(new FtTextRenderer());
 
         Begin3D();
     }
@@ -48,14 +49,8 @@ namespace procdraw {
         glDeleteVertexArrays(1, &rectangleVao_);
         glDeleteBuffers(1, &rectangleVertexBuffer_);
 
-        glDeleteVertexArrays(1, &textRectangleVao_);
-        glDeleteBuffers(1, &textRectangleVertexBuffer_);
-
-        glDeleteTextures(1, &textTexture_);
-
         glDeleteProgram(program_);
         glDeleteProgram(program2d_);
-        glDeleteProgram(programText_);
 
         if (glcontext_ != NULL) {
             SDL_GL_DeleteContext(glcontext_);
@@ -103,13 +98,8 @@ namespace procdraw {
 
     void GlRenderer::BeginText()
     {
-        glUseProgram(programText_);
-        // TODO Cache the 2d projection matrix -- no need to calculate
-        // each time, only when the renderer size changes
-        auto projection = glm::ortho(0.0f, static_cast<float>(Width()), static_cast<float>(Height()), 0.0f);
-        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform1i(2, 0);
-        glDisable(GL_DEPTH_TEST);
+        // TODO: Passing the width and height doesn't feel like a great solution
+        textRenderer_->BeginText(Width(), Height());
     }
 
     void GlRenderer::Color(float h, float s, float v)
@@ -212,50 +202,7 @@ namespace procdraw {
 
     void GlRenderer::Text(int x, int y)
     {
-        FT_GlyphSlot g = textRenderer_.LoadChar();
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textTexture_);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            g->bitmap.width,
-            g->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            g->bitmap.buffer
-        );
-
-        // Top left
-        textRectangleVertices_[0] = x;
-        textRectangleVertices_[1] = y;
-        textRectangleVertices_[2] = 0.0f;
-        textRectangleVertices_[3] = 0.0f;
-        // Bottom left
-        textRectangleVertices_[4] = x;
-        textRectangleVertices_[5] = y + g->bitmap.rows;
-        textRectangleVertices_[6] = 0.0f;
-        textRectangleVertices_[7] = 1.0f;
-        // Top right
-        textRectangleVertices_[8] = x + g->bitmap.width;
-        textRectangleVertices_[9] = y;
-        textRectangleVertices_[10] = 1.0f;
-        textRectangleVertices_[11] = 0.0f;
-        // Bottom right
-        textRectangleVertices_[12] = x + g->bitmap.width;
-        textRectangleVertices_[13] = y + g->bitmap.rows;
-        textRectangleVertices_[14] = 1.0f;
-        textRectangleVertices_[15] = 1.0f;
-
-        glBindVertexArray(textRectangleVao_);
-        glBindBuffer(GL_ARRAY_BUFFER, textRectangleVertexBuffer_);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textRectangleVertices_), textRectangleVertices_);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        textRenderer_->Text(x, y);
     }
 
     void GlRenderer::Translate(float x, float y, float z)
@@ -302,7 +249,7 @@ namespace procdraw {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    GLuint GlRenderer::CompileShaders()
+    void GlRenderer::CompileShaders()
     {
         static const GLchar *vertexShaderSource[] = {
             "#version 430 core                                                          \n"
@@ -335,10 +282,10 @@ namespace procdraw {
             "}                                                  \n"
         };
 
-        return CompileProgram(vertexShaderSource, fragmentShaderSource);
+        program_ = CompileProgram(vertexShaderSource, fragmentShaderSource);
     }
 
-    GLuint GlRenderer::CompileShaders2d()
+    void GlRenderer::CompileShaders2d()
     {
         static const GLchar *vertexShaderSource[] = {
             "#version 430 core                                                          \n"
@@ -359,59 +306,7 @@ namespace procdraw {
             "}                                                  \n"
         };
 
-        return CompileProgram(vertexShaderSource, fragmentShaderSource);
-    }
-
-    GLuint GlRenderer::CompileShadersText()
-    {
-        static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                                                          \n"
-            "layout (location = 0) in vec4 position;                                    \n"
-            "layout (location = 1) uniform mat4 projection;                             \n"
-            "out vec2 tc;                                                               \n"
-            "void main(void)                                                            \n"
-            "{                                                                          \n"
-            "    gl_Position = projection * vec4(position.xy, 0, 1);                    \n"
-            "    tc = position.zw;                                                      \n"
-            "}                                                                          \n"
-        };
-
-        static const GLchar *fragmentShaderSource[] = {
-            "#version 430 core                                  \n"
-            "layout (location = 2) uniform sampler2D tex;       \n"
-            "in vec2 tc;                                        \n"
-            "out vec4 color;                                    \n"
-            "void main(void)                                    \n"
-            "{                                                  \n"
-            "    color = vec4(0, 0, 0, texture(tex, tc).r);     \n"
-            "}                                                  \n"
-        };
-
-        return CompileProgram(vertexShaderSource, fragmentShaderSource);
-    }
-
-    GLuint GlRenderer::CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource)
-    {
-        // Vertex shader
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-
-        // Fragment shader
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-
-        // Program
-        GLuint program = glCreateProgram();
-        glAttachShader(program, vertexShader);
-        glAttachShader(program, fragmentShader);
-        glLinkProgram(program);
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-
-        return program;
+        program2d_ = CompileProgram(vertexShaderSource, fragmentShaderSource);
     }
 
     void GlRenderer::MakeTetrahedronVao()
@@ -524,30 +419,6 @@ namespace procdraw {
 
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
-    }
-
-    void GlRenderer::MakeTextRectangleVao()
-    {
-        glGenVertexArrays(1, &textRectangleVao_);
-        glBindVertexArray(textRectangleVao_);
-
-        glGenBuffers(1, &textRectangleVertexBuffer_);
-        glBindBuffer(GL_ARRAY_BUFFER, textRectangleVertexBuffer_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(textRectangleVertices_), textRectangleVertices_, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-        glEnableVertexAttribArray(0);
-    }
-
-    void GlRenderer::MakeTextTexture()
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &textTexture_);
-        glBindTexture(GL_TEXTURE_2D, textTexture_);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
     void GlRenderer::ResetMatrix()

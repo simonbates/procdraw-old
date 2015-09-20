@@ -39,6 +39,7 @@ add_library(libprocdraw
             frame_counter.cc
             ft_text_renderer.cc
             glrenderer.cc
+            gl_util.cc
             line_buffer.cc
             lisp_functions.cc
             lisp_interpreter.cc
