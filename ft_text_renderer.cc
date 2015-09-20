@@ -1,6 +1,7 @@
 #define GLM_FORCE_RADIANS
 
 #include "ft_text_renderer.h"
+#include "font_config.h"
 #include "gl_util.h"
 #include <stdexcept>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,12 +16,11 @@ namespace procdraw {
                 throw std::runtime_error("Error FT_Init_FreeType");
             }
 
-            // TODO: Need another solution, rather than hardcoding the font path
-            if (FT_New_Face(ft_, "/usr/share/fonts/truetype/DejaVuSansMono.ttf", 0, &face_)) {
-                throw std::runtime_error("Error FT_New_Face");
+            if (FT_New_Face(ft_, FT_TEXT_RENDERER_FONT_PATHNAME, 0, &face_)) {
+                throw std::runtime_error("Error loading font " FT_TEXT_RENDERER_FONT_PATHNAME);
             }
 
-            FT_Set_Pixel_Sizes(face_, 0, 240);
+            FT_Set_Pixel_Sizes(face_, 0, FT_TEXT_RENDERER_FONT_SIZE_PIXELS);
 
             CompileShaders();
             MakeTextRectangleVao();
