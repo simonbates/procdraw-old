@@ -86,7 +86,7 @@ namespace procdraw {
         // TODO Cache the 2d projection matrix -- no need to calculate
         // each time, only when the renderer size changes
         auto projection = glm::ortho(0.0f, static_cast<float>(Width()), static_cast<float>(Height()), 0.0f);
-        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(projection2dLoc, 1, GL_FALSE, glm::value_ptr(projection));
         glDisable(GL_DEPTH_TEST);
     }
 
@@ -220,8 +220,8 @@ namespace procdraw {
     void GlRenderer::CreateWindowAndGlContext()
     {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
         window_ = SDL_CreateWindow("Procdraw", SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED, 640, 640,
@@ -252,14 +252,14 @@ namespace procdraw {
     void GlRenderer::CompileShaders()
     {
         static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                                                          \n"
-            "layout (location = 0) in vec4 position;                                    \n"
-            "layout (location = 1) in vec3 normal;                                      \n"
-            "layout (location = 2) uniform mat4 world_view_projection;                  \n"
-            "layout (location = 3) uniform vec4 light_direction;                        \n"
-            "layout (location = 4) uniform vec4 light_color;                            \n"
-            "layout (location = 5) uniform vec4 ambient_light_color;                    \n"
-            "layout (location = 6) uniform vec4 material_color;                         \n"
+            "#version 150                                                               \n"
+            "uniform mat4 world_view_projection;                                        \n"
+            "uniform vec4 light_direction;                                              \n"
+            "uniform vec4 light_color;                                                  \n"
+            "uniform vec4 ambient_light_color;                                          \n"
+            "uniform vec4 material_color;                                               \n"
+            "in vec4 position;                                                          \n"
+            "in vec3 normal;                                                            \n"
             "out vec4 vs_color;                                                         \n"
             "void main(void)                                                            \n"
             "{                                                                          \n"
@@ -273,7 +273,7 @@ namespace procdraw {
         };
 
         static const GLchar *fragmentShaderSource[] = {
-            "#version 430 core                                  \n"
+            "#version 150                                       \n"
             "in vec4 vs_color;                                  \n"
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
@@ -282,15 +282,21 @@ namespace procdraw {
             "}                                                  \n"
         };
 
-        program_ = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        program_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}, {1, "normal"}});
+
+        worldViewProjectionLoc = glGetUniformLocation(program_, "world_view_projection");
+        lightDirectionLoc =  glGetUniformLocation(program_, "light_direction");
+        lightColorLoc = glGetUniformLocation(program_, "light_color");
+        ambientLightColorLoc = glGetUniformLocation(program_, "ambient_light_color");
+        materialColorLoc = glGetUniformLocation(program_, "material_color");
     }
 
     void GlRenderer::CompileShaders2d()
     {
         static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                                                          \n"
-            "layout (location = 0) in vec2 position;                                    \n"
-            "layout (location = 1) uniform mat4 projection;                             \n"
+            "#version 150                                                               \n"
+            "uniform mat4 projection;                                                   \n"
+            "in vec2 position;                                                          \n"
             "void main(void)                                                            \n"
             "{                                                                          \n"
             "    gl_Position = projection * vec4(position.xy, 0, 1);                    \n"
@@ -298,7 +304,7 @@ namespace procdraw {
         };
 
         static const GLchar *fragmentShaderSource[] = {
-            "#version 430 core                                  \n"
+            "#version 150                                       \n"
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
             "{                                                  \n"
@@ -306,7 +312,8 @@ namespace procdraw {
             "}                                                  \n"
         };
 
-        program2d_ = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        program2d_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}});
+        projection2dLoc = glGetUniformLocation(program2d_, "projection");
     }
 
     void GlRenderer::MakeTetrahedronVao()
@@ -446,11 +453,11 @@ namespace procdraw {
         auto inverseWorldMatrix = glm::inverse(worldMatrix_);
         auto modelSpaceLightDirection = glm::normalize(inverseWorldMatrix * lightDirection_);
 
-        glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
-        glUniform4fv(3, 1, glm::value_ptr(modelSpaceLightDirection));
-        glUniform4fv(4, 1, glm::value_ptr(lightColor_));
-        glUniform4fv(5, 1, glm::value_ptr(ambientLightColor_));
-        glUniform4f(6, materialR_, materialG_, materialB_, 1.0f);
+        glUniformMatrix4fv(worldViewProjectionLoc, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
+        glUniform4fv(lightDirectionLoc, 1, glm::value_ptr(modelSpaceLightDirection));
+        glUniform4fv(lightColorLoc, 1, glm::value_ptr(lightColor_));
+        glUniform4fv(ambientLightColorLoc, 1, glm::value_ptr(ambientLightColor_));
+        glUniform4f(materialColorLoc, materialR_, materialG_, materialB_, 1.0f);
     }
 
 }

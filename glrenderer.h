@@ -64,7 +64,13 @@ namespace procdraw {
         SDL_GLContext glcontext_;
         std::unique_ptr<FtTextRenderer> textRenderer_;
         GLuint program_;
+        GLint worldViewProjectionLoc;
+        GLint lightDirectionLoc;
+        GLint lightColorLoc;
+        GLint ambientLightColorLoc;
+        GLint materialColorLoc;
         GLuint program2d_;
+        GLint projection2dLoc;
         GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;

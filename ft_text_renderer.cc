@@ -52,8 +52,8 @@ namespace procdraw {
         // each time, only when the renderer size changes
         auto projection = glm::ortho(0.0f, static_cast<float>(width),
                                      static_cast<float>(height), 0.0f);
-        glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform1i(2, 0);
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniform1i(texLoc, 0);
         glDisable(GL_DEPTH_TEST);
     }
 
@@ -108,9 +108,9 @@ namespace procdraw {
     void FtTextRenderer::CompileShaders()
     {
         static const GLchar *vertexShaderSource[] = {
-            "#version 430 core                                                          \n"
-            "layout (location = 0) in vec4 position;                                    \n"
-            "layout (location = 1) uniform mat4 projection;                             \n"
+            "#version 150                                                               \n"
+            "uniform mat4 projection;                                                   \n"
+            "in vec4 position;                                                          \n"
             "out vec2 tc;                                                               \n"
             "void main(void)                                                            \n"
             "{                                                                          \n"
@@ -120,8 +120,8 @@ namespace procdraw {
         };
 
         static const GLchar *fragmentShaderSource[] = {
-            "#version 430 core                                  \n"
-            "layout (location = 2) uniform sampler2D tex;       \n"
+            "#version 150                                       \n"
+            "uniform sampler2D tex;                             \n"
             "in vec2 tc;                                        \n"
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
@@ -130,7 +130,9 @@ namespace procdraw {
             "}                                                  \n"
         };
 
-        program_ = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        program_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}});
+        projectionLoc = glGetUniformLocation(program_, "projection");
+        texLoc = glGetUniformLocation(program_, "tex");
     }
 
     void FtTextRenderer::MakeTextRectangleVao()

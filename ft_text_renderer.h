@@ -16,6 +16,8 @@ namespace procdraw {
         FT_Library ft_;
         FT_Face face_;
         GLuint program_;
+        GLint projectionLoc;
+        GLint texLoc;
         GLuint textRectangleVertexBuffer_;
         GLuint textRectangleVao_;
         GLfloat textRectangleVertices_[16] = {};

@@ -10,28 +10,33 @@ namespace procdraw {
         }
     }
 
-    GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource)
+    GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource,
+                          std::map<GLuint, const GLchar*> attribLocations)
     {
-        // Vertex shader
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-
-        // Fragment shader
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-
-        // Program
+        GLuint vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
+        GLuint fragmentShader = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
         GLuint program = glCreateProgram();
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
+
+        for (const auto& attrib : attribLocations) {
+            glBindAttribLocation(program, attrib.first, attrib.second);
+        }
+
         glLinkProgram(program);
 
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
         return program;
+    }
+
+    GLuint CompileShader(const GLchar **shaderSource, GLenum shaderType)
+    {
+        GLuint shader = glCreateShader(shaderType);
+        glShaderSource(shader, 1, shaderSource, NULL);
+        glCompileShader(shader);
+        return shader;
     }
 
 }
