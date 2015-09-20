@@ -28,6 +28,7 @@ Dependencies:
 * SDL2
 * GLEW
 * GLM
+* FreeType 2
 
 You can build Procdraw and run the tests using CMake:
 
