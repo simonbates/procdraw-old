@@ -15,8 +15,6 @@ In its current form, it consists of:
 * A simple data-flow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
 
-See: [Documentation/lang.md](Documentation/lang.md)
-
 Building on Linux
 -----------------
 

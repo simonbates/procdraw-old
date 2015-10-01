@@ -1,0 +1,11 @@
+element article {
+  attribute title { text },
+  element section {
+    attribute title { text },
+    element ul {
+      element li {
+        (text | element code { text })+
+      }+
+    }
+  }+
+}
