@@ -1,7 +1,9 @@
 element function-spec {
   attribute name { text },
-  element test {
-    attribute expr { text },
-    attribute expected { text }
-  }+
+  element examples {
+    element example {
+      attribute expr { text },
+      attribute value { text }
+    }+
+  }
 }
