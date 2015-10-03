@@ -69,4 +69,5 @@ target_link_libraries(procdraw
 
 # Tests
 
-add_subdirectory(tests)
+add_subdirectory(tests/unit_tests)
+add_subdirectory(tests/function_spec_tests)

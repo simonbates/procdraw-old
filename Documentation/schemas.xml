@@ -1,7 +1,9 @@
 <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
 
-  <documentElement localName="article" typeId="Procdraw Article"/>
+  <documentElement localName="article" typeId="procdraw-article"/>
+  <documentElement localName="function-spec" typeId="procdraw-function-spec"/>
 
-  <typeId id="Procdraw Article" uri="article.rnc"/>
+  <typeId id="procdraw-article" uri="article.rnc"/>
+  <typeId id="procdraw-function-spec" uri="function-spec.rnc"/>
 
 </locatingRules>

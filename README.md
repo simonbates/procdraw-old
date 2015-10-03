@@ -24,9 +24,12 @@ Dependencies:
 * GNU C++ compiler
 * GNU Readline
 * SDL2
+* OpenGL
 * GLEW
 * GLM
 * FreeType 2
+* Libxml2
+* xsltproc (for building the Documentation)
 
 You can build Procdraw and run the tests using CMake:
 

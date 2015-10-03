@@ -1,0 +1,7 @@
+<function-spec name="+">
+  <test expr="(+)" expected="0"/>
+  <test expr="(+ 0)" expected="0"/>
+  <test expr="(+ 2)" expected="2"/>
+  <test expr="(+ 2 3)" expected="5"/>
+  <test expr="(+ 2 3 4)" expected="9"/>
+</function-spec>

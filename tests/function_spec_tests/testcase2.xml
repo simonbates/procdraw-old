@@ -1,0 +1,4 @@
+<function-spec name="testcase2">
+  <test expr="(+ 2)" expected="0"/>
+  <test expr="(+ 3)" expected="3"/>
+</function-spec>
