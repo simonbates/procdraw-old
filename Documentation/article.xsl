@@ -27,4 +27,21 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="functionref">
+    <a>
+      <xsl:attribute name="href">
+        <xsl:choose>
+          <xsl:when test="@name = '+'">
+            <xsl:text>sum</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@name"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>.html</xsl:text>
+      </xsl:attribute>
+      <xsl:value-of select="@name"/>
+    </a>
+  </xsl:template>
+
 </xsl:stylesheet>

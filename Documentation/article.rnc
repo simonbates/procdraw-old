@@ -4,7 +4,9 @@ element article {
     attribute title { text },
     element ul {
       element li {
-        (text | element code { text })+
+        (text
+         | element code { text }
+         | element functionref { attribute name { text } } )+
       }+
     }
   }+

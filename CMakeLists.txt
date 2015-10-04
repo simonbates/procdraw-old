@@ -71,3 +71,7 @@ target_link_libraries(procdraw
 
 add_subdirectory(tests/unit_tests)
 add_subdirectory(tests/function_spec_tests)
+
+# Documentation
+
+add_subdirectory(Documentation)

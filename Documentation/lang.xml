@@ -15,7 +15,7 @@
   <section title="Special-forms and functions">
     <ul>
       <li><code>(* ...)</code></li>
-      <li><code>(+ ...)</code></li>
+      <li><functionref name="+"/></li>
       <li><code>(- number ...)</code></li>
       <li><code>(/ number ...)</code></li>
       <li><code>(apply function argument-list)</code></li>
