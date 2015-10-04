@@ -44,7 +44,13 @@ $ ctest --output-on-failure
 To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
 
 ```
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
+To generate the documentation, run `make html` in the `build` directory:
+
+```
+$ make html
 ```
 
 Running Procdraw from Emacs
