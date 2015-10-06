@@ -86,7 +86,7 @@ namespace procdraw {
         // TODO Cache the 2d projection matrix -- no need to calculate
         // each time, only when the renderer size changes
         auto projection = glm::ortho(0.0f, static_cast<float>(Width()), static_cast<float>(Height()), 0.0f);
-        glUniformMatrix4fv(projection2dLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(projection2dLoc_, 1, GL_FALSE, glm::value_ptr(projection));
         glDisable(GL_DEPTH_TEST);
     }
 
@@ -284,11 +284,11 @@ namespace procdraw {
 
         program_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}, {1, "normal"}});
 
-        worldViewProjectionLoc = glGetUniformLocation(program_, "world_view_projection");
-        lightDirectionLoc =  glGetUniformLocation(program_, "light_direction");
-        lightColorLoc = glGetUniformLocation(program_, "light_color");
-        ambientLightColorLoc = glGetUniformLocation(program_, "ambient_light_color");
-        materialColorLoc = glGetUniformLocation(program_, "material_color");
+        worldViewProjectionLoc_ = glGetUniformLocation(program_, "world_view_projection");
+        lightDirectionLoc_ =  glGetUniformLocation(program_, "light_direction");
+        lightColorLoc_ = glGetUniformLocation(program_, "light_color");
+        ambientLightColorLoc_ = glGetUniformLocation(program_, "ambient_light_color");
+        materialColorLoc_ = glGetUniformLocation(program_, "material_color");
     }
 
     void GlRenderer::CompileShaders2d()
@@ -313,7 +313,7 @@ namespace procdraw {
         };
 
         program2d_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}});
-        projection2dLoc = glGetUniformLocation(program2d_, "projection");
+        projection2dLoc_ = glGetUniformLocation(program2d_, "projection");
     }
 
     void GlRenderer::MakeTetrahedronVao()
@@ -453,11 +453,11 @@ namespace procdraw {
         auto inverseWorldMatrix = glm::inverse(worldMatrix_);
         auto modelSpaceLightDirection = glm::normalize(inverseWorldMatrix * lightDirection_);
 
-        glUniformMatrix4fv(worldViewProjectionLoc, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
-        glUniform4fv(lightDirectionLoc, 1, glm::value_ptr(modelSpaceLightDirection));
-        glUniform4fv(lightColorLoc, 1, glm::value_ptr(lightColor_));
-        glUniform4fv(ambientLightColorLoc, 1, glm::value_ptr(ambientLightColor_));
-        glUniform4f(materialColorLoc, materialR_, materialG_, materialB_, 1.0f);
+        glUniformMatrix4fv(worldViewProjectionLoc_, 1, GL_FALSE, glm::value_ptr(worldViewProjection));
+        glUniform4fv(lightDirectionLoc_, 1, glm::value_ptr(modelSpaceLightDirection));
+        glUniform4fv(lightColorLoc_, 1, glm::value_ptr(lightColor_));
+        glUniform4fv(ambientLightColorLoc_, 1, glm::value_ptr(ambientLightColor_));
+        glUniform4f(materialColorLoc_, materialR_, materialG_, materialB_, 1.0f);
     }
 
 }

@@ -16,17 +16,22 @@ namespace procdraw {
         FT_Library ft_;
         FT_Face face_;
         GLuint program_;
-        GLint projectionLoc;
-        GLint texLoc;
-        GLuint textRectangleVertexBuffer_;
-        GLuint textRectangleVao_;
-        GLfloat textRectangleVertices_[16] = {};
-        GLuint textTexture_;
+        GLint projectionLoc_;
+        GLint texLoc_;
+        GLuint glyphQuadVertexBuffer_;
+        GLuint glyphQuadVao_;
+        GLfloat glyphQuadVertices_[16] = {};
+        GLuint fontTexture_;
+        GLsizei fontTextureWidth_ = 0;
+        GLsizei fontTextureHeight_ = 0;
         void Cleanup();
         void CompileShaders();
-        void MakeTextRectangleVao();
-        void MakeTextTexture();
-        FT_GlyphSlot LoadChar();
+        void MakeGlyphQuadVao();
+        void MakeFontTexture();
+        void CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
+                                  int *width, int *height);
+        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode);
+        void RenderChar(FT_ULong charCode);
     };
 
 }
