@@ -25,6 +25,7 @@ namespace procdraw {
         SetGlobalCFunction("car", lisp_Car, nullptr);
         SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
         SetGlobalCFunction("clear", lisp_Clear, nullptr);
+        SetGlobalCFunction("cons", lisp_Cons, nullptr);
         SetGlobalCFunction("eq", lisp_Eq, nullptr);
         SetGlobalCFunction("functionp", lisp_Functionp, nullptr);
         SetGlobalCFunction("get", lisp_Get, nullptr);

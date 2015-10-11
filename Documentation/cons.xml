@@ -1,0 +1,8 @@
+<function-spec name="cons">
+  <syntax>(cons obj1 obj2)</syntax>
+  <examples>
+    <example expr="(cons 'a 'b)" value="(a . b)"/>
+    <example expr="(cons 'a nil)" value="(a)"/>
+    <example expr="(cons 'a '(b c d))" value="(a b c d)"/>
+  </examples>
+</function-spec>

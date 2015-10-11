@@ -17,6 +17,7 @@ function(add_function_spec name)
 endfunction()
 
 add_article(lang)
+add_function_spec(cons)
 add_function_spec(functionp)
 add_function_spec(memb)
 add_function_spec(sum)
@@ -24,6 +25,7 @@ add_function_spec(sum)
 add_custom_target(html
                   DEPENDS
                   lang.html
+                  cons.html
                   functionp.html
                   memb.html
                   sum.html)

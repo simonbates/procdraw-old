@@ -9,6 +9,7 @@ namespace procdraw {
     LispObjectPtr lisp_Car(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
     LispObjectPtr lisp_Cdr(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
     LispObjectPtr lisp_Clear(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
+    LispObjectPtr lisp_Cons(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
     LispObjectPtr lisp_Difference(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
     LispObjectPtr lisp_Eq(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);
     LispObjectPtr lisp_Functionp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data);

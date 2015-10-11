@@ -22,6 +22,7 @@
       <li><code>(assoc key alist)</code></li>
       <li><code>(car obj)</code></li>
       <li><code>(cdr obj)</code></li>
+      <li><functionref name="cons"/></li>
       <li><code>(def function-name arg-list body)</code></li>
       <li><code>(eq obj1 obj2)</code></li>
       <li><functionref name="functionp"/></li>

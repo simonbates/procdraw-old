@@ -39,6 +39,11 @@ namespace procdraw {
         return L->Clear(L->Car(args));
     }
 
+    LispObjectPtr lisp_Cons(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Cons(L->Car(args), L->Cadr(args));
+    }
+
     LispObjectPtr lisp_Difference(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         // TODO difference with 0 args? return a value or complain that not enough args?
