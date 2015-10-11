@@ -1,0 +1,9 @@
+<function-spec name="functionp">
+  <syntax>(functionp obj)</syntax>
+  <examples>
+    <example expr="(functionp nil)" value="false"/>
+    <example expr="(functionp '(a))" value="false"/>
+    <example expr="(functionp (lambda () 1))" value="true"/>
+    <example expr="(functionp functionp)" value="true"/>
+  </examples>
+</function-spec>

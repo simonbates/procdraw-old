@@ -1,8 +1,8 @@
 (progn
   (setq orbit1 (saw))
-  (put orbit1 'freq (/ (* 60 11)))
+  (put-slot orbit1 'freq (/ (* 60 11)))
   (setq rotation1 (saw))
-  (put rotation1 'freq (/ (* 60 5)))
+  (put-slot rotation1 'freq (/ (* 60 5)))
   (def planet (distance rotation size)
     (translate distance 0 0)
     (rotate-y rotation)

@@ -24,10 +24,12 @@
       <li><code>(cdr obj)</code></li>
       <li><code>(def function-name arg-list body)</code></li>
       <li><code>(eq obj1 obj2)</code></li>
+      <li><functionref name="functionp"/></li>
       <li><code>(if test then else)</code></li>
       <li><code>(lambda arg-list body)</code></li>
       <li><code>(lerp start stop val)</code></li>
       <li><code>(map-range start1 stop1 start2 stop2 val)</code></li>
+      <li><functionref name="memb"/></li>
       <li><code>(norm start stop val)</code></li>
       <li><code>(progn action ...)</code></li>
       <li><code>(putassoc key val alist)</code></li>
@@ -51,8 +53,9 @@
   <section title="Signals">
     <ul>
       <li><code>(make-signal stepfun)</code></li>
+      <li><code>(get-slot signal key)</code></li>
+      <li><code>(put-slot signal key val)</code></li>
       <li><code>(=> source dest-signal dest-key &amp;optional mapfun)</code></li>
-      <li><code>('step signal)</code></li>
       <li><code>(sigval signal)</code></li>
       <li><code>(saw)</code></li>
       <li><code>(sin-osc)</code></li>

@@ -1,8 +1,8 @@
 (progn
   (setq sin1 (sin-osc))
-  (put sin1 'freq (/ 120))
+  (put-slot sin1 'freq (/ 120))
   (setq saw1 (saw))
-  (put saw1 'freq (/ 120))
+  (put-slot saw1 'freq (/ 120))
   (def draw ()
     (background 0 0 0)
     (translate (lerp -4 4 (sigval saw1))

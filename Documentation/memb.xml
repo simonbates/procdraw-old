@@ -1,0 +1,11 @@
+<function-spec name="memb">
+  <syntax>(memb obj list)</syntax>
+  <examples>
+    <example expr="(memb nil nil)" value="false"/>
+    <example expr="(memb 'a nil)" value="false"/>
+    <example expr="(memb 'a '(b))" value="false"/>
+    <example expr="(memb 'a '(a))" value="true"/>
+    <example expr="(memb 'a '(a b))" value="true"/>
+    <example expr="(memb 'a '(b a))" value="true"/>
+  </examples>
+</function-spec>

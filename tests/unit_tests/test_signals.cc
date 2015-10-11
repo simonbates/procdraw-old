@@ -8,22 +8,12 @@ TEST_CASE("Signals")
     procdraw::LispInterpreter L;
     procdraw::RegisterSignals(&L);
 
-    // TODO Change the step function -- return value rather than (put self 'val1 value)
-    // The signal stepping infrastructure is responsible for storing the value
-    // from step.
-
-    L.Eval(L.Read("(setq step-incr (lambda (self) (put self 'val1 (+ (get self 'val1) (get self 'incr)))))"));
+    L.Eval(L.Read("(setq step-incr (lambda (self) (put-slot self 'val (+ (get-slot self 'val) (get-slot self 'incr)))))"));
     L.Eval(L.Read("(setq sig1 (make-signal step-incr))"));
-    L.Eval(L.Read("(put sig1 'val1 1)"));
-    L.Eval(L.Read("(put sig1 'incr 2)"));
-
-    SECTION("step") {
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get sig1 'val1)"))) == 1);
-        L.Eval(L.Read("('step sig1)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get sig1 'val1)"))) == 3);
-        L.Eval(L.Read("('step sig1)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get sig1 'val1)"))) == 5);
-    }
+    L.Eval(L.Read("(put-slot sig1 'val 1)"));
+    L.Eval(L.Read("(put-slot sig1 'incr 2)"));
+    REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sig1 'val)"))) == 1);
+    REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sig1 'incr)"))) == 2);
 
     SECTION("sigval") {
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 3);
@@ -39,8 +29,8 @@ TEST_CASE("Signals")
         // 2     3     3    4     step 1
         // 2     5     5    9     step 2
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
-        L.Eval(L.Read("(put sig2 'val1 1)"));
-        L.Eval(L.Read("(put sig2 'incr 0)"));
+        L.Eval(L.Read("(put-slot sig2 'val 1)"));
+        L.Eval(L.Read("(put-slot sig2 'incr 0)"));
         L.Eval(L.Read("(=> sig1 sig2 'incr)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 4);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 4);
@@ -58,8 +48,8 @@ TEST_CASE("Signals")
         // 2     3     30   31    step 1
         // 2     5     50   81    step 2
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
-        L.Eval(L.Read("(put sig2 'val1 1)"));
-        L.Eval(L.Read("(put sig2 'incr 0)"));
+        L.Eval(L.Read("(put-slot sig2 'val 1)"));
+        L.Eval(L.Read("(put-slot sig2 'incr 0)"));
         L.Eval(L.Read("(=> sig1 sig2 'incr (lambda (incr) (* 10 incr)))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 31);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 31);
@@ -72,8 +62,8 @@ TEST_CASE("Signals")
 
     SECTION("=> function source") {
         L.Eval(L.Read("(setq sig-func-source (make-signal step-incr))"));
-        L.Eval(L.Read("(put sig-func-source 'val1 4)"));
-        L.Eval(L.Read("(put sig-func-source 'incr 0)"));
+        L.Eval(L.Read("(put-slot sig-func-source 'val 4)"));
+        L.Eval(L.Read("(put-slot sig-func-source 'incr 0)"));
         L.Eval(L.Read("(=> (lambda () 10) sig-func-source 'incr)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
@@ -83,8 +73,8 @@ TEST_CASE("Signals")
 
     SECTION("=> function source with mapping function") {
         L.Eval(L.Read("(setq sig-func-source (make-signal step-incr))"));
-        L.Eval(L.Read("(put sig-func-source 'val1 4)"));
-        L.Eval(L.Read("(put sig-func-source 'incr 0)"));
+        L.Eval(L.Read("(put-slot sig-func-source 'val 4)"));
+        L.Eval(L.Read("(put-slot sig-func-source 'incr 0)"));
         L.Eval(L.Read("(=> (lambda () 10) sig-func-source 'incr (lambda (incr) (* 2 incr)))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
@@ -94,11 +84,11 @@ TEST_CASE("Signals")
 
     SECTION("saw") {
         L.Eval(L.Read("(setq saw1 (saw))"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get saw1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get saw1 'val1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'val)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0);
 
-        L.Eval(L.Read("(put saw1 'freq (/ 3 8))"));
+        L.Eval(L.Read("(put-slot saw1 'freq (/ 3 8))"));
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.375);
         L.Eval(L.Read("(clear-stepped-signals)"));
@@ -106,7 +96,7 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.125);
 
-        L.Eval(L.Read("(put saw1 'freq (/ -5 8))"));
+        L.Eval(L.Read("(put-slot saw1 'freq (/ -5 8))"));
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0.5);
         L.Eval(L.Read("(clear-stepped-signals)"));
@@ -115,11 +105,11 @@ TEST_CASE("Signals")
 
     SECTION("tri") {
         L.Eval(L.Read("(setq tri1 (tri))"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get tri1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get tri1 'val1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot tri1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot tri1 'val)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0);
 
-        L.Eval(L.Read("(put tri1 'freq (/ 4))"));
+        L.Eval(L.Read("(put-slot tri1 'freq (/ 4))"));
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
         L.Eval(L.Read("(clear-stepped-signals)"));
@@ -131,7 +121,7 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.5);
 
-        L.Eval(L.Read("(put tri1 'freq (/ -3 8))"));
+        L.Eval(L.Read("(put-slot tri1 'freq (/ -3 8))"));
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0.25);
         L.Eval(L.Read("(clear-stepped-signals)"));
@@ -144,11 +134,11 @@ TEST_CASE("Signals")
 
     SECTION("sin-osc") {
         L.Eval(L.Read("(setq sin1 (sin-osc))"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get sin1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get sin1 'val1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sin1 'freq)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sin1 'val)"))) == 0);
         REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0.5, 0.01));
 
-        L.Eval(L.Read("(put sin1 'freq (/ 4))"));
+        L.Eval(L.Read("(put-slot sin1 'freq (/ 4))"));
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 1, 0.01));
         L.Eval(L.Read("(clear-stepped-signals)"));

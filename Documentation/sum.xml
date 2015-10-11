@@ -1,4 +1,5 @@
 <function-spec name="+">
+  <syntax>(+ ...)</syntax>
   <examples>
     <example expr="(+)" value="0"/>
     <example expr="(+ 0)" value="0"/>

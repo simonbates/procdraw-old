@@ -16,6 +16,11 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="syntax">
+    <h2>Syntax</h2>
+    <pre><xsl:value-of select="."/></pre>
+  </xsl:template>
+
   <xsl:template match="examples">
     <h2>Examples</h2>
     <pre>

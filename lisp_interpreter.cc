@@ -26,11 +26,13 @@ namespace procdraw {
         SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
         SetGlobalCFunction("clear", lisp_Clear, nullptr);
         SetGlobalCFunction("eq", lisp_Eq, nullptr);
+        SetGlobalCFunction("functionp", lisp_Functionp, nullptr);
         SetGlobalCFunction("get", lisp_Get, nullptr);
         SetGlobalCFunction("keys", lisp_Keys, nullptr);
         SetGlobalCFunction("lerp", lisp_Lerp, nullptr);
         SetGlobalCFunction("make-table", lisp_MakeTable, nullptr);
         SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
+        SetGlobalCFunction("memb", lisp_Memb, nullptr);
         SetGlobalCFunction("norm", lisp_Norm, nullptr);
         SetGlobalCFunction("not", lisp_Not, nullptr);
         SetGlobalCFunction("put", lisp_Put, nullptr);
@@ -128,6 +130,11 @@ namespace procdraw {
             a = Cdr(a);
         }
         return env;
+    }
+
+    LispObjectPtr LispInterpreter::BoolToLisp(bool b)
+    {
+        return b ? True : False;
     }
 
     LispObjectPtr LispInterpreter::Caar(LispObjectPtr obj)
@@ -242,6 +249,13 @@ namespace procdraw {
         }
     }
 
+    bool LispInterpreter::Functionp(LispObjectPtr obj)
+    {
+        auto type = TypeOf(obj);
+        return (type == LispObjectType::Cons && Car(obj) == S_LAMBDA)
+               || type == LispObjectType::CFunction;
+    }
+
     LispObjectPtr LispInterpreter::MakeList(std::vector<LispObjectPtr> objs)
     {
         auto list1 = Nil;
@@ -249,6 +263,16 @@ namespace procdraw {
             list1 = Cons(*it, list1);
         }
         return list1;
+    }
+
+    bool LispInterpreter::Memb(LispObjectPtr obj, LispObjectPtr list)
+    {
+        for (LispObjectPtr n = list; !Null(n); n = Cdr(n)) {
+            if (Eq(obj, Car(n))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     LispObjectPtr LispInterpreter::Not(LispObjectPtr obj)

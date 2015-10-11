@@ -62,7 +62,12 @@ namespace procdraw {
 
     LispObjectPtr lisp_Eq(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->Eq(L->Car(args), L->Cadr(args)) ? L->True : L->False;
+        return L->BoolToLisp(L->Eq(L->Car(args), L->Cadr(args)));
+    }
+
+    LispObjectPtr lisp_Functionp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->BoolToLisp(L->Functionp(L->Car(args)));
     }
 
     LispObjectPtr lisp_Get(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -98,6 +103,11 @@ namespace procdraw {
         auto stop2 = L->NumVal(L->Cadddr(args));
         auto val = L->NumVal(L->Caddddr(args));
         return L->MakeNumber(MapRange(start1, stop1, start2, stop2, val));
+    }
+
+    LispObjectPtr lisp_Memb(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->BoolToLisp(L->Memb(L->Car(args), L->Cadr(args)));
     }
 
     LispObjectPtr lisp_Norm(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)

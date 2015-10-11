@@ -55,6 +55,7 @@ namespace procdraw {
         LispObjectPtr ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Assoc(LispObjectPtr key, LispObjectPtr alist);
         bool Atom(LispObjectPtr obj);
+        LispObjectPtr BoolToLisp(bool b);
         LispObjectPtr Caar(LispObjectPtr obj);
         LispObjectPtr Cadr(LispObjectPtr obj);
         LispObjectPtr Cdar(LispObjectPtr obj);
@@ -68,7 +69,9 @@ namespace procdraw {
         LispObjectPtr Eval(LispObjectPtr exp);
         LispObjectPtr Evif(LispObjectPtr arglist, LispObjectPtr env);
         LispObjectPtr Evlis(LispObjectPtr arglist, LispObjectPtr env);
+        bool Functionp(LispObjectPtr obj);
         LispObjectPtr MakeList(std::vector<LispObjectPtr> objs);
+        bool Memb(LispObjectPtr obj, LispObjectPtr list);
         LispObjectPtr Not(LispObjectPtr obj);
         std::string PrintToString(LispObjectPtr obj);
         LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);

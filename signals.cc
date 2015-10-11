@@ -26,67 +26,104 @@ namespace procdraw {
         }
     }
 
+    static LispObjectPtr PutassocHolder(LispInterpreter *L, LispObjectPtr key,
+                                        LispObjectPtr val, LispObjectPtr holder)
+    {
+        auto alist = L->Car(holder);
+        if (L->Null(alist)) {
+            L->Rplaca(holder, L->Cons(L->Cons(key, val), L->Nil));
+        }
+        else {
+            L->Putassoc(key, val, alist);
+        }
+        return val;
+    }
+
+    static LispObjectPtr SlotsHolder(LispInterpreter *L, LispObjectPtr signal)
+    {
+        return L->Cdr(signal);
+    }
+
+    static LispObjectPtr InputsHolder(LispInterpreter *L, LispObjectPtr signal)
+    {
+        return L->Cddr(signal);
+    }
+
+    static LispObjectPtr GetSlot(LispInterpreter *L, LispObjectPtr signal, LispObjectPtr key)
+    {
+        return L->Cdr(L->Assoc(key, L->Car(SlotsHolder(L, signal))));
+    }
+
+    static LispObjectPtr PutSlot(LispInterpreter *L, LispObjectPtr signal,
+                                 LispObjectPtr key, LispObjectPtr val)
+    {
+        return PutassocHolder(L, key, val, SlotsHolder(L, signal));
+    }
+
     static LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
     {
-        auto signal = L->MakeTable();
-        L->Put(signal, L->SymbolRef("inputs"), L->MakeTable());
-        L->Put(signal, L->SymbolRef("step"), stepFun);
+        auto signal = L->MakeList({ L->SymbolRef("signal"), L->Nil, L->Nil });
+        PutSlot(L, signal, L->SymbolRef("step"), stepFun);
         return signal;
     }
 
-    static LispObjectPtr GetSignalInputs(LispInterpreter *L, LispObjectPtr signal)
+    static bool Signalp(LispInterpreter *L, LispObjectPtr obj)
     {
-        return L->Get(signal, L->SymbolRef("inputs"));
+        return (L->TypeOf(obj) == LispObjectType::Cons) && (L->Car(obj) == L->SymbolRef("signal"));
     }
 
-    static LispObjectPtr GetSteppedSignals(LispInterpreter *L)
+    static bool HasBeenStepped(LispInterpreter *L, LispObjectPtr signal)
     {
-        return L->SymbolValue(L->SymbolRef("stepped-signals"));
+        return L->Memb(signal, L->SymbolValue(L->SymbolRef("stepped-signals")));
     }
 
-    static LispObjectPtr Sigval(LispInterpreter *L, LispObjectPtr signal,
-                                LispObjectPtr steppedSignals, LispObjectPtr env)
+    static void RecordAsStepped(LispInterpreter *L, LispObjectPtr signal)
     {
-        if (L->Null(L->Get(steppedSignals, signal))) {
-            // apply inputs
-            auto inputs = GetSignalInputs(L, signal);
-            for (LispObjectPtr n = L->Keys(inputs); !L->Null(n); n = L->Cdr(n)) {
-                auto key = L->Car(n);
-                auto sourceSpec = L->Get(inputs, key);
+        L->Set(L->SymbolRef("stepped-signals"),
+               L->Cons(signal, L->SymbolValue(L->SymbolRef("stepped-signals"))),
+               L->Nil);
+    }
+
+    static LispObjectPtr Sigval(LispInterpreter *L, LispObjectPtr signal, LispObjectPtr env)
+    {
+        if (!HasBeenStepped(L, signal)) {
+            // Apply inputs
+            for (LispObjectPtr n = L->Car(InputsHolder(L, signal)); !L->Null(n); n = L->Cdr(n)) {
+                auto key = L->Caar(n);
+                auto sourceSpec = L->Cdar(n);
                 auto source = L->Car(sourceSpec);
                 auto mapFun = L->Cdr(sourceSpec);
 
                 LispObjectPtr sourceVal = L->Nil;
 
-                auto sourceType = L->TypeOf(source);
-                if (sourceType == LispObjectType::Table) {
-                    sourceVal = Sigval(L, source, steppedSignals, env);
+                if (Signalp(L, source)) {
+                    sourceVal = Sigval(L, source, env);
                 }
-                else if (sourceType == LispObjectType::Cons || sourceType == LispObjectType::CFunction) {
+                else if (L->Functionp(source)) {
                     sourceVal = L->Apply(source, L->Nil, env);
                 }
 
                 if (L->Null(mapFun)) {
-                    L->Put(signal, key, sourceVal);
+                    PutSlot(L, signal, key, sourceVal);
                 }
                 else {
-                    L->Put(signal, key, L->Apply(mapFun, L->Cons(sourceVal, L->Nil), env));
+                    PutSlot(L, signal, key, L->Apply(mapFun, L->Cons(sourceVal, L->Nil), env));
                 }
             }
-            // step
-            L->ApplyTableMethod(L->SymbolRef("step"), signal, L->Nil, env);
-            L->Put(steppedSignals, signal, L->True);
+            // Step
+            L->Apply(GetSlot(L, signal, L->SymbolRef("step")), L->Cons(signal, L->Nil), env);
+            RecordAsStepped(L, signal);
         }
 
-        return L->Get(signal, L->SymbolRef("val1"));
+        return GetSlot(L, signal, L->SymbolRef("val"));
     }
 
     static LispObjectPtr MakeWavetableOscillator(LispInterpreter *L, LispObjectPtr stepFun)
     {
         auto sig = MakeSignal(L, stepFun);
-        L->Put(sig, L->SymbolRef("freq"), L->MakeNumber(0));
-        L->Put(sig, L->SymbolRef("index"), L->MakeNumber(0));
-        L->Put(sig, L->SymbolRef("val1"), L->MakeNumber(0));
+        PutSlot(L, sig, L->SymbolRef("freq"), L->MakeNumber(0));
+        PutSlot(L, sig, L->SymbolRef("index"), L->MakeNumber(0));
+        PutSlot(L, sig, L->SymbolRef("val"), L->MakeNumber(0));
         return sig;
     }
 
@@ -94,24 +131,34 @@ namespace procdraw {
             int wavetableLen)
     {
         int wavetableEnd = wavetableLen - 1;
-        double incr = L->NumVal(L->Get(signal, L->SymbolRef("freq"))) * wavetableEnd;
+        double incr = L->NumVal(GetSlot(L, signal, L->SymbolRef("freq"))) * wavetableEnd;
         auto indexKey = L->SymbolRef("index");
-        double index = L->NumVal(L->Get(signal, indexKey));
+        double index = L->NumVal(GetSlot(L, signal, indexKey));
         index = Wrap(0.0, wavetableEnd, index + incr);
         if (index >= wavetableEnd || index < 0.0) {
             index = 0.0;
         }
-        L->Put(signal, indexKey, L->MakeNumber(index));
+        PutSlot(L, signal, indexKey, L->MakeNumber(index));
         int indexBefore = floor(index);
-        double val1 = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
-        auto val1Num = L->MakeNumber(val1);
-        L->Put(signal, L->SymbolRef("val1"), val1Num);
-        return val1Num;
+        double val = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
+        auto valNum = L->MakeNumber(val);
+        PutSlot(L, signal, L->SymbolRef("val"), valNum);
+        return valNum;
     }
 
     static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return MakeSignal(L, L->Car(args));
+    }
+
+    static LispObjectPtr lisp_GetSlot(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return GetSlot(L, L->Car(args), L->Cadr(args));
+    }
+
+    static LispObjectPtr lisp_PutSlot(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return PutSlot(L, L->Car(args), L->Cadr(args), L->Caddr(args));
     }
 
     static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -121,36 +168,35 @@ namespace procdraw {
         auto destKey = L->Caddr(args);
         auto mapFun = L->Cadddr(args);
 
-        return L->Put(GetSignalInputs(L, destSignal), destKey, L->Cons(source, mapFun));
+        return PutassocHolder(L, destKey, L->Cons(source, mapFun), InputsHolder(L, destSignal));
     }
 
     static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return Sigval(L, L->Car(args), GetSteppedSignals(L), env);
+        return Sigval(L, L->Car(args), env);
     }
 
     static LispObjectPtr lisp_ClearSteppedSignals(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        auto steppedSignals = GetSteppedSignals(L);
-        return L->Clear(steppedSignals);
+        return L->Set(L->SymbolRef("stepped-signals"), L->Nil, L->Nil);
     }
 
     static LispObjectPtr lisp_StepSaw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto self = L->Car(args);
-        auto val1Key = L->SymbolRef("val1");
-        double val1 = L->NumVal(L->Get(self, val1Key));
-        val1 = Wrap(0.0, 1.0, val1 + L->NumVal(L->Get(self, L->SymbolRef("freq"))));
-        auto val1Num = L->MakeNumber(val1);
-        L->Put(self, val1Key, val1Num);
-        return val1Num;
+        auto valKey = L->SymbolRef("val");
+        double val = L->NumVal(GetSlot(L, self, valKey));
+        val = Wrap(0.0, 1.0, val + L->NumVal(GetSlot(L, self, L->SymbolRef("freq"))));
+        auto valNum = L->MakeNumber(val);
+        PutSlot(L, self, valKey, valNum);
+        return valNum;
     }
 
     static LispObjectPtr lisp_Saw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto saw = MakeSignal(L, L->MakeCFunction(lisp_StepSaw, nullptr));
-        L->Put(saw, L->SymbolRef("freq"), L->MakeNumber(0));
-        L->Put(saw, L->SymbolRef("val1"), L->MakeNumber(0));
+        PutSlot(L, saw, L->SymbolRef("freq"), L->MakeNumber(0));
+        PutSlot(L, saw, L->SymbolRef("val"), L->MakeNumber(0));
         return saw;
     }
 
@@ -178,8 +224,10 @@ namespace procdraw {
     {
         InitTriWavetable();
         InitSinWavetable();
-        L->Set(L->SymbolRef("stepped-signals"), L->MakeTable(), L->Nil);
+        L->Set(L->SymbolRef("stepped-signals"), L->Nil, L->Nil);
         L->SetGlobalCFunction("make-signal", lisp_MakeSignal, nullptr);
+        L->SetGlobalCFunction("get-slot", lisp_GetSlot, nullptr);
+        L->SetGlobalCFunction("put-slot", lisp_PutSlot, nullptr);
         L->SetGlobalCFunction("=>", lisp_Connect, nullptr);
         L->SetGlobalCFunction("sigval", lisp_Sigval, nullptr);
         L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals, nullptr);
