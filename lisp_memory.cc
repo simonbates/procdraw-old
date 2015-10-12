@@ -64,12 +64,6 @@ namespace procdraw {
         std::string str_;
     };
 
-    class LispTable : public LispObject {
-    public:
-        LispTable() : LispObject(LispObjectType::Table) { }
-        std::unordered_map<LispObjectPtr, LispObjectPtr> tableData;
-    };
-
     void LispInterpreter::InitSymbolLiterals()
     {
         Nil = std::make_shared<LispObject>(LispObjectType::Null);
@@ -101,11 +95,6 @@ namespace procdraw {
     LispObjectPtr LispInterpreter::MakeString(const std::string &str)
     {
         return std::make_shared<LispString>(str);
-    }
-
-    LispObjectPtr LispInterpreter::MakeTable()
-    {
-        return std::make_shared<LispTable>();
     }
 
     LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
@@ -241,56 +230,6 @@ namespace procdraw {
         }
         // TODO if not LispObjectType::Cons?
         return cons;
-    }
-
-    LispObjectPtr LispInterpreter::Get(LispObjectPtr table, LispObjectPtr key)
-    {
-        if (table->Type == LispObjectType::Table
-                && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table)) {
-            auto tableData = static_cast<LispTable*>(table.get())->tableData;
-            auto found = tableData.find(key);
-            if (found != tableData.end()) {
-                return found->second;
-            }
-            else {
-                return Nil;
-            }
-        }
-        // TODO if not expected types?
-        return Nil;
-    }
-
-    LispObjectPtr LispInterpreter::Put(LispObjectPtr table, LispObjectPtr key, LispObjectPtr val)
-    {
-        if (table->Type == LispObjectType::Table
-                && (key->Type == LispObjectType::Symbol || key->Type == LispObjectType::Table)) {
-            static_cast<LispTable*>(table.get())->tableData[key] = val;
-            return val;
-        }
-        // TODO if not expected types?
-        return Nil;
-    }
-
-    LispObjectPtr LispInterpreter::Keys(LispObjectPtr table)
-    {
-        LispObjectPtr keys = Nil;
-        if (table->Type == LispObjectType::Table) {
-            auto tableData = static_cast<LispTable*>(table.get())->tableData;
-            for (auto it = tableData.begin(); it != tableData.end(); ++it) {
-                keys = Cons(it->first, keys);
-            }
-        }
-        return keys;
-    }
-
-    LispObjectPtr LispInterpreter::Clear(LispObjectPtr table)
-    {
-        if (table->Type == LispObjectType::Table) {
-            static_cast<LispTable*>(table.get())->tableData.clear();
-            return table;
-        }
-        // TODO else if not a Table, complain?
-        return Nil;
     }
 
     LispObjectPtr LispInterpreter::ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env)

@@ -24,19 +24,14 @@ namespace procdraw {
         SetGlobalCFunction("assoc", lisp_Assoc, nullptr);
         SetGlobalCFunction("car", lisp_Car, nullptr);
         SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
-        SetGlobalCFunction("clear", lisp_Clear, nullptr);
         SetGlobalCFunction("cons", lisp_Cons, nullptr);
         SetGlobalCFunction("eq", lisp_Eq, nullptr);
         SetGlobalCFunction("functionp", lisp_Functionp, nullptr);
-        SetGlobalCFunction("get", lisp_Get, nullptr);
-        SetGlobalCFunction("keys", lisp_Keys, nullptr);
         SetGlobalCFunction("lerp", lisp_Lerp, nullptr);
-        SetGlobalCFunction("make-table", lisp_MakeTable, nullptr);
         SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
         SetGlobalCFunction("memb", lisp_Memb, nullptr);
         SetGlobalCFunction("norm", lisp_Norm, nullptr);
         SetGlobalCFunction("not", lisp_Not, nullptr);
-        SetGlobalCFunction("put", lisp_Put, nullptr);
         SetGlobalCFunction("putassoc", lisp_Putassoc, nullptr);
         SetGlobalCFunction("wrap", lisp_Wrap, nullptr);
         // Constants
@@ -72,18 +67,10 @@ namespace procdraw {
             return ApplyCFunction(fun, args, env);
         case LispObjectType::Cons:
             return Progn(Cddr(fun), Bind(Cadr(fun), args, env));
-        case LispObjectType::Symbol:
-            return Apply(Get(Car(args), fun), args, env);
         default:
             // TODO complain
             return Nil;
         }
-    }
-
-    LispObjectPtr LispInterpreter::ApplyTableMethod(LispObjectPtr key, LispObjectPtr table, LispObjectPtr args,
-            LispObjectPtr env)
-    {
-        return Apply(key, Cons(table, args), env);
     }
 
     LispObjectPtr LispInterpreter::Assoc1(LispObjectPtr key, LispObjectPtr alist, bool *found)

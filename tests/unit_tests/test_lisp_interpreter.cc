@@ -145,46 +145,6 @@ TEST_CASE("LispInterpreter::Rplacd()")
     REQUIRE(L.Eq(cons, result));
 }
 
-TEST_CASE("Tables")
-{
-
-    procdraw::LispInterpreter L;
-
-    auto table = L.MakeTable();
-
-    SECTION("Get, Put, and Clear") {
-        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
-        REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42))) == 42);
-        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 42);
-        REQUIRE(L.NumVal(L.Put(table, L.SymbolRef("key1"), L.MakeNumber(10))) == 10);
-        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
-        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
-        L.Put(table, L.SymbolRef("key2"), L.MakeNumber(100));
-        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key2"))) == 100);
-        REQUIRE(L.NumVal(L.Get(table, L.SymbolRef("key1"))) == 10);
-        L.Clear(table);
-        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key1"))));
-        REQUIRE(L.Null(L.Get(table, L.SymbolRef("key2"))));
-    }
-
-    SECTION("Keys") {
-        REQUIRE(L.Null(L.Keys(table)));
-
-        L.Put(table, L.SymbolRef("key1"), L.MakeNumber(42));
-        auto singleKey = L.Keys(table);
-        REQUIRE(L.SymbolName(L.Car(singleKey)) == "key1");
-        REQUIRE(L.Null(L.Cdr(singleKey)));
-
-        L.Put(table, L.SymbolRef("key2"), L.MakeNumber(10));
-        auto twoKeys = L.Keys(table);
-        REQUIRE(L.Null(L.Cddr(twoKeys)));
-        auto foundExpectedKeys = (L.SymbolName(L.Car(twoKeys)) == "key1" && L.SymbolName(L.Cadr(twoKeys)) == "key2")
-                                 || (L.SymbolName(L.Car(twoKeys)) == "key2" && L.SymbolName(L.Cadr(twoKeys)) == "key1");
-        REQUIRE(foundExpectedKeys);
-    }
-
-}
-
 TEST_CASE("LispInterpreter implicit type conversion")
 {
 
@@ -207,8 +167,6 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE(std::isnan(L.NumVal(L.False)));
             // String
             REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
-            // Table
-            REQUIRE(std::isnan(L.NumVal(L.MakeTable())));
             // Eof
             REQUIRE(std::isnan(L.NumVal(L.Eof)));
         }
@@ -231,8 +189,6 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE_FALSE(L.BoolVal(L.False));
             // String
             REQUIRE(L.BoolVal(L.MakeString("some string")));
-            // Table
-            REQUIRE(L.BoolVal(L.MakeTable()));
             // Eof
             REQUIRE(L.BoolVal(L.Eof));
         }
@@ -567,47 +523,6 @@ TEST_CASE("LispInterpreter::Eval")
             REQUIRE(L.NumVal(L.Eval(L.Read("(wrap -20 -10 -33)"))) == -13.0);
         }
 
-    }
-
-    SECTION("Tables") {
-        L.Eval(L.Read("(setq t1 (make-table))"));
-
-        SECTION("should provide getting and putting of key, value pairs") {
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key1)"))));
-            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 'key1 42)"))) == 42);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 42);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(put t1 'key1 10)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 10);
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
-            L.Eval(L.Read("(put t1 'key2 100)"));
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key2)"))) == 100);
-            REQUIRE(L.NumVal(L.Eval(L.Read("(get t1 'key1)"))) == 10);
-            L.Eval(L.Read("(clear t1)"));
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key1)"))));
-            REQUIRE(L.Null(L.Eval(L.Read("(get t1 'key2)"))));
-        }
-
-        SECTION("keys") {
-            REQUIRE(L.Null(L.Eval(L.Read("(keys t1)"))));
-
-            L.Eval(L.Read("(put t1 'key1 42)"));
-            REQUIRE(L.SymbolName(L.Car(L.Eval(L.Read("(keys t1)")))) == "key1");
-            REQUIRE(L.Null(L.Cdr(L.Eval(L.Read("(keys t1)")))));
-        }
-
-        SECTION("should provide method calls") {
-            auto exp = "(progn"
-                       "  (put t1 'x 10)"
-                       "  (put t1 'get-x"
-                       "    (lambda (self) (get self 'x)))"
-                       "  (put t1 'plus-x"
-                       "    (lambda (self n) (+ (get self 'x) n))))";
-            L.Eval(L.Read(exp));
-            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'get-x) t1)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("((get t1 'plus-x) t1 2)"))) == 12);
-            REQUIRE(L.NumVal(L.Eval(L.Read("('get-x t1)"))) == 10);
-            REQUIRE(L.NumVal(L.Eval(L.Read("('plus-x t1 4)"))) == 14);
-        }
     }
 
     SECTION("ASSOC returns nil if key is not found") {

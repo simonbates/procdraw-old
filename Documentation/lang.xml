@@ -7,7 +7,6 @@
       <li>Symbols</li>
       <li>Strings</li>
       <li>Pairs and lists</li>
-      <li>Tables</li>
       <li>CFunctions</li>
     </ul>
   </section>
@@ -37,17 +36,6 @@
       <li><code>(quote arg)</code></li>
       <li><code>(setq name value)</code></li>
       <li><code>(wrap start stop val)</code></li>
-    </ul>
-  </section>
-
-  <section title="Tables">
-    <ul>
-      <li><code>(make-table)</code></li>
-      <li><code>(get table key)</code></li>
-      <li><code>(put table key val)</code></li>
-      <li><code>(keys table)</code></li>
-      <li><code>(clear table)</code></li>
-      <li><code>(key table ...)</code></li>
     </ul>
   </section>
 

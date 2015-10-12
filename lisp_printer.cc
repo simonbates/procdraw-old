@@ -44,9 +44,6 @@ namespace procdraw {
             return L->BoolVal(obj) ? "true" : "false";
         case LispObjectType::String:
             return "\"" + L->StringVal(obj) + "\"";
-        case LispObjectType::Table:
-            // TODO Table serialization
-            return "<Table>";
         case LispObjectType::Eof:
             return "<Eof>";
         default:

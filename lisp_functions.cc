@@ -34,11 +34,6 @@ namespace procdraw {
         return L->Cdar(args);
     }
 
-    LispObjectPtr lisp_Clear(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
-    {
-        return L->Clear(L->Car(args));
-    }
-
     LispObjectPtr lisp_Cons(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return L->Cons(L->Car(args), L->Cadr(args));
@@ -75,29 +70,12 @@ namespace procdraw {
         return L->BoolToLisp(L->Functionp(L->Car(args)));
     }
 
-    LispObjectPtr lisp_Get(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
-    {
-        auto table = L->Car(args);
-        auto key = L->Cadr(args);
-        return L->Get(table, key);
-    }
-
-    LispObjectPtr lisp_Keys(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
-    {
-        return L->Keys(L->Car(args));
-    }
-
     LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto start = L->NumVal(L->Car(args));
         auto stop = L->NumVal(L->Cadr(args));
         auto val = L->NumVal(L->Caddr(args));
         return L->MakeNumber(Lerp(start, stop, val));
-    }
-
-    LispObjectPtr lisp_MakeTable(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
-    {
-        return L->MakeTable();
     }
 
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -133,14 +111,6 @@ namespace procdraw {
         double product = 1;
         REDUCE_NUM(L, product, x, product * x, args);
         return L->MakeNumber(product);
-    }
-
-    LispObjectPtr lisp_Put(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
-    {
-        auto table = L->Car(args);
-        auto key = L->Cadr(args);
-        auto val = L->Caddr(args);
-        return L->Put(table, key, val);
     }
 
     LispObjectPtr lisp_Putassoc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)

@@ -11,7 +11,6 @@ In its current form, it consists of:
     * list-structured memory
     * code stored as list structures and always recoverable and
       modifiable at run time
-    * a simple object model ("tables")
 * A simple data-flow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
 
