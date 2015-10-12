@@ -69,7 +69,7 @@ namespace procdraw {
 
     static bool Signalp(LispInterpreter *L, LispObjectPtr obj)
     {
-        return (L->TypeOf(obj) == LispObjectType::Cons) && (L->Car(obj) == L->SymbolRef("signal"));
+        return L->TypeOf(obj) == LispObjectType::Cons && L->Eq(L->Car(obj), L->SymbolRef("signal"));
     }
 
     static bool HasBeenStepped(LispInterpreter *L, LispObjectPtr signal)

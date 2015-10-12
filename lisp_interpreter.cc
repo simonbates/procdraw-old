@@ -253,7 +253,7 @@ namespace procdraw {
     bool LispInterpreter::Functionp(LispObjectPtr obj)
     {
         auto type = TypeOf(obj);
-        return (type == LispObjectType::Cons && Car(obj) == S_LAMBDA)
+        return (type == LispObjectType::Cons && Eq(Car(obj), S_LAMBDA))
                || type == LispObjectType::CFunction;
     }
 
