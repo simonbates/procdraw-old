@@ -3,9 +3,9 @@
 #include "ft_text_renderer.h"
 #include "font_config.h"
 #include "gl_util.h"
-#include <stdexcept>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <stdexcept>
 
 namespace procdraw {
 
@@ -23,8 +23,8 @@ namespace procdraw {
             FT_Set_Pixel_Sizes(face_, 0, FT_TEXT_RENDERER_FONT_SIZE_PIXELS);
 
             CompileShaders();
-            MakeTextRectangleVao();
-            MakeTextTexture();
+            MakeGlyphQuadVao();
+            MakeFontTexture();
         }
         catch (...) {
             Cleanup();
@@ -39,9 +39,9 @@ namespace procdraw {
 
     void FtTextRenderer::Cleanup()
     {
-        glDeleteVertexArrays(1, &textRectangleVao_);
-        glDeleteBuffers(1, &textRectangleVertexBuffer_);
-        glDeleteTextures(1, &textTexture_);
+        glDeleteVertexArrays(1, &glyphQuadVao_);
+        glDeleteBuffers(1, &glyphQuadVertexBuffer_);
+        glDeleteTextures(1, &fontTexture_);
         glDeleteProgram(program_);
     }
 
@@ -52,56 +52,40 @@ namespace procdraw {
         // each time, only when the renderer size changes
         auto projection = glm::ortho(0.0f, static_cast<float>(width),
                                      static_cast<float>(height), 0.0f);
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform1i(texLoc, 0);
+        glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniform1i(texLoc_, 0);
         glDisable(GL_DEPTH_TEST);
     }
 
     void FtTextRenderer::Text(int x, int y)
     {
-        FT_GlyphSlot g = LoadChar();
-
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textTexture_);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            g->bitmap.width,
-            g->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            g->bitmap.buffer
-        );
+        glBindTexture(GL_TEXTURE_2D, fontTexture_);
 
         // Top left
-        textRectangleVertices_[0] = x;
-        textRectangleVertices_[1] = y;
-        textRectangleVertices_[2] = 0.0f;
-        textRectangleVertices_[3] = 0.0f;
+        glyphQuadVertices_[0] = x;
+        glyphQuadVertices_[1] = y;
+        glyphQuadVertices_[2] = 0.0f;
+        glyphQuadVertices_[3] = 0.0f;
         // Bottom left
-        textRectangleVertices_[4] = x;
-        textRectangleVertices_[5] = y + g->bitmap.rows;
-        textRectangleVertices_[6] = 0.0f;
-        textRectangleVertices_[7] = 1.0f;
+        glyphQuadVertices_[4] = x;
+        glyphQuadVertices_[5] = y + fontTextureHeight_;
+        glyphQuadVertices_[6] = 0.0f;
+        glyphQuadVertices_[7] = 1.0f;
         // Top right
-        textRectangleVertices_[8] = x + g->bitmap.width;
-        textRectangleVertices_[9] = y;
-        textRectangleVertices_[10] = 1.0f;
-        textRectangleVertices_[11] = 0.0f;
+        glyphQuadVertices_[8] = x + fontTextureWidth_;
+        glyphQuadVertices_[9] = y;
+        glyphQuadVertices_[10] = 1.0f;
+        glyphQuadVertices_[11] = 0.0f;
         // Bottom right
-        textRectangleVertices_[12] = x + g->bitmap.width;
-        textRectangleVertices_[13] = y + g->bitmap.rows;
-        textRectangleVertices_[14] = 1.0f;
-        textRectangleVertices_[15] = 1.0f;
+        glyphQuadVertices_[12] = x + fontTextureWidth_;
+        glyphQuadVertices_[13] = y + fontTextureHeight_;
+        glyphQuadVertices_[14] = 1.0f;
+        glyphQuadVertices_[15] = 1.0f;
 
-        glBindVertexArray(textRectangleVao_);
-        glBindBuffer(GL_ARRAY_BUFFER, textRectangleVertexBuffer_);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textRectangleVertices_), textRectangleVertices_);
+        glBindVertexArray(glyphQuadVao_);
+        glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glyphQuadVertices_), glyphQuadVertices_);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
 
@@ -131,40 +115,96 @@ namespace procdraw {
         };
 
         program_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}});
-        projectionLoc = glGetUniformLocation(program_, "projection");
-        texLoc = glGetUniformLocation(program_, "tex");
+        projectionLoc_ = glGetUniformLocation(program_, "projection");
+        texLoc_ = glGetUniformLocation(program_, "tex");
     }
 
-    void FtTextRenderer::MakeTextRectangleVao()
+    void FtTextRenderer::MakeGlyphQuadVao()
     {
-        glGenVertexArrays(1, &textRectangleVao_);
-        glBindVertexArray(textRectangleVao_);
+        glGenVertexArrays(1, &glyphQuadVao_);
+        glBindVertexArray(glyphQuadVao_);
 
-        glGenBuffers(1, &textRectangleVertexBuffer_);
-        glBindBuffer(GL_ARRAY_BUFFER, textRectangleVertexBuffer_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(textRectangleVertices_), textRectangleVertices_, GL_DYNAMIC_DRAW);
+        glGenBuffers(1, &glyphQuadVertexBuffer_);
+        glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(glyphQuadVertices_), glyphQuadVertices_, GL_DYNAMIC_DRAW);
 
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
     }
 
-    void FtTextRenderer::MakeTextTexture()
+    void FtTextRenderer::MakeFontTexture()
     {
         glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &textTexture_);
-        glBindTexture(GL_TEXTURE_2D, textTexture_);
+        glGenTextures(1, &fontTexture_);
+        glBindTexture(GL_TEXTURE_2D, fontTexture_);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        FT_ULong fromCharCode = 'a';
+        FT_ULong toCharCode = 'f';
+
+        CalculateTextureSize(fromCharCode, toCharCode, &fontTextureWidth_, &fontTextureHeight_);
+        // TODO: Make the texture dimensions powers of 2
+
+        // Allocate the texture memory
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RED,
+                     fontTextureWidth_,
+                     fontTextureHeight_,
+                     0,
+                     GL_RED,
+                     GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        PopulateTexture(fromCharCode, toCharCode);
     }
 
-    FT_GlyphSlot FtTextRenderer::LoadChar()
+    void FtTextRenderer::CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
+            GLsizei *width, GLsizei *height)
     {
-        if (FT_Load_Char(face_, 'Q', FT_LOAD_RENDER)) {
+        *width = 0;
+        *height = 0;
+        for (auto charCode = fromCharCode; charCode < toCharCode; ++charCode) {
+            RenderChar(charCode);
+            FT_GlyphSlot g = face_->glyph;
+            *width += g->bitmap.width;
+            if (g->bitmap.rows > *height) {
+                *height = g->bitmap.rows;
+            }
+        }
+    }
+
+    void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode)
+    {
+        GLint xoffset = 0;
+
+        for (auto charCode = fromCharCode; charCode < toCharCode; ++charCode) {
+            RenderChar(charCode);
+            FT_GlyphSlot g = face_->glyph;
+
+            glTexSubImage2D(GL_TEXTURE_2D,
+                            0,
+                            xoffset,
+                            0,
+                            g->bitmap.width,
+                            g->bitmap.rows,
+                            GL_RED,
+                            GL_UNSIGNED_BYTE,
+                            g->bitmap.buffer);
+
+            xoffset += g->bitmap.width;
+        }
+    }
+
+    void FtTextRenderer::RenderChar(FT_ULong charCode)
+    {
+        if (FT_Load_Char(face_, charCode, FT_LOAD_RENDER)) {
             throw std::runtime_error("Error FT_Load_Char");
         }
-        return face_->glyph;
     }
 
 }
