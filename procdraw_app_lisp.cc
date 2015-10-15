@@ -1,4 +1,5 @@
 #include "procdraw_app_lisp.h"
+#include "signals.h"
 
 namespace procdraw {
 
@@ -61,16 +62,18 @@ namespace procdraw {
         return L->Nil;
     }
 
-    static LispObjectPtr lisp_MouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    static LispObjectPtr lisp_StepMouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
+        auto self = L->Car(args);
         auto app = static_cast<ProcdrawApp*>(data);
-        return L->MakeNumber(app->Renderer()->MouseX());
+        return PutSlot(L, self, L->SymbolRef("val"), L->MakeNumber(app->Renderer()->MouseX()));
     }
 
-    static LispObjectPtr lisp_MouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    static LispObjectPtr lisp_StepMouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
+        auto self = L->Car(args);
         auto app = static_cast<ProcdrawApp*>(data);
-        return L->MakeNumber(app->Renderer()->MouseY());
+        return PutSlot(L, self, L->SymbolRef("val"),L->MakeNumber(app->Renderer()->MouseY()));
     }
 
     static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -136,8 +139,8 @@ namespace procdraw {
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond, app);
         L->SetGlobalCFunction("height", lisp_Height, app);
         L->SetGlobalCFunction("light-color", lisp_LightColor, app);
-        L->SetGlobalCFunction("mouse-x", lisp_MouseX, app);
-        L->SetGlobalCFunction("mouse-y", lisp_MouseY, app);
+        L->Set(L->SymbolRef("mouse-x"), MakeSignal(L, L->MakeCFunction(lisp_StepMouseX, app)), L->Nil);
+        L->Set(L->SymbolRef("mouse-y"), MakeSignal(L, L->MakeCFunction(lisp_StepMouseY, app)), L->Nil);
         L->SetGlobalCFunction("rotate-x", lisp_RotateX, app);
         L->SetGlobalCFunction("rotate-y", lisp_RotateY, app);
         L->SetGlobalCFunction("rotate-z", lisp_RotateZ, app);

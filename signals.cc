@@ -49,18 +49,18 @@ namespace procdraw {
         return L->Cddr(signal);
     }
 
-    static LispObjectPtr GetSlot(LispInterpreter *L, LispObjectPtr signal, LispObjectPtr key)
+    LispObjectPtr GetSlot(LispInterpreter *L, LispObjectPtr signal, LispObjectPtr key)
     {
         return L->Cdr(L->Assoc(key, L->Car(SlotsHolder(L, signal))));
     }
 
-    static LispObjectPtr PutSlot(LispInterpreter *L, LispObjectPtr signal,
-                                 LispObjectPtr key, LispObjectPtr val)
+    LispObjectPtr PutSlot(LispInterpreter *L, LispObjectPtr signal,
+                          LispObjectPtr key, LispObjectPtr val)
     {
         return PutassocHolder(L, key, val, SlotsHolder(L, signal));
     }
 
-    static LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
+    LispObjectPtr MakeSignal(LispInterpreter *L, LispObjectPtr stepFun)
     {
         auto signal = L->MakeList({ L->SymbolRef("signal"), L->Nil, L->Nil });
         PutSlot(L, signal, L->SymbolRef("step"), stepFun);
@@ -94,14 +94,7 @@ namespace procdraw {
                 auto source = L->Car(sourceSpec);
                 auto mapFun = L->Cdr(sourceSpec);
 
-                LispObjectPtr sourceVal = L->Nil;
-
-                if (Signalp(L, source)) {
-                    sourceVal = Sigval(L, source, env);
-                }
-                else if (L->Functionp(source)) {
-                    sourceVal = L->Apply(source, L->Nil, env);
-                }
+                auto sourceVal = Sigval(L, source, env);
 
                 if (L->Null(mapFun)) {
                     PutSlot(L, signal, key, sourceVal);

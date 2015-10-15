@@ -60,28 +60,6 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 5);
     }
 
-    SECTION("=> function source") {
-        L.Eval(L.Read("(setq sig-func-source (make-signal step-incr))"));
-        L.Eval(L.Read("(put-slot sig-func-source 'val 4)"));
-        L.Eval(L.Read("(put-slot sig-func-source 'incr 0)"));
-        L.Eval(L.Read("(=> (lambda () 10) sig-func-source 'incr)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 14);
-        L.Eval(L.Read("(clear-stepped-signals)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
-    }
-
-    SECTION("=> function source with mapping function") {
-        L.Eval(L.Read("(setq sig-func-source (make-signal step-incr))"));
-        L.Eval(L.Read("(put-slot sig-func-source 'val 4)"));
-        L.Eval(L.Read("(put-slot sig-func-source 'incr 0)"));
-        L.Eval(L.Read("(=> (lambda () 10) sig-func-source 'incr (lambda (incr) (* 2 incr)))"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 24);
-        L.Eval(L.Read("(clear-stepped-signals)"));
-        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig-func-source)"))) == 44);
-    }
-
     SECTION("saw") {
         L.Eval(L.Read("(setq saw1 (saw))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'freq)"))) == 0);
