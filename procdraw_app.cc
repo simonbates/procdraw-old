@@ -2,6 +2,7 @@
 #include "procdraw_app_lisp.h"
 #include "signals.h"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 namespace procdraw {
 
@@ -32,6 +33,7 @@ namespace procdraw {
                 }
             }
             cli_->Poll();
+            midiClient_.Poll(this);
             L_.Call("clear-stepped-signals");
             L_.Call("draw");
             if (L_.BoolVal(L_.Eval(s_show_repl))) {
@@ -67,6 +69,11 @@ namespace procdraw {
     double ProcdrawApp::FramesPerSecond()
     {
         return frameCounter_.GetFramesPerSecond();
+    }
+
+    void ProcdrawApp::Message(const std::string &msg)
+    {
+        std::cout << msg << std::endl;
     }
 
 }

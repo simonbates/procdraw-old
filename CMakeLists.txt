@@ -12,11 +12,13 @@ enable_testing()
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(FT2 REQUIRED freetype2)
+pkg_search_module(ALSA REQUIRED alsa)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS}
                     ${FT2_INCLUDE_DIRS}
+                    ${ALSA_INCLUDE_DIRS}
                     ${OPENGL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS})
 
@@ -33,6 +35,7 @@ endif()
 # libprocdraw
 
 add_library(libprocdraw
+            alsa_midi_client.cc
             camera.cc
             cli.cc
             color.cc
@@ -63,6 +66,7 @@ target_link_libraries(procdraw
                       libprocdraw
                       ${SDL2_LIBRARIES}
                       ${FT2_LIBRARIES}
+                      ${ALSA_LIBRARIES}
                       ${OPENGL_LIBRARIES}
                       ${GLEW_LIBRARIES}
                       readline)

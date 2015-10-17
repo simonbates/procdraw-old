@@ -62,6 +62,16 @@ namespace procdraw {
         return L->Nil;
     }
 
+    static LispObjectPtr lisp_Message(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto msg = L->Car(args);
+        if (L->TypeOf(msg) == LispObjectType::String) {
+            auto app = static_cast<ProcdrawApp*>(data);
+            app->Message(L->StringVal(msg));
+        }
+        return msg;
+    }
+
     static LispObjectPtr lisp_StepMouseX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto self = L->Car(args);
@@ -139,6 +149,7 @@ namespace procdraw {
         L->SetGlobalCFunction("frames-per-second", lisp_FramesPerSecond, app);
         L->SetGlobalCFunction("height", lisp_Height, app);
         L->SetGlobalCFunction("light-color", lisp_LightColor, app);
+        L->SetGlobalCFunction("message", lisp_Message, app);
         L->Set(L->SymbolRef("mouse-x"), MakeSignal(L, L->MakeCFunction(lisp_StepMouseX, app)), L->Nil);
         L->Set(L->SymbolRef("mouse-y"), MakeSignal(L, L->MakeCFunction(lisp_StepMouseY, app)), L->Nil);
         L->SetGlobalCFunction("rotate-x", lisp_RotateX, app);
