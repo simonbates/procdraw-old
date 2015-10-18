@@ -8,6 +8,7 @@
 #include "alsa_midi_client.h"
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace procdraw {
 
@@ -23,12 +24,20 @@ namespace procdraw {
         BalancedState CheckCommand(const std::string &cmd);
         double FramesPerSecond();
         void Message(const std::string &msg);
+        void OnMidiControllerInput(unsigned int channel, unsigned int controller, int value);
     private:
         GlRenderer renderer_;
         LispInterpreter L_;
+        LispObjectPtr S_LOG_MIDI;
+        LispObjectPtr S_SHOW_REPL;
+        LispObjectPtr S_VAL;
         std::unique_ptr<CLI> cli_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;
+        std::vector<LispObjectPtr> midiChannelOneControllers_;
+        LispObjectPtr ShowRepl();
+        void MakeMidiSignals();
+        LispObjectPtr MakeMidiSignal(int channel, int controller);
     };
 
 }

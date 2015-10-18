@@ -26,11 +26,9 @@ namespace procdraw {
         while (snd_seq_event_input_pending(seq_, 1) > 0) {
             snd_seq_event_input(seq_, &ev);
             if (ev->type == SND_SEQ_EVENT_CONTROLLER) {
-                std::ostringstream s;
-                s << "Control Change ch " << static_cast<unsigned>(ev->data.control.channel);
-                s << " controller " << ev->data.control.param;
-                s << " value " << ev->data.control.value;
-                app->Message(s.str());
+                app->OnMidiControllerInput(static_cast<unsigned int>(ev->data.control.channel) + 1,
+                                           ev->data.control.param,
+                                           ev->data.control.value);
             }
         }
     }

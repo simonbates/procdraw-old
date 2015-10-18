@@ -22,6 +22,12 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 5);
     }
 
+    SECTION("sigval with a null step") {
+        L.Eval(L.Read("(setq null-step-signal (make-signal nil))"));
+        L.Eval(L.Read("(put-slot null-step-signal 'val 2)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval null-step-signal)"))) == 2);
+    }
+
     SECTION("=> signal source") {
         // sig1        sig2
         // incr  val1  incr val1

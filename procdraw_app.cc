@@ -4,12 +4,25 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
+static const int numMidiControllers = 33;
+
 namespace procdraw {
 
     ProcdrawApp::ProcdrawApp()
     {
+        S_LOG_MIDI = L_.SymbolRef("log-midi");
+        S_SHOW_REPL = L_.SymbolRef("show-repl");
+        S_VAL = L_.SymbolRef("val");
+
+        midiChannelOneControllers_ = std::vector<LispObjectPtr>(numMidiControllers, L_.Nil);
+
         RegisterSignals(&L_);
         RegisterProcdrawAppFunctions(this, &L_);
+        MakeMidiSignals();
+
+        L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
+        L_.Set(S_SHOW_REPL, L_.False, L_.Nil);
+
         cli_ = std::unique_ptr<CLI>(new CLI(this));
     }
 
@@ -17,26 +30,23 @@ namespace procdraw {
     {
         bool quit = false;
 
-        auto s_show_repl = L_.SymbolRef("show-repl");
-        L_.Set(s_show_repl, L_.False, L_.Nil);
-
         SDL_Event e;
         while (!quit) {
+            L_.Call("clear-stepped-signals");
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
                 }
                 else if (e.type == SDL_KEYDOWN) {
                     if ((e.key.keysym.sym == SDLK_ESCAPE) && (e.key.repeat == 0)) {
-                        L_.Set(s_show_repl, L_.Not(L_.Eval(s_show_repl)), L_.Nil);
+                        L_.Set(S_SHOW_REPL, L_.Not(ShowRepl()), L_.Nil);
                     }
                 }
             }
             cli_->Poll();
             midiClient_.Poll(this);
-            L_.Call("clear-stepped-signals");
             L_.Call("draw");
-            if (L_.BoolVal(L_.Eval(s_show_repl))) {
+            if (L_.BoolVal(ShowRepl())) {
                 renderer_.Begin2D();
                 renderer_.Rect(40, 80, 280, 240);
                 renderer_.BeginText();
@@ -74,6 +84,43 @@ namespace procdraw {
     void ProcdrawApp::Message(const std::string &msg)
     {
         std::cout << msg << std::endl;
+    }
+
+    void ProcdrawApp::OnMidiControllerInput(unsigned int channel, unsigned int controller, int value)
+    {
+        if (channel == 1 && controller < numMidiControllers) {
+            PutSlot(&L_, midiChannelOneControllers_[controller], S_VAL, L_.MakeNumber(value / 127.0));
+        }
+
+        if (L_.BoolVal(L_.SymbolValue(S_LOG_MIDI))) {
+            std::ostringstream s;
+            s << "Control Change ch " << channel;
+            s << " controller " << controller;
+            s << " value " << value;
+            Message(s.str());
+        }
+    }
+
+    LispObjectPtr ProcdrawApp::ShowRepl()
+    {
+        return L_.SymbolValue(S_SHOW_REPL);
+    }
+
+    void ProcdrawApp::MakeMidiSignals()
+    {
+        for (int i = 0; i < numMidiControllers; ++i) {
+            midiChannelOneControllers_[i] = MakeMidiSignal(1, i);
+        }
+    }
+
+    LispObjectPtr ProcdrawApp::MakeMidiSignal(int channel, int controller)
+    {
+        auto signal = MakeSignal(&L_, L_.Nil);
+        PutSlot(&L_, signal, S_VAL, L_.MakeNumber(0));
+        std::ostringstream name;
+        name << "midic-" << channel << "-" << controller;
+        L_.Set(L_.SymbolRef(name.str()), signal, L_.Nil);
+        return signal;
     }
 
 }

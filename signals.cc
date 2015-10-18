@@ -86,7 +86,8 @@ namespace procdraw {
 
     static LispObjectPtr Sigval(LispInterpreter *L, LispObjectPtr signal, LispObjectPtr env)
     {
-        if (!HasBeenStepped(L, signal)) {
+        auto stepFun = GetSlot(L, signal, L->SymbolRef("step"));
+        if (!L->Null(stepFun) && !HasBeenStepped(L, signal)) {
             // Apply inputs
             for (LispObjectPtr n = L->Car(InputsHolder(L, signal)); !L->Null(n); n = L->Cdr(n)) {
                 auto key = L->Caar(n);
@@ -104,7 +105,7 @@ namespace procdraw {
                 }
             }
             // Step
-            L->Apply(GetSlot(L, signal, L->SymbolRef("step")), L->Cons(signal, L->Nil), env);
+            L->Apply(stepFun, L->Cons(signal, L->Nil), env);
             RecordAsStepped(L, signal);
         }
 
