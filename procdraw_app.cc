@@ -89,7 +89,7 @@ namespace procdraw {
     void ProcdrawApp::OnMidiControllerInput(unsigned int channel, unsigned int controller, int value)
     {
         if (channel == 1 && controller < numMidiControllers) {
-            PutSlot(&L_, midiChannelOneControllers_[controller], S_VAL, L_.MakeNumber(value / 127.0));
+            PutSlot(&L_, midiChannelOneControllers_[controller], S_VAL, L_.MakeNumber(value / 128.0));
         }
 
         if (L_.BoolVal(L_.SymbolValue(S_LOG_MIDI))) {
