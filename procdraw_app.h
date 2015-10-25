@@ -28,14 +28,17 @@ namespace procdraw {
     private:
         GlRenderer renderer_;
         LispInterpreter L_;
+        LispObjectPtr S_EVENT;
         LispObjectPtr S_LOG_MIDI;
         LispObjectPtr S_SHOW_REPL;
         LispObjectPtr S_VAL;
         std::unique_ptr<CLI> cli_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;
+        LispObjectPtr keySpaceSignal_;
         std::vector<LispObjectPtr> midiChannelOneControllers_;
         LispObjectPtr ShowRepl();
+        void MakeKeySignals();
         void MakeMidiSignals();
         LispObjectPtr MakeMidiSignal(int channel, int controller);
     };

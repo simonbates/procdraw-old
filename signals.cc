@@ -67,6 +67,21 @@ namespace procdraw {
         return signal;
     }
 
+    static LispObjectPtr lisp_StepEventRelay(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto self = L->Car(args);
+        auto eventKey = L->SymbolRef("event");
+        auto event = GetSlot(L, self, eventKey);
+        PutSlot(L, self, L->SymbolRef("val"), event);
+        PutSlot(L, self, eventKey, L->Nil);
+        return event;
+    }
+
+    LispObjectPtr MakeEventRelaySignal(LispInterpreter *L)
+    {
+        return MakeSignal(L, L->MakeCFunction(lisp_StepEventRelay, nullptr));
+    }
+
     static bool Signalp(LispInterpreter *L, LispObjectPtr obj)
     {
         return L->TypeOf(obj) == LispObjectType::Cons && L->Eq(L->Car(obj), L->SymbolRef("signal"));

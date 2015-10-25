@@ -134,4 +134,16 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 1, 0.01));
     }
+
+    SECTION("Event Relay Signal") {
+        L.Set(L.SymbolRef("relay1"), MakeEventRelaySignal(&L), L.Nil);
+        REQUIRE(L.Null(L.Eval(L.Read("(sigval relay1)"))));
+        L.Eval(L.Read("(put-slot relay1 'event true)"));
+        REQUIRE(L.Null(L.Eval(L.Read("(sigval relay1)"))));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(sigval relay1)"))));
+        REQUIRE(L.BoolVal(L.Eval(L.Read("(sigval relay1)"))));
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.Null(L.Eval(L.Read("(sigval relay1)"))));
+    }
 }

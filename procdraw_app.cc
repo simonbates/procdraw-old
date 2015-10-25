@@ -10,6 +10,7 @@ namespace procdraw {
 
     ProcdrawApp::ProcdrawApp()
     {
+        S_EVENT = L_.SymbolRef("event");
         S_LOG_MIDI = L_.SymbolRef("log-midi");
         S_SHOW_REPL = L_.SymbolRef("show-repl");
         S_VAL = L_.SymbolRef("val");
@@ -18,6 +19,7 @@ namespace procdraw {
 
         RegisterSignals(&L_);
         RegisterProcdrawAppFunctions(this, &L_);
+        MakeKeySignals();
         MakeMidiSignals();
 
         L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
@@ -40,6 +42,9 @@ namespace procdraw {
                 else if (e.type == SDL_KEYDOWN) {
                     if ((e.key.keysym.sym == SDLK_ESCAPE) && (e.key.repeat == 0)) {
                         L_.Set(S_SHOW_REPL, L_.Not(ShowRepl()), L_.Nil);
+                    }
+                    else if ((e.key.keysym.sym == SDLK_SPACE) && (e.key.repeat == 0)) {
+                        PutSlot(&L_, keySpaceSignal_, S_EVENT, L_.True);
                     }
                 }
             }
@@ -104,6 +109,12 @@ namespace procdraw {
     LispObjectPtr ProcdrawApp::ShowRepl()
     {
         return L_.SymbolValue(S_SHOW_REPL);
+    }
+
+    void ProcdrawApp::MakeKeySignals()
+    {
+        keySpaceSignal_ = MakeEventRelaySignal(&L_);
+        L_.Set(L_.SymbolRef("key-space"), keySpaceSignal_, L_.Nil);
     }
 
     void ProcdrawApp::MakeMidiSignals()
