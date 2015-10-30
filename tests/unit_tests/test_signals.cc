@@ -8,11 +8,11 @@ TEST_CASE("Signals")
     procdraw::LispInterpreter L;
     procdraw::RegisterSignals(&L);
 
-    L.Eval(L.Read("(setq step-incr (lambda (self) (put-slot self 'val (+ (get-slot self 'val) (get-slot self 'incr)))))"));
+    L.Eval(L.Read("(setq step-incr (lambda (self) (put-slot self 'out (+ (get-slot self 'out) (get-slot self 'incr)))))"));
     L.Eval(L.Read("(setq sig1 (make-signal step-incr))"));
-    L.Eval(L.Read("(put-slot sig1 'val 1)"));
+    L.Eval(L.Read("(put-slot sig1 'out 1)"));
     L.Eval(L.Read("(put-slot sig1 'incr 2)"));
-    REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sig1 'val)"))) == 1);
+    REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sig1 'out)"))) == 1);
     REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sig1 'incr)"))) == 2);
 
     SECTION("sigval") {
@@ -24,18 +24,18 @@ TEST_CASE("Signals")
 
     SECTION("sigval with a null step") {
         L.Eval(L.Read("(setq null-step-signal (make-signal nil))"));
-        L.Eval(L.Read("(put-slot null-step-signal 'val 2)"));
+        L.Eval(L.Read("(put-slot null-step-signal 'out 2)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval null-step-signal)"))) == 2);
     }
 
     SECTION("=> signal source") {
         // sig1        sig2
-        // incr  val1  incr val1
-        // 2     1     0    1     before
-        // 2     3     3    4     step 1
-        // 2     5     5    9     step 2
+        // incr  out   incr  out
+        // 2     1     0     1     before
+        // 2     3     3     4     step 1
+        // 2     5     5     9     step 2
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
-        L.Eval(L.Read("(put-slot sig2 'val 1)"));
+        L.Eval(L.Read("(put-slot sig2 'out 1)"));
         L.Eval(L.Read("(put-slot sig2 'incr 0)"));
         L.Eval(L.Read("(=> sig1 sig2 'incr)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 4);
@@ -49,12 +49,12 @@ TEST_CASE("Signals")
 
     SECTION("=> signal source with mapping function") {
         // sig1        sig2
-        // incr  val1  incr val1
-        // 2     1     0    1     before
-        // 2     3     30   31    step 1
-        // 2     5     50   81    step 2
+        // incr  out   incr  out
+        // 2     1     0     1     before
+        // 2     3     30    31    step 1
+        // 2     5     50    81    step 2
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
-        L.Eval(L.Read("(put-slot sig2 'val 1)"));
+        L.Eval(L.Read("(put-slot sig2 'out 1)"));
         L.Eval(L.Read("(put-slot sig2 'incr 0)"));
         L.Eval(L.Read("(=> sig1 sig2 'incr (lambda (incr) (* 10 incr)))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 31);
@@ -69,7 +69,7 @@ TEST_CASE("Signals")
     SECTION("saw") {
         L.Eval(L.Read("(setq saw1 (saw))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'val)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot saw1 'out)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval saw1)"))) == 0);
 
         L.Eval(L.Read("(put-slot saw1 'freq (/ 3 8))"));
@@ -90,7 +90,7 @@ TEST_CASE("Signals")
     SECTION("tri") {
         L.Eval(L.Read("(setq tri1 (tri))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot tri1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot tri1 'val)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot tri1 'out)"))) == 0);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval tri1)"))) == 0);
 
         L.Eval(L.Read("(put-slot tri1 'freq (/ 4))"));
@@ -119,7 +119,7 @@ TEST_CASE("Signals")
     SECTION("sin-osc") {
         L.Eval(L.Read("(setq sin1 (sin-osc))"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sin1 'freq)"))) == 0);
-        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sin1 'val)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(get-slot sin1 'out)"))) == 0);
         REQUIRE(procdraw::ApproximatelyEqual(L.NumVal(L.Eval(L.Read("(sigval sin1)"))), 0.5, 0.01));
 
         L.Eval(L.Read("(put-slot sin1 'freq (/ 4))"));

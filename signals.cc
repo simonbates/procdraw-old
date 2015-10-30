@@ -72,14 +72,16 @@ namespace procdraw {
         auto self = L->Car(args);
         auto eventKey = L->SymbolRef("event");
         auto event = GetSlot(L, self, eventKey);
-        PutSlot(L, self, L->SymbolRef("val"), event);
+        PutSlot(L, self, L->SymbolRef("out"), event);
         PutSlot(L, self, eventKey, L->Nil);
         return event;
     }
 
     LispObjectPtr MakeEventRelaySignal(LispInterpreter *L)
     {
-        return MakeSignal(L, L->MakeCFunction(lisp_StepEventRelay, nullptr));
+        auto signal = MakeSignal(L, L->MakeCFunction(lisp_StepEventRelay, nullptr));
+        PutSlot(L, signal, L->SymbolRef("out"), L->Nil);
+        return signal;
     }
 
     static bool Signalp(LispInterpreter *L, LispObjectPtr obj)
@@ -124,7 +126,7 @@ namespace procdraw {
             RecordAsStepped(L, signal);
         }
 
-        return GetSlot(L, signal, L->SymbolRef("val"));
+        return GetSlot(L, signal, L->SymbolRef("out"));
     }
 
     static LispObjectPtr MakeWavetableOscillator(LispInterpreter *L, LispObjectPtr stepFun)
@@ -132,7 +134,7 @@ namespace procdraw {
         auto sig = MakeSignal(L, stepFun);
         PutSlot(L, sig, L->SymbolRef("freq"), L->MakeNumber(0));
         PutSlot(L, sig, L->SymbolRef("index"), L->MakeNumber(0));
-        PutSlot(L, sig, L->SymbolRef("val"), L->MakeNumber(0));
+        PutSlot(L, sig, L->SymbolRef("out"), L->MakeNumber(0));
         return sig;
     }
 
@@ -149,10 +151,10 @@ namespace procdraw {
         }
         PutSlot(L, signal, indexKey, L->MakeNumber(index));
         int indexBefore = floor(index);
-        double val = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
-        auto valNum = L->MakeNumber(val);
-        PutSlot(L, signal, L->SymbolRef("val"), valNum);
-        return valNum;
+        double out = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
+        auto outNum = L->MakeNumber(out);
+        PutSlot(L, signal, L->SymbolRef("out"), outNum);
+        return outNum;
     }
 
     static LispObjectPtr lisp_MakeSignal(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -193,19 +195,19 @@ namespace procdraw {
     static LispObjectPtr lisp_StepSaw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto self = L->Car(args);
-        auto valKey = L->SymbolRef("val");
-        double val = L->NumVal(GetSlot(L, self, valKey));
-        val = Wrap(0.0, 1.0, val + L->NumVal(GetSlot(L, self, L->SymbolRef("freq"))));
-        auto valNum = L->MakeNumber(val);
-        PutSlot(L, self, valKey, valNum);
-        return valNum;
+        auto outKey = L->SymbolRef("out");
+        double out = L->NumVal(GetSlot(L, self, outKey));
+        out = Wrap(0.0, 1.0, out + L->NumVal(GetSlot(L, self, L->SymbolRef("freq"))));
+        auto outNum = L->MakeNumber(out);
+        PutSlot(L, self, outKey, outNum);
+        return outNum;
     }
 
     static LispObjectPtr lisp_Saw(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto saw = MakeSignal(L, L->MakeCFunction(lisp_StepSaw, nullptr));
         PutSlot(L, saw, L->SymbolRef("freq"), L->MakeNumber(0));
-        PutSlot(L, saw, L->SymbolRef("val"), L->MakeNumber(0));
+        PutSlot(L, saw, L->SymbolRef("out"), L->MakeNumber(0));
         return saw;
     }
 

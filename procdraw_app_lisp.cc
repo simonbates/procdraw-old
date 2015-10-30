@@ -76,14 +76,14 @@ namespace procdraw {
     {
         auto self = L->Car(args);
         auto app = static_cast<ProcdrawApp*>(data);
-        return PutSlot(L, self, L->SymbolRef("val"), L->MakeNumber(app->Renderer()->MouseX()));
+        return PutSlot(L, self, L->SymbolRef("out"), L->MakeNumber(app->Renderer()->MouseX()));
     }
 
     static LispObjectPtr lisp_StepMouseY(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto self = L->Car(args);
         auto app = static_cast<ProcdrawApp*>(data);
-        return PutSlot(L, self, L->SymbolRef("val"),L->MakeNumber(app->Renderer()->MouseY()));
+        return PutSlot(L, self, L->SymbolRef("out"),L->MakeNumber(app->Renderer()->MouseY()));
     }
 
     static LispObjectPtr lisp_RotateX(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)

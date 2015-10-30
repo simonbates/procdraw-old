@@ -31,7 +31,7 @@ namespace procdraw {
         LispObjectPtr S_EVENT;
         LispObjectPtr S_LOG_MIDI;
         LispObjectPtr S_SHOW_REPL;
-        LispObjectPtr S_VAL;
+        LispObjectPtr S_OUT;
         std::unique_ptr<CLI> cli_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;

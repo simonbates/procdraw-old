@@ -13,7 +13,7 @@ namespace procdraw {
         S_EVENT = L_.SymbolRef("event");
         S_LOG_MIDI = L_.SymbolRef("log-midi");
         S_SHOW_REPL = L_.SymbolRef("show-repl");
-        S_VAL = L_.SymbolRef("val");
+        S_OUT = L_.SymbolRef("out");
 
         midiChannelOneControllers_ = std::vector<LispObjectPtr>(numMidiControllers, L_.Nil);
 
@@ -94,7 +94,7 @@ namespace procdraw {
     void ProcdrawApp::OnMidiControllerInput(unsigned int channel, unsigned int controller, int value)
     {
         if (channel == 1 && controller < numMidiControllers) {
-            PutSlot(&L_, midiChannelOneControllers_[controller], S_VAL, L_.MakeNumber(value / 128.0));
+            PutSlot(&L_, midiChannelOneControllers_[controller], S_OUT, L_.MakeNumber(value / 128.0));
         }
 
         if (L_.BoolVal(L_.SymbolValue(S_LOG_MIDI))) {
@@ -127,7 +127,7 @@ namespace procdraw {
     LispObjectPtr ProcdrawApp::MakeMidiSignal(int channel, int controller)
     {
         auto signal = MakeSignal(&L_, L_.Nil);
-        PutSlot(&L_, signal, S_VAL, L_.MakeNumber(0));
+        PutSlot(&L_, signal, S_OUT, L_.MakeNumber(0));
         std::ostringstream name;
         name << "midic-" << channel << "-" << controller;
         L_.Set(L_.SymbolRef(name.str()), signal, L_.Nil);
