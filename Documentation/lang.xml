@@ -54,6 +54,7 @@
       <li><code>(saw)</code></li>
       <li><code>(sin-osc)</code></li>
       <li><code>(tri)</code></li>
+      <li><code>(toggle)</code></li>
     </ul>
   </section>
 

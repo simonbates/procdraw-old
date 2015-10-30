@@ -146,4 +146,24 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(clear-stepped-signals)"));
         REQUIRE(L.Null(L.Eval(L.Read("(sigval relay1)"))));
     }
+
+    SECTION("Toggle Signal") {
+        L.Eval(L.Read("(setq toggle1 (toggle))"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 0);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 0);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 0);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        L.Eval(L.Read("(put-slot toggle1 'event true)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 1);
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 1);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        L.Eval(L.Read("(put-slot toggle1 'event false)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 1);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        L.Eval(L.Read("(put-slot toggle1 'event true)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 0);
+        L.Eval(L.Read("(clear-stepped-signals)"));
+        REQUIRE(L.NumVal(L.Eval(L.Read("(sigval toggle1)"))) == 1);
+    }
 }

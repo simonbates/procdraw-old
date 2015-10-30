@@ -220,6 +220,38 @@ namespace procdraw {
         return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepSinOsc, nullptr));
     }
 
+    static LispObjectPtr lisp_StepToggle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto self = L->Car(args);
+        auto outKey = L->SymbolRef("out");
+        auto out = GetSlot(L, self, outKey);
+        if (L->BoolVal(GetSlot(L, self, L->SymbolRef("event")))) {
+            auto selectedKey = L->SymbolRef("selected");
+            auto symbolA = L->SymbolRef("a");
+            auto symbolB = L->SymbolRef("b");
+            if (L->Eq(GetSlot(L, self, selectedKey), symbolA)) {
+                PutSlot(L, self, selectedKey, symbolB);
+                out = GetSlot(L, self, symbolB);
+            } else {
+                PutSlot(L, self, selectedKey, symbolA);
+                out = GetSlot(L, self, symbolA);
+            }
+            PutSlot(L, self, outKey, out);
+        }
+        return out;
+    }
+
+    LispObjectPtr lisp_Toggle(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto toggle = MakeSignal(L, L->MakeCFunction(lisp_StepToggle, nullptr));
+        PutSlot(L, toggle, L->SymbolRef("event"), L->Nil);
+        PutSlot(L, toggle, L->SymbolRef("a"), L->MakeNumber(0));
+        PutSlot(L, toggle, L->SymbolRef("b"), L->MakeNumber(1));
+        PutSlot(L, toggle, L->SymbolRef("selected"), L->SymbolRef("a"));
+        PutSlot(L, toggle, L->SymbolRef("out"), GetSlot(L, toggle, L->SymbolRef("a")));
+        return toggle;
+    }
+
     void RegisterSignals(LispInterpreter *L)
     {
         InitTriWavetable();
@@ -234,6 +266,7 @@ namespace procdraw {
         L->SetGlobalCFunction("saw", lisp_Saw, nullptr);
         L->SetGlobalCFunction("sin-osc", lisp_SinOsc, nullptr);
         L->SetGlobalCFunction("tri", lisp_Tri, nullptr);
+        L->SetGlobalCFunction("toggle", lisp_Toggle, nullptr);
     }
 
 }
