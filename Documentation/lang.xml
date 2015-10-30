@@ -45,7 +45,7 @@
       <li><code>(make-signal stepfun)</code></li>
       <li><code>(get-slot signal key)</code></li>
       <li><code>(put-slot signal key val)</code></li>
-      <li><code>(=> source dest-signal dest-key &amp;optional mapfun)</code></li>
+      <li><code>(=> expr signal key)</code></li>
       <li><code>(sigval signal)</code></li>
       <li><code>key-space</code></li>
       <li><code>midic-CHANNEL-CONTROLLER</code></li>

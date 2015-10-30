@@ -2,7 +2,7 @@
   (setq saw1 (saw))
   (setq sin1 (sin-osc))
   (put-slot sin1 'freq (/ (* 11 60)))
-  (=> sin1 saw1 'freq (lambda (freq) (lerp (/ (* 7 60)) (/ 90) freq)))
+  (=> '(lerp (/ (* 7 60)) (/ 90) (sigval sin1)) saw1 'freq)
   (def draw ()
     (background 200 (/ 6 10) (/ 9 10))
     (rotate-y (sigval saw1))

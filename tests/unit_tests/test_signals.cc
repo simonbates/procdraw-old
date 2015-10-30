@@ -28,7 +28,7 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval null-step-signal)"))) == 2);
     }
 
-    SECTION("=> signal source") {
+    SECTION("=> with single sigval") {
         // sig1        sig2
         // incr  out   incr  out
         // 2     1     0     1     before
@@ -37,7 +37,7 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
         L.Eval(L.Read("(put-slot sig2 'out 1)"));
         L.Eval(L.Read("(put-slot sig2 'incr 0)"));
-        L.Eval(L.Read("(=> sig1 sig2 'incr)"));
+        L.Eval(L.Read("(=> '(sigval sig1) sig2 'incr)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 4);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 4);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 3);
@@ -47,7 +47,7 @@ TEST_CASE("Signals")
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 5);
     }
 
-    SECTION("=> signal source with mapping function") {
+    SECTION("=> with expression of sigval") {
         // sig1        sig2
         // incr  out   incr  out
         // 2     1     0     1     before
@@ -56,7 +56,7 @@ TEST_CASE("Signals")
         L.Eval(L.Read("(setq sig2 (make-signal step-incr))"));
         L.Eval(L.Read("(put-slot sig2 'out 1)"));
         L.Eval(L.Read("(put-slot sig2 'incr 0)"));
-        L.Eval(L.Read("(=> sig1 sig2 'incr (lambda (incr) (* 10 incr)))"));
+        L.Eval(L.Read("(=> '(* 10 (sigval sig1)) sig2 'incr)"));
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 31);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig2)"))) == 31);
         REQUIRE(L.NumVal(L.Eval(L.Read("(sigval sig1)"))) == 3);

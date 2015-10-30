@@ -108,18 +108,8 @@ namespace procdraw {
             // Apply inputs
             for (LispObjectPtr n = L->Car(InputsHolder(L, signal)); !L->Null(n); n = L->Cdr(n)) {
                 auto key = L->Caar(n);
-                auto sourceSpec = L->Cdar(n);
-                auto source = L->Car(sourceSpec);
-                auto mapFun = L->Cdr(sourceSpec);
-
-                auto sourceVal = Sigval(L, source, env);
-
-                if (L->Null(mapFun)) {
-                    PutSlot(L, signal, key, sourceVal);
-                }
-                else {
-                    PutSlot(L, signal, key, L->Apply(mapFun, L->Cons(sourceVal, L->Nil), env));
-                }
+                auto expr = L->Cdar(n);
+                PutSlot(L, signal, key, L->Eval(expr, env));
             }
             // Step
             L->Apply(stepFun, L->Cons(signal, L->Nil), env);
@@ -174,12 +164,11 @@ namespace procdraw {
 
     static LispObjectPtr lisp_Connect(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        auto source = L->Car(args);
+        auto expr = L->Car(args);
         auto destSignal = L->Cadr(args);
         auto destKey = L->Caddr(args);
-        auto mapFun = L->Cadddr(args);
 
-        return PutassocHolder(L, destKey, L->Cons(source, mapFun), InputsHolder(L, destSignal));
+        return PutassocHolder(L, destKey, expr, InputsHolder(L, destSignal));
     }
 
     static LispObjectPtr lisp_Sigval(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
