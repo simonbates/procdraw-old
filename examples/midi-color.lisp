@@ -10,7 +10,5 @@
     (color (lerp 0 360 (- 1 (sigval midic-1-17))) (sigval midic-1-18) 1)
     (rotate-x (sigval angle-x))
     (rotate-y (sigval angle-y))
-    ((lambda (s)
-       (scale s s s))
-     (lerp (/ 4) 4 (sigval midic-1-19)))
+    (scale (lerp (/ 4) 4 (sigval midic-1-19)))
     (cube)))

@@ -6,7 +6,7 @@
   (def planet (distance rotation size)
     (translate distance 0 0)
     (rotate-y rotation)
-    (scale size size size)
+    (scale size)
     (tetrahedron))
   (def draw ()
     (background 0 0 0)

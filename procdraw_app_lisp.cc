@@ -110,10 +110,7 @@ namespace procdraw {
     static LispObjectPtr lisp_Scale(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         auto app = static_cast<ProcdrawApp*>(data);
-        auto x = L->NumVal(L->Car(args));
-        auto y = L->NumVal(L->Cadr(args));
-        auto z = L->NumVal(L->Caddr(args));
-        app->Renderer()->Scale(x, y, z);
+        app->Renderer()->Scale(L->NumVal(L->Car(args)));
         return L->Nil;
     }
 

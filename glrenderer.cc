@@ -188,9 +188,9 @@ namespace procdraw {
                                    glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
-    void GlRenderer::Scale(float x, float y, float z)
+    void GlRenderer::Scale(float factor)
     {
-        worldMatrix_ = glm::scale(worldMatrix_, glm::vec3(x, y, z));
+        worldMatrix_ = glm::scale(worldMatrix_, glm::vec3(factor, factor, factor));
     }
 
     void GlRenderer::Tetrahedron()

@@ -54,7 +54,7 @@ namespace procdraw {
         void RotateX(float turns);
         void RotateY(float turns);
         void RotateZ(float turns);
-        void Scale(float x, float y, float z);
+        void Scale(float factor);
         void Tetrahedron();
         void Text(int x, int y);
         void Translate(float x, float y, float z);

@@ -69,7 +69,7 @@
       <li><code>(rotate-x turns)</code></li>
       <li><code>(rotate-y turns)</code></li>
       <li><code>(rotate-z turns)</code></li>
-      <li><code>(scale x y z)</code></li>
+      <li><code>(scale factor)</code></li>
       <li><code>(tetrahedron)</code></li>
       <li><code>(translate x y z)</code></li>
       <li><code>(width)</code></li>

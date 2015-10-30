@@ -8,5 +8,5 @@
     (translate (lerp -4 4 (sigval saw1))
                (lerp -4 4 (sigval sin1))
                0)
-    (scale (/ 4) (/ 4) (/ 4))
+    (scale (/ 4))
     (cube)))
