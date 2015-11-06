@@ -9,7 +9,7 @@ In its current form, it consists of:
 * An interpreter for a Lisp-like language with:
     * s-expression syntax
     * list-structured memory
-    * code stored as list structures and always recoverable and
+    * procedures stored as list structures and always recoverable and
       modifiable at run time
 * A data-flow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
