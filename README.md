@@ -11,8 +11,13 @@ In its current form, it consists of:
     * list-structured memory
     * code stored as list structures and always recoverable and
       modifiable at run time
-* A simple data-flow model ("signals")
+* A data-flow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
+
+The primary target platform is currently Linux but, where possible,
+Procdraw uses cross-platform technologies (such as CMake, SDL2, and
+OpenGL) with the hope of easing the work of porting to other platforms
+in the future.
 
 Building on Linux
 -----------------
@@ -31,7 +36,8 @@ Dependencies:
 * Libxml2
 * xsltproc (for building the Documentation)
 
-You can build Procdraw and run the tests using CMake:
+Procdraw uses the CMake build system. To build Procdraw and run the
+tests:
 
 ```
 $ mkdir build
