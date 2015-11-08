@@ -41,6 +41,7 @@ namespace procdraw {
         void MakeKeySignals();
         void MakeMidiSignals();
         LispObjectPtr MakeMidiSignal(int channel, int controller);
+        void InitDraw();
     };
 
 }

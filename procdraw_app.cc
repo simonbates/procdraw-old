@@ -22,6 +22,8 @@ namespace procdraw {
         MakeKeySignals();
         MakeMidiSignals();
 
+        InitDraw();
+
         L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
         L_.Set(S_SHOW_REPL, L_.False, L_.Nil);
 
@@ -132,6 +134,12 @@ namespace procdraw {
         name << "midic-" << channel << "-" << controller;
         L_.Set(L_.SymbolRef(name.str()), signal, L_.Nil);
         return signal;
+    }
+
+    void ProcdrawApp::InitDraw()
+    {
+        auto drawFun = L_.Read("(lambda () (background 0 0 0))");
+        L_.Set(L_.SymbolRef("draw"), drawFun, L_.Nil);
     }
 
 }
