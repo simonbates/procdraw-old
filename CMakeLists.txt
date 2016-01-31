@@ -10,7 +10,6 @@ enable_testing()
 # Find dependencies
 
 include(FindPkgConfig)
-
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(FT2 REQUIRED freetype2)
 pkg_search_module(ALSA REQUIRED alsa)
