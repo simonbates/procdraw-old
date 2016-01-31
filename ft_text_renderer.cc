@@ -178,6 +178,8 @@ namespace procdraw {
         }
     }
 
+    // TODO: Rename PopulateTexture to PopulateTextureAndMetrics
+    // TODO: Pass in the address of the metrics array to populate
     void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode)
     {
         GLint xoffset = 0;
@@ -195,6 +197,8 @@ namespace procdraw {
                             GL_RED,
                             GL_UNSIGNED_BYTE,
                             g->bitmap.buffer);
+
+            // TODO: Populate the glyphMetrics array
 
             xoffset += g->bitmap.width;
         }

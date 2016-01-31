@@ -21,9 +21,11 @@ namespace procdraw {
         GLuint glyphQuadVertexBuffer_;
         GLuint glyphQuadVao_;
         GLfloat glyphQuadVertices_[16] = {};
+        // TODO: Rename fontTexture_ to asciiFontTexture_
         GLuint fontTexture_;
         GLsizei fontTextureWidth_ = 0;
         GLsizei fontTextureHeight_ = 0;
+        // TODO: asciiGlyphMetrics array
         void Cleanup();
         void CompileShaders();
         void MakeGlyphQuadVao();
