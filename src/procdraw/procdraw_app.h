@@ -12,7 +12,7 @@
 
 namespace procdraw {
 
-    class ProcdrawApp : public CommandProcessor {
+    class ProcdrawApp : public CommandProcessor, MidiListener {
     public:
         ProcdrawApp();
         inline GlRenderer* Renderer()

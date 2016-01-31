@@ -1,5 +1,5 @@
 #include "alsa_midi_client.h"
-#include "procdraw_app.h"
+#include <stdexcept>
 
 namespace procdraw {
 
@@ -19,16 +19,16 @@ namespace procdraw {
         }
     }
 
-    void AlsaMidiClient::Poll(ProcdrawApp *app)
+    void AlsaMidiClient::Poll(MidiListener *listener)
     {
         snd_seq_event_t *ev;
 
         while (snd_seq_event_input_pending(seq_, 1) > 0) {
             snd_seq_event_input(seq_, &ev);
             if (ev->type == SND_SEQ_EVENT_CONTROLLER) {
-                app->OnMidiControllerInput(static_cast<unsigned int>(ev->data.control.channel) + 1,
-                                           ev->data.control.param,
-                                           ev->data.control.value);
+                listener->OnMidiControllerInput(static_cast<unsigned int>(ev->data.control.channel) + 1,
+                                                ev->data.control.param,
+                                                ev->data.control.value);
             }
         }
     }

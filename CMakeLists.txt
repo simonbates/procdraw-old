@@ -9,18 +9,13 @@ enable_testing()
 
 # Find dependencies
 
-#include(FindPkgConfig)
-#pkg_search_module(SDL2 REQUIRED sdl2)
-#pkg_search_module(FT2 REQUIRED freetype2)
-#pkg_search_module(ALSA REQUIRED alsa)
-#find_package(OpenGL REQUIRED)
-#find_package(GLEW REQUIRED)
+include(FindPkgConfig)
 
-#include_directories(${SDL2_INCLUDE_DIRS}
-#                    ${FT2_INCLUDE_DIRS}
-#                    ${ALSA_INCLUDE_DIRS}
-#                    ${OPENGL_INCLUDE_DIRS}
-#                    ${GLEW_INCLUDE_DIRS})
+pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(FT2 REQUIRED freetype2)
+pkg_search_module(ALSA REQUIRED alsa)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
 
 # Platform-specific compiler settings
 
@@ -32,40 +27,16 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wpedantic -Wall")
 endif()
 
-# libprocdraw
-
-#add_library(libprocdraw
-#            alsa_midi_client.cc
-#            camera.cc
-#            cli.cc
-#            frame_counter.cc
-#            ft_text_renderer.cc
-#            glrenderer.cc
-#            gl_util.cc
-#            procdraw_app.cc
-#            procdraw_app_lisp.cc
-#            sdl_util.cc)
-
-# set_target_properties(libprocdraw PROPERTIES OUTPUT_NAME procdraw)
-
-# procdraw
-
-#add_executable(procdraw main.cc)
-
-#target_link_libraries(procdraw
-#                      libprocdraw)
-#                      ${SDL2_LIBRARIES}
-#                      ${FT2_LIBRARIES}
-#                      ${ALSA_LIBRARIES}
-#                      ${OPENGL_LIBRARIES}
-#                      ${GLEW_LIBRARIES}
-#                      readline)
-
 # Projects
 
+add_subdirectory(src/utils)
 add_subdirectory(src/interpreter)
+add_subdirectory(src/graphics)
+add_subdirectory(src/alsa_midi)
+add_subdirectory(src/procdraw)
+add_subdirectory(tests/utils_tests)
 add_subdirectory(tests/interpreter_tests)
-#add_subdirectory(tests/function_spec_tests)
+add_subdirectory(tests/function_spec_tests)
 
 # Documentation
 

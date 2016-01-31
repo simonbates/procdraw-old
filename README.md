@@ -59,31 +59,6 @@ To generate the documentation, run `make html` in the `build` directory:
 $ make html
 ```
 
-Building on Windows
--------------------
-
-Dependencies:
-
-- Visual Studio Community 2015 (with C++ tools and Windows SDK)
-- CMake
-
-Run CMake to generate the Visual Studio solution:
-
-```
-> mkdir build
-> cd build
-> cmake -G "Visual Studio 14" ..
-```
-
-To build in Visual Studio:
-
-- Open `build\Procdraw.sln`
-- Build Solution (Ctrl+Shift+B)
-
-To run the tests in Visual Studio:
-
-- Build the `RUN_TESTS` project
-
 Running Procdraw from Emacs
 ---------------------------
 

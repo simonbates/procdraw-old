@@ -1,5 +1,5 @@
 #include "signals.h"
-#include "util.h"
+#include "utils.h"
 #include <cmath>
 
 #define TRI_WAVETABLE_LEN 3
@@ -232,7 +232,8 @@ namespace procdraw {
             if (L->Eq(GetSlot(L, self, selectedKey), symbolA)) {
                 PutSlot(L, self, selectedKey, symbolB);
                 out = GetSlot(L, self, symbolB);
-            } else {
+            }
+            else {
                 PutSlot(L, self, selectedKey, symbolA);
                 out = GetSlot(L, self, symbolA);
             }

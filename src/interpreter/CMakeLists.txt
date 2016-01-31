@@ -1,11 +1,9 @@
+include_directories(${PROJECT_SOURCE_DIR}/src/utils)
+
 add_library(interpreter
-            color.cpp
-            line_buffer.cpp
             lisp_functions.cpp
             lisp_interpreter.cpp
             lisp_memory.cpp
             lisp_printer.cpp
             lisp_reader.cpp
-            lsystem.cpp
-            signals.cpp
-            util.cpp)
+            signals.cpp)

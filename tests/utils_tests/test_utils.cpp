@@ -1,4 +1,4 @@
-#include "util.h"
+#include "utils.h"
 #include "catch.hpp"
 
 TEST_CASE("Clamp")
