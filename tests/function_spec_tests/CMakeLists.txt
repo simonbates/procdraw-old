@@ -1,14 +1,13 @@
 pkg_search_module(LIBXML2 REQUIRED libxml-2.0)
 
-include_directories(${PROJECT_SOURCE_DIR}/src/interpreter
-                    ${LIBXML2_INCLUDE_DIRS})
+include_directories(${LIBXML2_INCLUDE_DIRS})
 
-add_executable(test_function_spec test_function_spec.cpp)
+add_executable(test_function_spec
+    test_function_spec.cpp)
 
 target_link_libraries(test_function_spec
-                      interpreter
-                      utils
-                      ${LIBXML2_LIBRARIES})
+    interpreter
+    ${LIBXML2_LIBRARIES})
 
 function(add_spec_failure name spec numtests expected)
     add_test("function_spec_${name}_fails" test_function_spec ${spec} ${numtests})
