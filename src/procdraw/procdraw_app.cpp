@@ -55,9 +55,9 @@ namespace procdraw {
             L_.Call("draw");
             if (L_.BoolVal(ShowRepl())) {
                 renderer_.Begin2D();
-                renderer_.Rect(40, 80, 280, 240);
+                renderer_.Rect(20, 20, renderer_.Width() - 40, renderer_.Height() - 40);
                 renderer_.BeginText();
-                renderer_.Text(40, 80);
+                renderer_.Text(30, 30, "hello, world");
                 renderer_.Begin3D();
             }
             renderer_.DoSwap();

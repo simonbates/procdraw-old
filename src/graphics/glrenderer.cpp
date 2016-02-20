@@ -200,9 +200,9 @@ namespace procdraw {
         glDrawArrays(GL_TRIANGLES, 0, 12);
     }
 
-    void GlRenderer::Text(int x, int y)
+    void GlRenderer::Text(int x, int y, const std::string &text)
     {
-        textRenderer_->Text(x, y);
+        textRenderer_->Text(x, y, text);
     }
 
     void GlRenderer::Translate(float x, float y, float z)

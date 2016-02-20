@@ -9,6 +9,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <glm/glm.hpp>
 #include <memory>
+#include <string>
 
 namespace procdraw {
 
@@ -56,7 +57,7 @@ namespace procdraw {
         void RotateZ(float turns);
         void Scale(float factor);
         void Tetrahedron();
-        void Text(int x, int y);
+        void Text(int x, int y, const std::string &text);
         void Translate(float x, float y, float z);
         int Width();
     private:
