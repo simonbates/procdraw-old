@@ -59,64 +59,74 @@ namespace procdraw {
 
     void FtTextRenderer::Text(int x, int y, const std::string &text)
     {
+        // TODO: Calculate the baseline position from font metrics
+        float baseline = 80;
+
         int cursorX = x;
         int numGlyphs = 0;
+        int verticesOffset = 0;
         int maxCharCode = asciiGlyphMetrics.size() - 1;
+
         for (const char &c : text) {
             if (numGlyphs >= FT_TEXT_RENDERER_MAX_DRAW_GLYPHS) {
                 break;
             }
 
             if (c <= 32 || c > maxCharCode) {
-                // TODO: Move cursorX one character over
+                cursorX += asciiGlyphMetrics[32].advanceWidthPixels;
                 continue;
             }
 
             unsigned int charCode = c;
 
-            float glyphWidth = asciiGlyphMetrics[charCode].width;
-            float glyphHeight = asciiGlyphMetrics[charCode].height;
-            float glyphTextureLeft = ((float)asciiGlyphMetrics[charCode].xoffset) / asciiFontTextureWidth_;
-            float glyphTextureRight = (asciiGlyphMetrics[charCode].xoffset + glyphWidth) / asciiFontTextureWidth_;
+            float glyphWidth = asciiGlyphMetrics[charCode].widthPixels;
+            float glyphHeight = asciiGlyphMetrics[charCode].heightPixels;
+
+            float glyphLeft = cursorX + asciiGlyphMetrics[charCode].leftBearingPixels;
+            float glyphRight = glyphLeft + glyphWidth;
+            float glyphTop = y + baseline - asciiGlyphMetrics[charCode].topBearingPixels;
+            float glyphBottom = glyphTop + glyphHeight;
+
+            float glyphTextureLeft = ((float)asciiGlyphMetrics[charCode].xoffsetPixels) / asciiFontTextureWidth_;
+            float glyphTextureRight = (asciiGlyphMetrics[charCode].xoffsetPixels + glyphWidth) / asciiFontTextureWidth_;
             float glyphTextureTop = 0.0f;
             float glyphTextureBottom = glyphHeight / asciiFontTextureHeight_;
 
-            auto verticesOffset = numGlyphs * FT_TEXT_RENDERER_VERTICES_PER_QUAD;
-
             // Top left
-            glyphQuadVertices_[verticesOffset + 0] = cursorX;
-            glyphQuadVertices_[verticesOffset + 1] = y;
+            glyphQuadVertices_[verticesOffset + 0] = glyphLeft;
+            glyphQuadVertices_[verticesOffset + 1] = glyphTop;
             glyphQuadVertices_[verticesOffset + 2] = glyphTextureLeft;
             glyphQuadVertices_[verticesOffset + 3] = glyphTextureTop;
             // Bottom left
-            glyphQuadVertices_[verticesOffset + 4] = cursorX;
-            glyphQuadVertices_[verticesOffset + 5] = y + glyphHeight;
+            glyphQuadVertices_[verticesOffset + 4] = glyphLeft;
+            glyphQuadVertices_[verticesOffset + 5] = glyphBottom;
             glyphQuadVertices_[verticesOffset + 6] = glyphTextureLeft;
             glyphQuadVertices_[verticesOffset + 7] = glyphTextureBottom;
             // Top right
-            glyphQuadVertices_[verticesOffset + 8] = cursorX + glyphWidth;
-            glyphQuadVertices_[verticesOffset + 9] = y;
+            glyphQuadVertices_[verticesOffset + 8] = glyphRight;
+            glyphQuadVertices_[verticesOffset + 9] = glyphTop;
             glyphQuadVertices_[verticesOffset + 10] = glyphTextureRight;
             glyphQuadVertices_[verticesOffset + 11] = glyphTextureTop;
 
             // Bottom left
-            glyphQuadVertices_[verticesOffset + 12] = cursorX;
-            glyphQuadVertices_[verticesOffset + 13] = y + glyphHeight;
+            glyphQuadVertices_[verticesOffset + 12] = glyphLeft;
+            glyphQuadVertices_[verticesOffset + 13] = glyphBottom;
             glyphQuadVertices_[verticesOffset + 14] = glyphTextureLeft;
             glyphQuadVertices_[verticesOffset + 15] = glyphTextureBottom;
             // Bottom right
-            glyphQuadVertices_[verticesOffset + 16] = cursorX + glyphWidth;
-            glyphQuadVertices_[verticesOffset + 17] = y + glyphHeight;
+            glyphQuadVertices_[verticesOffset + 16] = glyphRight;
+            glyphQuadVertices_[verticesOffset + 17] = glyphBottom;
             glyphQuadVertices_[verticesOffset + 18] = glyphTextureRight;
             glyphQuadVertices_[verticesOffset + 19] = glyphTextureBottom;
             // Top right
-            glyphQuadVertices_[verticesOffset + 20] = cursorX + glyphWidth;
-            glyphQuadVertices_[verticesOffset + 21] = y;
+            glyphQuadVertices_[verticesOffset + 20] = glyphRight;
+            glyphQuadVertices_[verticesOffset + 21] = glyphTop;
             glyphQuadVertices_[verticesOffset + 22] = glyphTextureRight;
             glyphQuadVertices_[verticesOffset + 23] = glyphTextureTop;
 
-            cursorX += glyphWidth;
+            cursorX += asciiGlyphMetrics[charCode].advanceWidthPixels;
             ++numGlyphs;
+            verticesOffset += FT_TEXT_RENDERER_VERTICES_PER_QUAD;
         }
 
         glActiveTexture(GL_TEXTURE0);

@@ -13,14 +13,26 @@
 namespace procdraw {
 
     struct GlyphMetrics {
-        int xoffset;
-        int width;
-        int height;
+        // Location of the glyph in the texture
+        int xoffsetPixels;
+        // Width of the glyph bitmap
+        int widthPixels;
+        // Height of the glyph bitmap
+        int heightPixels;
+        // Distance to advance the drawing position for next glyph
+        int advanceWidthPixels;
+        // Distance from the drawing position to the left of the glyph's bitmap
+        int leftBearingPixels;
+        // Distance from the baseline to the top of the glyph's bitmap
+        int topBearingPixels;
         GlyphMetrics()
         {
-            this->xoffset = 0;
-            this->width = 0;
-            this->height = 0;
+            this->xoffsetPixels = 0;
+            this->widthPixels = 0;
+            this->heightPixels = 0;
+            this->advanceWidthPixels = 0;
+            this->leftBearingPixels = 0;
+            this->topBearingPixels = 0;
         }
     };
 
@@ -73,9 +85,12 @@ namespace procdraw {
                             GL_UNSIGNED_BYTE,
                             g->bitmap.buffer);
 
-            metrics.at(charCode).xoffset = xoffset;
-            metrics.at(charCode).width = g->bitmap.width;
-            metrics.at(charCode).height = g->bitmap.rows;
+            metrics.at(charCode).xoffsetPixels = xoffset;
+            metrics.at(charCode).widthPixels = g->bitmap.width;
+            metrics.at(charCode).heightPixels = g->bitmap.rows;
+            metrics.at(charCode).advanceWidthPixels = g->advance.x / 64;
+            metrics.at(charCode).leftBearingPixels = g->bitmap_left;
+            metrics.at(charCode).topBearingPixels = g->bitmap_top;
 
             xoffset += g->bitmap.width;
         }
