@@ -1,0 +1,453 @@
+#+TODO: TODO | DONE WONTDO
+#+TAGS: { v0_1_0 v0_2_0 }
+#+STARTUP: content
+
+* Meta
+** TODO Close GitHub issues                                          :v0_1_0:
+* Interpreter
+** TODO Add pretty printing
+
+   - See: "Prettyprinting" by Derek Oppen
+     - ACM Transactions on Programming Languages and Systems
+     - Volume 2 Issue 4, Oct. 1980
+     - http://dl.acm.org/citation.cfm?id=357114.357115
+   - Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
+     - http://hdl.handle.net/1721.1/6504
+
+** TODO Add binary file utils
+
+   - New byte array data type
+   - Use a hex dump for the string representation of a byte array (what
+     is shown in the Transcript): offset, hex values, and ASCII
+     rendering
+   - (load-file filename)
+     - Load a file from disk, returning a byte array
+   - (strings byte-array)
+     - Works like Unix strings -- returns a list of (offset, string)
+       pairs for ASCII text found in the byte array
+
+** TODO Use an image file to persist interpreter state
+
+   - Make the image format as human readable as possible
+   - Need to handle references to shared data
+   - Need to handle cycles
+   - Partition the global environment into collections/modules and
+     store each in a separate file
+     - I'm hoping this will make it easier to extract bits of an image
+       for sharing
+     - Start with 2 collections: user and system
+     - By default a symbol is placed into the user collection
+     - Add functions for getting and setting a symbol's collection
+       membership
+
+   Use a format of one dotted pair per symbol:
+
+   (symbol1 . val1)
+   (symbol2 . val2)
+
+   Depends on:
+
+   - [[Shared reference support and cycle detection]]
+   - [[Name CFunctions]]
+
+** TODO Update the Reader to read floating point numbers             :v0_1_0:
+** TODO Implement image frame Signals
+
+   - Streams of bitmap images implementing the Signal interface.
+   - For doing real time image processing.
+   - The rendering process could be modified to act as a signal
+     generator so that I could do full-screen post processing on the
+     rendered images.
+
+** TODO Efficient symbol referencing from C++
+
+   Some options:
+
+   - Keep the existing SymbolRef(std::string name) API but use a
+     hashtable
+     - std::unordered_map<std::string, LispObjectPtr>
+   - String interning with a hashtable
+   - A global symbol table rather than per interpreter instance --
+     symbols can then be created and references stored once at program
+     start
+   - Use an object oriented extension API to create symbols needed by
+     an extension at extension registration -- references to the
+     symbols can then be stored on the extension instance and accessed
+     through the callback data argument (similar to how the interpreter
+     itself uses symbols -- references are stored at construction)
+   - Symbol table generation at compile time
+     - Mark symbols in C code with a macro
+     - Make a tool which scans through and generates a symbol table
+     - The symbol table is represented as an array on the interpreter
+     - And the symbol macro expands to a lookup into the array
+
+** TODO Use a shorter name for "lambda"
+
+   Such as:
+
+   - \ (Haskell)
+   - fn (Clojure, Standard ML)
+   - fun (Erlang, OCaml)
+   - func (Go)
+
+** TODO Initialise signal keys at construction
+
+   Some syntax options:
+
+   - (setq saw1 (saw 10))
+   - (setq saw1 (saw 'freq 10))
+   - (setq saw1 (saw {'freq 10}))
+
+   Rather than
+
+   (setq saw1 (saw))
+   (put saw1 'freq 10)
+
+** TODO Add a /=> disconnect signal function
+** TODO Use Hz for oscillator frequencies
+
+   Use Hz for oscillator frequencies rather than cycles per frame.
+
+   Mapping Hz to cycles per frame will depend on exactly how I proceed
+   with updating the signals vs rendering ('game loop'). But if I
+   continue with vsync, then:
+
+   - For windowed mode, I can get the refresh rate from DwmGetCompositionTimingInfo
+   - For full-screen, IDXGIOutput::GetDisplayModeList and what is requested in DXGI_SWAP_CHAIN_DESC.RefreshRate
+   - Or empirically using my existing ProcDrawApp::FramesPerSecond
+
+   See http://stackoverflow.com/questions/18844654/how-to-find-out-real-screen-refresh-rate-not-the-rounded-number
+
+** TODO Add a for-each function
+
+   (for-each list fun)
+
+** TODO Add function(s) for generating ranges of numbers
+
+   Either functions which return actual list data structures or which
+   return iterators/generators that build values lazily.
+
+   Like:
+
+   - APL iota
+   - Python 2 range
+   - Python 3 Ranges
+   - vvvv spreads
+     - http://vvvv.org/documentation/spread-nodes
+     - http://vvvv.org/documentation/linearspread-%28spreads%29
+
+** TODO Add a mechanism for iterating over a cartesian product
+
+   Either with a list comprehension or by building a list of all
+   combinations.
+
+   See:
+
+   - https://docs.python.org/2/library/itertools.html#itertools.product
+   - http://vvvv.org/documentation/cross-%282d%29
+   - http://vvvv.org/documentation/cross-%283d%29
+
+** TODO Add a list-length function
+
+   See http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length
+
+** TODO Add an equal function
+
+   Which recurses into conses, comparing their components.
+
+   See http://www.lispworks.com/documentation/HyperSpec/Body/f_equal.htm#equal
+
+** TODO Create an extensions API
+   <<Extensions API>>
+
+   And minimise the runtime, with as much as possible structured as
+   extensions.
+
+   I have:
+
+   - RegisterProcdrawAppFunctions() in procdraw_app_lisp.h
+   - RegisterSignals() in signals.h
+
+   Create a standard structure for expressing extensions. Maybe an
+   object with a Register() function. Or an Exports() function.
+
+   With the addition of the void *data parameter to
+   LispInterpreter::SetGlobalCFunction(), I should be able to bind
+   directly to the GLRenderer instance, rather than going through
+   ProcdrawApp.
+
+   First step could be to keep the use of a C function but standardise
+   on a naming convention of Register<Extension name>:
+
+   - RegisterSignals
+   - RegisterGLRenderer
+   - RegisterUtil
+
+   Cleanup:
+
+   - Remove procdraw_app_lisp.* (becomes part of GLRenderer)
+   - Remove lisp_functions.*
+     - The functions that are part of LispInterpreter are bound in
+       LispInterpreter
+     - The functions that are not part of LispInterpreter have
+       Register function(s) added beside the code they bind
+   - Extensions/*_ext.cc and extensions/*_ext.h
+
+   Rename util.h to math.h and util.cc to math.cc.
+
+   A possible object-based API:
+
+   class Extension {
+   public:
+       virtual void Register(LispInterpreter &L) = 0;
+       virtual ~Extension() { }
+   };
+
+   And:
+
+   LispInterpreter::Extend(Extension &ext)
+   {
+       ext.Register(this);
+   }
+
+** TODO Add shared reference support and cycle detection to data structure printing and reading
+   <<Shared reference support and cycle detection>>
+
+** TODO Name CFunctions
+   <<Name CFunctions>>
+
+   When I am further with my serialization and implementation of
+   image-based storage, I will need some way to name CFunctions.
+
+   Right now, if I implement table printing, I would get something
+   like this for a signal:
+
+   { step <CFunction> }
+
+   But which CFunction?
+
+   Sketch of an initial idea:
+
+   - A hash table storing mapping from string name to function pointer
+   - Functions must be registered in this hash table
+   - The CFunction object includes the name in addition to the
+     function pointer
+   - SetGlobalCFunction takes a name (which is looked up in table 1)
+     rather than a function pointer directly
+   - When we print a CFunction we get <CFunction:NAME> or such
+   - When we read <CFunction:NAME>, we look up the table 1
+
+   MakeCFunction would also take a name rather than a function
+   pointer.
+
+** TODO Add hex literals to the reader syntax
+** TODO Add signalp
+
+   I have a C function Signalp but it isn't yet accessible from Lisp.
+
+** TODO Add logical operators: and, or, not
+
+   - not [DONE]
+   - and
+   - or
+
+** TODO Remove the Boolean and Null types
+
+   And use the traditional Lisp treatment of boolean values:
+
+   - nil is false
+   - everything else is true
+   - nil and t are Symbols and are self evaluating
+
+   The not function then becomes an alias of null as they have the same
+   behaviour.
+
+   See also: [[Is Constant]]
+
+** TODO Add an 'is constant' flag to Symbols
+   <<Is constant>>
+
+   Add an 'is constant' flag to Symbols. That determines if it's
+   possible to change their value.
+
+   Set on
+
+   - pi
+   - nil
+   - t
+
+** TODO Add a phase offset to my oscillator signals
+** TODO Minimise the size of the Lisp machine core
+
+   Minimise the size of the Procdraw Lisp machine core
+
+   - Minimise the number of types
+   - Minimise the number of functions
+
+   I'm thinking in terms of scope something like a bytecoded virtual
+   machine: data types, logic, arithmetic, lambdas, and eval.
+
+   Move non-core functions (including read and print) to separate
+   source file(s).
+
+   See also: [[Extensions API]].
+
+** TODO Add a lisp binding for list
+
+   The interpreter has a list function but it is not accessible from Lisp.
+
+** TODO Add sigmap and sigmap2 functions
+
+   - (sigmap f signal)
+   - (sigmap2 f signal1 signal2)
+
+   Returns a new signal that applies the provided function f to the
+   signal input(s).
+
+   Can then remove the optional mapfun parameter from =>.
+
+** TODO Add support for constant sources to =>
+
+   If the source of a => is a signal (signalp), put a connection.
+   Otherwise, set the value with put-slot and remove any existing
+   connection.
+
+** TODO Add a toggle signal type
+
+   Inputs:
+
+   - Event signal
+   - Signal A (default to constant 0)
+   - Signal B (default to constant 1)
+
+   The value of the toggle signal is either A or B and toggles between
+   them each time the input event signal is true.
+
+   Example usage: stopping and starting an oscillation
+
+   (=> (sigmap2 * (toggle key-space) midic-1-1) saw1 'freq)
+
+** TODO Add a counter signal type
+
+   Inputs:
+
+   - incr event signal
+   - decr event signal
+   - min (default to 0)
+   - max (default to 1)
+   - incr-amount (default to 1/8)
+   - wrap boolean defaults to false
+
+   Signal value:
+
+   - A number >= min and <= max
+   - If incr, val += incr-amount
+   - If decr, val -= incr-amount
+   - If wrap is true, the value wraps, otherwise, it stops at the limits
+
+** TODO Connect to non-signals
+
+   For example, it would be nice to be able to do something like:
+
+   (<- console-font-size [$midic-1-1])
+
+* Utils
+** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
+* Graphics
+** TODO Add specular lighting
+
+   Use the Phong reflection model or the Blinn–Phong reflection model.
+
+** TODO Add camera positioning functions
+
+   - (camera x y z)
+   - (look-at x y z)
+   - (camera-up x y z)
+
+** TODO Add point light source lighting
+** TODO Add a world matrix stack
+
+   To save and backtrack to world matrix states.
+
+** TODO Relative cursor 3D graphics
+
+   Turtle-like graphics for 3D.
+
+   - (left angle)
+   - (right angle)
+   - (up angle)
+   - (down angle)
+   - (roll angle)
+   - (forward distance)
+
+   Object placement (such as drawing a cube) is then made at the cursor
+   position.
+
+   See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
+
+** TODO Try out some simple drawing persistence
+
+   Such as keeping a history of what was drawn and then redrawing it
+   for some number of frames.
+
+** TODO Add a function to draw a sphere
+** TODO Add a function to draw a point
+** TODO Support resizing of the Procdraw window
+* Procdraw
+** TODO Add Xbox 360 controller input
+** TODO Add Wacom tablet input
+
+   Either interface directly with the device or via OSC.
+
+   - http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
+   - An OSC Address Subspace for Wacom Tablet Data
+   - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
+
+** TODO Procdraw client/server
+
+   Interact with a running procdraw from another process using a Unix
+   domain socket -- make a file in /tmp (private to the user).
+
+   Add command line options to talk to the running procdraw, such as:
+
+   - procdraw eval EXPRESSION
+   - procdraw set IDENTIFIER EXPRESSION
+   - procdraw get IDENTIFIER
+
+** TODO Internationalize procdraw using GNU gettext
+** TODO Add a function to load code from a file
+
+   (source filename)
+
+** TODO Use tick count for signal updating
+
+   Change the mechanism used to determine if a signal needs to be
+   updated for this frame.
+
+   Rather than a set of updated signals that must be cleared, store a
+   tick or frame count. Each signal keeps the value for when it was
+   last updated. At the end of each frame, the tick count value is
+   incremented.
+
+   frame_counter.h
+
+** TODO Add Fadecandy integration
+
+   https://github.com/scanlime/fadecandy
+
+** TODO Implement a basic console and REPL                           :v0_1_0:
+*** TODO Move cursor drawing into GlRenderer::Text
+*** TODO Replace CursorForward(n) and CursorBackward(n)
+
+    Replace CursorForward(n) and CursorBackward(n) with:
+
+    - ForwardChar()
+    - BackwardChar()
+
+** TODO Implement an editor
+* Tests
+** TODO Use propositions for test names
+
+   As if prefixed by "test that..." or "check that...".
+
+
