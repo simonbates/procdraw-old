@@ -355,6 +355,13 @@
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
+** FtTextRenderer
+*** TODO Calculate the baseline position from font metrics           :v0_1_0:
+*** TODO Split FtTextRenderer::Text into separate layout and draw
+
+    Then I can cache layouts for text -- very little text will change
+    every frame
+
 ** TODO Add specular lighting
 
    Use the Phong reflection model or the Blinn–Phong reflection model.
@@ -438,7 +445,7 @@
 
 ** TODO Implement a basic console and REPL                           :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
-*** TODO Replace CursorForward(n) and CursorBackward(n)
+*** DONE Replace CursorForward(n) and CursorBackward(n)
 
     Replace CursorForward(n) and CursorBackward(n) with:
 
