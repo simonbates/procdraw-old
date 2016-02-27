@@ -5,7 +5,6 @@ namespace procdraw {
     void Console::Draw(GlRenderer *renderer)
     {
         // TODO: Don't need to calculate the cursor pos each time, only when changes
-        // TODO: Calculate y positioning from font metrics
         int cursorX, cursorWidth, cursorHeight;
         renderer->CalculateBlockCursorPos(line_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
 

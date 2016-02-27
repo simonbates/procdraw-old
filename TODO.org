@@ -452,6 +452,13 @@
     - ForwardChar()
     - BackwardChar()
 
+*** TODO Add console content lines
+
+    I currently have only a single line, where the cursor is
+
+*** TODO Wrap lines longer than the console width
+*** TODO Scroll the console when we reach the bottom
+*** TODO Provide scrollback to view lines that have scrolled off the top
 ** TODO Implement an editor
 * Tests
 ** TODO Use propositions for test names
