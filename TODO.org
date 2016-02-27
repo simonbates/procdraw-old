@@ -394,6 +394,12 @@
 ** TODO Add a function to draw a sphere
 ** TODO Add a function to draw a point
 ** TODO Support resizing of the Procdraw window
+* Hardware integration
+** TODO Serial connection to Arduino
+** TODO Add Fadecandy integration
+
+   https://github.com/scanlime/fadecandy
+
 * Procdraw
 ** TODO Add Xbox 360 controller input
 ** TODO Add Wacom tablet input
@@ -431,10 +437,6 @@
    incremented.
 
    frame_counter.h
-
-** TODO Add Fadecandy integration
-
-   https://github.com/scanlime/fadecandy
 
 ** TODO Implement a basic console and REPL                           :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
