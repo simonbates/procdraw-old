@@ -1,5 +1,6 @@
 add_executable(procdraw
     cli.cpp
+    console.cpp
     frame_counter.cpp
     main.cpp
     procdraw_app.cpp

@@ -96,15 +96,29 @@ namespace procdraw {
         glEnable(GL_DEPTH_TEST);
     }
 
+    void GlRenderer::BeginInverse()
+    {
+        Color(0, 0, 1.0f, 1.0f);
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+    }
+
     void GlRenderer::BeginText()
     {
         // TODO: Passing the width and height doesn't feel like a great solution
         textRenderer_->BeginText(Width(), Height());
     }
 
-    void GlRenderer::Color(float h, float s, float v)
+    void GlRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width)
+    {
+        textRenderer_->CalculateBlockCursorPos(cursorTextPosition, x, width);
+    }
+
+    // TODO: ColorHsv and ColorRgb
+
+    void GlRenderer::Color(float h, float s, float v, float a)
     {
         Hsv2Rgb(h, s, v, materialR_, materialG_, materialB_);
+        materialA_ = a;
     }
 
     void GlRenderer::Cube()
@@ -117,6 +131,11 @@ namespace procdraw {
     void GlRenderer::DoSwap()
     {
         SDL_GL_SwapWindow(window_);
+    }
+
+    void GlRenderer::EndInverse()
+    {
+        SetDefaultBlend();
     }
 
     int GlRenderer::Height()
@@ -161,6 +180,7 @@ namespace procdraw {
         rectangleVertices_[6] = x + w;
         rectangleVertices_[7] = y + h;
 
+        glUniform4f(materialColor2dLoc_, materialR_, materialG_, materialB_, materialA_);
         glBindVertexArray(rectangleVao_);
         glBindBuffer(GL_ARRAY_BUFFER, rectangleVertexBuffer_);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(rectangleVertices_), rectangleVertices_);
@@ -246,6 +266,11 @@ namespace procdraw {
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
+        SetDefaultBlend();
+    }
+
+    void GlRenderer::SetDefaultBlend()
+    {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
@@ -305,15 +330,17 @@ namespace procdraw {
 
         static const GLchar *fragmentShaderSource[] = {
             "#version 150                                       \n"
+            "uniform vec4 material_color;                       \n"
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
             "{                                                  \n"
-            "    color = vec4(1, 1, 1, 0.5);                    \n"
+            "    color = material_color;                        \n"
             "}                                                  \n"
         };
 
         program2d_ = CompileProgram(vertexShaderSource, fragmentShaderSource, {{0, "position"}});
         projection2dLoc_ = glGetUniformLocation(program2d_, "projection");
+        materialColor2dLoc_ = glGetUniformLocation(program2d_, "material_color");
     }
 
     void GlRenderer::MakeTetrahedronVao()
@@ -442,9 +469,7 @@ namespace procdraw {
 
     void GlRenderer::InitMaterial()
     {
-        materialR_ = 0.8f;
-        materialG_ = 0.8f;
-        materialB_ = 0.8f;
+        Color(0, 0, 0.8f);
     }
 
     void GlRenderer::UpdateUniformsForObject()
@@ -457,7 +482,7 @@ namespace procdraw {
         glUniform4fv(lightDirectionLoc_, 1, glm::value_ptr(modelSpaceLightDirection));
         glUniform4fv(lightColorLoc_, 1, glm::value_ptr(lightColor_));
         glUniform4fv(ambientLightColorLoc_, 1, glm::value_ptr(ambientLightColor_));
-        glUniform4f(materialColorLoc_, materialR_, materialG_, materialB_, 1.0f);
+        glUniform4f(materialColorLoc_, materialR_, materialG_, materialB_, materialA_);
     }
 
 }

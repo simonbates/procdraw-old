@@ -57,6 +57,14 @@ namespace procdraw {
         glDisable(GL_DEPTH_TEST);
     }
 
+    void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width)
+    {
+        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiGlyphMetrics[32].advanceWidthPixels, x, width);
+    }
+
+    // TODO: Split the Text method into 2 -- (1) layout and (2) draw layout
+    // Then I can cache layouts for text -- very little text will change every frame
+
     void FtTextRenderer::Text(int x, int y, const std::string &text)
     {
         // TODO: Calculate the baseline position from font metrics
@@ -67,17 +75,17 @@ namespace procdraw {
         int verticesOffset = 0;
         int maxCharCode = asciiGlyphMetrics.size() - 1;
 
-        for (const char &c : text) {
+        for (const char &ch : text) {
             if (numGlyphs >= FT_TEXT_RENDERER_MAX_DRAW_GLYPHS) {
                 break;
             }
 
-            if (c <= 32 || c > maxCharCode) {
+            if (ch <= 32 || ch > maxCharCode) {
                 cursorX += asciiGlyphMetrics[32].advanceWidthPixels;
                 continue;
             }
 
-            unsigned int charCode = c;
+            unsigned int charCode = ch;
 
             float glyphWidth = asciiGlyphMetrics[charCode].widthPixels;
             float glyphHeight = asciiGlyphMetrics[charCode].heightPixels;

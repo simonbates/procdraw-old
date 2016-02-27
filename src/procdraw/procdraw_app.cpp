@@ -37,28 +37,41 @@ namespace procdraw {
         SDL_Event e;
         while (!quit) {
             L_.Call("clear-stepped-signals");
+            auto showReplVal = L_.BoolVal(ShowRepl());
             while (SDL_PollEvent(&e)) {
-                if (e.type == SDL_QUIT) {
+                switch (e.type) {
+                case SDL_QUIT:
                     quit = true;
-                }
-                else if (e.type == SDL_KEYDOWN) {
-                    if ((e.key.keysym.sym == SDLK_ESCAPE) && (e.key.repeat == 0)) {
-                        L_.Set(S_SHOW_REPL, L_.Not(ShowRepl()), L_.Nil);
+                    break;
+                case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_ESCAPE) {
+                        if (e.key.repeat == 0) {
+                            L_.Set(S_SHOW_REPL, L_.Not(ShowRepl()), L_.Nil);
+                        }
                     }
-                    else if ((e.key.keysym.sym == SDLK_SPACE) && (e.key.repeat == 0)) {
-                        PutSlot(&L_, keySpaceSignal_, S_EVENT, L_.True);
+                    else {
+                        if (showReplVal) {
+                            console_.ProcessKey(&(e.key));
+                        }
+                        else {
+                            if ((e.key.keysym.sym == SDLK_SPACE) && (e.key.repeat == 0)) {
+                                PutSlot(&L_, keySpaceSignal_, S_EVENT, L_.True);
+                            }
+                        }
                     }
+                    break;
+                case SDL_TEXTINPUT:
+                    if (showReplVal) {
+                        console_.InputText(e.text.text);
+                    }
+                    break;
                 }
             }
             cli_->Poll();
             midiClient_.Poll(this);
             L_.Call("draw");
-            if (L_.BoolVal(ShowRepl())) {
-                renderer_.Begin2D();
-                renderer_.Rect(20, 20, renderer_.Width() - 40, renderer_.Height() - 40);
-                renderer_.BeginText();
-                renderer_.Text(30, 30, "hello, world");
-                renderer_.Begin3D();
+            if (showReplVal) {
+                console_.Draw(&renderer_);
             }
             renderer_.DoSwap();
             frameCounter_.RecordFrame();

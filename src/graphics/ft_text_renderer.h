@@ -1,5 +1,6 @@
 #pragma once
 
+#include "font_utils.h"
 #include <GL/glew.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -10,37 +11,17 @@
 #define FT_TEXT_RENDERER_VERTICES_PER_QUAD 24
 #define FT_TEXT_RENDERER_MAX_ASCII_CODE 126
 
-namespace procdraw {
+// TODO: Do some refactoring and pull bits out, such as font metrics type
+//       So that I can support multiple fonts and switch between
 
-    struct GlyphMetrics {
-        // Location of the glyph in the texture
-        int xoffsetPixels;
-        // Width of the glyph bitmap
-        int widthPixels;
-        // Height of the glyph bitmap
-        int heightPixels;
-        // Distance to advance the drawing position for next glyph
-        int advanceWidthPixels;
-        // Distance from the drawing position to the left of the glyph's bitmap
-        int leftBearingPixels;
-        // Distance from the baseline to the top of the glyph's bitmap
-        int topBearingPixels;
-        GlyphMetrics()
-        {
-            this->xoffsetPixels = 0;
-            this->widthPixels = 0;
-            this->heightPixels = 0;
-            this->advanceWidthPixels = 0;
-            this->leftBearingPixels = 0;
-            this->topBearingPixels = 0;
-        }
-    };
+namespace procdraw {
 
     class FtTextRenderer {
     public:
         FtTextRenderer();
         ~FtTextRenderer();
         void BeginText(int width, int height);
+        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width);
         void Text(int x, int y, const std::string &text);
     private:
         FT_Library ft_;
@@ -54,7 +35,7 @@ namespace procdraw {
         GLuint asciiFontTexture_;
         GLsizei asciiFontTextureWidth_ = 0;
         GLsizei asciiFontTextureHeight_ = 0;
-        std::array<GlyphMetrics, FT_TEXT_RENDERER_MAX_ASCII_CODE + 1> asciiGlyphMetrics;
+        std::array<TextureGlyphMetrics, FT_TEXT_RENDERER_MAX_ASCII_CODE + 1> asciiGlyphMetrics;
         void Cleanup();
         void CompileShaders();
         void MakeGlyphQuadVao();
@@ -62,12 +43,13 @@ namespace procdraw {
         void CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
                                   int *width, int *height);
         template<size_t N>
-        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, std::array<GlyphMetrics, N> &metrics);
+        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, std::array<TextureGlyphMetrics, N> &metrics);
         void RenderChar(FT_ULong charCode);
     };
 
     template<size_t N>
-    void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, std::array<GlyphMetrics, N> &metrics)
+    void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
+                                         std::array<TextureGlyphMetrics, N> &metrics)
     {
         GLint xoffset = 0;
 
