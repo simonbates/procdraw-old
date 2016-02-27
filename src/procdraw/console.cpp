@@ -6,10 +6,8 @@ namespace procdraw {
     {
         // TODO: Don't need to calculate the cursor pos each time, only when changes
         // TODO: Calculate y positioning from font metrics
-        int cursorX, cursorWidth;
-        int cursorY = 47;
-        int cursorHeight = 42;
-        renderer->CalculateBlockCursorPos(line_.GetCursorPos(), &cursorX, &cursorWidth);
+        int cursorX, cursorWidth, cursorHeight;
+        renderer->CalculateBlockCursorPos(line_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
 
         // Console background
         renderer->Begin2D();
@@ -17,8 +15,7 @@ namespace procdraw {
         renderer->Rect(0, 0, renderer->Width(), renderer->Height());
 
         // Block cursor background
-        renderer->Color(0, 0, 1.0f, 1.0f);
-        renderer->Rect(cursorX, cursorY, cursorWidth, cursorHeight);
+        renderer->DrawBlockCursorBackground(cursorX, 0, cursorWidth, cursorHeight);
 
         // Draw text
         renderer->BeginText();
@@ -26,9 +23,7 @@ namespace procdraw {
 
         // Do block cursor inversion
         renderer->Begin2D();
-        renderer->BeginInverse();
-        renderer->Rect(cursorX, cursorY, cursorWidth, cursorHeight);
-        renderer->EndInverse();
+        renderer->DrawBlockCursorInversion(cursorX, 0, cursorWidth, cursorHeight);
 
         renderer->Begin3D();
     }

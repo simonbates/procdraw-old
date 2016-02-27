@@ -24,6 +24,10 @@ namespace procdraw {
 
             CompileShaders();
             MakeGlyphQuadVao();
+
+            // Build font data
+            asciiFontAscenderPixels_ = face_->ascender / 64;
+            asciiFontDescenderPixels_ = face_->descender / 64;
             MakeAsciiFontTexture();
         }
         catch (...) {
@@ -57,9 +61,10 @@ namespace procdraw {
         glDisable(GL_DEPTH_TEST);
     }
 
-    void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width)
+    void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
     {
         CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiGlyphMetrics[32].advanceWidthPixels, x, width);
+        *height = asciiFontAscenderPixels_ - asciiFontDescenderPixels_;
     }
 
     // TODO: Split the Text method into 2 -- (1) layout and (2) draw layout
@@ -67,9 +72,6 @@ namespace procdraw {
 
     void FtTextRenderer::Text(int x, int y, const std::string &text)
     {
-        // TODO: Calculate the baseline position from font metrics
-        float baseline = 80;
-
         int cursorX = x;
         int numGlyphs = 0;
         int verticesOffset = 0;
@@ -92,7 +94,7 @@ namespace procdraw {
 
             float glyphLeft = cursorX + asciiGlyphMetrics[charCode].leftBearingPixels;
             float glyphRight = glyphLeft + glyphWidth;
-            float glyphTop = y + baseline - asciiGlyphMetrics[charCode].topBearingPixels;
+            float glyphTop = y + asciiFontAscenderPixels_ - asciiGlyphMetrics[charCode].topBearingPixels;
             float glyphBottom = glyphTop + glyphHeight;
 
             float glyphTextureLeft = ((float)asciiGlyphMetrics[charCode].xoffsetPixels) / asciiFontTextureWidth_;

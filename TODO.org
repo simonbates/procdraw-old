@@ -1,4 +1,4 @@
-#+TODO: TODO | DONE WONTDO
+#+TODO: TODO INPROGRESS | DONE WONTDO
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: content
 
@@ -356,7 +356,7 @@
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
 ** FtTextRenderer
-*** TODO Calculate the baseline position from font metrics           :v0_1_0:
+*** DONE Calculate the baseline position from font metrics           :v0_1_0:
 *** TODO Split FtTextRenderer::Text into separate layout and draw
 
     Then I can cache layouts for text -- very little text will change

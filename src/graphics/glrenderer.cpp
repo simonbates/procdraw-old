@@ -108,9 +108,9 @@ namespace procdraw {
         textRenderer_->BeginText(Width(), Height());
     }
 
-    void GlRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width)
+    void GlRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
     {
-        textRenderer_->CalculateBlockCursorPos(cursorTextPosition, x, width);
+        textRenderer_->CalculateBlockCursorPos(cursorTextPosition, x, width, height);
     }
 
     // TODO: ColorHsv and ColorRgb
@@ -131,6 +131,19 @@ namespace procdraw {
     void GlRenderer::DoSwap()
     {
         SDL_GL_SwapWindow(window_);
+    }
+
+    void GlRenderer::DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight)
+    {
+        Color(0, 0, 1.0f, 1.0f);
+        Rect(cursorX, cursorY, cursorWidth, cursorHeight);
+    }
+
+    void GlRenderer::DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight)
+    {
+        BeginInverse();
+        Rect(cursorX, cursorY, cursorWidth, cursorHeight);
+        EndInverse();
     }
 
     void GlRenderer::EndInverse()

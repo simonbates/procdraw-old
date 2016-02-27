@@ -21,7 +21,7 @@ namespace procdraw {
         FtTextRenderer();
         ~FtTextRenderer();
         void BeginText(int width, int height);
-        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width);
+        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         void Text(int x, int y, const std::string &text);
     private:
         FT_Library ft_;
@@ -32,6 +32,8 @@ namespace procdraw {
         GLuint glyphQuadVertexBuffer_;
         GLuint glyphQuadVao_;
         GLfloat glyphQuadVertices_[FT_TEXT_RENDERER_VERTICES_PER_QUAD * FT_TEXT_RENDERER_MAX_DRAW_GLYPHS] = {};
+        int asciiFontAscenderPixels_ = 0;
+        int asciiFontDescenderPixels_ = 0;
         GLuint asciiFontTexture_;
         GLsizei asciiFontTextureWidth_ = 0;
         GLsizei asciiFontTextureHeight_ = 0;

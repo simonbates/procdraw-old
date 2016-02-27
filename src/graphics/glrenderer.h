@@ -45,10 +45,12 @@ namespace procdraw {
         void Begin3D();
         void BeginInverse();
         void BeginText();
-        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width);
+        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         void Color(float h, float s, float v, float a = 1.0f);
         void Cube();
         void DoSwap();
+        void DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
+        void DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
         void EndInverse();
         int Height();
         void LightColor(float h, float s, float v);
