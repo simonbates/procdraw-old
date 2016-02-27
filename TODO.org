@@ -2,8 +2,8 @@
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: content
 
-* Meta
-** TODO Close GitHub issues                                          :v0_1_0:
+* Project level
+** TODO Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 * Interpreter
 ** TODO Add pretty printing
 
