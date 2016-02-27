@@ -9,6 +9,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <glm/glm.hpp>
 #include <memory>
+#include <string>
 
 namespace procdraw {
 
@@ -42,10 +43,15 @@ namespace procdraw {
         void Background(float h, float s, float v);
         void Begin2D();
         void Begin3D();
+        void BeginInverse();
         void BeginText();
-        void Color(float h, float s, float v);
+        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
+        void Color(float h, float s, float v, float a = 1.0f);
         void Cube();
         void DoSwap();
+        void DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
+        void DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
+        void EndInverse();
         int Height();
         void LightColor(float h, float s, float v);
         double MouseX();
@@ -56,7 +62,7 @@ namespace procdraw {
         void RotateZ(float turns);
         void Scale(float factor);
         void Tetrahedron();
-        void Text(int x, int y);
+        void Text(int x, int y, const std::string &text);
         void Translate(float x, float y, float z);
         int Width();
     private:
@@ -71,6 +77,7 @@ namespace procdraw {
         GLint materialColorLoc_;
         GLuint program2d_;
         GLint projection2dLoc_;
+        GLint materialColor2dLoc_;
         GLuint tetrahedronVertexBuffer_;
         GLuint tetrahedronVao_;
         GLuint cubeIndexBuffer_;
@@ -87,7 +94,9 @@ namespace procdraw {
         float materialR_;
         float materialG_;
         float materialB_;
+        float materialA_;
         void CreateWindowAndGlContext();
+        void SetDefaultBlend();
         void CompileShaders();
         void CompileShaders2d();
         void MakeTetrahedronVao();

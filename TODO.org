@@ -1,4 +1,4 @@
-#+TODO: TODO | DONE WONTDO
+#+TODO: TODO INPROGRESS | DONE WONTDO
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: content
 
@@ -355,6 +355,13 @@
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
+** FtTextRenderer
+*** DONE Calculate the baseline position from font metrics           :v0_1_0:
+*** TODO Split FtTextRenderer::Text into separate layout and draw
+
+    Then I can cache layouts for text -- very little text will change
+    every frame
+
 ** TODO Add specular lighting
 
    Use the Phong reflection model or the Blinn–Phong reflection model.
@@ -440,13 +447,20 @@
 
 ** TODO Implement a basic console and REPL                           :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
-*** TODO Replace CursorForward(n) and CursorBackward(n)
+*** DONE Replace CursorForward(n) and CursorBackward(n)
 
     Replace CursorForward(n) and CursorBackward(n) with:
 
     - ForwardChar()
     - BackwardChar()
 
+*** TODO Add console content lines
+
+    I currently have only a single line, where the cursor is
+
+*** TODO Wrap lines longer than the console width
+*** TODO Scroll the console when we reach the bottom
+*** TODO Provide scrollback to view lines that have scrolled off the top
 ** TODO Implement an editor
 * Tests
 ** TODO Use propositions for test names

@@ -2,31 +2,53 @@
 
 namespace procdraw {
 
-    void LineBuffer::Clear(const std::wstring &prompt)
+    void LineBuffer::Clear(const std::string &prompt)
     {
         line_ = prompt;
         promptLen_ = prompt.length();
+        cursorPos_ = promptLen_;
     }
 
-    std::wstring LineBuffer::GetLine()
+    std::string LineBuffer::GetLine()
     {
         return line_;
     }
 
-    std::wstring LineBuffer::GetUserText()
+    std::string LineBuffer::GetUserText()
     {
         return line_.substr(promptLen_, line_.length() - promptLen_);
     }
 
-    void LineBuffer::Insert(wchar_t ch)
+    int LineBuffer::GetCursorPos()
     {
-        line_.push_back(ch);
+        return cursorPos_;
+    }
+
+    void LineBuffer::ForwardChar()
+    {
+        if (cursorPos_ < line_.length()) {
+            ++cursorPos_;
+        }
+    }
+
+    void LineBuffer::BackwardChar()
+    {
+        if (cursorPos_ > promptLen_) {
+            --cursorPos_;
+        }
+    }
+
+    void LineBuffer::Insert(char ch)
+    {
+        line_.insert(cursorPos_, 1, ch);
+        ++cursorPos_;
     }
 
     void LineBuffer::DeleteBack()
     {
-        if (line_.length() > promptLen_) {
-            line_.pop_back();
+        if (cursorPos_ > promptLen_) {
+            line_.erase(cursorPos_ - 1, 1);
+            --cursorPos_;
         }
     }
 

@@ -3,6 +3,7 @@
 #include "glrenderer.h"
 #include "lisp_interpreter.h"
 #include "cli.h"
+#include "console.h"
 #include "command_processor.h"
 #include "frame_counter.h"
 #include "alsa_midi_client.h"
@@ -33,6 +34,7 @@ namespace procdraw {
         LispObjectPtr S_SHOW_REPL;
         LispObjectPtr S_OUT;
         std::unique_ptr<CLI> cli_;
+        Console console_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;
         LispObjectPtr keySpaceSignal_;
