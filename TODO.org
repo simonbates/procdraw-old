@@ -4,6 +4,7 @@
 
 * Project level
 ** TODO Close GitHub issues that have been moved to TODO.org         :v0_1_0:
+** TODO Rename "Procdraw" to "ProcDraw"                              :v0_1_0:
 * Interpreter
 ** TODO Add pretty printing
 
@@ -124,7 +125,7 @@
 
 ** TODO Add function(s) for generating ranges of numbers
 
-   Either functions which return actual list data structures or which
+   Either functions that return actual list data structures or that
    return iterators/generators that build values lazily.
 
    Like:
