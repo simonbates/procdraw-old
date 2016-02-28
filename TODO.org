@@ -5,6 +5,52 @@
 * Project level
 ** TODO Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 ** TODO Rename "Procdraw" to "ProcDraw"                              :v0_1_0:
+** TODO Version ProcDraw
+
+   Could use Semantic Versioning
+
+   http://semver.org/
+
+   Store the version info in the top CMakeLists.txt
+
+   Then generate a C header file with version info that I can show in
+   the program.
+
+   https://cmake.org/cmake/help/v3.0/command/configure_file.html
+
+   For pre-release, append -alpha.SOMETHING
+
+   See SemVer 2.0 spec point 11
+
+   For example:
+
+   0.1.0-alpha.1234
+
+   Maybe add +GITHASH ?
+
+   Options for .SOMETHING:
+
+   - timestamp of HEAD commit
+   - number of commits at HEAD
+
+   Can get the timestamp of the HEAD commit with:
+
+   git show -s --format=%ct HEAD
+
+   Can get the number of commits with:
+
+   git rev-list --count HEAD
+
+   Can get the commit hash with:
+
+   git rev-parse --verify --short HEAD
+
+   See also:
+
+   - http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+   - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
+   - http://programmers.stackexchange.com/a/151558
+
 * Interpreter
 ** TODO Add pretty printing
 
@@ -357,6 +403,7 @@
 * Graphics
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
+*** TODO Ensure that the texture dimensions are powers of 2          :v0_1_0:
 *** TODO Split FtTextRenderer::Text into separate layout and draw
     <<Text layout function>>
 
