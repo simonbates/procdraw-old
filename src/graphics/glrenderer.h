@@ -52,6 +52,7 @@ namespace procdraw {
         void DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
         void DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
         void EndInverse();
+        int GetLinespace();
         int Height();
         void LightColor(float h, float s, float v);
         double MouseX();

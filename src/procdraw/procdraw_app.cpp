@@ -25,9 +25,15 @@ namespace procdraw {
         InitDraw();
 
         L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
-        L_.Set(S_SHOW_REPL, L_.False, L_.Nil);
+        L_.Set(S_SHOW_REPL, L_.True, L_.Nil);
 
         cli_ = std::unique_ptr<CLI>(new CLI(this));
+        console_ = std::unique_ptr<Console>(new Console(this));
+
+        console_->Println("ProcDraw");
+        console_->Println("");
+        console_->Println("Press ESC to show and hide the REPL.");
+        console_->Println("");
     }
 
     int ProcdrawApp::MainLoop()
@@ -51,7 +57,7 @@ namespace procdraw {
                     }
                     else {
                         if (showReplVal) {
-                            console_.ProcessKey(&(e.key));
+                            console_->ProcessKey(&(e.key));
                         }
                         else {
                             if ((e.key.keysym.sym == SDLK_SPACE) && (e.key.repeat == 0)) {
@@ -62,7 +68,7 @@ namespace procdraw {
                     break;
                 case SDL_TEXTINPUT:
                     if (showReplVal) {
-                        console_.InputText(e.text.text);
+                        console_->InputText(e.text.text);
                     }
                     break;
                 }
@@ -71,7 +77,7 @@ namespace procdraw {
             midiClient_.Poll(this);
             L_.Call("draw");
             if (showReplVal) {
-                console_.Draw(&renderer_);
+                console_->Draw(&renderer_);
             }
             renderer_.DoSwap();
             frameCounter_.RecordFrame();

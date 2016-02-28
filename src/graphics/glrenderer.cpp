@@ -135,7 +135,7 @@ namespace procdraw {
 
     void GlRenderer::DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight)
     {
-        Color(0, 0, 1.0f, 1.0f);
+        Color(0, 0, 0.1f, 1.0f);
         Rect(cursorX, cursorY, cursorWidth, cursorHeight);
     }
 
@@ -149,6 +149,11 @@ namespace procdraw {
     void GlRenderer::EndInverse()
     {
         SetDefaultBlend();
+    }
+
+    int GlRenderer::GetLinespace()
+    {
+        return textRenderer_->GetLinespace();
     }
 
     int GlRenderer::Height()

@@ -26,8 +26,9 @@ namespace procdraw {
             MakeGlyphQuadVao();
 
             // Build font data
-            asciiFontAscenderPixels_ = face_->ascender / 64;
-            asciiFontDescenderPixels_ = face_->descender / 64;
+            asciiFontAscenderPixels_ = face_->size->metrics.ascender / 64;
+            asciiFontDescenderPixels_ = face_->size->metrics.descender / 64;
+            asciiFontLinespacePixels_ = face_->size->metrics.height / 64;
             MakeAsciiFontTexture();
         }
         catch (...) {
@@ -65,6 +66,11 @@ namespace procdraw {
     {
         CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiGlyphMetrics[32].advanceWidthPixels, x, width);
         *height = asciiFontAscenderPixels_ - asciiFontDescenderPixels_;
+    }
+
+    int FtTextRenderer::GetLinespace()
+    {
+        return asciiFontLinespacePixels_;
     }
 
     // TODO: Split the Text method into 2 -- (1) layout and (2) draw layout
@@ -169,7 +175,7 @@ namespace procdraw {
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
             "{                                                  \n"
-            "    color = vec4(0, 0, 0, texture(tex, tc).r);     \n"
+            "    color = vec4(0.9, 0.9, 0.9, texture(tex, tc).r);     \n"
             "}                                                  \n"
         };
 

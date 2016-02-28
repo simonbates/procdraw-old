@@ -358,9 +358,14 @@
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
 *** TODO Split FtTextRenderer::Text into separate layout and draw
+    <<Text layout function>>
 
     Then I can cache layouts for text -- very little text will change
     every frame
+
+*** TODO Set text color programmatically
+
+    Right now it is specified directly in the shader source
 
 ** TODO Add specular lighting
 
@@ -454,11 +459,14 @@
     - ForwardChar()
     - BackwardChar()
 
-*** TODO Add console content lines
+*** DONE Add console content lines
 
     I currently have only a single line, where the cursor is
 
 *** TODO Wrap lines longer than the console width
+
+    Probably want to do this with [[Text layout function]]
+
 *** TODO Scroll the console when we reach the bottom
 *** TODO Provide scrollback to view lines that have scrolled off the top
 ** TODO Implement an editor

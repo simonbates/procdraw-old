@@ -34,7 +34,7 @@ namespace procdraw {
         LispObjectPtr S_SHOW_REPL;
         LispObjectPtr S_OUT;
         std::unique_ptr<CLI> cli_;
-        Console console_;
+        std::unique_ptr<Console> console_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;
         LispObjectPtr keySpaceSignal_;
