@@ -176,7 +176,7 @@ namespace procdraw {
             "out vec4 color;                                    \n"
             "void main(void)                                    \n"
             "{                                                  \n"
-            "    color = vec4(0.9, 0.9, 0.9, texture(tex, tc).r);     \n"
+            "    color = vec4(0.96875, 0.96875, 0.96875, texture(tex, tc).r);           \n"
             "}                                                  \n"
         };
 
