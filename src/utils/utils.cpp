@@ -23,6 +23,18 @@ namespace procdraw {
         return (val - start) / (stop - start);
     }
 
+    int PowerOf2Gte(int n)
+    {
+        if (n <= 0) {
+            return 0;
+        }
+        int powerOf2 = 1;
+        while (powerOf2 < n) {
+            powerOf2 *= 2;
+        }
+        return powerOf2;
+    }
+
     double Wrap(double start, double stop, double val)
     {
         return val - floor((val - start) / (stop - start)) * (stop - start);

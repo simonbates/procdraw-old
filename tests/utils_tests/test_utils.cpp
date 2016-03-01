@@ -100,6 +100,20 @@ TEST_CASE("Norm")
 
 }
 
+TEST_CASE("PowerOf2Gte")
+{
+    REQUIRE(procdraw::PowerOf2Gte(0) == 0);
+    REQUIRE(procdraw::PowerOf2Gte(-1) == 0);
+    REQUIRE(procdraw::PowerOf2Gte(-100) == 0);
+    REQUIRE(procdraw::PowerOf2Gte(1) == 1);
+    REQUIRE(procdraw::PowerOf2Gte(2) == 2);
+    REQUIRE(procdraw::PowerOf2Gte(3) == 4);
+    REQUIRE(procdraw::PowerOf2Gte(4) == 4);
+    REQUIRE(procdraw::PowerOf2Gte(5) == 8);
+    REQUIRE(procdraw::PowerOf2Gte(127) == 128);
+    REQUIRE(procdraw::PowerOf2Gte(128) == 128);
+}
+
 TEST_CASE("Wrap")
 {
 

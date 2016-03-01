@@ -3,6 +3,7 @@
 #include "ft_text_renderer.h"
 #include "font_config.h"
 #include "gl_util.h"
+#include "utils.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
@@ -212,7 +213,6 @@ namespace procdraw {
         FT_ULong toCharCode = asciiGlyphMetrics.size();
 
         CalculateTextureSize(fromCharCode, toCharCode, &asciiFontTextureWidth_, &asciiFontTextureHeight_);
-        // TODO: Make the texture dimensions powers of 2
 
         // Allocate the texture memory
         glTexImage2D(GL_TEXTURE_2D,
@@ -241,6 +241,9 @@ namespace procdraw {
                 *height = g->bitmap.rows;
             }
         }
+        // Ensure that the texture dimensions are powers of 2
+        *width = PowerOf2Gte(*width);
+        *height = PowerOf2Gte(*height);
     }
 
     void FtTextRenderer::RenderChar(FT_ULong charCode)

@@ -398,12 +398,13 @@
 
    (<- console-font-size [$midic-1-1])
 
+** TODO JSON parser and serializer
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
-*** TODO Ensure that the texture dimensions are powers of 2          :v0_1_0:
+*** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
 *** TODO Split FtTextRenderer::Text into separate layout and draw
     <<Text layout function>>
 
@@ -517,6 +518,7 @@
 *** TODO Scroll the console when we reach the bottom
 *** TODO Provide scrollback to view lines that have scrolled off the top
 ** TODO Implement an editor
+** TODO Implement autocomplete for symbols
 * Tests
 ** TODO Use propositions for test names
 
