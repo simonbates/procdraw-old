@@ -454,6 +454,11 @@
 ** TODO Add a function to draw a sphere
 ** TODO Add a function to draw a point
 ** TODO Support resizing of the Procdraw window
+** TODO Add a material color stack
+
+   And use when drawing the console, so that we don't clobber the
+   color.
+
 * Hardware integration
 ** TODO Serial connection to Arduino
 ** TODO Add Fadecandy integration
