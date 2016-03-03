@@ -460,12 +460,6 @@
    color.
 
 * Hardware integration
-** TODO Serial connection to Arduino
-** TODO Add Fadecandy integration
-
-   https://github.com/scanlime/fadecandy
-
-* Procdraw
 ** TODO Add Xbox 360 controller input
 ** TODO Add Wacom tablet input
 
@@ -475,6 +469,17 @@
    - An OSC Address Subspace for Wacom Tablet Data
    - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
 
+** TODO Serial connection to Arduino
+** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
+
+   - https://www.arduino.cc/en/Main/ArduinoBoard101
+   - http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
+
+** TODO Add Fadecandy integration
+
+   https://github.com/scanlime/fadecandy
+
+* Procdraw
 ** TODO Procdraw client/server
 
    Interact with a running procdraw from another process using a Unix
