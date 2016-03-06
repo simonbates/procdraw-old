@@ -3,7 +3,7 @@
 #+STARTUP: content
 
 * Project level
-** TODO Close GitHub issues that have been moved to TODO.org         :v0_1_0:
+** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 ** TODO Rename "Procdraw" to "ProcDraw"                              :v0_1_0:
 ** TODO Put each class into its own translation unit
 
@@ -170,6 +170,10 @@
 
    See http://stackoverflow.com/questions/18844654/how-to-find-out-real-screen-refresh-rate-not-the-rounded-number
 
+   Also could set a value in the interpreter called fixed-fps and use
+   that in signals to calculate update per frame from a frequency in
+   Hz.
+
 ** TODO Add a for-each function
 
    (for-each list fun)
@@ -182,8 +186,8 @@
    Like:
 
    - APL iota
-   - Python 2 range
-   - Python 3 Ranges
+   - Python 2 [[https://docs.python.org/2/library/functions.html#range][range]]
+   - Python 3 [[https://docs.python.org/3/library/stdtypes.html#typesseq-range][Ranges]]
    - vvvv spreads
      - http://vvvv.org/documentation/spread-nodes
      - http://vvvv.org/documentation/linearspread-%28spreads%29
@@ -280,14 +284,15 @@
 
    Sketch of an initial idea:
 
-   - A hash table storing mapping from string name to function pointer
-   - Functions must be registered in this hash table
-   - The CFunction object includes the name in addition to the
-     function pointer
-   - SetGlobalCFunction takes a name (which is looked up in table 1)
-     rather than a function pointer directly
-   - When we print a CFunction we get <CFunction:NAME> or such
-   - When we read <CFunction:NAME>, we look up the table 1
+   1. A hash table storing mapping from string name to function
+      pointer
+   2. Functions must be registered in this hash table
+   3. The CFunction object includes the name in addition to the
+      function pointer
+   4. SetGlobalCFunction takes a name (which is looked up in table 1)
+      rather than a function pointer directly
+   5. When we print a CFunction we get <CFunction:NAME> or such
+   6. When we read <CFunction:NAME>, we look up the table 1
 
    MakeCFunction would also take a name rather than a function
    pointer.
@@ -364,7 +369,7 @@
    Otherwise, set the value with put-slot and remove any existing
    connection.
 
-** TODO Add a toggle signal type
+** DONE Add a toggle signal type
 
    Inputs:
 
@@ -458,6 +463,12 @@
    for some number of frames.
 
 ** TODO Add a function to draw a sphere
+
+   - UV sphere
+   - and/or Icosphere
+
+   http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
+
 ** TODO Add a function to draw a superegg
 
    https://en.wikipedia.org/wiki/Superegg
@@ -483,7 +494,7 @@
    Either interface directly with the device or via OSC.
 
    - http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
-   - An OSC Address Subspace for Wacom Tablet Data
+   - [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
    - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
 
 ** TODO Serial connection to Arduino
