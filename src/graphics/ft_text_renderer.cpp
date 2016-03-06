@@ -56,9 +56,8 @@ namespace procdraw {
         glUseProgram(program_);
         // TODO: Cache the 2d projection matrix -- no need to calculate
         // each time, only when the renderer size changes
-        auto projection = glm::ortho(0.0f, static_cast<float>(width),
-                                     static_cast<float>(height), 0.0f);
-        glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projection));
+        orthoProjection_ = glm::ortho(0.0f, static_cast<float>(width),
+                                      static_cast<float>(height), 0.0f);
         glUniform1i(texLoc_, 0);
         glDisable(GL_DEPTH_TEST);
     }
@@ -69,19 +68,32 @@ namespace procdraw {
         *height = asciiFontAscenderPixels_ - asciiFontDescenderPixels_;
     }
 
+    void FtTextRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
+    {
+        auto projectionMatrix = glm::translate(orthoProjection_, glm::vec3(x, y, 0));
+        glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, asciiFontTexture_);
+        glBindVertexArray(glyphQuadVao_);
+        glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(), vertices.data());
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX);
+    }
+
     int FtTextRenderer::GetLinespace()
     {
         return asciiFontLinespacePixels_;
     }
 
-    // TODO: Split the Text method into 2 -- (1) layout and (2) draw layout
-    // Then I can cache layouts for text -- very little text will change every frame
+    // TODO: Move LayoutText to utils/font_utils -- add new TextureFontMetrics parameter and write unit tests
 
-    void FtTextRenderer::Text(int x, int y, const std::string &text)
+    void FtTextRenderer::LayoutText(const std::string &text, std::vector<GLfloat> &vertices)
     {
-        int cursorX = x;
+        vertices.clear();
+
+        int cursorX = 0;
         int numGlyphs = 0;
-        int verticesOffset = 0;
         int maxCharCode = asciiGlyphMetrics.size() - 1;
 
         for (const char &ch : text) {
@@ -101,7 +113,7 @@ namespace procdraw {
 
             float glyphLeft = cursorX + asciiGlyphMetrics[charCode].leftBearingPixels;
             float glyphRight = glyphLeft + glyphWidth;
-            float glyphTop = y + asciiFontAscenderPixels_ - asciiGlyphMetrics[charCode].topBearingPixels;
+            float glyphTop = asciiFontAscenderPixels_ - asciiGlyphMetrics[charCode].topBearingPixels;
             float glyphBottom = glyphTop + glyphHeight;
 
             float glyphTextureLeft = ((float)asciiGlyphMetrics[charCode].xoffsetPixels) / asciiFontTextureWidth_;
@@ -110,49 +122,40 @@ namespace procdraw {
             float glyphTextureBottom = glyphHeight / asciiFontTextureHeight_;
 
             // Top left
-            glyphQuadVertices_[verticesOffset + 0] = glyphLeft;
-            glyphQuadVertices_[verticesOffset + 1] = glyphTop;
-            glyphQuadVertices_[verticesOffset + 2] = glyphTextureLeft;
-            glyphQuadVertices_[verticesOffset + 3] = glyphTextureTop;
+            vertices.push_back(glyphLeft);
+            vertices.push_back(glyphTop);
+            vertices.push_back(glyphTextureLeft);
+            vertices.push_back(glyphTextureTop);
             // Bottom left
-            glyphQuadVertices_[verticesOffset + 4] = glyphLeft;
-            glyphQuadVertices_[verticesOffset + 5] = glyphBottom;
-            glyphQuadVertices_[verticesOffset + 6] = glyphTextureLeft;
-            glyphQuadVertices_[verticesOffset + 7] = glyphTextureBottom;
+            vertices.push_back(glyphLeft);
+            vertices.push_back(glyphBottom);
+            vertices.push_back(glyphTextureLeft);
+            vertices.push_back(glyphTextureBottom);
             // Top right
-            glyphQuadVertices_[verticesOffset + 8] = glyphRight;
-            glyphQuadVertices_[verticesOffset + 9] = glyphTop;
-            glyphQuadVertices_[verticesOffset + 10] = glyphTextureRight;
-            glyphQuadVertices_[verticesOffset + 11] = glyphTextureTop;
+            vertices.push_back(glyphRight);
+            vertices.push_back(glyphTop);
+            vertices.push_back(glyphTextureRight);
+            vertices.push_back(glyphTextureTop);
 
             // Bottom left
-            glyphQuadVertices_[verticesOffset + 12] = glyphLeft;
-            glyphQuadVertices_[verticesOffset + 13] = glyphBottom;
-            glyphQuadVertices_[verticesOffset + 14] = glyphTextureLeft;
-            glyphQuadVertices_[verticesOffset + 15] = glyphTextureBottom;
+            vertices.push_back(glyphLeft);
+            vertices.push_back(glyphBottom);
+            vertices.push_back(glyphTextureLeft);
+            vertices.push_back(glyphTextureBottom);
             // Bottom right
-            glyphQuadVertices_[verticesOffset + 16] = glyphRight;
-            glyphQuadVertices_[verticesOffset + 17] = glyphBottom;
-            glyphQuadVertices_[verticesOffset + 18] = glyphTextureRight;
-            glyphQuadVertices_[verticesOffset + 19] = glyphTextureBottom;
+            vertices.push_back(glyphRight);
+            vertices.push_back(glyphBottom);
+            vertices.push_back(glyphTextureRight);
+            vertices.push_back(glyphTextureBottom);
             // Top right
-            glyphQuadVertices_[verticesOffset + 20] = glyphRight;
-            glyphQuadVertices_[verticesOffset + 21] = glyphTop;
-            glyphQuadVertices_[verticesOffset + 22] = glyphTextureRight;
-            glyphQuadVertices_[verticesOffset + 23] = glyphTextureTop;
+            vertices.push_back(glyphRight);
+            vertices.push_back(glyphTop);
+            vertices.push_back(glyphTextureRight);
+            vertices.push_back(glyphTextureTop);
 
             cursorX += asciiGlyphMetrics[charCode].advanceWidthPixels;
             ++numGlyphs;
-            verticesOffset += FT_TEXT_RENDERER_VERTICES_PER_QUAD;
         }
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, asciiFontTexture_);
-        glBindVertexArray(glyphQuadVao_);
-        glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
-        // TODO: Copy only as much of glyphQuadVertices_ as I need
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glyphQuadVertices_), glyphQuadVertices_);
-        glDrawArrays(GL_TRIANGLES, 0, 6 * numGlyphs);
     }
 
     void FtTextRenderer::CompileShaders()
@@ -190,11 +193,16 @@ namespace procdraw {
         glGenVertexArrays(1, &glyphQuadVao_);
         glBindVertexArray(glyphQuadVao_);
 
+        auto vertexBufferSize = sizeof(GLfloat) *
+                                FT_TEXT_RENDERER_MAX_DRAW_GLYPHS *
+                                FT_TEXT_RENDERER_VERTICES_PER_GLYPH *
+                                FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX;
+
         glGenBuffers(1, &glyphQuadVertexBuffer_);
         glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glyphQuadVertices_), glyphQuadVertices_, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_DYNAMIC_DRAW);
 
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(0, FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
     }
 

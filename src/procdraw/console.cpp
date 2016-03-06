@@ -2,49 +2,56 @@
 
 namespace procdraw {
 
-    void Console::Draw(GlRenderer *renderer)
+    void Console::Draw()
     {
-        int linespace = renderer->GetLinespace();
+        int linespace = renderer_->GetLinespace();
 
         // TODO: Don't need to calculate the cursor pos each time, only when changes
         int cursorX, cursorWidth, cursorHeight;
-        renderer->CalculateBlockCursorPos(inputLine_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
+        renderer_->CalculateBlockCursorPos(inputLine_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
 
         int cursorY = linespace * lines_.size();
 
         int y = 0;
 
         // Console background
-        renderer->Begin2D();
-        renderer->Color(0, 0, 0, 0.7f);
-        renderer->Rect(0, 0, renderer->Width(), renderer->Height());
+        renderer_->Begin2D();
+        renderer_->Color(0, 0, 0, 0.7f);
+        renderer_->Rect(0, 0, renderer_->Width(), renderer_->Height());
 
         // Block cursor background
-        renderer->DrawBlockCursorBackground(cursorX, cursorY, cursorWidth, cursorHeight);
+        renderer_->DrawBlockCursorBackground(cursorX, cursorY, cursorWidth, cursorHeight);
 
         // Draw text
-        renderer->BeginText();
+        renderer_->BeginText();
         for (auto line : lines_) {
-            renderer->Text(0, y, line);
+            renderer_->DrawText(0, y, line.layout);
             y += linespace;
         }
-        renderer->Text(0, y, inputLine_.GetLine());
+        if (inputLineNeedsLayout_) {
+            renderer_->LayoutText(inputLine_.GetLine(), inputLineLayout_);
+            inputLineNeedsLayout_ = false;
+        }
+        renderer_->DrawText(0, y, inputLineLayout_);
 
         // Do block cursor inversion
-        renderer->Begin2D();
-        renderer->DrawBlockCursorInversion(cursorX, cursorY, cursorWidth, cursorHeight);
+        renderer_->Begin2D();
+        renderer_->DrawBlockCursorInversion(cursorX, cursorY, cursorWidth, cursorHeight);
 
-        renderer->Begin3D();
+        renderer_->Begin3D();
     }
 
     void Console::InputText(char *text)
     {
         inputLine_.Insert(text[0]);
+        inputLineNeedsLayout_ = true;
     }
 
     void Console::Println(const std::string &str)
     {
-        lines_.push_back(str);
+        ConsoleLine line(str);
+        renderer_->LayoutText(str, line.layout);
+        lines_.push_back(line);
     }
 
     void Console::ProcessKey(SDL_KeyboardEvent *key)
@@ -52,17 +59,21 @@ namespace procdraw {
         switch (key->keysym.sym) {
         case SDLK_BACKSPACE:
             inputLine_.DeleteBack();
+            inputLineNeedsLayout_ = true;
             break;
         case SDLK_LEFT:
             inputLine_.BackwardChar();
+            inputLineNeedsLayout_ = true;
             break;
         case SDLK_RIGHT:
             inputLine_.ForwardChar();
+            inputLineNeedsLayout_ = true;
             break;
         case SDLK_RETURN:
-            lines_.push_back(inputLine_.GetLine());
+            Println(inputLine_.GetLine());
             ProcessReturn();
             inputLine_.Clear(continuedLine_ ? continuedLinePrompt_ : topLevelPrompt_);
+            inputLineNeedsLayout_ = true;
             break;
         }
     }
@@ -73,12 +84,12 @@ namespace procdraw {
         cmd_ += inputLine_.GetUserText();
         switch (cmdProcessor_->CheckCommand(cmd_)) {
         case BalancedState::Balanced:
-            lines_.push_back(cmdProcessor_->DoCommand(cmd_));
+            Println(cmdProcessor_->DoCommand(cmd_));
             cmd_ = "";
             continuedLine_ = false;
             break;
         case BalancedState::TooManyClosingParens:
-            lines_.push_back("Too many closing parens");
+            Println("Too many closing parens");
             cmd_ = "";
             continuedLine_ = false;
             break;

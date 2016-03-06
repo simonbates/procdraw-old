@@ -51,9 +51,11 @@ namespace procdraw {
         void DoSwap();
         void DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
         void DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
+        void DrawText(int x, int y, const std::vector<GLfloat> &vertices);
         void EndInverse();
         int GetLinespace();
         int Height();
+        void LayoutText(const std::string &text, std::vector<GLfloat> &vertices);
         void LightColor(float h, float s, float v);
         double MouseX();
         double MouseY();
@@ -63,7 +65,6 @@ namespace procdraw {
         void RotateZ(float turns);
         void Scale(float factor);
         void Tetrahedron();
-        void Text(int x, int y, const std::string &text);
         void Translate(float x, float y, float z);
         int Width();
     private:

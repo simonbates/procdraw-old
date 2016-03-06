@@ -5,6 +5,11 @@
 * Project level
 ** TODO Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 ** TODO Rename "Procdraw" to "ProcDraw"                              :v0_1_0:
+** TODO Put each class into its own translation unit
+
+   - SomeClass.h
+   - SomeClass.cpp
+
 ** TODO Version ProcDraw
 
    Could use Semantic Versioning
@@ -405,12 +410,13 @@
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
 *** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
-*** TODO Split FtTextRenderer::Text into separate layout and draw
+*** DONE Split FtTextRenderer::Text into separate layout and draw
     <<Text layout function>>
 
     Then I can cache layouts for text -- very little text will change
     every frame
 
+*** TODO Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
 *** TODO Set text color programmatically
 
     Right now it is specified directly in the shader source
@@ -452,6 +458,10 @@
    for some number of frames.
 
 ** TODO Add a function to draw a sphere
+** TODO Add a function to draw a superegg
+
+   https://en.wikipedia.org/wiki/Superegg
+
 ** TODO Add a function to draw a point
 ** TODO Support resizing of the Procdraw window
 ** TODO Add a material color stack
@@ -459,6 +469,13 @@
    And use when drawing the console, so that we don't clobber the
    color.
 
+* Procedural generation
+** TODO Make L-systems available from Lisp and a mechanism for drawing
+** TODO Draw a Menger Sponge
+
+   https://en.wikipedia.org/wiki/Menger_sponge
+
+** TODO Implement Noise functions
 * Hardware integration
 ** TODO Add Xbox 360 controller input
 ** TODO Add Wacom tablet input
@@ -492,7 +509,7 @@
    - procdraw get IDENTIFIER
 
 ** TODO Internationalize procdraw using GNU gettext
-** TODO Add a function to load code from a file
+** TODO Add a function to load code from a file                      :v0_1_0:
 
    (source filename)
 
@@ -529,6 +546,11 @@
 *** TODO Provide scrollback to view lines that have scrolled off the top
 ** TODO Implement an editor
 ** TODO Implement autocomplete for symbols
+** TODO Implement matching parens highlighting
+** TODO Add in-program help
+
+   Read in the Documentation XML
+
 * Tests
 ** TODO Use propositions for test names
 

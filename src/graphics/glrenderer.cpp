@@ -146,6 +146,11 @@ namespace procdraw {
         EndInverse();
     }
 
+    void GlRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
+    {
+        textRenderer_->DrawText(x, y, vertices);
+    }
+
     void GlRenderer::EndInverse()
     {
         SetDefaultBlend();
@@ -161,6 +166,11 @@ namespace procdraw {
         int w, h;
         SDL_GetWindowSize(window_, &w, &h);
         return h;
+    }
+
+    void GlRenderer::LayoutText(const std::string &text, std::vector<GLfloat> &vertices)
+    {
+        textRenderer_->LayoutText(text, vertices);
     }
 
     void GlRenderer::LightColor(float h, float s, float v)
@@ -236,11 +246,6 @@ namespace procdraw {
         UpdateUniformsForObject();
         glBindVertexArray(tetrahedronVao_);
         glDrawArrays(GL_TRIANGLES, 0, 12);
-    }
-
-    void GlRenderer::Text(int x, int y, const std::string &text)
-    {
-        textRenderer_->Text(x, y, text);
     }
 
     void GlRenderer::Translate(float x, float y, float z)

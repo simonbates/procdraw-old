@@ -4,15 +4,18 @@
 #include <GL/glew.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <glm/glm.hpp>
 #include <array>
 #include <string>
+#include <vector>
 
 #define FT_TEXT_RENDERER_MAX_DRAW_GLYPHS 1000
-#define FT_TEXT_RENDERER_VERTICES_PER_QUAD 24
+#define FT_TEXT_RENDERER_VERTICES_PER_GLYPH 6
+#define FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX 4
+
 #define FT_TEXT_RENDERER_MAX_ASCII_CODE 126
 
-// TODO: Do some refactoring and pull bits out, such as font metrics type
-//       So that I can support multiple fonts and switch between
+// TODO: Extract font metrics to a new type TextureFontMetrics
 
 namespace procdraw {
 
@@ -22,8 +25,9 @@ namespace procdraw {
         ~FtTextRenderer();
         void BeginText(int width, int height);
         void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
+        void DrawText(int x, int y, const std::vector<GLfloat> &vertices);
         int GetLinespace();
-        void Text(int x, int y, const std::string &text);
+        void LayoutText(const std::string &text, std::vector<GLfloat> &vertices);
     private:
         FT_Library ft_;
         FT_Face face_;
@@ -32,7 +36,7 @@ namespace procdraw {
         GLint texLoc_;
         GLuint glyphQuadVertexBuffer_;
         GLuint glyphQuadVao_;
-        GLfloat glyphQuadVertices_[FT_TEXT_RENDERER_VERTICES_PER_QUAD * FT_TEXT_RENDERER_MAX_DRAW_GLYPHS] = {};
+        glm::mat4 orthoProjection_;
         int asciiFontAscenderPixels_ = 0;
         int asciiFontDescenderPixels_ = 0;
         int asciiFontLinespacePixels_ = 0;
