@@ -409,6 +409,14 @@
    (<- console-font-size [$midic-1-1])
 
 ** TODO JSON parser and serializer
+** TODO Add some form of sequencing and/or pattern generation mechanism
+
+   Some ideas:
+
+   - A step sequencer
+   - A sound tracker like sequencer
+   - Algorithmic pattern generation
+
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
@@ -479,6 +487,14 @@
 
    And use when drawing the console, so that we don't clobber the
    color.
+
+** TODO Add a function to draw the Utah Teapot
+
+   Use the original data set and tessellate it myself.
+
+   - https://en.wikipedia.org/wiki/Utah_teapot
+   - http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
+   - http://www.sjbaker.org/teapot/teaset.tgz
 
 * Procedural generation
 ** TODO Make L-systems available from Lisp and a mechanism for drawing
