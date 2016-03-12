@@ -56,6 +56,18 @@
    - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
    - http://programmers.stackexchange.com/a/151558
 
+* Documentation
+** TODO Add type of function: special-form or function
+
+   Traditional names used in Lisp:
+
+   | SUBR  | system | function     |
+   | FSUBR | system | special-form |
+   | EXPR  | user   | function     |
+   | FEXPR | user   | special-form |
+
+** TODO Add a description
+** TODO Add argument details
 * Interpreter
 ** TODO Add pretty printing
 
@@ -417,6 +429,7 @@
    - A sound tracker like sequencer
    - Algorithmic pattern generation
 
+** TODO Add fexprs
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
@@ -514,6 +527,21 @@
    - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
 
 ** TODO Serial connection to Arduino
+
+   Some references for information on Arduino serial buffering and
+   latency:
+
+   - https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
+   - http://forum.arduino.cc/index.php?topic=96.0
+   - http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
+
+   Some data format options:
+
+   - Stream of dotted pair s-expressions
+     - (name . val)
+   - https://github.com/bakercp/PacketSerial
+   - https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
+
 ** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
 
    - https://www.arduino.cc/en/Main/ArduinoBoard101
@@ -577,6 +605,22 @@
 ** TODO Add in-program help
 
    Read in the Documentation XML
+
+** TODO Add a watch function
+
+   (watch expr)
+
+   such as:
+
+   (watch '(frames-per-second))
+
+   Evaluates the expression on a regular basis (every frame?
+   configurable?) and displays the result on screen. Maybe in the top
+   right, with multiple watch expressions stacked vertically.
+
+** TODO Implement a tiling window manager
+
+   To manage REPL and editors
 
 * Tests
 ** TODO Use propositions for test names
