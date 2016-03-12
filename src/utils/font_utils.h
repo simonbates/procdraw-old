@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace procdraw {
 
     struct TextureGlyphMetrics {
@@ -24,6 +26,21 @@ namespace procdraw {
             this->leftBearingPixels = 0;
             this->topBearingPixels = 0;
         }
+    };
+
+    class TextureFontMetrics {
+    public:
+        int ascenderPixels = 0;
+        int descenderPixels = 0;
+        int linespacePixels = 0;
+        int textureWidth = 0;
+        int textureHeight = 0;
+        void ClearGlyphs(int maxCharCode);
+        int MaxCharCode();
+        void SetGlyph(int charCode, const TextureGlyphMetrics &glyphMetrics);
+        TextureGlyphMetrics& GetGlyph(int charCode);
+    private:
+        std::vector<TextureGlyphMetrics> glyphMetrics_;
     };
 
     void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);

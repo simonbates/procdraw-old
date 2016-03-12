@@ -15,8 +15,6 @@
 
 #define FT_TEXT_RENDERER_MAX_ASCII_CODE 126
 
-// TODO: Extract font metrics to a new type TextureFontMetrics
-
 namespace procdraw {
 
     class FtTextRenderer {
@@ -37,53 +35,17 @@ namespace procdraw {
         GLuint glyphQuadVertexBuffer_;
         GLuint glyphQuadVao_;
         glm::mat4 orthoProjection_;
-        int asciiFontAscenderPixels_ = 0;
-        int asciiFontDescenderPixels_ = 0;
-        int asciiFontLinespacePixels_ = 0;
+        TextureFontMetrics asciiFontMetrics_;
         GLuint asciiFontTexture_;
-        GLsizei asciiFontTextureWidth_ = 0;
-        GLsizei asciiFontTextureHeight_ = 0;
-        std::array<TextureGlyphMetrics, FT_TEXT_RENDERER_MAX_ASCII_CODE + 1> asciiGlyphMetrics;
         void Cleanup();
         void CompileShaders();
         void MakeGlyphQuadVao();
-        void MakeAsciiFontTexture();
+        void MakeFontTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
+                             TextureFontMetrics &fontMetrics, GLuint *fontTexture);
         void CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
                                   int *width, int *height);
-        template<size_t N>
-        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, std::array<TextureGlyphMetrics, N> &metrics);
+        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, TextureFontMetrics &fontMetrics);
         void RenderChar(FT_ULong charCode);
     };
-
-    template<size_t N>
-    void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                                         std::array<TextureGlyphMetrics, N> &metrics)
-    {
-        GLint xoffset = 0;
-
-        for (auto charCode = fromCharCode; charCode < toCharCode; ++charCode) {
-            RenderChar(charCode);
-            FT_GlyphSlot g = face_->glyph;
-
-            glTexSubImage2D(GL_TEXTURE_2D,
-                            0,
-                            xoffset,
-                            0,
-                            g->bitmap.width,
-                            g->bitmap.rows,
-                            GL_RED,
-                            GL_UNSIGNED_BYTE,
-                            g->bitmap.buffer);
-
-            metrics.at(charCode).xoffsetPixels = xoffset;
-            metrics.at(charCode).widthPixels = g->bitmap.width;
-            metrics.at(charCode).heightPixels = g->bitmap.rows;
-            metrics.at(charCode).advanceWidthPixels = g->advance.x / 64;
-            metrics.at(charCode).leftBearingPixels = g->bitmap_left;
-            metrics.at(charCode).topBearingPixels = g->bitmap_top;
-
-            xoffset += g->bitmap.width;
-        }
-    }
 
 }

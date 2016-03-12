@@ -442,7 +442,8 @@
     Then I can cache layouts for text -- very little text will change
     every frame
 
-*** TODO Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
+*** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
+*** TODO Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
 *** TODO Set text color programmatically
 
     Right now it is specified directly in the shader source

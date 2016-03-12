@@ -27,10 +27,10 @@ namespace procdraw {
             MakeGlyphQuadVao();
 
             // Build font data
-            asciiFontAscenderPixels_ = face_->size->metrics.ascender / 64;
-            asciiFontDescenderPixels_ = face_->size->metrics.descender / 64;
-            asciiFontLinespacePixels_ = face_->size->metrics.height / 64;
-            MakeAsciiFontTexture();
+            asciiFontMetrics_.ascenderPixels = face_->size->metrics.ascender / 64;
+            asciiFontMetrics_.descenderPixels = face_->size->metrics.descender / 64;
+            asciiFontMetrics_.linespacePixels = face_->size->metrics.height / 64;
+            MakeFontTexture(32, FT_TEXT_RENDERER_MAX_ASCII_CODE, asciiFontMetrics_, &asciiFontTexture_);
         }
         catch (...) {
             Cleanup();
@@ -64,8 +64,8 @@ namespace procdraw {
 
     void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
     {
-        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiGlyphMetrics[32].advanceWidthPixels, x, width);
-        *height = asciiFontAscenderPixels_ - asciiFontDescenderPixels_;
+        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiFontMetrics_.GetGlyph(32).advanceWidthPixels, x, width);
+        *height = asciiFontMetrics_.ascenderPixels - asciiFontMetrics_.descenderPixels;
     }
 
     void FtTextRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
@@ -83,7 +83,7 @@ namespace procdraw {
 
     int FtTextRenderer::GetLinespace()
     {
-        return asciiFontLinespacePixels_;
+        return asciiFontMetrics_.linespacePixels;
     }
 
     // TODO: Move LayoutText to utils/font_utils -- add new TextureFontMetrics parameter and write unit tests
@@ -94,7 +94,7 @@ namespace procdraw {
 
         int cursorX = 0;
         int numGlyphs = 0;
-        int maxCharCode = asciiGlyphMetrics.size() - 1;
+        int maxCharCode = asciiFontMetrics_.MaxCharCode();
 
         for (const char &ch : text) {
             if (numGlyphs >= FT_TEXT_RENDERER_MAX_DRAW_GLYPHS) {
@@ -102,24 +102,25 @@ namespace procdraw {
             }
 
             if (ch <= 32 || ch > maxCharCode) {
-                cursorX += asciiGlyphMetrics[32].advanceWidthPixels;
+                cursorX += asciiFontMetrics_.GetGlyph(32).advanceWidthPixels;
                 continue;
             }
 
             unsigned int charCode = ch;
 
-            float glyphWidth = asciiGlyphMetrics[charCode].widthPixels;
-            float glyphHeight = asciiGlyphMetrics[charCode].heightPixels;
+            float glyphWidth = asciiFontMetrics_.GetGlyph(charCode).widthPixels;
+            float glyphHeight = asciiFontMetrics_.GetGlyph(charCode).heightPixels;
 
-            float glyphLeft = cursorX + asciiGlyphMetrics[charCode].leftBearingPixels;
+            float glyphLeft = cursorX + asciiFontMetrics_.GetGlyph(charCode).leftBearingPixels;
             float glyphRight = glyphLeft + glyphWidth;
-            float glyphTop = asciiFontAscenderPixels_ - asciiGlyphMetrics[charCode].topBearingPixels;
+            float glyphTop = asciiFontMetrics_.ascenderPixels - asciiFontMetrics_.GetGlyph(charCode).topBearingPixels;
             float glyphBottom = glyphTop + glyphHeight;
 
-            float glyphTextureLeft = ((float)asciiGlyphMetrics[charCode].xoffsetPixels) / asciiFontTextureWidth_;
-            float glyphTextureRight = (asciiGlyphMetrics[charCode].xoffsetPixels + glyphWidth) / asciiFontTextureWidth_;
+            float glyphTextureLeft = ((float)asciiFontMetrics_.GetGlyph(charCode).xoffsetPixels) / asciiFontMetrics_.textureWidth;
+            float glyphTextureRight = (asciiFontMetrics_.GetGlyph(charCode).xoffsetPixels + glyphWidth) /
+                                      asciiFontMetrics_.textureWidth;
             float glyphTextureTop = 0.0f;
-            float glyphTextureBottom = glyphHeight / asciiFontTextureHeight_;
+            float glyphTextureBottom = glyphHeight / asciiFontMetrics_.textureHeight;
 
             // Top left
             vertices.push_back(glyphLeft);
@@ -153,7 +154,7 @@ namespace procdraw {
             vertices.push_back(glyphTextureRight);
             vertices.push_back(glyphTextureTop);
 
-            cursorX += asciiGlyphMetrics[charCode].advanceWidthPixels;
+            cursorX += asciiFontMetrics_.GetGlyph(charCode).advanceWidthPixels;
             ++numGlyphs;
         }
     }
@@ -206,34 +207,34 @@ namespace procdraw {
         glEnableVertexAttribArray(0);
     }
 
-    void FtTextRenderer::MakeAsciiFontTexture()
+    void FtTextRenderer::MakeFontTexture(FT_ULong fromCharCode,
+                                         FT_ULong toCharCode,
+                                         TextureFontMetrics &fontMetrics,
+                                         GLuint *fontTexture)
     {
         glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &asciiFontTexture_);
-        glBindTexture(GL_TEXTURE_2D, asciiFontTexture_);
+        glGenTextures(1, fontTexture);
+        glBindTexture(GL_TEXTURE_2D, *fontTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        FT_ULong fromCharCode = 32;
-        FT_ULong toCharCode = asciiGlyphMetrics.size();
-
-        CalculateTextureSize(fromCharCode, toCharCode, &asciiFontTextureWidth_, &asciiFontTextureHeight_);
+        CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.textureWidth), &(fontMetrics.textureHeight));
 
         // Allocate the texture memory
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RED,
-                     asciiFontTextureWidth_,
-                     asciiFontTextureHeight_,
+                     fontMetrics.textureWidth,
+                     fontMetrics.textureHeight,
                      0,
                      GL_RED,
                      GL_UNSIGNED_BYTE,
                      nullptr);
 
-        PopulateTexture(fromCharCode, toCharCode, asciiGlyphMetrics);
+        PopulateTexture(fromCharCode, toCharCode, fontMetrics);
     }
 
     void FtTextRenderer::CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
@@ -252,6 +253,42 @@ namespace procdraw {
         // Ensure that the texture dimensions are powers of 2
         *width = PowerOf2Gte(*width);
         *height = PowerOf2Gte(*height);
+    }
+
+    void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
+                                         TextureFontMetrics &fontMetrics)
+    {
+        fontMetrics.ClearGlyphs(toCharCode);
+
+        GLint xoffset = 0;
+
+        TextureGlyphMetrics glyphMetrics;
+
+        for (auto charCode = fromCharCode; charCode < toCharCode; ++charCode) {
+            RenderChar(charCode);
+            FT_GlyphSlot g = face_->glyph;
+
+            glTexSubImage2D(GL_TEXTURE_2D,
+                            0,
+                            xoffset,
+                            0,
+                            g->bitmap.width,
+                            g->bitmap.rows,
+                            GL_RED,
+                            GL_UNSIGNED_BYTE,
+                            g->bitmap.buffer);
+
+            glyphMetrics.xoffsetPixels = xoffset;
+            glyphMetrics.widthPixels = g->bitmap.width;
+            glyphMetrics.heightPixels = g->bitmap.rows;
+            glyphMetrics.advanceWidthPixels = g->advance.x / 64;
+            glyphMetrics.leftBearingPixels = g->bitmap_left;
+            glyphMetrics.topBearingPixels = g->bitmap_top;
+
+            fontMetrics.SetGlyph(charCode, glyphMetrics);
+
+            xoffset += g->bitmap.width;
+        }
     }
 
     void FtTextRenderer::RenderChar(FT_ULong charCode)
