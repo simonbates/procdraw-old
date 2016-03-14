@@ -30,7 +30,7 @@ namespace procdraw {
         cli_ = std::unique_ptr<CLI>(new CLI(this));
         console_ = std::unique_ptr<Console>(new Console(&renderer_, this));
 
-        console_->Println("ProcDraw");
+        console_->Println("Procdraw");
         console_->Println("");
         console_->Println("Press ESC to show and hide the REPL.");
         console_->Println("");

@@ -27,9 +27,9 @@ namespace procdraw {
             MakeGlyphQuadVao();
 
             // Build font data
-            asciiFontMetrics_.ascenderPixels = face_->size->metrics.ascender / 64;
-            asciiFontMetrics_.descenderPixels = face_->size->metrics.descender / 64;
-            asciiFontMetrics_.linespacePixels = face_->size->metrics.height / 64;
+            asciiFontMetrics_.AscenderPixels = face_->size->metrics.ascender / 64;
+            asciiFontMetrics_.DescenderPixels = face_->size->metrics.descender / 64;
+            asciiFontMetrics_.LinespacePixels = face_->size->metrics.height / 64;
             MakeFontTexture(32, FT_TEXT_RENDERER_MAX_ASCII_CODE, asciiFontMetrics_, &asciiFontTexture_);
         }
         catch (...) {
@@ -64,8 +64,8 @@ namespace procdraw {
 
     void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
     {
-        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiFontMetrics_.GetGlyph(32).advanceWidthPixels, x, width);
-        *height = asciiFontMetrics_.ascenderPixels - asciiFontMetrics_.descenderPixels;
+        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiFontMetrics_.GetGlyph(32).AdvanceWidthPixels, x, width);
+        *height = asciiFontMetrics_.AscenderPixels - asciiFontMetrics_.DescenderPixels;
     }
 
     void FtTextRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
@@ -83,80 +83,12 @@ namespace procdraw {
 
     int FtTextRenderer::GetLinespace()
     {
-        return asciiFontMetrics_.linespacePixels;
+        return asciiFontMetrics_.LinespacePixels;
     }
 
-    // TODO: Move LayoutText to utils/font_utils -- add new TextureFontMetrics parameter and write unit tests
-
-    void FtTextRenderer::LayoutText(const std::string &text, std::vector<GLfloat> &vertices)
+    void FtTextRenderer::LayOutText(const std::string &text, std::vector<GLfloat> &vertices)
     {
-        vertices.clear();
-
-        int cursorX = 0;
-        int numGlyphs = 0;
-        int maxCharCode = asciiFontMetrics_.MaxCharCode();
-
-        for (const char &ch : text) {
-            if (numGlyphs >= FT_TEXT_RENDERER_MAX_DRAW_GLYPHS) {
-                break;
-            }
-
-            if (ch <= 32 || ch > maxCharCode) {
-                cursorX += asciiFontMetrics_.GetGlyph(32).advanceWidthPixels;
-                continue;
-            }
-
-            unsigned int charCode = ch;
-
-            float glyphWidth = asciiFontMetrics_.GetGlyph(charCode).widthPixels;
-            float glyphHeight = asciiFontMetrics_.GetGlyph(charCode).heightPixels;
-
-            float glyphLeft = cursorX + asciiFontMetrics_.GetGlyph(charCode).leftBearingPixels;
-            float glyphRight = glyphLeft + glyphWidth;
-            float glyphTop = asciiFontMetrics_.ascenderPixels - asciiFontMetrics_.GetGlyph(charCode).topBearingPixels;
-            float glyphBottom = glyphTop + glyphHeight;
-
-            float glyphTextureLeft = ((float)asciiFontMetrics_.GetGlyph(charCode).xoffsetPixels) / asciiFontMetrics_.textureWidth;
-            float glyphTextureRight = (asciiFontMetrics_.GetGlyph(charCode).xoffsetPixels + glyphWidth) /
-                                      asciiFontMetrics_.textureWidth;
-            float glyphTextureTop = 0.0f;
-            float glyphTextureBottom = glyphHeight / asciiFontMetrics_.textureHeight;
-
-            // Top left
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureTop);
-            // Bottom left
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureBottom);
-            // Top right
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureTop);
-
-            // Bottom left
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureBottom);
-            // Bottom right
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureBottom);
-            // Top right
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureTop);
-
-            cursorX += asciiFontMetrics_.GetGlyph(charCode).advanceWidthPixels;
-            ++numGlyphs;
-        }
+        procdraw::LayOutText(text, asciiFontMetrics_, FT_TEXT_RENDERER_MAX_DRAW_GLYPHS, vertices);
     }
 
     void FtTextRenderer::CompileShaders()
@@ -221,14 +153,14 @@ namespace procdraw {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.textureWidth), &(fontMetrics.textureHeight));
+        CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.TextureWidth), &(fontMetrics.TextureHeight));
 
         // Allocate the texture memory
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RED,
-                     fontMetrics.textureWidth,
-                     fontMetrics.textureHeight,
+                     fontMetrics.TextureWidth,
+                     fontMetrics.TextureHeight,
                      0,
                      GL_RED,
                      GL_UNSIGNED_BYTE,
@@ -278,12 +210,12 @@ namespace procdraw {
                             GL_UNSIGNED_BYTE,
                             g->bitmap.buffer);
 
-            glyphMetrics.xoffsetPixels = xoffset;
-            glyphMetrics.widthPixels = g->bitmap.width;
-            glyphMetrics.heightPixels = g->bitmap.rows;
-            glyphMetrics.advanceWidthPixels = g->advance.x / 64;
-            glyphMetrics.leftBearingPixels = g->bitmap_left;
-            glyphMetrics.topBearingPixels = g->bitmap_top;
+            glyphMetrics.XoffsetPixels = xoffset;
+            glyphMetrics.WidthPixels = g->bitmap.width;
+            glyphMetrics.HeightPixels = g->bitmap.rows;
+            glyphMetrics.AdvanceWidthPixels = g->advance.x / 64;
+            glyphMetrics.LeftBearingPixels = g->bitmap_left;
+            glyphMetrics.TopBearingPixels = g->bitmap_top;
 
             fontMetrics.SetGlyph(charCode, glyphMetrics);
 

@@ -29,7 +29,7 @@ namespace procdraw {
             y += linespace;
         }
         if (inputLineNeedsLayout_) {
-            renderer_->LayoutText(inputLine_.GetLine(), inputLineLayout_);
+            renderer_->LayOutText(inputLine_.GetLine(), inputLineLayout_);
             inputLineNeedsLayout_ = false;
         }
         renderer_->DrawText(0, y, inputLineLayout_);
@@ -50,7 +50,7 @@ namespace procdraw {
     void Console::Println(const std::string &str)
     {
         ConsoleLine line(str);
-        renderer_->LayoutText(str, line.layout);
+        renderer_->LayOutText(str, line.layout);
         lines_.push_back(line);
     }
 

@@ -168,9 +168,9 @@ namespace procdraw {
         return h;
     }
 
-    void GlRenderer::LayoutText(const std::string &text, std::vector<GLfloat> &vertices)
+    void GlRenderer::LayOutText(const std::string &text, std::vector<GLfloat> &vertices)
     {
-        textRenderer_->LayoutText(text, vertices);
+        textRenderer_->LayOutText(text, vertices);
     }
 
     void GlRenderer::LightColor(float h, float s, float v)

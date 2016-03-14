@@ -55,7 +55,7 @@ namespace procdraw {
         void EndInverse();
         int GetLinespace();
         int Height();
-        void LayoutText(const std::string &text, std::vector<GLfloat> &vertices);
+        void LayOutText(const std::string &text, std::vector<GLfloat> &vertices);
         void LightColor(float h, float s, float v);
         double MouseX();
         double MouseY();

@@ -4,13 +4,13 @@
 
 * Project level
 ** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
-** TODO Rename "Procdraw" to "ProcDraw"                              :v0_1_0:
+** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
 ** TODO Put each class into its own translation unit
 
    - SomeClass.h
    - SomeClass.cpp
 
-** TODO Version ProcDraw
+** TODO Version Procdraw
 
    Could use Semantic Versioning
 
@@ -178,7 +178,7 @@
 
    - For windowed mode, I can get the refresh rate from DwmGetCompositionTimingInfo
    - For full-screen, IDXGIOutput::GetDisplayModeList and what is requested in DXGI_SWAP_CHAIN_DESC.RefreshRate
-   - Or empirically using my existing ProcDrawApp::FramesPerSecond
+   - Or empirically using my existing ProcdrawApp::FramesPerSecond
 
    See http://stackoverflow.com/questions/18844654/how-to-find-out-real-screen-refresh-rate-not-the-rounded-number
 
@@ -443,7 +443,7 @@
     every frame
 
 *** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
-*** TODO Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
+*** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
 *** TODO Set text color programmatically
 
     Right now it is specified directly in the shader source
@@ -510,6 +510,15 @@
    - http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
    - http://www.sjbaker.org/teapot/teaset.tgz
 
+** TODO Have a look at raymarching and sphere tracing with distance functions for geometry
+
+   - https://youtu.be/s8nFqwOho-s
+   - http://mercury.sexy/hg_sdf/
+   - http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
+   - "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
+     - The Visual Computer 12(10) 1996, pp 527-545
+     - http://graphics.cs.illinois.edu/papers/zeno
+
 * Procedural generation
 ** TODO Make L-systems available from Lisp and a mechanism for drawing
 ** TODO Draw a Menger Sponge
@@ -547,6 +556,10 @@
 
    - https://www.arduino.cc/en/Main/ArduinoBoard101
    - http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
+
+** TODO Take a look at the Adafruit BNO055 board
+
+   https://www.adafruit.com/products/2472
 
 ** TODO Add Fadecandy integration
 
@@ -628,4 +641,12 @@
 
    As if prefixed by "test that..." or "check that...".
 
-
+*** TODO interpreter_tests/test_lisp_interpreter.cpp
+*** DONE interpreter_tests/test_lisp_printer.cpp
+*** TODO interpreter_tests/test_lisp_reader.cpp
+*** TODO interpreter_tests/test_signals.cpp
+*** TODO utils_tests/test_color.cpp
+*** TODO utils_tests/test_font_utils.cpp
+*** TODO utils_tests/test_line_buffer.cpp
+*** TODO utils_tests/test_lsystem.cpp
+*** TODO utils_tests/test_utils.cpp

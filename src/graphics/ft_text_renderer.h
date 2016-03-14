@@ -25,7 +25,7 @@ namespace procdraw {
         void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         void DrawText(int x, int y, const std::vector<GLfloat> &vertices);
         int GetLinespace();
-        void LayoutText(const std::string &text, std::vector<GLfloat> &vertices);
+        void LayOutText(const std::string &text, std::vector<GLfloat> &vertices);
     private:
         FT_Library ft_;
         FT_Face face_;
