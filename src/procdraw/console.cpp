@@ -16,7 +16,7 @@ namespace procdraw {
 
         // Console background
         renderer_->Begin2D();
-        renderer_->Color(0, 0, 0, 0.7f);
+        renderer_->Color(0, 0, 0, 0.6f);
         renderer_->Rect(0, 0, renderer_->Width(), renderer_->Height());
 
         // Block cursor background

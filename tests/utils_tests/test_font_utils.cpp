@@ -1,41 +1,12 @@
 #include "font_utils.h"
 #include "catch.hpp"
 
-// TODO: Move GlyphCoords and LayOutGlyph to font_utils.h
-//       - Unit test LayOutGlyph
-//       - Use LayOutGlyph in LayOutText
-
-struct GlyphCoords {
-    float Left;
-    float Right;
-    float Top;
-    float Bottom;
-    float TextureLeft;
-    float TextureRight;
-    float TextureTop;
-    float TextureBottom;
-};
-
-void LayOutGlyph(const procdraw::TextureFontMetrics &fontMetrics,
-                 const procdraw::TextureGlyphMetrics &glyphMetrics,
-                 GlyphCoords &coords)
-{
-    coords.Left = glyphMetrics.LeftBearingPixels;
-    coords.Right = coords.Left + glyphMetrics.WidthPixels;
-    coords.Top = fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels;
-    coords.Bottom = coords.Top + glyphMetrics.HeightPixels;
-    coords.TextureLeft = ((float)glyphMetrics.XoffsetPixels) / fontMetrics.TextureWidth;
-    coords.TextureRight = ((float)glyphMetrics.XoffsetPixels + glyphMetrics.WidthPixels) / fontMetrics.TextureWidth;
-    coords.TextureTop = 0.0f;
-    coords.TextureBottom = ((float)glyphMetrics.HeightPixels) / fontMetrics.TextureHeight;
-}
-
 void MakeTestFontMetrics(procdraw::TextureFontMetrics &metrics)
 {
     metrics.AscenderPixels = 32;
     metrics.DescenderPixels = -8;
     metrics.LinespacePixels = 48;
-    metrics.TextureWidth = 1024;
+    metrics.TextureWidth = 128;
     metrics.TextureHeight = 64;
 
     metrics.ClearGlyphs(34);
@@ -68,7 +39,7 @@ void MakeTestFontMetrics(procdraw::TextureFontMetrics &metrics)
     metrics.SetGlyph(34, quote);
 }
 
-void AssertGlyphVertices(const GlyphCoords &expected, float expectedHorizontalOffset,
+void AssertGlyphVertices(const procdraw::GlyphCoords &expected, float expectedHorizontalOffset,
                          const std::vector<float> &vertices, int verticesOffset)
 {
     // Left top
@@ -111,6 +82,13 @@ void AssertGlyphVertices(const GlyphCoords &expected, float expectedHorizontalOf
 TEST_CASE("Font utils")
 {
 
+    procdraw::TextureFontMetrics fontMetrics;
+    MakeTestFontMetrics(fontMetrics);
+
+    procdraw::GlyphCoords exclamationCoords, quoteCoords;
+    procdraw::LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(33), exclamationCoords);
+    procdraw::LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(34), quoteCoords);
+
     SECTION("CalculateFixedWidthBlockCursorPos") {
         int x, width;
 
@@ -123,14 +101,27 @@ TEST_CASE("Font utils")
         REQUIRE(width == 10);
     }
 
+    SECTION("LayOutGlyph") {
+        REQUIRE(exclamationCoords.Left == 2);
+        REQUIRE(exclamationCoords.Right == 16);
+        REQUIRE(exclamationCoords.Top == 6);
+        REQUIRE(exclamationCoords.Bottom == 34);
+        REQUIRE(exclamationCoords.TextureLeft == 0.0f);
+        REQUIRE(exclamationCoords.TextureRight == 0.109375f);
+        REQUIRE(exclamationCoords.TextureTop == 0.0f);
+        REQUIRE(exclamationCoords.TextureBottom == 0.4375f);
+
+        REQUIRE(quoteCoords.Left == 4);
+        REQUIRE(quoteCoords.Right == 20);
+        REQUIRE(quoteCoords.Top == 12);
+        REQUIRE(quoteCoords.Bottom == 24);
+        REQUIRE(quoteCoords.TextureLeft == 0.25f);
+        REQUIRE(quoteCoords.TextureRight == 0.375f);
+        REQUIRE(quoteCoords.TextureTop == 0.0f);
+        REQUIRE(quoteCoords.TextureBottom == 0.1875f);
+    }
+
     SECTION("LayOutText") {
-
-        procdraw::TextureFontMetrics fontMetrics;
-        MakeTestFontMetrics(fontMetrics);
-
-        GlyphCoords exclamationCoords, quoteCoords;
-        LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(33), exclamationCoords);
-        LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(34), quoteCoords);
 
         float spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
         float exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;

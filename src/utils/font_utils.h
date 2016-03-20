@@ -47,16 +47,33 @@ namespace procdraw {
         std::vector<TextureGlyphMetrics> glyphMetrics_;
     };
 
+    struct GlyphCoords {
+        float Left;
+        float Right;
+        float Top;
+        float Bottom;
+        float TextureLeft;
+        float TextureRight;
+        float TextureTop;
+        float TextureBottom;
+    };
+
     void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);
 
+    void LayOutGlyph(const TextureFontMetrics &fontMetrics,
+                     const TextureGlyphMetrics &glyphMetrics,
+                     GlyphCoords &coords);
+
     template <typename T>
-    void LayOutText(const std::string &text, TextureFontMetrics &metrics, int maxDrawGlyphs, std::vector<T> &vertices)
+    void LayOutText(const std::string &text, TextureFontMetrics &fontMetrics, int maxDrawGlyphs, std::vector<T> &vertices)
     {
         vertices.clear();
 
         int cursorX = 0;
         int numGlyphs = 0;
-        int maxCharCode = metrics.MaxCharCode();
+        int maxCharCode = fontMetrics.MaxCharCode();
+        TextureGlyphMetrics glyphMetrics;
+        GlyphCoords glyphCoords;
 
         for (const char &ch : text) {
             if (numGlyphs >= maxDrawGlyphs) {
@@ -64,58 +81,46 @@ namespace procdraw {
             }
 
             if (ch <= 32 || ch > maxCharCode) {
-                cursorX += metrics.GetGlyph(32).AdvanceWidthPixels;
+                cursorX += fontMetrics.GetGlyph(32).AdvanceWidthPixels;
                 continue;
             }
 
-            unsigned int charCode = ch;
-
-            float glyphWidth = metrics.GetGlyph(charCode).WidthPixels;
-            float glyphHeight = metrics.GetGlyph(charCode).HeightPixels;
-
-            float glyphLeft = cursorX + metrics.GetGlyph(charCode).LeftBearingPixels;
-            float glyphRight = glyphLeft + glyphWidth;
-            float glyphTop = metrics.AscenderPixels - metrics.GetGlyph(charCode).TopBearingPixels;
-            float glyphBottom = glyphTop + glyphHeight;
-
-            float glyphTextureLeft = ((float)metrics.GetGlyph(charCode).XoffsetPixels) / metrics.TextureWidth;
-            float glyphTextureRight = (metrics.GetGlyph(charCode).XoffsetPixels + glyphWidth) / metrics.TextureWidth;
-            float glyphTextureTop = 0.0f;
-            float glyphTextureBottom = glyphHeight / metrics.TextureHeight;
+            glyphMetrics = fontMetrics.GetGlyph(ch);
+            LayOutGlyph(fontMetrics, glyphMetrics, glyphCoords);
 
             // Left top
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureTop);
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureTop);
             // Left bottom
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureBottom);
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureBottom);
             // Right top
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureTop);
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureTop);
 
             // Left bottom
-            vertices.push_back(glyphLeft);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureLeft);
-            vertices.push_back(glyphTextureBottom);
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureBottom);
             // Right bottom
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphBottom);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureBottom);
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureBottom);
             // Right top
-            vertices.push_back(glyphRight);
-            vertices.push_back(glyphTop);
-            vertices.push_back(glyphTextureRight);
-            vertices.push_back(glyphTextureTop);
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureTop);
 
-            cursorX += metrics.GetGlyph(charCode).AdvanceWidthPixels;
+            cursorX += glyphMetrics.AdvanceWidthPixels;
             ++numGlyphs;
         }
     }

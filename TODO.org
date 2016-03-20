@@ -5,6 +5,9 @@
 * Project level
 ** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 ** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
+** DONE Add a note on font_config.h to the README.md
+** TODO Add a "Getting Started" section to the README.md
+** TODO Set up Procdraw installation and add note to the README.md
 ** TODO Put each class into its own translation unit
 
    - SomeClass.h
@@ -56,7 +59,9 @@
    - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
    - http://programmers.stackexchange.com/a/151558
 
+** TODO Publish the documentation to a static website
 * Documentation
+** TODO Move the documentation into a single file
 ** TODO Add type of function: special-form or function
 
    Traditional names used in Lisp:
@@ -115,6 +120,18 @@
    - [[Name CFunctions]]
 
 ** TODO Update the Reader to read floating point numbers             :v0_1_0:
+** TODO Update the Reader API to support reading multiple objects from one input
+   <<Read multiple objects>>
+
+   LispReader::SetInput(const std::string &str);
+   LispReader::Read(LispInterpreter *L);
+
+   These methods are implemented. I just need to remove the
+   Read(LispInterpreter *L, const std::string &str) and make them
+   public.
+
+   I will need to add unit tests for multiple inputs.
+
 ** TODO Implement image frame Signals
 
    - Streams of bitmap images implementing the Signal interface.
@@ -581,6 +598,12 @@
 ** TODO Add a function to load code from a file                      :v0_1_0:
 
    (source filename)
+
+   or
+
+   (load filename)
+
+   Depends on [[Read multiple objects]]
 
 ** TODO Use tick count for signal updating
 

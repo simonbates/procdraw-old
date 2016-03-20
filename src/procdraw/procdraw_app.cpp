@@ -22,7 +22,7 @@ namespace procdraw {
         MakeKeySignals();
         MakeMidiSignals();
 
-        InitDraw();
+        InitProg();
 
         L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
         L_.Set(S_SHOW_REPL, L_.True, L_.Nil);
@@ -32,7 +32,7 @@ namespace procdraw {
 
         console_->Println("Procdraw");
         console_->Println("");
-        console_->Println("Press ESC to show and hide the REPL.");
+        console_->Println("Press ESC to show and hide the REPL");
         console_->Println("");
     }
 
@@ -43,7 +43,7 @@ namespace procdraw {
         SDL_Event e;
         while (!quit) {
             L_.Call("clear-stepped-signals");
-            auto showReplVal = L_.BoolVal(ShowRepl());
+            auto showReplVal = L_.BoolVal(IsShowRepl());
             while (SDL_PollEvent(&e)) {
                 switch (e.type) {
                 case SDL_QUIT:
@@ -52,7 +52,7 @@ namespace procdraw {
                 case SDL_KEYDOWN:
                     if (e.key.keysym.sym == SDLK_ESCAPE) {
                         if (e.key.repeat == 0) {
-                            L_.Set(S_SHOW_REPL, L_.Not(ShowRepl()), L_.Nil);
+                            L_.Set(S_SHOW_REPL, L_.Not(IsShowRepl()), L_.Nil);
                         }
                     }
                     else {
@@ -127,7 +127,7 @@ namespace procdraw {
         }
     }
 
-    LispObjectPtr ProcdrawApp::ShowRepl()
+    LispObjectPtr ProcdrawApp::IsShowRepl()
     {
         return L_.SymbolValue(S_SHOW_REPL);
     }
@@ -155,10 +155,24 @@ namespace procdraw {
         return signal;
     }
 
-    void ProcdrawApp::InitDraw()
+    void ProcdrawApp::InitProg()
     {
-        auto drawFun = L_.Read("(lambda () (background 0 0 0))");
-        L_.Set(L_.SymbolRef("draw"), drawFun, L_.Nil);
+        const std::string prog =
+            "(progn                                                           "
+            "  (setq y-angle (saw))                                           "
+            "  (put-slot y-angle 'freq (/ (* 37 60)))                         "
+            "  (setq z-angle (saw))                                           "
+            "  (put-slot z-angle 'freq (/ (* 181 60)))                        "
+            "  (def draw ()                                                   "
+            "    (background 200 (/ 6 10) (/ 9 10))                           "
+            "    (rotate-z (sigval z-angle))                                  "
+            "    (rotate-y (sigval y-angle))                                  "
+            "    (translate 6 0 0)                                            "
+            "    (rotate-y (sigval y-angle))                                  "
+            "    (color 7 (/ 7 10) (/ 7 10))                                  "
+            "    (tetrahedron)))                                              ";
+
+        L_.Eval(L_.Read(prog));
     }
 
 }

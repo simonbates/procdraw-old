@@ -17,11 +17,11 @@ namespace procdraw {
                 throw std::runtime_error("Error FT_Init_FreeType");
             }
 
-            if (FT_New_Face(ft_, FT_TEXT_RENDERER_FONT_PATHNAME, 0, &face_)) {
-                throw std::runtime_error("Error loading font " FT_TEXT_RENDERER_FONT_PATHNAME);
+            if (FT_New_Face(ft_, CodeFontFilePath.c_str(), 0, &face_)) {
+                throw std::runtime_error("Error loading font " + CodeFontFilePath);
             }
 
-            FT_Set_Pixel_Sizes(face_, 0, FT_TEXT_RENDERER_FONT_SIZE_PIXELS);
+            FT_Set_Pixel_Sizes(face_, 0, CodeFontSizePixels);
 
             CompileShaders();
             MakeGlyphQuadVao();

@@ -22,7 +22,14 @@ in the future.
 Building on Linux
 -----------------
 
-Dependencies:
+### Configure font
+
+Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
+to a suitable font on your system.
+
+### Install Dependencies
+
+Procdraw has the following dependencies:
 
 * CMake
 * GNU C++ compiler
@@ -35,6 +42,8 @@ Dependencies:
 * ALSA (for MIDI input)
 * Libxml2
 * xsltproc (for building the Documentation)
+
+### Build and run the tests
 
 Procdraw uses the CMake build system. To build Procdraw and run the
 tests:
@@ -57,6 +66,15 @@ To generate the documentation, run `make html` in the `build` directory:
 
 ```
 $ make html
+```
+
+Running Procdraw
+----------------
+
+Procdaw can be run from the build directory:
+
+```
+$ src/procdraw/procdraw
 ```
 
 Running Procdraw from Emacs

@@ -39,11 +39,11 @@ namespace procdraw {
         AlsaMidiClient midiClient_;
         LispObjectPtr keySpaceSignal_;
         std::vector<LispObjectPtr> midiChannelOneControllers_;
-        LispObjectPtr ShowRepl();
+        LispObjectPtr IsShowRepl();
         void MakeKeySignals();
         void MakeMidiSignals();
         LispObjectPtr MakeMidiSignal(int channel, int controller);
-        void InitDraw();
+        void InitProg();
     };
 
 }
