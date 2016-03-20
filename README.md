@@ -27,7 +27,7 @@ Building on Linux
 Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
 to a suitable font on your system.
 
-### Install Dependencies
+### Install dependencies
 
 Procdraw has the following dependencies:
 
