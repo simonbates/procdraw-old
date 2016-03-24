@@ -6,16 +6,16 @@ namespace procdraw {
     // h [0, 360)
     // s [0, 1]
     // v [0, 1]
-    void Hsv2Rgb(float h, float s, float v, float &r, float &g, float &b)
+    void Hsv2Rgb(float h, float s, float v, float &out_r, float &out_g, float &out_b)
     {
-        r = 0.0f;
-        g = 0.0f;
-        b = 0.0f;
+        out_r = 0.0f;
+        out_g = 0.0f;
+        out_b = 0.0f;
 
         if (s == 0) {
-            r = v;
-            g = v;
-            b = v;
+            out_r = v;
+            out_g = v;
+            out_b = v;
         }
         else {
             if (h == 360) {
@@ -29,34 +29,34 @@ namespace procdraw {
             float t = v * (1 - (s * (1 - f)));
             switch (i) {
             case 0:
-                r = v;
-                g = t;
-                b = p;
+                out_r = v;
+                out_g = t;
+                out_b = p;
                 break;
             case 1:
-                r = q;
-                g = v;
-                b = p;
+                out_r = q;
+                out_g = v;
+                out_b = p;
                 break;
             case 2:
-                r = p;
-                g = v;
-                b = t;
+                out_r = p;
+                out_g = v;
+                out_b = t;
                 break;
             case 3:
-                r = p;
-                g = q;
-                b = v;
+                out_r = p;
+                out_g = q;
+                out_b = v;
                 break;
             case 4:
-                r = t;
-                g = p;
-                b = v;
+                out_r = t;
+                out_g = p;
+                out_b = v;
                 break;
             case 5:
-                r = v;
-                g = p;
-                b = q;
+                out_r = v;
+                out_g = p;
+                out_b = q;
                 break;
             }
         }

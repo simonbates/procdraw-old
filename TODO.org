@@ -437,6 +437,10 @@
 
    (<- console-font-size [$midic-1-1])
 
+   or even:
+
+   (<- color 'hue (\ () $sin1))
+
 ** TODO JSON parser and serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
 
@@ -536,6 +540,7 @@
      - The Visual Computer 12(10) 1996, pp 527-545
      - http://graphics.cs.illinois.edu/papers/zeno
 
+** TODO Vector text rendering
 * Procedural generation
 ** TODO Make L-systems available from Lisp and a mechanism for drawing
 ** TODO Draw a Menger Sponge
@@ -630,7 +635,7 @@
 
     I currently have only a single line, where the cursor is
 
-*** TODO Wrap lines longer than the console width
+*** INPROGRESS Wrap lines longer than the console width
 
     Probably want to do this with [[Text layout function]]
 
