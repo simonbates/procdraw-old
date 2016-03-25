@@ -431,16 +431,6 @@
    - If decr, val -= incr-amount
    - If wrap is true, the value wraps, otherwise, it stops at the limits
 
-** TODO Connect to non-signals
-
-   For example, it would be nice to be able to do something like:
-
-   (<- console-font-size [$midic-1-1])
-
-   or even:
-
-   (<- color 'hue (\ () $sin1))
-
 ** TODO JSON parser and serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
 
@@ -451,6 +441,104 @@
    - Algorithmic pattern generation
 
 ** TODO Add fexprs
+** TODO New Signals
+*** Desired behaviour and challenges
+
+    - Concise notation for signal value and update expressions; some
+      thoughts:
+      - $sig as reader macro for (sigval sig)
+      - (sig) instead of (sigval sig) -- signal as callable function
+      - [expr] rather than (lambda () expr)
+      - "\" as new spelling for "lambda" -- (\ () expr)
+    - Make update connections between things which are not generators
+      (both as source and target)
+      - such as updating draw colour based on a sin generator
+        - (<- color 'hue (\ () $sin1))
+        - (<- console-font-size [$midic-1-1])
+      - or updating a sin generator frequency from the value of a
+        function call (do I want this second one? that is: a source
+        that is not a generator?)
+    - Being able to update a generator, or processing function, bound
+      to a particular name
+      - for example if I did the following:
+        - (<- sigtarget 'key (sigmap sigsource f))
+        - sigsouce and f are looked up at evaluation of the sigmap
+          call and if I later rebind sigsource or f, the update
+          connection will still use the previous bindings
+      - if I instead use expressions and do name lookup at update time
+        (each frame say)
+        - (<- sigtarget 'key (\ () (f sigsource)))
+        - I can now rebind f or sigsource and the connection will use
+          the new bindings
+        - but it's harder to build dependency information
+        - f may do its own lookup of global names -- that is: there
+          may be dependencies that are within the body of f and not
+          explicitly in the expression provided to <-
+    - How to perform dependency updating?
+      - I currently do it on a lazy pull basis -- if I ask for the
+        value of a signal, I check to see if it's been updated for
+        this frame; if it hasn't yet, then I evaluate any update
+        expressions (and recursively this will result in dependencies
+        being updated)
+        - how should this interact with updates that occur within the
+          draw function? (user code updates a value with a dependent)
+        - if a signal generator is not evaluated for a particular
+          frame, it will not be stepped
+      - Another approach would be to reactively push changes through
+        the system -- if a value changes that others are depending on,
+        they get notifications of the change and update themselves
+        appropriately
+        - how should this interact with a generator that should only
+          update once per frame?
+      - A third approach would be to do all dependency updating at the
+        start of each frame
+        - similarly to the lazy updating: how should this interact
+          with updates that occur with the draw function? (user code
+          updates a value with a dependent)
+    - Signal containment would be good to add so that when an update
+      expression is evaluated, the sub-signals are searched for names
+      before searching globally. Then I can have self-contained
+      related signals that can be passed around, or stored in a
+      collection and iterated over.
+
+*** Expressions as signal generator sources
+
+    If I use expressions as update sources, then I no longer need to
+    wrap information sources in signals -- they can be variables or
+    function calls.
+
+    - mouse position
+    - midi input
+    - key press state
+
+*** Implementation thoughts
+**** Tables
+
+     Add a Table type, with some strategy for stable printing (keys
+     maintain their order). Either store internally as a property
+     list, or as a hashtable and sort keys at print.
+
+     - (put table 'key val)
+     - (get table 'key)
+     - (<- table 'key expr)
+       - where expr is a lambda expression without arguments
+       - for example: (<- color 'hue (\ () (sin1)))
+     - a table may be called as a function
+       - a special key "--call" is looked up when a table is called as
+         a function (like Lua)
+       - for example:
+         - (put t1 '--call (\ (self b) (+ (get self 'a) b)))
+         - (t1 10)
+
+     Signals (generators?) are then implemented as tables with step
+     functions as --call members.
+
+**** Push connections ->
+
+     (-> table 'key 'targetname)
+     (-> table 'key 'target-table-name 'target-key)
+     (-> table 'key 'target-table-name 'target-key expr)
+
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics
