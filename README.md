@@ -1,6 +1,8 @@
 Procdraw
 ========
 
+[![Build Status](https://travis-ci.org/simonbates/procdraw.svg?branch=master)](https://travis-ci.org/simonbates/procdraw)
+
 Procdraw is/will be a platform for exploring programming language
 design and interaction design for live programming.
 
