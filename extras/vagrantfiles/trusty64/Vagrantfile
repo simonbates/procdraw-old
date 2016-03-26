@@ -8,6 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell", inline: "sudo apt-get -y update"
     config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
     config.vm.provision "shell", inline: "sudo apt-get -y install build-essential cmake"
+    config.vm.provision "shell", inline: "sudo apt-get -y install libreadline-dev libsdl2-dev libglew-dev libglm-dev libfreetype6-dev libxml2-dev"
 
     config.vm.provision "shell", path: "install-user-files.sh", privileged: false
 
