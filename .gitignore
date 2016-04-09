@@ -11,7 +11,10 @@
 /GTAGS
 
 # Site
-/site/_reference
-/site/_site
+/site/node_modules/
+/site/bower_components/
+/site/_reference/
+/site/_site/
 /site/.sass-cache
 /site/.jekyll-metadata
+/site/css/main.css

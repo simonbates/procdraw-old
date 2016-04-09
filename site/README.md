@@ -2,11 +2,18 @@ Dependencies
 ------------
 
 * GNU Make
+* Node.js
+* Bower
+* gulp-cli
 * Jekyll
 * xsltproc
 
 Building the site
 -----------------
 
-1. Run `make content` to generate website content from project files
-1. Run Jekyll
+```
+$ npm install
+$ bower install
+$ make
+$ jekyll build
+```

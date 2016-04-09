@@ -20,7 +20,14 @@ github_username:  jekyll
 # Build settings
 markdown: kramdown
 
-exclude: [Makefile]
+exclude: [
+  "bower.json",
+  "gulpfile.js",
+  "Makefile",
+  "node_modules",
+  "package.json",
+  "README.md"
+]
 
 collections:
   reference:
@@ -31,4 +38,4 @@ defaults:
       path: ""
       type: reference
     values:
-      layout: page
+      layout: default
