@@ -19,3 +19,16 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
+
+exclude: [Makefile]
+
+collections:
+  reference:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+      type: reference
+    values:
+      layout: page

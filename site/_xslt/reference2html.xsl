@@ -3,17 +3,11 @@
   <xsl:output method="html"/>
 
   <xsl:template match="function-spec">
-    <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;
+    <xsl:text>---
+title: Function </xsl:text><xsl:value-of select="@name"/><xsl:text>
+---
 </xsl:text>
-    <html>
-      <head>
-        <title>Function: <xsl:value-of select="@name"/></title>
-      </head>
-      <body>
-        <h1>Function: <xsl:value-of select="@name"/></h1>
-        <xsl:apply-templates/>
-      </body>
-    </html>
+    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="syntax">
@@ -24,7 +18,7 @@
   <xsl:template match="examples">
     <h2>Examples</h2>
     <pre>
-    <xsl:apply-templates select="example"/>
+      <xsl:apply-templates select="example"/>
     </pre>
   </xsl:template>
 

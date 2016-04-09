@@ -9,3 +9,9 @@
 /GPATH
 /GRTAGS
 /GTAGS
+
+# Site
+/site/_reference
+/site/_site
+/site/.sass-cache
+/site/.jekyll-metadata
