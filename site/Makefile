@@ -10,8 +10,8 @@ all: content css/main.css ;
 .PHONY: content
 content: $(REFERENCE_OUT_FILES) ;
 
-$(REFERENCE_OUT_DIR)/%.html: $(REFERENCE_SRC_DIR)/%.xml _xslt/reference2html.xsl
-	xsltproc --output $@ _xslt/reference2html.xsl $<
+$(REFERENCE_OUT_DIR)/%.html: $(REFERENCE_SRC_DIR)/%.xml _xslt/functionspec2html.xsl
+	xsltproc --output $@ _xslt/functionspec2html.xsl $<
 
 css/main.css: _scss/main.scss _scss/_settings.scss
 	gulp
