@@ -13,7 +13,7 @@
 # Site
 /site/node_modules/
 /site/bower_components/
-/site/_reference/
+/site/_reference_generated/
 /site/_site/
 /site/.sass-cache
 /site/.jekyll-metadata

@@ -1,5 +1,5 @@
 REFERENCE_SRC_DIR = ../Documentation/reference
-REFERENCE_OUT_DIR = _reference
+REFERENCE_OUT_DIR = _reference_generated
 
 REFERENCE_SRC_FILES = $(filter-out $(REFERENCE_SRC_DIR)/schemas.xml, $(wildcard $(REFERENCE_SRC_DIR)/*.xml))
 REFERENCE_OUT_FILES = $(patsubst $(REFERENCE_SRC_DIR)/%.xml, $(REFERENCE_OUT_DIR)/%.html, $(REFERENCE_SRC_FILES))

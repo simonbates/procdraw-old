@@ -4,7 +4,7 @@
 
   <xsl:template match="function-spec">
     <xsl:text>---
-title: Function </xsl:text><xsl:value-of select="@name"/><xsl:text>
+title: </xsl:text><xsl:value-of select="@name"/><xsl:text>
 ---
 </xsl:text>
     <xsl:apply-templates/>
