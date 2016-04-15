@@ -39,4 +39,4 @@ defaults:
       path: ""
       type: reference_generated
     values:
-      layout: default
+      layout: page
