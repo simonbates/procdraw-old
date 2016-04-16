@@ -12,7 +12,7 @@ mkdir procdraw-build
 cd procdraw-build
 cmake /procdraw
 make
-make test
+ctest --output-on-failure
 EOF
 
 chmod u+x "$HOME/make-test-procdraw.sh"

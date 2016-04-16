@@ -24,6 +24,31 @@ C++ Conventions
   do so much optimization that using a different approach, without
   evidence because it might be faster, is premature.
 
+Passing data to functions
+-------------------------
+
+| Mechanism | When |
+|-----------|------|
+| By value | Use for read-only primitive types |
+| By reference | Use const references for passing read-only structs and classes; when providing references to data for the purpose of returning multiple values, prefix argument names with "out_" (but for a single return value, prefer return by value) |
+| By smart pointer | Use for objects with automatic memory management |
+| By pointer | Prefer pass by reference instead; use pointers when compatibility with C is needed |
+
+Returning data from functions
+-----------------------------
+
+| Mechanism | When |
+|-----------|------|
+| By value | This is the prefered mechanism to use when returning a single value (including compound objects) |
+| By reference | Use with care; a valid use case would be returning access to a collection member |
+| By smart pointer | Use for objects with automatic memory management |
+| By pointer | Use with care; for example to provide access to an object with program-lifetime temporal scope |
+
+If a function has a single return value (including compound
+objects), prefer return by value. If there are situations where there
+is evidence (profiling) that return by value is too slow, then use a
+different approach (such as pass modifiable object by reference).
+
 Pre-commit checklist
 --------------------
 
