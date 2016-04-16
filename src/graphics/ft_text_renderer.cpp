@@ -86,9 +86,9 @@ namespace procdraw {
         return asciiFontMetrics_.LinespacePixels;
     }
 
-    void FtTextRenderer::LayOutText(const std::string &text, std::vector<GLfloat> &vertices)
+    TextLayout<GLfloat> FtTextRenderer::LayOutText(const std::string &text)
     {
-        procdraw::LayOutText(text, asciiFontMetrics_, FT_TEXT_RENDERER_MAX_DRAW_GLYPHS, vertices);
+        return procdraw::LayOutText<GLfloat>(text, asciiFontMetrics_, FT_TEXT_RENDERER_MAX_DRAW_GLYPHS);
     }
 
     void FtTextRenderer::CompileShaders()

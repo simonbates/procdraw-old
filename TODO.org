@@ -500,6 +500,9 @@
       before searching globally. Then I can have self-contained
       related signals that can be passed around, or stored in a
       collection and iterated over.
+      - This could be done using explicit reference to signal members,
+        such as:
+        - (<- sig1 'key1 (\ (self) (sigval (get self 'subsig1))))
 
 *** Expressions as signal generator sources
 
@@ -539,6 +542,7 @@
      (-> table 'key 'target-table-name 'target-key)
      (-> table 'key 'target-table-name 'target-key expr)
 
+** TODO Implement property list functions
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 * Graphics

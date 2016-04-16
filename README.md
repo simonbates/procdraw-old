@@ -25,7 +25,7 @@ Building on Linux
 ### Configure font
 
 Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
-to a suitable font on your system.
+to a suitable monospaced font on your system.
 
 ### Install dependencies
 

@@ -85,9 +85,8 @@ TEST_CASE("Font utils")
     procdraw::TextureFontMetrics fontMetrics;
     MakeTestFontMetrics(fontMetrics);
 
-    procdraw::GlyphCoords exclamationCoords, quoteCoords;
-    procdraw::LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(33), exclamationCoords);
-    procdraw::LayOutGlyph(fontMetrics, fontMetrics.GetGlyph(34), quoteCoords);
+    procdraw::GlyphCoords exclamationCoords = procdraw::LayOutGlyph(fontMetrics.GetGlyph(33), fontMetrics);
+    procdraw::GlyphCoords quoteCoords = procdraw::LayOutGlyph(fontMetrics.GetGlyph(34), fontMetrics);
 
     SECTION("CalculateFixedWidthBlockCursorPos") {
         int x, width;
@@ -127,9 +126,11 @@ TEST_CASE("Font utils")
         float exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
 
         SECTION("Text is laid out") {
-            std::vector<float> vertices;
-            procdraw::LayOutText(" ! \"", fontMetrics, 10, vertices);
+            procdraw::TextLayout<float> layout = procdraw::LayOutText<float>(" ! \"", fontMetrics, 10);
 
+            REQUIRE(layout.Size() == 1);
+
+            auto vertices = layout.GetLineVertices(0);
             REQUIRE(vertices.size() == 24 * 2);
             AssertGlyphVertices(exclamationCoords, spaceAdvance, vertices, 0);
             AssertGlyphVertices(quoteCoords, spaceAdvance * 2 + exclamationAdvance, vertices, 24);

@@ -58,16 +58,45 @@ namespace procdraw {
         float TextureBottom;
     };
 
-    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);
-
-    void LayOutGlyph(const TextureFontMetrics &fontMetrics,
-                     const TextureGlyphMetrics &glyphMetrics,
-                     GlyphCoords &coords);
+    template <typename T>
+    class TextLayout {
+    public:
+        typedef typename std::vector<std::vector<T>>::size_type size_type;
+        std::vector<T>& GetLineVertices(size_type pos);
+        std::vector<T>& OpenNewLine();
+        size_type Size();
+    private:
+        std::vector<std::vector<T>> lines_;
+    };
 
     template <typename T>
-    void LayOutText(const std::string &text, TextureFontMetrics &fontMetrics, int maxDrawGlyphs, std::vector<T> &vertices)
+    std::vector<T>& TextLayout<T>::GetLineVertices(size_type pos)
     {
-        vertices.clear();
+        return lines_.at(pos);
+    }
+
+    template <typename T>
+    std::vector<T>& TextLayout<T>::OpenNewLine()
+    {
+        lines_.resize(lines_.size() + 1);
+        return lines_.back();
+    }
+
+    template <typename T>
+    typename TextLayout<T>::size_type TextLayout<T>::Size()
+    {
+        return lines_.size();
+    }
+
+    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);
+
+    GlyphCoords LayOutGlyph(const TextureGlyphMetrics &glyphMetrics, const TextureFontMetrics &fontMetrics);
+
+    template <typename T>
+    TextLayout<T> LayOutText(const std::string &text, TextureFontMetrics &fontMetrics, int maxDrawGlyphs)
+    {
+        TextLayout<T> layout;
+        std::vector<T>& vertices = layout.OpenNewLine();
 
         int cursorX = 0;
         int numGlyphs = 0;
@@ -86,7 +115,7 @@ namespace procdraw {
             }
 
             glyphMetrics = fontMetrics.GetGlyph(ch);
-            LayOutGlyph(fontMetrics, glyphMetrics, glyphCoords);
+            glyphCoords = LayOutGlyph(glyphMetrics, fontMetrics);
 
             // Left top
             vertices.push_back(cursorX + glyphCoords.Left);
@@ -123,6 +152,8 @@ namespace procdraw {
             cursorX += glyphMetrics.AdvanceWidthPixels;
             ++numGlyphs;
         }
+
+        return layout;
     }
 
 }

@@ -25,14 +25,14 @@ namespace procdraw {
         // Draw text
         renderer_->BeginText();
         for (auto line : lines_) {
-            renderer_->DrawText(0, y, line.layout);
+            renderer_->DrawText(0, y, line.layout.GetLineVertices(0));
             y += linespace;
         }
         if (inputLineNeedsLayout_) {
-            renderer_->LayOutText(inputLine_.GetLine(), inputLineLayout_);
+            inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine());
             inputLineNeedsLayout_ = false;
         }
-        renderer_->DrawText(0, y, inputLineLayout_);
+        renderer_->DrawText(0, y, inputLineLayout_.GetLineVertices(0));
 
         // Do block cursor inversion
         renderer_->Begin2D();
@@ -50,7 +50,7 @@ namespace procdraw {
     void Console::Println(const std::string &str)
     {
         ConsoleLine line(str);
-        renderer_->LayOutText(str, line.layout);
+        line.layout = renderer_->LayOutText(str);
         lines_.push_back(line);
     }
 

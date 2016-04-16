@@ -29,10 +29,10 @@ namespace procdraw {
         *width = glyphWidth;
     }
 
-    void LayOutGlyph(const procdraw::TextureFontMetrics &fontMetrics,
-                     const procdraw::TextureGlyphMetrics &glyphMetrics,
-                     GlyphCoords &coords)
+    GlyphCoords LayOutGlyph(const procdraw::TextureGlyphMetrics &glyphMetrics,
+                            const procdraw::TextureFontMetrics &fontMetrics)
     {
+        GlyphCoords coords;
         coords.Left = glyphMetrics.LeftBearingPixels;
         coords.Right = coords.Left + glyphMetrics.WidthPixels;
         coords.Top = fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels;
@@ -41,6 +41,7 @@ namespace procdraw {
         coords.TextureRight = ((float)glyphMetrics.XoffsetPixels + glyphMetrics.WidthPixels) / fontMetrics.TextureWidth;
         coords.TextureTop = 0.0f;
         coords.TextureBottom = ((float)glyphMetrics.HeightPixels) / fontMetrics.TextureHeight;
+        return coords;
     }
 
 }

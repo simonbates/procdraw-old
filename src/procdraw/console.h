@@ -10,7 +10,7 @@ namespace procdraw {
 
     struct ConsoleLine {
         std::string text;
-        std::vector<GLfloat> layout;
+        TextLayout<GLfloat> layout;
         ConsoleLine(const std::string &text) : text(text) { }
     };
 
@@ -31,7 +31,7 @@ namespace procdraw {
         std::string cmd_ = "";
         std::vector<ConsoleLine> lines_;
         LineBuffer inputLine_;
-        std::vector<GLfloat> inputLineLayout_;
+        TextLayout<GLfloat> inputLineLayout_;
         bool inputLineNeedsLayout_ = true;
         void ProcessReturn();
     };

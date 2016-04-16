@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+// TODO: Use const ints rather than #defines
+
 #define FT_TEXT_RENDERER_MAX_DRAW_GLYPHS 1000
 #define FT_TEXT_RENDERER_VERTICES_PER_GLYPH 6
 #define FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX 4
@@ -16,6 +18,9 @@
 #define FT_TEXT_RENDERER_MAX_ASCII_CODE 126
 
 namespace procdraw {
+
+    // TODO: Split FtTextRenderer into 2: BitmapTextRenderer and FreeTypeFontLoader
+    // TODO: Rename asciiFont* to codeFont*
 
     class FtTextRenderer {
     public:
@@ -25,7 +30,7 @@ namespace procdraw {
         void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         void DrawText(int x, int y, const std::vector<GLfloat> &vertices);
         int GetLinespace();
-        void LayOutText(const std::string &text, std::vector<GLfloat> &vertices);
+        TextLayout<GLfloat> LayOutText(const std::string &text);
     private:
         FT_Library ft_;
         FT_Face face_;
