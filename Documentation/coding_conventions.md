@@ -17,12 +17,6 @@ C++ Conventions
 - Order of header #includes: for this cpp file, within project, system
 - Use RAII (Resource Acquisition Is Initialization)
 - For text, use UTF-8 in std::string
-- If a function has a single return value (including compound
-  objects), use return by value. If there are situations where there
-  is evidence (profiling) that return by value is too slow, then use a
-  different approach. But return by value is clearer and C++ compilers
-  do so much optimization that using a different approach, without
-  evidence because it might be faster, is premature.
 
 Passing data to functions
 -------------------------
@@ -44,9 +38,9 @@ Returning data from functions
 | By smart pointer | Use for objects with automatic memory management |
 | By pointer | Use with care; for example to provide access to an object with program-lifetime temporal scope |
 
-If a function has a single return value (including compound
-objects), prefer return by value. If there are situations where there
-is evidence (profiling) that return by value is too slow, then use a
+If a function has a single return value (including compound objects),
+prefer return by value. If there are situations where there is
+evidence (profiling) that return by value is too slow, then use a
 different approach (such as pass modifiable object by reference).
 
 Pre-commit checklist
