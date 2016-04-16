@@ -1,0 +1,9 @@
+{
+    "name": "procdraw-site",
+    "dependencies": {
+        "gulp": "3.9.1",
+        "gulp-sass": "2.2.0",
+        "gulp-autoprefixer": "3.1.0"
+    },
+    "private": true
+}

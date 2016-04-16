@@ -1,0 +1,16 @@
+@charset 'utf-8';
+
+@import 'settings';
+@import 'foundation';
+
+@include foundation-global-styles;
+@include foundation-grid;
+@include foundation-typography;
+
+.procdraw-site h1 {
+    font-weight: 300;
+}
+
+pre {
+    font-family: $font-family-monospace;
+}

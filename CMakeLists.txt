@@ -36,7 +36,3 @@ add_subdirectory(src/procdraw)
 add_subdirectory(tests/utils_tests)
 add_subdirectory(tests/interpreter_tests)
 add_subdirectory(tests/function_spec_tests)
-
-# Documentation
-
-add_subdirectory(Documentation)

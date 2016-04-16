@@ -9,3 +9,12 @@
 /GPATH
 /GRTAGS
 /GTAGS
+
+# Site
+/site/node_modules/
+/site/bower_components/
+/site/_reference_generated/
+/site/_site/
+/site/.sass-cache
+/site/.jekyll-metadata
+/site/css/main.css

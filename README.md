@@ -43,7 +43,6 @@ Procdraw has the following dependencies:
 * FreeType 2
 * ALSA (for MIDI input)
 * Libxml2
-* xsltproc (for building the Documentation)
 
 ### Build and run the tests
 
@@ -62,12 +61,6 @@ To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
 
 ```
 $ cmake -DCMAKE_BUILD_TYPE=Debug ..
-```
-
-To generate the documentation, run `make html` in the `build` directory:
-
-```
-$ make html
 ```
 
 Running Procdraw
