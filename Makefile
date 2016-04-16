@@ -1,0 +1,3 @@
+.PHONY: gtags
+gtags:
+	gtags
