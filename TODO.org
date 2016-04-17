@@ -61,7 +61,7 @@
 
 ** TODO Publish the documentation to a static website
 * Documentation
-** TODO Move the documentation into a single file
+** WONTDO Move the documentation into a single file
 ** TODO Add type of function: special-form or function
 
    Traditional names used in Lisp:
@@ -431,7 +431,9 @@
    - If decr, val -= incr-amount
    - If wrap is true, the value wraps, otherwise, it stops at the limits
 
-** TODO JSON parser and serializer
+** TODO JSON parser
+   <<JSON parser>>
+** TODO JSON serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
 
    Some ideas:
@@ -679,6 +681,25 @@
 
    https://github.com/scanlime/fadecandy
 
+** TODO Add Nexus integration
+
+   Will require a WebSocket library and a [[JSON parser]] for
+   receiving updates.
+
+   (nexus-bind hostname port-number component-path model-path var-name)
+
+   (nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
+
+   The value of the Lisp object some-obj will be updated to reflect
+   the value of {nexus.procdraw.someObj}.model.value from the Nexus.
+
+   I'll want a way to unbind also.
+
+   Some C/C++ WebSocket client libraries:
+
+   - https://github.com/zaphoyd/websocketpp
+   - https://github.com/dhbaird/easywsclient
+
 * Procdraw
 ** TODO Procdraw client/server
 
@@ -727,12 +748,16 @@
 
     I currently have only a single line, where the cursor is
 
-*** INPROGRESS Wrap lines longer than the console width
+*** DONE Wrap lines longer than the console width
 
     Probably want to do this with [[Text layout function]]
 
+*** TODO Position cursor when input line is wrapped
 *** TODO Scroll the console when we reach the bottom
 *** TODO Provide scrollback to view lines that have scrolled off the top
+
+    Up to some maximum number of stored lines
+
 ** TODO Implement an editor
 ** TODO Implement autocomplete for symbols
 ** TODO Implement matching parens highlighting

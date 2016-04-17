@@ -28,9 +28,10 @@ namespace procdraw {
         ~FtTextRenderer();
         void BeginText(int width, int height);
         void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
-        void DrawText(int x, int y, const std::vector<GLfloat> &vertices);
+        // TODO: Add start line and num lines args to DrawText
+        void DrawText(int x, int y, const TextLayout<GLfloat> &layout);
         int GetLinespace();
-        TextLayout<GLfloat> LayOutText(const std::string &text);
+        TextLayout<GLfloat> LayOutText(const std::string &text, int maxLineWidthPixels);
     private:
         FT_Library ft_;
         FT_Face face_;

@@ -9,8 +9,10 @@ namespace procdraw {
         // TODO: Don't need to calculate the cursor pos each time, only when changes
         int cursorX, cursorWidth, cursorHeight;
         renderer_->CalculateBlockCursorPos(inputLine_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
-
-        int cursorY = linespace * lines_.size();
+        int cursorY = 0;
+        for (auto line : lines_) {
+            cursorY += linespace * line.layout.Size();
+        }
 
         int y = 0;
 
@@ -25,14 +27,14 @@ namespace procdraw {
         // Draw text
         renderer_->BeginText();
         for (auto line : lines_) {
-            renderer_->DrawText(0, y, line.layout.GetLineVertices(0));
-            y += linespace;
+            renderer_->DrawText(0, y, line.layout);
+            y += linespace * line.layout.Size();
         }
         if (inputLineNeedsLayout_) {
-            inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine());
+            inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine(), renderer_->Width());
             inputLineNeedsLayout_ = false;
         }
-        renderer_->DrawText(0, y, inputLineLayout_.GetLineVertices(0));
+        renderer_->DrawText(0, y, inputLineLayout_);
 
         // Do block cursor inversion
         renderer_->Begin2D();
@@ -50,7 +52,7 @@ namespace procdraw {
     void Console::Println(const std::string &str)
     {
         ConsoleLine line(str);
-        line.layout = renderer_->LayOutText(str);
+        line.layout = renderer_->LayOutText(str, renderer_->Width());
         lines_.push_back(line);
     }
 

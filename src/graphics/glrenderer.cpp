@@ -146,9 +146,9 @@ namespace procdraw {
         EndInverse();
     }
 
-    void GlRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
+    void GlRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout)
     {
-        textRenderer_->DrawText(x, y, vertices);
+        textRenderer_->DrawText(x, y, layout);
     }
 
     void GlRenderer::EndInverse()
@@ -168,9 +168,9 @@ namespace procdraw {
         return h;
     }
 
-    TextLayout<GLfloat> GlRenderer::LayOutText(const std::string &text)
+    TextLayout<GLfloat> GlRenderer::LayOutText(const std::string &text, int maxLineWidthPixels)
     {
-        return textRenderer_->LayOutText(text);
+        return textRenderer_->LayOutText(text, maxLineWidthPixels);
     }
 
     void GlRenderer::LightColor(float h, float s, float v)

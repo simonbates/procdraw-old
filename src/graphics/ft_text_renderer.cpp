@@ -68,7 +68,7 @@ namespace procdraw {
         *height = asciiFontMetrics_.AscenderPixels - asciiFontMetrics_.DescenderPixels;
     }
 
-    void FtTextRenderer::DrawText(int x, int y, const std::vector<GLfloat> &vertices)
+    void FtTextRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout)
     {
         auto projectionMatrix = glm::translate(orthoProjection_, glm::vec3(x, y, 0));
         glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
@@ -77,8 +77,12 @@ namespace procdraw {
         glBindTexture(GL_TEXTURE_2D, asciiFontTexture_);
         glBindVertexArray(glyphQuadVao_);
         glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(), vertices.data());
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX);
+
+        for (TextLayout<GLfloat>::size_type i = 0; i < layout.Size(); i++) {
+            auto vertices = layout.GetLineVertices(i);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(), vertices.data());
+            glDrawArrays(GL_TRIANGLES, 0, vertices.size() / FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX);
+        }
     }
 
     int FtTextRenderer::GetLinespace()
@@ -86,9 +90,11 @@ namespace procdraw {
         return asciiFontMetrics_.LinespacePixels;
     }
 
-    TextLayout<GLfloat> FtTextRenderer::LayOutText(const std::string &text)
+    TextLayout<GLfloat> FtTextRenderer::LayOutText(const std::string &text, int maxLineWidthPixels)
     {
-        return procdraw::LayOutText<GLfloat>(text, asciiFontMetrics_, FT_TEXT_RENDERER_MAX_DRAW_GLYPHS);
+        return procdraw::LayOutText<GLfloat>(text, asciiFontMetrics_,
+                                             FT_TEXT_RENDERER_MAX_DRAW_GLYPHS,
+                                             maxLineWidthPixels);
     }
 
     void FtTextRenderer::CompileShaders()
