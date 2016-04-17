@@ -24,11 +24,6 @@ in the future.
 Building on Linux
 -----------------
 
-### Configure font
-
-Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
-to a suitable monospaced font on your system.
-
 ### Install dependencies
 
 Procdraw has the following dependencies:
@@ -44,12 +39,19 @@ Procdraw has the following dependencies:
 * ALSA (for MIDI input)
 * Libxml2
 
+### Configure the font
+
+Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
+to a suitable monospaced font on your system.
+
 ### Build and run the tests
 
 Procdraw uses the CMake build system. To build Procdraw and run the
 tests:
 
 ```
+$ git submodule init
+$ git submodule update
 $ mkdir build
 $ cd build
 $ cmake ..

@@ -5,4 +5,4 @@ compiler: gcc
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install libreadline-dev libsdl2-dev libglew-dev libglm-dev libfreetype6-dev libxml2-dev
-script: mkdir build && cd build && cmake .. && make && ctest --output-on-failure
+script: git submodule init && git submodule update && mkdir build && cd build && cmake .. && make && ctest --output-on-failure

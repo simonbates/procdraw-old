@@ -1,6 +1,6 @@
 file(GLOB UTILS_TESTS_SOURCES "*.cpp")
 
-include_directories(${PROJECT_SOURCE_DIR}/third_party/catch)
+include_directories(${PROJECT_SOURCE_DIR}/third_party/Catch/single_include)
 
 add_executable(utils_tests
     ${UTILS_TESTS_SOURCES})
