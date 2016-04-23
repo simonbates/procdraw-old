@@ -1,6 +1,6 @@
-FUNCTIONS_SRC_DIR = Documentation/reference
+FUNCTIONS_SRC_DIR = Documentation/functions
 FUNCTIONS_SRC_FILES = $(filter-out $(FUNCTIONS_SRC_DIR)/schemas.xml, $(wildcard $(FUNCTIONS_SRC_DIR)/*.xml))
-FUNCTION_SCHEMA = Documentation/reference/function-spec.rnc
+FUNCTION_SCHEMA = $(FUNCTIONS_SRC_DIR)/function-spec.rnc
 
 .PHONY: gtags
 gtags:

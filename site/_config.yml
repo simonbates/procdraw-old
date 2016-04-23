@@ -30,13 +30,13 @@ exclude: [
 ]
 
 collections:
-  reference_generated:
+  functions_generated:
     output: true
-    permalink: /reference/:path:output_ext
+    permalink: /docs/functions/:path:output_ext
 
 defaults:
   - scope:
       path: ""
-      type: reference_generated
+      type: functions_generated
     values:
       layout: page

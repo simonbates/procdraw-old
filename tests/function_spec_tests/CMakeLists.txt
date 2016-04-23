@@ -20,7 +20,7 @@ function(add_spec_failure name spec numtests expected)
 endfunction()
 
 function(add_function_test name numtests)
-    add_test(${name} test_function_spec "${PROJECT_SOURCE_DIR}/Documentation/reference/${name}.xml" ${numtests})
+    add_test(${name} test_function_spec "${PROJECT_SOURCE_DIR}/Documentation/functions/${name}.xml" ${numtests})
 endfunction()
 
 # Tests for test_function_spec
