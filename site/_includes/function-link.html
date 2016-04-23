@@ -1,0 +1,2 @@
+{% assign function_page = site.functions_generated | where: "title",include.name | first %}
+<a href="{{ function_page.url | prepend: site.baseurl }}">{{ function_page.syntax }}</a>

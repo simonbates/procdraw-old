@@ -5,6 +5,7 @@
   <xsl:template match="function-spec">
     <xsl:text>---
 title: </xsl:text><xsl:value-of select="@name"/><xsl:text>
+syntax: </xsl:text><xsl:value-of select="syntax"/><xsl:text>
 ---
 </xsl:text>
     <xsl:apply-templates/>

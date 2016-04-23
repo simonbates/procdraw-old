@@ -3,12 +3,79 @@ title: "Procdraw Documentation"
 layout: page
 ---
 
-<h2>Functions</h2>
+<h2>Types</h2>
 
 <ul>
-  {% for page in site.functions_generated %}
-    <li>
-      <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-    </li>
-  {% endfor %}
+  <li>Numbers</li>
+  <li>Booleans</li>
+  <li>Symbols</li>
+  <li>Strings</li>
+  <li>Pairs and lists</li>
+  <li>CFunctions</li>
+</ul>
+
+<h2>Special-forms and functions</h2>
+
+<ul>
+  <li>(* ...)</li>
+  <li>{% include function-link.html name="+" %}</li>
+  <li>(- number ...)</li>
+  <li>(/ number ...)</li>
+  <li>(apply function argument-list)</li>
+  <li>(assoc key alist)</li>
+  <li>(car obj)</li>
+  <li>(cdr obj)</li>
+  <li>{% include function-link.html name="cons" %}</li>
+  <li>(def function-name arg-list body)</li>
+  <li>(eq obj1 obj2)</li>
+  <li>{% include function-link.html name="functionp" %}</li>
+  <li>(if test then else)</li>
+  <li>(lambda arg-list body)</li>
+  <li>(lerp start stop val)</li>
+  <li>(map-range start1 stop1 start2 stop2 val)</li>
+  <li>{% include function-link.html name="memb" %}</li>
+  <li>(message msg)</li>
+  <li>(norm start stop val)</li>
+  <li>(progn action ...)</li>
+  <li>(putassoc key val alist)</li>
+  <li>(quote arg)</li>
+  <li>(setq name value)</li>
+  <li>(wrap start stop val)</li>
+</ul>
+
+<h2>Signals</h2>
+
+<ul>
+  <li>(make-signal stepfun)</li>
+  <li>(get-slot signal key)</li>
+  <li>(put-slot signal key val)</li>
+  <li>(=> expr signal key)</li>
+  <li>(sigval signal)</li>
+  <li>key-space</li>
+  <li>midic-CHANNEL-CONTROLLER</li>
+  <li>mouse-x</li>
+  <li>mouse-y</li>
+  <li>(saw)</li>
+  <li>(sin-osc)</li>
+  <li>(tri)</li>
+  <li>(toggle)</li>
+</ul>
+
+<h2>Graphics</h2>
+
+<ul>
+  <li>(ambient-light-color h s v)</li>
+  <li>(background h s v)</li>
+  <li>(color h s v)</li>
+  <li>(cube)</li>
+  <li>(frames-per-second)</li>
+  <li>(height)</li>
+  <li>(light-color h s v)</li>
+  <li>(rotate-x turns)</li>
+  <li>(rotate-y turns)</li>
+  <li>(rotate-z turns)</li>
+  <li>(scale factor)</li>
+  <li>(tetrahedron)</li>
+  <li>(translate x y z)</li>
+  <li>(width)</li>
 </ul>
