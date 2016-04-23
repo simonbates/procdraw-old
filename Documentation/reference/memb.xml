@@ -1,5 +1,14 @@
 <function-spec name="memb">
   <syntax>(memb obj list)</syntax>
+
+  <description>Searches <argname>list</argname> for a member eq to
+  <argname>obj</argname>; returns true if one is found, and false if
+  not.</description>
+
+  <arguments>
+    <argument name="obj">The object to test for</argument>
+    <argument name="list">The list to search</argument>
+  </arguments>
   <examples>
     <example expr="(memb nil nil)" value="false"/>
     <example expr="(memb 'a nil)" value="false"/>

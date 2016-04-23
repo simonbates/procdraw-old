@@ -46,7 +46,7 @@
 // ---------
 
 $global-font-size: 18px;
-$global-width: rem-calc(800);
+$global-width: rem-calc(840);
 $global-lineheight: 1.5;
 $foundation-palette: (
   primary: #2199e8,
@@ -58,12 +58,11 @@ $foundation-palette: (
 $light-gray: #e6e6e6;
 $medium-gray: #cacaca;
 $dark-gray: #8a8a8a;
-$darker-gray: #404040;
 $black: #0a0a0a;
 $white: #fefefe;
 $body-background: $white;
-$body-font-color: $darker-gray;
-$body-font-family: 'Lato', sans-serif;
+$body-font-color: #303030;
+$body-font-family: Lato, sans-serif;
 $body-antialiased: true;
 $global-margin: 1rem;
 $global-padding: 1rem;

@@ -39,6 +39,10 @@ Procdraw has the following dependencies:
 * ALSA (for MIDI input)
 * Libxml2
 
+Optional dependencies:
+
+* Jing: to validate the XML function-specs
+
 ### Configure the font
 
 Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`

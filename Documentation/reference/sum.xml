@@ -1,5 +1,9 @@
 <function-spec name="+">
   <syntax>(+ ...)</syntax>
+  <description>Returns the sum of all of its arguments.</description>
+  <arguments>
+    <argument name="...">Zero or more numbers</argument>
+  </arguments>
   <examples>
     <example expr="(+)" value="0"/>
     <example expr="(+ 0)" value="0"/>

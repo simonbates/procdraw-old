@@ -1,5 +1,14 @@
 <function-spec name="cons">
   <syntax>(cons obj1 obj2)</syntax>
+
+  <description>Constructs a new cons cell with car
+  <argname>obj1</argname> and cdr
+  <argname>obj2</argname>.</description>
+
+  <arguments>
+    <argument name="obj1">The car of the newly constructed cons cell will be set to this object</argument>
+    <argument name="obj2">The cdr of the newly constructed cons cell will be set to this object</argument>
+  </arguments>
   <examples>
     <example expr="(cons 'a 'b)" value="(a . b)"/>
     <example expr="(cons 'a nil)" value="(a)"/>

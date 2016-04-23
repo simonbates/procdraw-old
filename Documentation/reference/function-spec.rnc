@@ -1,6 +1,16 @@
 element function-spec {
   attribute name { text },
   element syntax { text },
+  element description {
+    (text
+     | element argname { text })+
+  },
+  element arguments {
+    element argument {
+      attribute name { text },
+      text
+    }+
+  },
   element examples {
     element example {
       attribute expr { text },

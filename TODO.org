@@ -71,8 +71,8 @@
    | EXPR  | user   | function     |
    | FEXPR | user   | special-form |
 
-** TODO Add a description
-** TODO Add argument details
+** DONE Add a description
+** DONE Add argument details
 * Interpreter
 ** TODO Add pretty printing
 
@@ -433,6 +433,15 @@
 
 ** TODO JSON parser
    <<JSON parser>>
+
+   Some C/C++ JSON parsers:
+
+   - https://github.com/open-source-parsers/jsoncpp
+   - https://github.com/nlohmann/json
+   - https://github.com/miloyip/rapidjson
+   - https://github.com/miloyip/nativejson-benchmark
+   - http://en.cppreference.com/w/cpp/links/libs
+
 ** TODO JSON serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
 
@@ -699,6 +708,11 @@
 
    - https://github.com/zaphoyd/websocketpp
    - https://github.com/dhbaird/easywsclient
+
+** TODO Add audio input
+
+To make audio reactive graphics. Could start with just volume and
+later look at other analysis such as frequency composition.
 
 * Procdraw
 ** TODO Procdraw client/server
