@@ -776,7 +776,7 @@ later look at other analysis such as frequency composition.
 
     Probably want to do this with [[Text layout function]]
 
-*** TODO Position cursor when input line is wrapped
+*** DONE Position cursor when input line is wrapped
 *** TODO Scroll the console when we reach the bottom
 *** TODO Provide scrollback to view lines that have scrolled off the top
 

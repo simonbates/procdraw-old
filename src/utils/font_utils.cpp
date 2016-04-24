@@ -23,12 +23,6 @@ namespace procdraw {
         return glyphMetrics_.at(charCode);
     }
 
-    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width)
-    {
-        *x = cursorTextPosition * glyphWidth;
-        *width = glyphWidth;
-    }
-
     GlyphCoords LayOutGlyph(const procdraw::TextureGlyphMetrics &glyphMetrics,
                             const procdraw::TextureFontMetrics &fontMetrics)
     {

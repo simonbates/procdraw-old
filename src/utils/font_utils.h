@@ -62,12 +62,19 @@ namespace procdraw {
     class TextLayout {
     public:
         typedef typename std::vector<std::vector<T>>::size_type size_type;
+        int FixedGlyphWidth = 0;
+        int GlyphHeight = 0;
+        int LinespacePixels = 0;
+        int MaxLineWidthPixels = 0;
         void OpenNewLine();
         size_type NumLines() const;
         void AddGlyph(const GlyphCoords &glyphCoords, int cursorX, int cursorY);
         const std::vector<T>& GetVerticesForLine(size_type lineNum) const;
         void SetNumCharsInLine(int n);
-        int GetNumCharsInLine(size_type lineNum);
+        int GetNumCharsInLine(size_type lineNum) const;
+        void CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
+                                               int &out_x, int &out_y,
+                                               int &out_width, int &out_height) const;
     private:
         std::vector<std::vector<T>> lines_;
         std::vector<int> numChars_;
@@ -141,12 +148,41 @@ namespace procdraw {
     }
 
     template <typename T>
-    int TextLayout<T>::GetNumCharsInLine(size_type lineNum)
+    int TextLayout<T>::GetNumCharsInLine(size_type lineNum) const
     {
         return numChars_.at(lineNum);
     }
 
-    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);
+    template <typename T>
+    void TextLayout<T>::CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
+            int &out_x, int &out_y,
+            int &out_width, int &out_height) const
+    {
+        int physicalCursorTextPosition = cursorTextPosition;
+        int physicalLineNum = 0;
+        for (size_type i = 0; i < this->NumLines(); i++) {
+            int numCharsThisLine = this->GetNumCharsInLine(i);
+            if (physicalCursorTextPosition <= numCharsThisLine) {
+                break;
+            }
+            physicalCursorTextPosition -= numCharsThisLine;
+            ++physicalLineNum;
+        }
+
+        int x = physicalCursorTextPosition * this->FixedGlyphWidth;
+        if (x + this->FixedGlyphWidth > this->MaxLineWidthPixels) {
+            // If we can't fit the cursor within MaxLineWidthPixels,
+            // move it to the start of the next line
+            x = 0;
+            ++physicalLineNum;
+        }
+
+        out_x = x;
+        out_y = physicalLineNum * this->LinespacePixels;
+        out_width = this->FixedGlyphWidth;
+        out_height = this->GlyphHeight;
+    }
+
 
     GlyphCoords LayOutGlyph(const TextureGlyphMetrics &glyphMetrics, const TextureFontMetrics &fontMetrics);
 
@@ -155,6 +191,12 @@ namespace procdraw {
                              int maxDrawGlyphsPerLine, int maxLineWidthPixels)
     {
         TextLayout<T> layout;
+
+        layout.FixedGlyphWidth = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
+        layout.GlyphHeight = fontMetrics.AscenderPixels - fontMetrics.DescenderPixels;
+        layout.LinespacePixels = fontMetrics.LinespacePixels;
+        layout.MaxLineWidthPixels = maxLineWidthPixels;
+
         layout.OpenNewLine();
 
         int cursorX = 0;

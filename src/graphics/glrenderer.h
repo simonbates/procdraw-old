@@ -45,7 +45,6 @@ namespace procdraw {
         void Begin3D();
         void BeginInverse();
         void BeginText();
-        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         void Color(float h, float s, float v, float a = 1.0f);
         void Cube();
         void DoSwap();

@@ -6,33 +6,35 @@ namespace procdraw {
     {
         int linespace = renderer_->GetLinespace();
 
-        // TODO: Don't need to calculate the cursor pos each time, only when changes
-        int cursorX, cursorWidth, cursorHeight;
-        renderer_->CalculateBlockCursorPos(inputLine_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
-        int cursorY = 0;
-        for (auto line : lines_) {
-            cursorY += linespace * line.layout.NumLines();
+        // Update the input line layout if needed
+        if (inputLineNeedsLayout_) {
+            inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine(), renderer_->Width());
+            inputLineNeedsLayout_ = false;
         }
-
-        int y = 0;
 
         // Console background
         renderer_->Begin2D();
         renderer_->Color(0, 0, 0, 0.6f);
         renderer_->Rect(0, 0, renderer_->Width(), renderer_->Height());
 
+        // Calculate cursor position
+        // TODO: Don't need to calculate the cursor pos each time, only when changes
+        int cursorX, cursorY, cursorWidth, cursorHeight;
+        inputLineLayout_.CalculateFixedWidthBlockCursorPos(inputLine_.GetCursorPos(),
+                cursorX, cursorY, cursorWidth, cursorHeight);
+        for (auto line : lines_) {
+            cursorY += linespace * line.layout.NumLines();
+        }
+
         // Block cursor background
         renderer_->DrawBlockCursorBackground(cursorX, cursorY, cursorWidth, cursorHeight);
 
         // Draw text
+        int y = 0;
         renderer_->BeginText();
         for (auto line : lines_) {
             renderer_->DrawText(0, y, line.layout);
             y += linespace * line.layout.NumLines();
-        }
-        if (inputLineNeedsLayout_) {
-            inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine(), renderer_->Width());
-            inputLineNeedsLayout_ = false;
         }
         renderer_->DrawText(0, y, inputLineLayout_);
 

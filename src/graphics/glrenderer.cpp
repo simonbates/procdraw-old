@@ -108,11 +108,6 @@ namespace procdraw {
         textRenderer_->BeginText(Width(), Height());
     }
 
-    void GlRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
-    {
-        textRenderer_->CalculateBlockCursorPos(cursorTextPosition, x, width, height);
-    }
-
     // TODO: ColorHsv and ColorRgb
 
     void GlRenderer::Color(float h, float s, float v, float a)

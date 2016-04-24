@@ -27,7 +27,6 @@ namespace procdraw {
         FtTextRenderer();
         ~FtTextRenderer();
         void BeginText(int width, int height);
-        void CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height);
         // TODO: Add start line and num lines args to DrawText
         void DrawText(int x, int y, const TextLayout<GLfloat> &layout);
         int GetLinespace();

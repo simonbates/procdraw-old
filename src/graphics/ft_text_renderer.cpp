@@ -62,12 +62,6 @@ namespace procdraw {
         glDisable(GL_DEPTH_TEST);
     }
 
-    void FtTextRenderer::CalculateBlockCursorPos(int cursorTextPosition, int *x, int *width, int *height)
-    {
-        CalculateFixedWidthBlockCursorPos(cursorTextPosition, asciiFontMetrics_.GetGlyph(32).AdvanceWidthPixels, x, width);
-        *height = asciiFontMetrics_.AscenderPixels - asciiFontMetrics_.DescenderPixels;
-    }
-
     void FtTextRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout)
     {
         auto projectionMatrix = glm::translate(orthoProjection_, glm::vec3(x, y, 0));

@@ -93,15 +93,84 @@ TEST_CASE("Font utils")
     procdraw::GlyphCoords quoteCoords = procdraw::LayOutGlyph(fontMetrics.GetGlyph(34), fontMetrics);
 
     SECTION("CalculateFixedWidthBlockCursorPos") {
-        int x, width;
+        int x, y, width, height;
 
-        procdraw::CalculateFixedWidthBlockCursorPos(0, 10, &x, &width);
-        REQUIRE(x == 0);
-        REQUIRE(width == 10);
+        procdraw::TextLayout<float> layout;
+        layout.FixedGlyphWidth = 10;
+        layout.GlyphHeight = 14;
+        layout.LinespacePixels = 16;
+        layout.MaxLineWidthPixels = 100;
 
-        procdraw::CalculateFixedWidthBlockCursorPos(2, 10, &x, &width);
-        REQUIRE(x == 20);
-        REQUIRE(width == 10);
+        SECTION("Cursor is positioned at 0,0 for an empty layout") {
+            layout.CalculateFixedWidthBlockCursorPos(0, x, y, width, height);
+            REQUIRE(x == 0);
+            REQUIRE(y == 0);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor is positioned at 0,0 for a layout with a single empty line") {
+            layout.OpenNewLine();
+            layout.CalculateFixedWidthBlockCursorPos(0, x, y, width, height);
+            REQUIRE(x == 0);
+            REQUIRE(y == 0);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor is positioned at the end of a single line") {
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(8);
+            layout.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+            REQUIRE(x == 80);
+            REQUIRE(y == 0);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor wraps when exceeds maxLineWidthPixels") {
+            layout.MaxLineWidthPixels = 89;
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(8);
+            layout.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+            REQUIRE(x == 0);
+            REQUIRE(y == 16);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor does not wrap when positioned right at maxLineWidthPixels") {
+            layout.MaxLineWidthPixels = 90;
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(8);
+            layout.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+            REQUIRE(x == 80);
+            REQUIRE(y == 0);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor is positioned on a second line") {
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(8);
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(4);
+            layout.CalculateFixedWidthBlockCursorPos(10, x, y, width, height);
+            REQUIRE(x == 20);
+            REQUIRE(y == 16);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
+
+        SECTION("Cursor is positioned beyond the char count") {
+            layout.OpenNewLine();
+            layout.SetNumCharsInLine(8);
+            layout.CalculateFixedWidthBlockCursorPos(100, x, y, width, height);
+            REQUIRE(x == 0);
+            REQUIRE(y == 32);
+            REQUIRE(width == 10);
+            REQUIRE(height == 14);
+        }
     }
 
     SECTION("LayOutGlyph") {
@@ -132,6 +201,12 @@ TEST_CASE("Font utils")
 
         SECTION("A layout for an empty string has one empty line") {
             auto layout = procdraw::LayOutText<float>("", fontMetrics, 100, 100);
+
+            REQUIRE(layout.FixedGlyphWidth == spaceAdvance);
+            REQUIRE(layout.GlyphHeight == 40);
+            REQUIRE(layout.LinespacePixels == fontMetrics.LinespacePixels);
+            REQUIRE(layout.MaxLineWidthPixels == 100);
+
             REQUIRE(layout.NumLines() == 1);
             REQUIRE(layout.GetNumCharsInLine(0) == 0);
             REQUIRE(layout.GetVerticesForLine(0).size() == 0);
@@ -139,6 +214,11 @@ TEST_CASE("Font utils")
 
         SECTION("A single line of text is laid out") {
             auto layout = procdraw::LayOutText<float>(" ! \"", fontMetrics, 10, 1000);
+
+            REQUIRE(layout.FixedGlyphWidth == spaceAdvance);
+            REQUIRE(layout.GlyphHeight == 40);
+            REQUIRE(layout.LinespacePixels == fontMetrics.LinespacePixels);
+            REQUIRE(layout.MaxLineWidthPixels == 1000);
 
             REQUIRE(layout.NumLines() == 1);
 
@@ -157,6 +237,11 @@ TEST_CASE("Font utils")
             //
             // ' !!!!'
             // '""'
+
+            REQUIRE(layout.FixedGlyphWidth == spaceAdvance);
+            REQUIRE(layout.GlyphHeight == 40);
+            REQUIRE(layout.LinespacePixels == fontMetrics.LinespacePixels);
+            REQUIRE(layout.MaxLineWidthPixels == 1000);
 
             REQUIRE(layout.NumLines() == 2);
 
@@ -189,6 +274,11 @@ TEST_CASE("Font utils")
             // ' ! '
             // '!!!!!'
             // '!'
+
+            REQUIRE(layout.FixedGlyphWidth == spaceAdvance);
+            REQUIRE(layout.GlyphHeight == 40);
+            REQUIRE(layout.LinespacePixels == fontMetrics.LinespacePixels);
+            REQUIRE(layout.MaxLineWidthPixels == spaceAdvance * 3);
 
             REQUIRE(layout.NumLines() == 4);
 
