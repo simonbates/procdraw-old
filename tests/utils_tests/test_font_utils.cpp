@@ -130,53 +130,84 @@ TEST_CASE("Font utils")
         float exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
         float quoteAdvance = fontMetrics.GetGlyph(34).AdvanceWidthPixels;
 
+        SECTION("A layout for an empty string has one empty line") {
+            auto layout = procdraw::LayOutText<float>("", fontMetrics, 100, 100);
+            REQUIRE(layout.NumLines() == 1);
+            REQUIRE(layout.GetNumCharsInLine(0) == 0);
+            REQUIRE(layout.GetVerticesForLine(0).size() == 0);
+        }
+
         SECTION("A single line of text is laid out") {
-            procdraw::TextLayout<float> layout = procdraw::LayOutText<float>(" ! \"", fontMetrics, 10, 1000);
+            auto layout = procdraw::LayOutText<float>(" ! \"", fontMetrics, 10, 1000);
 
-            REQUIRE(layout.Size() == 1);
+            REQUIRE(layout.NumLines() == 1);
 
-            auto vertices = layout.GetLineVertices(0);
+            REQUIRE(layout.GetNumCharsInLine(0) == 4);
+
+            auto vertices = layout.GetVerticesForLine(0);
             REQUIRE(vertices.size() == 24 * 2);
             AssertGlyphVertices(exclamationCoords, spaceAdvance, 0, vertices, 0);
             AssertGlyphVertices(quoteCoords, spaceAdvance * 2 + exclamationAdvance, 0, vertices, 24);
         }
 
         SECTION("Text is wrapped when the max number of glyphs is exceeded") {
-            procdraw::TextLayout<float> layout = procdraw::LayOutText<float>(" !!!!\"\"", fontMetrics, 4, 1000);
+            auto layout = procdraw::LayOutText<float>(" !!!!\"\"", fontMetrics, 4, 1000);
 
-            REQUIRE(layout.Size() == 2);
+            // Expect:
+            //
+            // ' !!!!'
+            // '""'
 
-            auto lineOneVertices = layout.GetLineVertices(0);
+            REQUIRE(layout.NumLines() == 2);
+
+            // Number of chars in each line
+
+            REQUIRE(layout.GetNumCharsInLine(0) == 5);
+            REQUIRE(layout.GetNumCharsInLine(1) == 2);
+
+            // Vertices
+
+            auto lineOneVertices = layout.GetVerticesForLine(0);
             REQUIRE(lineOneVertices.size() == 24 * 4);
             AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 0, 0, lineOneVertices, 24 * 0);
             AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 1, 0, lineOneVertices, 24 * 1);
             AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 2, 0, lineOneVertices, 24 * 2);
             AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 3, 0, lineOneVertices, 24 * 3);
 
-            auto lineTwoVertices = layout.GetLineVertices(1);
+            auto lineTwoVertices = layout.GetVerticesForLine(1);
             REQUIRE(lineTwoVertices.size() == 24 * 2);
             AssertGlyphVertices(quoteCoords, quoteAdvance * 0, fontMetrics.LinespacePixels, lineTwoVertices, 24 * 0);
             AssertGlyphVertices(quoteCoords, quoteAdvance * 1, fontMetrics.LinespacePixels, lineTwoVertices, 24 * 1);
         }
 
         SECTION("Text is wrapped when the max pixel width is exceeded") {
-            procdraw::TextLayout<float> layout = procdraw::LayOutText<float>("    ! !!!!!!", fontMetrics, 1000, spaceAdvance * 3);
+            auto layout = procdraw::LayOutText<float>("    ! !!!!!!", fontMetrics, 1000, spaceAdvance * 3);
 
-            // Expected:
-            // "   "
-            // " ! "
-            // "!!!!!"
-            // "!"
+            // Expect:
+            //
+            // '   '
+            // ' ! '
+            // '!!!!!'
+            // '!'
 
-            REQUIRE(layout.Size() == 4);
+            REQUIRE(layout.NumLines() == 4);
 
-            REQUIRE(layout.GetLineVertices(0).size() == 0);
+            // Number of chars in each line
 
-            auto lineTwoVertices = layout.GetLineVertices(1);
+            REQUIRE(layout.GetNumCharsInLine(0) == 3);
+            REQUIRE(layout.GetNumCharsInLine(1) == 3);
+            REQUIRE(layout.GetNumCharsInLine(2) == 5);
+            REQUIRE(layout.GetNumCharsInLine(3) == 1);
+
+            // Vertices
+
+            REQUIRE(layout.GetVerticesForLine(0).size() == 0);
+
+            auto lineTwoVertices = layout.GetVerticesForLine(1);
             REQUIRE(lineTwoVertices.size() == 24);
             AssertGlyphVertices(exclamationCoords, spaceAdvance, fontMetrics.LinespacePixels, lineTwoVertices, 0);
 
-            auto lineThreeVertices = layout.GetLineVertices(2);
+            auto lineThreeVertices = layout.GetVerticesForLine(2);
             REQUIRE(lineThreeVertices.size() == 24 * 5);
             AssertGlyphVertices(exclamationCoords, exclamationAdvance * 0, fontMetrics.LinespacePixels * 2,
                                 lineThreeVertices, 24 * 0);
@@ -189,7 +220,7 @@ TEST_CASE("Font utils")
             AssertGlyphVertices(exclamationCoords, exclamationAdvance * 4, fontMetrics.LinespacePixels * 2,
                                 lineThreeVertices, 24 * 4);
 
-            auto lineFourVertices = layout.GetLineVertices(3);
+            auto lineFourVertices = layout.GetVerticesForLine(3);
             REQUIRE(lineFourVertices.size() == 24);
             AssertGlyphVertices(exclamationCoords, 0, fontMetrics.LinespacePixels * 3, lineFourVertices, 0);
         }

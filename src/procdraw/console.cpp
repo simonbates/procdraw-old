@@ -11,7 +11,7 @@ namespace procdraw {
         renderer_->CalculateBlockCursorPos(inputLine_.GetCursorPos(), &cursorX, &cursorWidth, &cursorHeight);
         int cursorY = 0;
         for (auto line : lines_) {
-            cursorY += linespace * line.layout.Size();
+            cursorY += linespace * line.layout.NumLines();
         }
 
         int y = 0;
@@ -28,7 +28,7 @@ namespace procdraw {
         renderer_->BeginText();
         for (auto line : lines_) {
             renderer_->DrawText(0, y, line.layout);
-            y += linespace * line.layout.Size();
+            y += linespace * line.layout.NumLines();
         }
         if (inputLineNeedsLayout_) {
             inputLineLayout_ = renderer_->LayOutText(inputLine_.GetLine(), renderer_->Width());

@@ -62,30 +62,88 @@ namespace procdraw {
     class TextLayout {
     public:
         typedef typename std::vector<std::vector<T>>::size_type size_type;
-        const std::vector<T>& GetLineVertices(size_type pos) const;
-        std::vector<T>& OpenNewLine();
-        size_type Size() const;
+        void OpenNewLine();
+        size_type NumLines() const;
+        void AddGlyph(const GlyphCoords &glyphCoords, int cursorX, int cursorY);
+        const std::vector<T>& GetVerticesForLine(size_type lineNum) const;
+        void SetNumCharsInLine(int n);
+        int GetNumCharsInLine(size_type lineNum);
     private:
         std::vector<std::vector<T>> lines_;
+        std::vector<int> numChars_;
     };
 
     template <typename T>
-    const std::vector<T>& TextLayout<T>::GetLineVertices(size_type pos) const
-    {
-        return lines_.at(pos);
-    }
-
-    template <typename T>
-    std::vector<T>& TextLayout<T>::OpenNewLine()
+    void TextLayout<T>::OpenNewLine()
     {
         lines_.resize(lines_.size() + 1);
-        return lines_.back();
+        numChars_.push_back(0);
     }
 
     template <typename T>
-    typename TextLayout<T>::size_type TextLayout<T>::Size() const
+    typename TextLayout<T>::size_type TextLayout<T>::NumLines() const
     {
         return lines_.size();
+    }
+
+    template <typename T>
+    void TextLayout<T>::AddGlyph(const GlyphCoords &glyphCoords, int cursorX, int cursorY)
+    {
+        if (!lines_.empty()) {
+            std::vector<T> &vertices = lines_.back();
+
+            // Left top
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(cursorY + glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureTop);
+            // Left bottom
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(cursorY + glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureBottom);
+            // Right top
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(cursorY + glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureTop);
+
+            // Left bottom
+            vertices.push_back(cursorX + glyphCoords.Left);
+            vertices.push_back(cursorY + glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureLeft);
+            vertices.push_back(glyphCoords.TextureBottom);
+            // Right bottom
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(cursorY + glyphCoords.Bottom);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureBottom);
+            // Right top
+            vertices.push_back(cursorX + glyphCoords.Right);
+            vertices.push_back(cursorY + glyphCoords.Top);
+            vertices.push_back(glyphCoords.TextureRight);
+            vertices.push_back(glyphCoords.TextureTop);
+        }
+    }
+
+    template <typename T>
+    const std::vector<T>& TextLayout<T>::GetVerticesForLine(size_type lineNum) const
+    {
+        return lines_.at(lineNum);
+    }
+
+    template <typename T>
+    void TextLayout<T>::SetNumCharsInLine(int n)
+    {
+        if (!numChars_.empty()) {
+            numChars_.back() = n;
+        }
+    }
+
+    template <typename T>
+    int TextLayout<T>::GetNumCharsInLine(size_type lineNum)
+    {
+        return numChars_.at(lineNum);
     }
 
     void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int glyphWidth, int *x, int *width);
@@ -97,11 +155,12 @@ namespace procdraw {
                              int maxDrawGlyphsPerLine, int maxLineWidthPixels)
     {
         TextLayout<T> layout;
-        std::vector<T> *vertices = &(layout.OpenNewLine());
+        layout.OpenNewLine();
 
         int cursorX = 0;
         int cursorY = 0;
         int numGlyphsThisLine = 0;
+        int numCharsThisLine = 0;
         int maxCharCode = fontMetrics.MaxCharCode();
         TextureGlyphMetrics glyphMetrics;
         GlyphCoords glyphCoords;
@@ -110,11 +169,14 @@ namespace procdraw {
         for (const char &ch : text) {
             if (ch <= 32 || ch > maxCharCode) {
                 if (cursorX + spaceAdvance > maxLineWidthPixels) {
-                    vertices = &(layout.OpenNewLine());
+                    layout.SetNumCharsInLine(numCharsThisLine);
+                    layout.OpenNewLine();
                     cursorX = 0;
                     cursorY += fontMetrics.LinespacePixels;
                     numGlyphsThisLine = 0;
+                    numCharsThisLine = 0;
                 }
+                ++numCharsThisLine;
                 cursorX += spaceAdvance;
             }
             else {
@@ -123,55 +185,24 @@ namespace procdraw {
 
                 if ((cursorX + glyphMetrics.AdvanceWidthPixels > maxLineWidthPixels)
                         || (numGlyphsThisLine >= maxDrawGlyphsPerLine)) {
-                    vertices = &(layout.OpenNewLine());
+                    layout.SetNumCharsInLine(numCharsThisLine);
+                    layout.OpenNewLine();
                     cursorX = 0;
                     cursorY += fontMetrics.LinespacePixels;
                     numGlyphsThisLine = 0;
+                    numCharsThisLine = 0;
                 }
 
-                AddGlyphVertices(*vertices, glyphCoords, cursorX, cursorY);
+                layout.AddGlyph(glyphCoords, cursorX, cursorY);
                 ++numGlyphsThisLine;
+                ++numCharsThisLine;
                 cursorX += glyphMetrics.AdvanceWidthPixels;
             }
         }
 
+        layout.SetNumCharsInLine(numCharsThisLine);
+
         return layout;
-    }
-
-    template <typename T>
-    void AddGlyphVertices(std::vector<T> &vertices, const GlyphCoords &glyphCoords, int cursorX, int cursorY)
-    {
-        // Left top
-        vertices.push_back(cursorX + glyphCoords.Left);
-        vertices.push_back(cursorY + glyphCoords.Top);
-        vertices.push_back(glyphCoords.TextureLeft);
-        vertices.push_back(glyphCoords.TextureTop);
-        // Left bottom
-        vertices.push_back(cursorX + glyphCoords.Left);
-        vertices.push_back(cursorY + glyphCoords.Bottom);
-        vertices.push_back(glyphCoords.TextureLeft);
-        vertices.push_back(glyphCoords.TextureBottom);
-        // Right top
-        vertices.push_back(cursorX + glyphCoords.Right);
-        vertices.push_back(cursorY + glyphCoords.Top);
-        vertices.push_back(glyphCoords.TextureRight);
-        vertices.push_back(glyphCoords.TextureTop);
-
-        // Left bottom
-        vertices.push_back(cursorX + glyphCoords.Left);
-        vertices.push_back(cursorY + glyphCoords.Bottom);
-        vertices.push_back(glyphCoords.TextureLeft);
-        vertices.push_back(glyphCoords.TextureBottom);
-        // Right bottom
-        vertices.push_back(cursorX + glyphCoords.Right);
-        vertices.push_back(cursorY + glyphCoords.Bottom);
-        vertices.push_back(glyphCoords.TextureRight);
-        vertices.push_back(glyphCoords.TextureBottom);
-        // Right top
-        vertices.push_back(cursorX + glyphCoords.Right);
-        vertices.push_back(cursorY + glyphCoords.Top);
-        vertices.push_back(glyphCoords.TextureRight);
-        vertices.push_back(glyphCoords.TextureTop);
     }
 
 }

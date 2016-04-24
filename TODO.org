@@ -556,6 +556,16 @@
 ** TODO Implement property list functions
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
+** TODO Optimize common text layout changes
+
+   At the moment I do a fresh lay out each time a line changes. I
+   could optimize some common text and layout changes. For example,
+   when a character is added to the end of the line, increment the
+   char count for the line and append the glyph.
+
+   I'll need to take care that LineBuffer and TextLayout stay
+   synchronized.
+
 * Graphics
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
@@ -749,7 +759,7 @@ later look at other analysis such as frequency composition.
 
    frame_counter.h
 
-** TODO Implement a basic console and REPL                           :v0_1_0:
+** INPROGRESS Implement a basic console and REPL                     :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
 *** DONE Replace CursorForward(n) and CursorBackward(n)
 

@@ -78,8 +78,8 @@ namespace procdraw {
         glBindVertexArray(glyphQuadVao_);
         glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
 
-        for (TextLayout<GLfloat>::size_type i = 0; i < layout.Size(); i++) {
-            auto vertices = layout.GetLineVertices(i);
+        for (TextLayout<GLfloat>::size_type i = 0; i < layout.NumLines(); i++) {
+            auto vertices = layout.GetVerticesForLine(i);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(), vertices.data());
             glDrawArrays(GL_TRIANGLES, 0, vertices.size() / FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX);
         }
