@@ -1,0 +1,14 @@
+<function-spec name="*">
+  <syntax>(* ...)</syntax>
+  <description>Returns the product of all of its arguments.</description>
+  <arguments>
+    <argument name="...">Zero or more numbers</argument>
+  </arguments>
+  <examples>
+    <example expr="(*)" value="1"/>
+    <example expr="(* 0)" value="0"/>
+    <example expr="(* 2)" value="2"/>
+    <example expr="(* 2 3)" value="6"/>
+    <example expr="(* 2 3 4)" value="24"/>
+  </examples>
+</function-spec>

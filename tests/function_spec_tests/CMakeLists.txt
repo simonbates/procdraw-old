@@ -53,4 +53,5 @@ add_spec_failure(too_many
 add_function_test(cons 3)
 add_function_test(functionp 4)
 add_function_test(memb 6)
+add_function_test(product 5)
 add_function_test(sum 5)
