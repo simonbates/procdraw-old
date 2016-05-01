@@ -20,15 +20,16 @@
 namespace procdraw {
 
     // TODO: Split FtTextRenderer into 2: BitmapTextRenderer and FreeTypeFontLoader
-    // TODO: Rename asciiFont* to codeFont*
+    // TODO: Rename asciiFont* to monospaceFont*
 
     class FtTextRenderer {
     public:
         FtTextRenderer();
         ~FtTextRenderer();
         void BeginText(int width, int height);
-        // TODO: Add start line and num lines args to DrawText
-        void DrawText(int x, int y, const TextLayout<GLfloat> &layout);
+        void DrawText(int x, int y, const TextLayout<GLfloat> &layout,
+                      TextLayout<GLfloat>::size_type startLineNum,
+                      TextLayout<GLfloat>::size_type endLineNum);
         int GetLinespace();
         TextLayout<GLfloat> LayOutText(const std::string &text, int maxLineWidthPixels);
     private:

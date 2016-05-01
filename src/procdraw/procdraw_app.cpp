@@ -28,7 +28,7 @@ namespace procdraw {
         L_.Set(S_SHOW_REPL, L_.True, L_.Nil);
 
         cli_ = std::unique_ptr<CLI>(new CLI(this));
-        console_ = std::unique_ptr<Console>(new Console(&renderer_, this));
+        console_ = std::unique_ptr<Console>(new Console(&renderer_, this, renderer_.Width(), renderer_.Height()));
 
         console_->Println("Procdraw");
         console_->Println("");

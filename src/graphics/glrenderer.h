@@ -50,7 +50,9 @@ namespace procdraw {
         void DoSwap();
         void DrawBlockCursorBackground(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
         void DrawBlockCursorInversion(int cursorX, int cursorY, int cursorWidth, int cursorHeight);
-        void DrawText(int x, int y, const TextLayout<GLfloat> &layout);
+        void DrawText(int x, int y, const TextLayout<GLfloat> &layout,
+                      TextLayout<GLfloat>::size_type startLineNum,
+                      TextLayout<GLfloat>::size_type endLineNum);
         void EndInverse();
         int GetLinespace();
         int Height();

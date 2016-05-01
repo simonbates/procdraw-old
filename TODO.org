@@ -553,6 +553,28 @@
      (-> table 'key 'target-table-name 'target-key)
      (-> table 'key 'target-table-name 'target-key expr)
 
+**** New 'formula' type
+
+     Introduce a new type to the language that works like a
+     spreadsheet formula. An object can either be a value (one of the
+     other types) or a formula. Evaluating a formula gets its value.
+
+     (setq console-font-size (formula midic-1-1))
+     or
+     (setq console-font-size (<- midic-1-1))
+
+     > console-font-size
+     36
+     > (formula console-font-size)
+     midic-1-1
+     > (numberp console-font-size)
+     true
+     > (formulap console-font-size)
+     true
+
+     How to do scoped lookup for names in the formula? Such as a
+     generator with sub-generators.
+
 ** TODO Implement property list functions
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
@@ -777,7 +799,17 @@ later look at other analysis such as frequency composition.
     Probably want to do this with [[Text layout function]]
 
 *** DONE Position cursor when input line is wrapped
-*** TODO Scroll the console when we reach the bottom
+*** DONE Scroll the console when we reach the bottom
+*** TODO Scolling when cursor at end of full width line
+
+    I'm not scrolling properly when the input line is at the bottom of
+    the screen and the input line fills the width of the console.
+
+    Either include the wrapped cursor in the inputNumLines, or switch
+    to the use of a right hand side gutter to indicate that the cursor
+    is at the end of a line that has the maximum number of displayable
+    characters.
+
 *** TODO Provide scrollback to view lines that have scrolled off the top
 
     Up to some maximum number of stored lines

@@ -141,9 +141,11 @@ namespace procdraw {
         EndInverse();
     }
 
-    void GlRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout)
+    void GlRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout,
+                              TextLayout<GLfloat>::size_type startLineNum,
+                              TextLayout<GLfloat>::size_type endLineNum)
     {
-        textRenderer_->DrawText(x, y, layout);
+        textRenderer_->DrawText(x, y, layout, startLineNum, endLineNum);
     }
 
     void GlRenderer::EndInverse()

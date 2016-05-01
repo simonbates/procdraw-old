@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
+#include <type_traits>
 
 namespace procdraw {
 
@@ -60,19 +61,22 @@ namespace procdraw {
                                       static_cast<float>(height), 0.0f);
         glUniform1i(texLoc_, 0);
         glDisable(GL_DEPTH_TEST);
-    }
-
-    void FtTextRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout)
-    {
-        auto projectionMatrix = glm::translate(orthoProjection_, glm::vec3(x, y, 0));
-        glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, asciiFontTexture_);
         glBindVertexArray(glyphQuadVao_);
         glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+    }
 
-        for (TextLayout<GLfloat>::size_type i = 0; i < layout.NumLines(); i++) {
+    void FtTextRenderer::DrawText(int x, int y, const TextLayout<GLfloat> &layout,
+                                  TextLayout<GLfloat>::size_type startLineNum,
+                                  TextLayout<GLfloat>::size_type endLineNum)
+    {
+        int startLineY = y - (startLineNum * layout.LinespacePixels);
+        auto projectionMatrix = glm::translate(orthoProjection_, glm::vec3(x, startLineY, 0));
+        glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+        for (std::remove_reference<decltype(layout)>::type::size_type i = startLineNum; i < endLineNum; ++i) {
             auto vertices = layout.GetVerticesForLine(i);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(), vertices.data());
             glDrawArrays(GL_TRIANGLES, 0, vertices.size() / FT_TEXT_RENDERER_COMPONENTS_PER_VERTEX);
