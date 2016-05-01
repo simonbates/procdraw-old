@@ -815,6 +815,17 @@ later look at other analysis such as frequency composition.
     Up to some maximum number of stored lines
 
 ** TODO Implement an editor
+
+   Make a TextWidget class that is a super class of Console and
+   TextEditor. Provides common functionality such as:
+
+   - list of TextLayout
+   - viewport positioning (what lines to show --
+     displayFromLogicalLine and displayFromPhysicalLine)
+   - cursor position
+   - drawing of text
+   - drawing of cursor
+
 ** TODO Implement autocomplete for symbols
 ** TODO Implement matching parens highlighting
 ** TODO Add in-program help
