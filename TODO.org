@@ -769,6 +769,39 @@ later look at other analysis such as frequency composition.
 
    Depends on [[Read multiple objects]]
 
+** TODO Add functions for navigating the filesystem
+
+   - (pwd)
+   - (cd)
+   - (list-files)
+
+** TODO Add an alternate notation to the command processor
+
+   Similar to the Scheme 48 command processor's comma commands or the
+   BBC BASIC star commands:
+
+   - http://s48.org/1.9.2/manual/manual-Z-H-4.html#node_chap_3
+   - http://chrisacorns.computinghistory.org.uk/docs/Acorn/Manuals/Acorn_ADFSUG.pdf
+
+   So, instead of
+
+   > (pwd)
+   "/home/simon"
+   > (list-files "projects")
+   ("project1" "project2")
+
+   We would have
+
+   > *pwd
+   /home/simon
+   > *ls projects
+   project1
+   project2
+
+   Maybe PowerShell could also be a model here -- that the outputs of
+   commands are streams of objects that can be both displayed in the
+   REPL and processed with code.
+
 ** TODO Use tick count for signal updating
 
    Change the mechanism used to determine if a signal needs to be
