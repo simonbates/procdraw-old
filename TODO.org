@@ -771,8 +771,8 @@ later look at other analysis such as frequency composition.
 
 ** TODO Add functions for navigating the filesystem
 
-   - (pwd)
-   - (cd)
+   - (getcwd) -- POSIX getcwd()
+   - (chdir) -- POSIX chdir()
    - (list-files)
 
 ** TODO Add an alternate notation to the command processor
