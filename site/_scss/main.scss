@@ -6,8 +6,42 @@
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-typography;
+@include foundation-table;
+
+.procdraw-header {
+    background-color: #ebebe8;
+    padding: 1rem 0;
+    margin: 0 0 2.5rem 0;
+}
+
+.procdraw-header a {
+    color: $body-font-color;
+}
+
+.procdraw-name {
+    font-weight: 700;
+}
+
+.procdraw-nav a {
+    margin: 0 1.5em 0 0;
+}
 
 .procdraw-site h1 {
+    font-weight: 300;
+}
+
+.procdraw-site h2 {
+    font-weight: 700;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.procdraw-home h1 {
+    font-weight: 400;
+    margin: 0 0 1rem 0;
+}
+
+.procdraw-home p {
+    font-size: 1.5rem;
     font-weight: 300;
 }
 

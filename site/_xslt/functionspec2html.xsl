@@ -28,8 +28,12 @@ syntax: "</xsl:text><xsl:value-of select="syntax"/><xsl:text>"
   <xsl:template match="arguments">
     <h2>Arguments</h2>
     <table>
-      <tr><th>Argument</th><th>Usage</th></tr>
-      <xsl:apply-templates select="argument"/>
+      <thead>
+        <tr><th>Argument</th><th>Usage</th></tr>
+      </thead>
+      <tbody>
+        <xsl:apply-templates select="argument"/>
+      </tbody>
     </table>
   </xsl:template>
 

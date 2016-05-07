@@ -5,4 +5,5 @@
                               projectile-compilation-cmd-map)
                      (puthash (projectile-project-root)
                               "cd build && ctest --output-on-failure"
-                              projectile-test-cmd-map)))))))
+                              projectile-test-cmd-map))))))
+ (html-mode . ((sgml-basic-offset . 2))))

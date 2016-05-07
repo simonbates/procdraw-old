@@ -108,21 +108,13 @@ $header-font-style: normal;
 $font-family-monospace: 'Anonymous Pro', monospace;
 $header-sizes: (
   small: (
-    'h1': 24,
-    'h2': 20,
+    'h1': 56,
+    'h2': 22,
     'h3': 19,
     'h4': 18,
     'h5': 17,
     'h6': 16,
-  ),
-  medium: (
-    'h1': 48,
-    'h2': 40,
-    'h3': 31,
-    'h4': 25,
-    'h5': 20,
-    'h6': 16,
-  ),
+  )
 );
 $header-color: inherit;
 $header-lineheight: 1.4;
