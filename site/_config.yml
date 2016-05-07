@@ -25,6 +25,7 @@ exclude: [
   "gulpfile.js",
   "Makefile",
   "node_modules",
+  "bower_components",
   "package.json",
   "README.md"
 ]
