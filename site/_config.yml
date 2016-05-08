@@ -41,3 +41,7 @@ defaults:
       type: functions_generated
     values:
       layout: page
+  - scope:
+      path: "docs"
+    values:
+      section: docs
