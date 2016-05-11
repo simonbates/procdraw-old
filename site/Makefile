@@ -5,7 +5,8 @@ FUNCTIONS_SRC_FILES = $(filter-out $(FUNCTIONS_SRC_DIR)/schemas.xml, $(wildcard 
 FUNCTIONS_OUT_FILES = $(patsubst $(FUNCTIONS_SRC_DIR)/%.xml, $(FUNCTIONS_OUT_DIR)/%.html, $(FUNCTIONS_SRC_FILES))
 
 .PHONY: all
-all: content css/main.css ;
+all: content css/main.css
+	jekyll build
 
 .PHONY: content
 content: $(FUNCTIONS_OUT_FILES) ;
@@ -20,3 +21,4 @@ css/main.css: _scss/main.scss _scss/_settings.scss
 clean:
 	rm -rf $(FUNCTIONS_OUT_DIR)
 	rm -f css/main.css
+	jekyll clean

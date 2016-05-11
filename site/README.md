@@ -15,5 +15,4 @@ Building the site
 $ npm install
 $ bower install
 $ make
-$ jekyll build
 ```
