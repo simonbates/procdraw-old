@@ -59,7 +59,8 @@
    - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
    - http://programmers.stackexchange.com/a/151558
 
-** TODO Publish the documentation to a static website
+** DONE Publish the documentation to a static website
+** TODO Set up Cppcheck
 * Documentation
 ** WONTDO Move the documentation into a single file
 ** TODO Add type of function: special-form or function

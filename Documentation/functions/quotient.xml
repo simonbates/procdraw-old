@@ -1,0 +1,17 @@
+<function-spec name="/">
+  <syntax>(/ number ...)</syntax>
+
+  <description>When called with one argument, returns the reciprocal.
+  When called with more than one argument, returns the first divided
+  by the others.</description>
+
+  <arguments>
+    <argument name="number ...">One or more numbers</argument>
+  </arguments>
+  <examples>
+    <example expr="(/ 2)" value="0.5"/>
+    <example expr="(/ 0)" value="inf"/>
+    <example expr="(/ 8 5)" value="1.6"/>
+    <example expr="(/ 360 4 3)" value="30"/>
+  </examples>
+</function-spec>
