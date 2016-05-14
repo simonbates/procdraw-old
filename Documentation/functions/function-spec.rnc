@@ -3,10 +3,10 @@ element function-spec {
   element syntax { text },
   element description {
     (text
-     | element argname { text })+
+     | element paramname { text })+
   },
-  element arguments {
-    element argument {
+  element parameters {
+    element parameter {
       attribute name { text },
       text
     }+

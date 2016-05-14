@@ -1,12 +1,12 @@
 <function-spec name="functionp">
   <syntax>(functionp obj)</syntax>
 
-  <description>Tests if <argname>obj</argname> is a function; returns
+  <description>Tests if <paramname>obj</paramname> is a function; returns
   true if it is, and false otherwise.</description>
 
-  <arguments>
-    <argument name="obj">The object to test</argument>
-  </arguments>
+  <parameters>
+    <parameter name="obj">The object to test</parameter>
+  </parameters>
   <examples>
     <example expr="(functionp nil)" value="false"/>
     <example expr="(functionp '(a))" value="false"/>

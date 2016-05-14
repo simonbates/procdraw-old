@@ -5,9 +5,9 @@
   When called with more than one argument, returns the first divided
   by the others.</description>
 
-  <arguments>
-    <argument name="number ...">One or more numbers</argument>
-  </arguments>
+  <parameters>
+    <parameter name="number ...">One or more numbers</parameter>
+  </parameters>
   <examples>
     <example expr="(/ 2)" value="0.5"/>
     <example expr="(/ 0)" value="inf"/>

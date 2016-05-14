@@ -24,7 +24,7 @@ Passing data to functions
 | Mechanism | When |
 |-----------|------|
 | By value | Use for read-only primitive types |
-| By reference | Use const references for passing read-only structs and classes; when providing references to data for the purpose of returning multiple values, prefix argument names with "out_" (but for a single return value, prefer return by value) |
+| By reference | Use const references for passing read-only structs and classes; when providing references to data for the purpose of returning multiple values, prefix parameter names with "out_" (but for a single return value, prefer return by value) |
 | By smart pointer | Use for objects with automatic memory management |
 | By pointer | Prefer pass by reference instead; use pointers when compatibility with C is needed |
 

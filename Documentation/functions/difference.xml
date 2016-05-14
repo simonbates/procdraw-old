@@ -6,9 +6,9 @@
   argument, subtracts each of the arguments after the first argument
   from the first argument and returns the result.</description>
 
-  <arguments>
-    <argument name="number ...">One or more numbers</argument>
-  </arguments>
+  <parameters>
+    <parameter name="number ...">One or more numbers</parameter>
+  </parameters>
   <examples>
     <example expr="(- 0)" value="0"/>
     <example expr="(- 2)" value="-2"/>

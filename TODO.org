@@ -63,7 +63,7 @@
 ** TODO Set up Cppcheck
 * Documentation
 ** WONTDO Move the documentation into a single file
-** TODO Rename "arguments" to "parameters"                           :v0_1_0:
+** DONE Rename "arguments" to "parameters"                           :v0_1_0:
 ** TODO Add type of function: special-form or function
 
    Traditional names used in Lisp:
