@@ -33,7 +33,7 @@ defaults:
       path: ""
       type: functions_generated
     values:
-      layout: page
+      layout: docs_page
       section: docs
   - scope:
       path: "docs"

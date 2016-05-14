@@ -50,14 +50,22 @@ a.procdraw-active-section:hover {
     margin: 1.5rem 0 0.5rem 0;
 }
 
+.procdraw-content {
+    padding-bottom: 8rem;
+}
+
 .procdraw-home h1 {
     font-weight: 400;
     margin: 0 0 1rem 0;
 }
 
 .procdraw-home p {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 300;
+}
+
+.procdraw-docs-index li {
+    font-size: 0.95rem;
 }
 
 pre {
