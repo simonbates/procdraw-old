@@ -22,9 +22,11 @@ markdown: kramdown
 
 exclude: [
   "bower.json",
+  "browserslist",
   "gulpfile.js",
   "Makefile",
   "node_modules",
+  "npm-debug.log",
   "bower_components",
   "package.json",
   "README.md"

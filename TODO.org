@@ -63,6 +63,7 @@
 ** TODO Set up Cppcheck
 * Documentation
 ** WONTDO Move the documentation into a single file
+** TODO Rename "arguments" to "parameters"                           :v0_1_0:
 ** TODO Add type of function: special-form or function
 
    Traditional names used in Lisp:
@@ -74,6 +75,24 @@
 
 ** DONE Add a description
 ** DONE Add argument details
+* Website
+** TODO Add breadcrumbs for docs pages
+
+   Docs / Function memb
+
+   - http://foundation.zurb.com/sites/docs/breadcrumbs.html
+   - https://developers.google.com/structured-data/breadcrumbs
+
+** TODO Set Cache-Control headers
+
+   See:
+   - https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
+   - https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
+   - https://www.mnot.net/cache_docs/
+   - http://www.askapache.com/htaccess/apache-speed-cache-control.html
+   - https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
+   - https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
+
 * Interpreter
 ** TODO Add pretty printing
 

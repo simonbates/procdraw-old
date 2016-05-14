@@ -10,7 +10,7 @@
 
 .procdraw-header {
     background-color: #ebebe8;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
     margin: 0 0 2.5rem 0;
 }
 
@@ -24,12 +24,12 @@
 }
 
 .procdraw-nav a {
-    padding: 0.25em;
-    margin: 0 1.25em 0 0;
+    padding: 0 0 0.25em 0;
+    margin: 0 1.5em 0 0;
 }
 
 .procdraw-active-section {
-    border: 2px solid #707070;
+    border-bottom: 0.35em solid #707070;
 }
 
 .procdraw-site h1 {

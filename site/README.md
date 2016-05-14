@@ -1,11 +1,10 @@
-Dependencies
-------------
+External dependencies
+---------------------
 
 * GNU Make
+* Jekyll
 * Node.js
 * Bower
-* gulp-cli
-* Jekyll
 * xsltproc
 
 Building the site
