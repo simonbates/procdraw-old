@@ -18,6 +18,11 @@
     color: $body-font-color;
 }
 
+.procdraw-header a:hover {
+    color: $primary-color;
+    text-decoration: none;
+}
+
 .procdraw-sitename {
     font-weight: 700;
     text-transform: uppercase;
@@ -28,8 +33,12 @@
     margin: 0 1.5em 0 0;
 }
 
-.procdraw-active-section {
+a.procdraw-active-section {
     border-bottom: 0.35em solid #707070;
+}
+
+a.procdraw-active-section:hover {
+    border-bottom-color: $primary-color;
 }
 
 .procdraw-site h1 {
