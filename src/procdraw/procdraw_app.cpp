@@ -150,7 +150,7 @@ namespace procdraw {
         auto signal = MakeSignal(&L_, L_.Nil);
         PutSlot(&L_, signal, S_OUT, L_.MakeNumber(0));
         std::ostringstream name;
-        name << "midic-" << channel << "-" << controller;
+        name << "midicc-" << channel << "-" << controller;
         L_.Set(L_.SymbolRef(name.str()), signal, L_.Nil);
         return signal;
     }
