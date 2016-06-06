@@ -1,0 +1,6 @@
+(def draw ()
+  (background 200 (/ 6 10) (/ 9 10))
+  (color 7 (/ 7 10) (/ 7 10))
+  (rotate-z (lerp (/ 2) (/ -2) $midicc-1-2))
+  (rotate-x (lerp (/ -4) (/ 4) $midicc-1-3))
+  (cube))

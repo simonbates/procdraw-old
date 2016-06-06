@@ -264,7 +264,7 @@ namespace procdraw {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
         window_ = SDL_CreateWindow("Procdraw", SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED, 640, 640,
+                                   SDL_WINDOWPOS_UNDEFINED, 720, 720,
                                    SDL_WINDOW_OPENGL);
         if (window_ == nullptr) {
             ThrowSdlError();

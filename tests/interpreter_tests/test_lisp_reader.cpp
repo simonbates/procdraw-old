@@ -32,6 +32,14 @@ TEST_CASE("Lisp reader")
         REQUIRE(L.SymbolName(obj) == "HELLO-WORLD-1");
     }
 
+    SECTION("An expression starting with $ is read as a sigval") {
+        auto obj = reader.Read(&L, "$foo");
+        REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);
+        REQUIRE(L.SymbolName(L.Car(obj)) == "sigval");
+        REQUIRE(L.SymbolName(L.Cadr(obj)) == "foo");
+        REQUIRE(L.Null(L.Cddr(obj)));
+    }
+
     SECTION("An expression starting with ' is read as a quote") {
         auto obj = reader.Read(&L, "'42");
         REQUIRE(L.TypeOf(obj) == procdraw::LispObjectType::Cons);

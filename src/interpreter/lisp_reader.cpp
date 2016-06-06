@@ -62,6 +62,10 @@ namespace procdraw {
             GetString();
             break;
         }
+        case'$':
+            token_ = LispTokenType::Dollar;
+            GetCh();
+            break;
         case '\'':
             token_ = LispTokenType::SingleQuote;
             GetCh();
@@ -190,6 +194,9 @@ namespace procdraw {
     LispObjectPtr LispReader::Read(LispInterpreter *L)
     {
         switch (token_) {
+        case LispTokenType::Dollar:
+            GetToken();
+            return L->Cons(L->SymbolRef("sigval"), L->Cons(Read(L), L->Nil));
         case LispTokenType::SingleQuote:
             GetToken();
             return L->Cons(L->SymbolRef("quote"), L->Cons(Read(L), L->Nil));

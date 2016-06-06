@@ -188,7 +188,7 @@
    Such as:
 
    - \ (Haskell)
-   - fn (Clojure, Standard ML)
+   - fn (Clojure, newLISP, Standard ML)
    - fun (Erlang, OCaml)
    - func (Go)
 
@@ -370,6 +370,9 @@
    behaviour.
 
    See also: [[Is Constant]]
+
+   However, this change would cause trouble for round-tripping with
+   notations that have an explicit Boolean type (such as JSON).
 
 ** TODO Add an 'is constant' flag to Symbols
    <<Is constant>>
@@ -596,7 +599,89 @@
      How to do scoped lookup for names in the formula? Such as a
      generator with sub-generators.
 
+**** Separate signal graph for connections
+
+     (progn
+       (setq saw1 (saw))
+       (setq sin1 (sin-osc))
+       (setq signal-graph
+         '((sin1 (freq (/ (* 11 60))))
+           (saw1 (freq (lerp (/ (* 7 60)) (/ 90) $sin1)))))
+       (def draw ()
+         (background 200 0.6 0.9)
+         (rotate-y $saw1)
+         (translate 3 0 0)
+         (rotate-y $saw1)
+         (color (lerp 5 9 $sin1)
+                (lerp 0.6 0.8 $sin1)
+                (lerp 0.6 0.8 $sin1))
+         (tetrahedron)))
+
 ** TODO Implement property list functions
+
+   And remove putassoc.
+
+   Or implement hashtables instead of plists (and remove putassoc).
+
+** TODO Remove dotted pairs
+
+   A linked list element rest pointer always points to another list
+   cell or NIL (and not to any other data type).
+
+   (cons 'a 'b) => (a b) rather than (a . b)
+   (set-rest 'c '(a b)) => (a c) rather than (a . c)
+
+   NIL continues to represent the empty list.
+
+   List functions:
+
+   (first list)
+   (second list)
+   (rest list)
+   (nth index list)
+
+   would replace (car), (cdr), (cadr), (cddr), and so on.
+
+   And:
+
+   (set-first val list)
+   (set-rest val list)
+   (set-nth index val list)
+
+   would replace (rplaca) and (rplacd)
+
+   Association lists would change:
+
+   ((k1 v1) (k2 v2))
+
+   rather than:
+
+   ((k1 . v1) (k2 . v2))
+
+   - https://arclanguage.github.io/ref/assoc.html
+   - http://www.newlisp.org/newlisp_manual.html#lookup
+
+   (second (assoc key alist))
+
+   rather than:
+
+   (cdr (assoc key alist))
+
+** TODO Implement lexical scoping instead of dynamic
+
+   - Nested environments
+   - Looking up a bound value starts at the innermost environment and
+     works outwards, returning the value of the first binding found
+   - Setting a binding value starts searching at the innermost
+     environment and sets the value of the first binding found; if
+     none is found a binding is added to the global environment
+   - Don't implement closures initially -- a function application is
+     always evaluated with the global environment plus parameter
+     bindings
+   - For closures, figure out a good way to attach an environment to a
+     lambda such that the lambda expression can be viewed and edited
+     (object metadata?)
+
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 ** TODO Optimize common text layout changes

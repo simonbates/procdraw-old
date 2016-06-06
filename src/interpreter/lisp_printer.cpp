@@ -16,6 +16,9 @@ namespace procdraw {
         case LispObjectType::Symbol:
             return L->SymbolName(obj);
         case LispObjectType::Cons: {
+            if (L->Eq(L->Car(obj), L->SymbolRef("sigval"))) {
+                return "$" + PrintToString(L, L->Cadr(obj));
+            }
             if (L->Eq(L->Car(obj), L->SymbolRef("quote"))) {
                 return "'" + PrintToString(L, L->Cadr(obj));
             }
