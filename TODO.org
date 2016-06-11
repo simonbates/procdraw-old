@@ -682,6 +682,8 @@
      lambda such that the lambda expression can be viewed and edited
      (object metadata?)
 
+   See: http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Environment-Operations.html
+
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 ** TODO Optimize common text layout changes
