@@ -6,7 +6,7 @@ namespace procdraw {
 
     LispInterpreter::LispInterpreter()
     {
-        InitSymbolLiterals();
+        InitSingletons();
         symbols_ = Nil;
         // Special forms
         S_DEF = SymbolRef("def");
@@ -109,7 +109,7 @@ namespace procdraw {
 
     LispObjectPtr LispInterpreter::Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
     {
-        // TODO verify that vars and args are the same length
+        // TODO: verify that vars and args are the same length
         auto v = vars;
         auto a = args;
         while (!Null(v)) {

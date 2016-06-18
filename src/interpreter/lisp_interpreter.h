@@ -18,7 +18,7 @@ namespace procdraw {
     class LispInterpreter {
     public:
         LispInterpreter();
-        // Symbol literals
+        // Singletons
         LispObjectPtr Nil;
         LispObjectPtr True;
         LispObjectPtr False;
@@ -83,7 +83,7 @@ namespace procdraw {
         LispObjectPtr S_PROGN;
         LispObjectPtr S_QUOTE;
         LispObjectPtr S_SETQ;
-        void InitSymbolLiterals();
+        void InitSingletons();
         LispObjectPtr ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
         LispObjectPtr Assoc1(LispObjectPtr key, LispObjectPtr alist, bool *found);
         LispObjectPtr Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);

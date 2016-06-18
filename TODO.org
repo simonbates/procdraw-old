@@ -617,12 +617,24 @@
                 (lerp 0.6 0.8 $sin1))
          (tetrahedron)))
 
-** TODO Implement property list functions
+** TODO Implement a Dictionary type
+*** TODO Make strings immutable
+*** TODO Implement C++ == operator for LispObjectPtr
 
-   And remove putassoc.
+    And use it for the implementation of (eq).
 
-   Or implement hashtables instead of plists (and remove putassoc).
+    - For numbers, compare val_
+    - For strings, they are equal if they have the same contents
+      - Compute a hash value on construction (make strings immutable)
+      - Compare hash values, if different then not equal, otherwise,
+        compare string contents
+   - For other types compare memory locations
+      - For booleans and null types this is safe as we always share
+        objects: there is exactly one true, false, and nil
 
+*** TODO Implement C++ hash for LispObjectPtr
+*** TODO Use Dictionary for Signals rather than association list
+*** TODO Remove putassoc
 ** TODO Remove dotted pairs
 
    A linked list element rest pointer always points to another list
@@ -683,6 +695,32 @@
      (object metadata?)
 
    See: http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Environment-Operations.html
+
+   Use the Dictionary type to store bindings.
+
+*** Start of environment unit test
+
+TEST_CASE("Environment")
+{
+    procdraw::LispEnvironment env;
+    procdraw::LispInterpreter L;
+
+    SECTION("notFound is returned when get from empty environment") {
+        REQUIRE(L.Eq(L.Nil, env.Get(L.SymbolRef("a"), L.Nil)));
+    }
+
+    SECTION("Get returns previously Set value") {
+        procdraw::LispObjectPtr name1 = L.SymbolRef("name1");
+        procdraw::LispObjectPtr name2 = L.SymbolRef("name2");
+        procdraw::LispObjectPtr value1 = L.SymbolRef("value1");
+        REQUIRE(L.Eq(L.Nil, env.Get(name1, L.Nil)));
+        REQUIRE(L.Eq(L.Nil, env.Get(name2, L.Nil)));
+        env.Set(name1, value1);
+        REQUIRE(L.Eq(value1, env.Get(name1, L.Nil)));
+        REQUIRE(L.Eq(L.Nil, env.Get(name2, L.Nil)));
+    }
+
+}
 
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees

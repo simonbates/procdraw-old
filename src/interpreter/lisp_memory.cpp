@@ -64,7 +64,7 @@ namespace procdraw {
         std::string str_;
     };
 
-    void LispInterpreter::InitSymbolLiterals()
+    void LispInterpreter::InitSingletons()
     {
         Nil = std::make_shared<LispObject>(LispObjectType::Null);
         True = std::make_shared<LispBoolean>(true);
