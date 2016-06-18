@@ -1,9 +1,9 @@
 <function-spec name="memb">
   <syntax>(memb obj list)</syntax>
 
-  <description>Searches <paramname>list</paramname> for a member eq to
-  <paramname>obj</paramname>; returns true if one is found, and false if
-  not.</description>
+  <description><p>Searches <paramname>list</paramname> for a member eq
+  to <paramname>obj</paramname>; returns true if one is found, and
+  false if not.</p></description>
 
   <parameters>
     <parameter name="obj">The object to test for</parameter>

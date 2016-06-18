@@ -1,10 +1,10 @@
 <function-spec name="-">
   <syntax>(- number ...)</syntax>
 
-  <description>When called with one argument, returns the additive
+  <description><p>When called with one argument, returns the additive
   inverse (zero minus the number). When called with more than one
   argument, subtracts each of the arguments after the first argument
-  from the first argument and returns the result.</description>
+  from the first argument and returns the result.</p></description>
 
   <parameters>
     <parameter name="number ...">One or more numbers</parameter>

@@ -1,6 +1,7 @@
 #include "lisp_memory.h"
 #include "lisp_interpreter.h"
 #include <limits>
+#include <string>
 #include <unordered_map>
 
 namespace procdraw {
@@ -60,8 +61,12 @@ namespace procdraw {
     public:
         LispString(const std::string &str) :
             LispObject(LispObjectType::String),
-            str_(str) { }
-        std::string str_;
+            str_(str)
+        {
+            strHashValue_ = std::hash<std::string>()(str_);
+        }
+        const std::string str_;
+        size_t strHashValue_;
     };
 
     void LispInterpreter::InitSingletons()
@@ -205,9 +210,15 @@ namespace procdraw {
     {
         if (x->Type == LispObjectType::Number && y->Type == LispObjectType::Number) {
             return static_cast<LispNumber*>(x.get())->val_ == static_cast<LispNumber*>(y.get())->val_;
-        }
-        else if (x->Type == LispObjectType::Null && y->Type == LispObjectType::Null) {
-            return true;
+        } else if (x->Type == LispObjectType::String && y->Type == LispObjectType::String) {
+            LispString *stringX = static_cast<LispString*>(x.get());
+            LispString *stringY = static_cast<LispString*>(y.get());
+            if (stringX->strHashValue_ != stringY->strHashValue_) {
+                return false;
+            }
+            else {
+                return stringX->str_ == stringY->str_;
+            }
         }
         else {
             return x.get() == y.get();

@@ -87,6 +87,11 @@ TEST_CASE("LispInterpreter::Eq()")
     REQUIRE_FALSE(L.Eq(L.MakeNumber(42), L.Nil));
     REQUIRE_FALSE(L.Eq(L.Nil, L.MakeNumber(42)));
 
+    REQUIRE(L.Eq(L.MakeString("hello"), L.MakeString("hello")));
+    REQUIRE_FALSE(L.Eq(L.MakeString("hello"), L.MakeString("world")));
+    REQUIRE_FALSE(L.Eq(L.MakeString("hello"), L.Nil));
+    REQUIRE_FALSE(L.Eq(L.Nil, L.MakeString("hello")));
+
     REQUIRE(L.Eq(L.SymbolRef("A"), L.SymbolRef("A")));
     REQUIRE_FALSE(L.Eq(L.SymbolRef("A"), L.SymbolRef("B")));
 

@@ -1,9 +1,9 @@
 <function-spec name="cons">
   <syntax>(cons obj1 obj2)</syntax>
 
-  <description>Constructs a new cons cell with car
+  <description><p>Constructs a new cons cell with car
   <paramname>obj1</paramname> and cdr
-  <paramname>obj2</paramname>.</description>
+  <paramname>obj2</paramname>.</p></description>
 
   <parameters>
     <parameter name="obj1">The car of the newly constructed cons cell will be set to this object</parameter>

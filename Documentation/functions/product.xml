@@ -1,6 +1,9 @@
 <function-spec name="*">
   <syntax>(* ...)</syntax>
-  <description>Returns the product of all of its arguments.</description>
+
+  <description><p>Returns the product of all of its
+  arguments.</p></description>
+
   <parameters>
     <parameter name="...">Zero or more numbers</parameter>
   </parameters>

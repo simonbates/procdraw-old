@@ -1,9 +1,9 @@
 <function-spec name="/">
   <syntax>(/ number ...)</syntax>
 
-  <description>When called with one argument, returns the reciprocal.
-  When called with more than one argument, returns the first divided
-  by the others.</description>
+  <description><p>When called with one argument, returns the
+  reciprocal. When called with more than one argument, returns the
+  first divided by the others.</p></description>
 
   <parameters>
     <parameter name="number ...">One or more numbers</parameter>

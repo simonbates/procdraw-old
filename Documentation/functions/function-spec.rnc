@@ -1,20 +1,27 @@
-element function-spec {
-  attribute name { text },
-  element syntax { text },
-  element description {
-    (text
-     | element paramname { text })+
-  },
-  element parameters {
-    element parameter {
+grammar {
+  start =
+    element function-spec {
       attribute name { text },
-      text
-    }+
-  },
-  element examples {
-    element example {
-      attribute expr { text },
-      attribute value { text }
-    }+
-  }
+      element syntax { text },
+      element description {
+        (element p { textContent }
+        | element ul {
+          element li { textContent }+
+        })+
+      },
+      element parameters {
+        element parameter {
+          attribute name { text },
+          text
+        }+
+      },
+      element examples {
+        element example {
+          attribute expr { text },
+          attribute value { text }
+        }+
+      }
+    }
+  textContent =
+    (text | element paramname { text })+
 }

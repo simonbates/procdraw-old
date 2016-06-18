@@ -19,7 +19,7 @@ syntax: "</xsl:text><xsl:value-of select="syntax"/><xsl:text>"
 
   <xsl:template match="description">
     <h2>Description</h2>
-    <p><xsl:apply-templates/></p>
+    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="paramname">
@@ -55,6 +55,12 @@ syntax: "</xsl:text><xsl:value-of select="syntax"/><xsl:text>"
   <xsl:template match="example">
     <xsl:value-of select="@expr"/> => <xsl:value-of select="@value"/><xsl:text>
 </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="p|ul|li">
+    <xsl:copy>
+      <xsl:apply-templates/>
+    </xsl:copy>
   </xsl:template>
 
 </xsl:stylesheet>

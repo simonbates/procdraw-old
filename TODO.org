@@ -618,23 +618,22 @@
          (tetrahedron)))
 
 ** TODO Implement a Dictionary type
-*** TODO Make strings immutable
-*** TODO Implement C++ == operator for LispObjectPtr
-
-    And use it for the implementation of (eq).
+*** DONE Make strings immutable
+*** DONE Modify LispInterpreter::Eq to compare string contents
 
     - For numbers, compare val_
     - For strings, they are equal if they have the same contents
       - Compute a hash value on construction (make strings immutable)
       - Compare hash values, if different then not equal, otherwise,
         compare string contents
-   - For other types compare memory locations
+    - For other types compare memory locations
       - For booleans and null types this is safe as we always share
         objects: there is exactly one true, false, and nil
 
 *** TODO Implement C++ hash for LispObjectPtr
-*** TODO Use Dictionary for Signals rather than association list
-*** TODO Remove putassoc
+** TODO Use Dictionary for Signals rather than association list
+** TODO Remove putassoc
+** TODO Implement read and print Dictionary
 ** TODO Remove dotted pairs
 
    A linked list element rest pointer always points to another list

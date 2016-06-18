@@ -1,8 +1,8 @@
 <function-spec name="functionp">
   <syntax>(functionp obj)</syntax>
 
-  <description>Tests if <paramname>obj</paramname> is a function; returns
-  true if it is, and false otherwise.</description>
+  <description><p>Tests if <paramname>obj</paramname> is a function;
+  returns true if it is, and false otherwise.</p></description>
 
   <parameters>
     <parameter name="obj">The object to test</parameter>
