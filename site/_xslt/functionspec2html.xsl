@@ -28,14 +28,21 @@ syntax: "</xsl:text><xsl:value-of select="syntax"/><xsl:text>"
 
   <xsl:template match="parameters">
     <h2>Parameters</h2>
-    <table>
-      <thead>
-        <tr><th>Parameter</th><th>Usage</th></tr>
-      </thead>
-      <tbody>
-        <xsl:apply-templates select="parameter"/>
-      </tbody>
-    </table>
+    <xsl:choose>
+      <xsl:when test="./@none">
+        <p>None.</p>
+      </xsl:when>
+      <xsl:otherwise>
+        <table>
+          <thead>
+            <tr><th>Parameter</th><th>Usage</th></tr>
+          </thead>
+          <tbody>
+            <xsl:apply-templates select="parameter"/>
+          </tbody>
+        </table>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="parameter">

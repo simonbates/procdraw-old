@@ -34,6 +34,11 @@ namespace procdraw {
         return L->Cdar(args);
     }
 
+    LispObjectPtr lisp_Clear(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Clear(L->Car(args));
+    }
+
     LispObjectPtr lisp_Cons(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return L->Cons(L->Car(args), L->Cadr(args));
@@ -62,12 +67,24 @@ namespace procdraw {
 
     LispObjectPtr lisp_Eq(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
-        return L->BoolToLisp(L->Eq(L->Car(args), L->Cadr(args)));
+        return L->BoolToLisp(LispObjectEq(L->Car(args), L->Cadr(args)));
     }
 
     LispObjectPtr lisp_Functionp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
     {
         return L->BoolToLisp(L->Functionp(L->Car(args)));
+    }
+
+    LispObjectPtr lisp_Get(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto key = L->Car(args);
+        auto dict = L->Cadr(args);
+        return L->Get(key, dict);
+    }
+
+    LispObjectPtr lisp_Keys(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->Keys(L->Car(args));
     }
 
     LispObjectPtr lisp_Lerp(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -76,6 +93,11 @@ namespace procdraw {
         auto stop = L->NumVal(L->Cadr(args));
         auto val = L->NumVal(L->Caddr(args));
         return L->MakeNumber(Lerp(start, stop, val));
+    }
+
+    LispObjectPtr lisp_MakeDict(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        return L->MakeDict();
     }
 
     LispObjectPtr lisp_MapRange(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
@@ -111,6 +133,14 @@ namespace procdraw {
         double product = 1;
         REDUCE_NUM(L, product, x, product * x, args);
         return L->MakeNumber(product);
+    }
+
+    LispObjectPtr lisp_Put(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)
+    {
+        auto key = L->Car(args);
+        auto val = L->Cadr(args);
+        auto dict = L->Caddr(args);
+        return L->Put(key, val, dict);
     }
 
     LispObjectPtr lisp_Putassoc(LispInterpreter *L, LispObjectPtr args, LispObjectPtr env, void *data)

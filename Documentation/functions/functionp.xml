@@ -1,4 +1,5 @@
 <function-spec name="functionp">
+
   <syntax>(functionp obj)</syntax>
 
   <description><p>Tests if <paramname>obj</paramname> is a function;
@@ -7,10 +8,12 @@
   <parameters>
     <parameter name="obj">The object to test</parameter>
   </parameters>
+
   <examples>
     <example expr="(functionp nil)" value="false"/>
     <example expr="(functionp '(a))" value="false"/>
     <example expr="(functionp (lambda () 1))" value="true"/>
     <example expr="(functionp functionp)" value="true"/>
   </examples>
+
 </function-spec>

@@ -358,7 +358,7 @@
    - and
    - or
 
-** TODO Remove the Boolean and Null types
+** WONTDO Remove the Boolean and Null types
 
    And use the traditional Lisp treatment of boolean values:
 
@@ -617,7 +617,7 @@
                 (lerp 0.6 0.8 $sin1))
          (tetrahedron)))
 
-** TODO Implement a Dictionary type
+** DONE Implement a Dictionary type
 *** DONE Make strings immutable
 *** DONE Modify LispInterpreter::Eq to compare string contents
 
@@ -630,7 +630,7 @@
       - For booleans and null types this is safe as we always share
         objects: there is exactly one true, false, and nil
 
-*** TODO Implement C++ hash for LispObjectPtr
+*** DONE Implement C++ hash for LispObjectPtr
 ** TODO Use Dictionary for Signals rather than association list
 ** TODO Remove putassoc
 ** TODO Implement read and print Dictionary

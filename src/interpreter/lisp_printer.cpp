@@ -16,10 +16,10 @@ namespace procdraw {
         case LispObjectType::Symbol:
             return L->SymbolName(obj);
         case LispObjectType::Cons: {
-            if (L->Eq(L->Car(obj), L->SymbolRef("sigval"))) {
+            if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
                 return "$" + PrintToString(L, L->Cadr(obj));
             }
-            if (L->Eq(L->Car(obj), L->SymbolRef("quote"))) {
+            if (LispObjectEq(L->Car(obj), L->SymbolRef("quote"))) {
                 return "'" + PrintToString(L, L->Cadr(obj));
             }
             else {
@@ -47,6 +47,8 @@ namespace procdraw {
             return L->BoolVal(obj) ? "true" : "false";
         case LispObjectType::String:
             return "\"" + L->StringVal(obj) + "\"";
+        case LispObjectType::Dictionary:
+            return "<Dictionary>";
         case LispObjectType::Eof:
             return "<Eof>";
         default:

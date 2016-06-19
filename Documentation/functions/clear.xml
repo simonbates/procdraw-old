@@ -1,0 +1,20 @@
+<function-spec name="clear">
+
+  <syntax>(clear dict)</syntax>
+
+  <description><p>Removes all the associations from the dictionary
+  <paramname>dict</paramname>.</p></description>
+
+  <parameters>
+    <parameter name="dict">A dictionary</parameter>
+  </parameters>
+
+  <examples>
+    <example expr="(setq d (make-dict))" value="&lt;Dictionary>"/>
+    <example expr="(put 'key1 42 d)" value="42"/>
+    <example expr="(keys d)" value="(key1)"/>
+    <example expr="(clear d)" value="&lt;Dictionary>"/>
+    <example expr="(keys d)" value="nil"/>
+  </examples>
+
+</function-spec>

@@ -10,10 +10,11 @@ grammar {
         })+
       },
       element parameters {
-        element parameter {
+        (attribute none { "none" }
+        | element parameter {
           attribute name { text },
           text
-        }+
+        }+)
       },
       element examples {
         element example {

@@ -46,6 +46,10 @@ TEST_CASE("Lisp printer")
         REQUIRE(printer.PrintToString(&L, L.MakeString("some string")) == "\"some string\"");
     }
 
+    SECTION("Dictionaries TODO") {
+        REQUIRE(printer.PrintToString(&L, L.MakeDict()) == "<Dictionary>");
+    }
+
     SECTION("A sigval form is printed using prefixed dollar sign") {
         REQUIRE(printer.PrintToString(&L, L.MakeList({ L.SymbolRef("sigval"), L.SymbolRef("foo") })) == "$foo");
     }

@@ -86,7 +86,7 @@ namespace procdraw {
 
     static bool Signalp(LispInterpreter *L, LispObjectPtr obj)
     {
-        return L->TypeOf(obj) == LispObjectType::Cons && L->Eq(L->Car(obj), L->SymbolRef("signal"));
+        return L->TypeOf(obj) == LispObjectType::Cons && LispObjectEq(L->Car(obj), L->SymbolRef("signal"));
     }
 
     static bool HasBeenStepped(LispInterpreter *L, LispObjectPtr signal)
@@ -229,7 +229,7 @@ namespace procdraw {
             auto selectedKey = L->SymbolRef("selected");
             auto symbolA = L->SymbolRef("a");
             auto symbolB = L->SymbolRef("b");
-            if (L->Eq(GetSlot(L, self, selectedKey), symbolA)) {
+            if (LispObjectEq(GetSlot(L, self, selectedKey), symbolA)) {
                 PutSlot(L, self, selectedKey, symbolB);
                 out = GetSlot(L, self, symbolB);
             }

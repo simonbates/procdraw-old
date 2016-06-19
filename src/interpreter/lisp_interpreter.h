@@ -9,7 +9,7 @@
 namespace procdraw {
 
     enum class LispObjectType {
-        Null, Number, Symbol, Cons, CFunction, Boolean, String, Eof
+        Null, Number, Symbol, Cons, CFunction, Boolean, String, Dictionary, Eof
     };
 
     typedef LispObjectPtr(*lisp_CFunction) (LispInterpreter *L, LispObjectPtr args,
@@ -28,6 +28,7 @@ namespace procdraw {
         LispObjectPtr Cons(LispObjectPtr car, LispObjectPtr cdr);
         LispObjectPtr MakeCFunction(lisp_CFunction cfun, void *data);
         LispObjectPtr MakeString(const std::string &str);
+        LispObjectPtr MakeDict();
         // Memory access
         LispObjectType TypeOf(LispObjectPtr obj);
         bool Null(LispObjectPtr obj);
@@ -39,9 +40,13 @@ namespace procdraw {
         LispObjectPtr Cdr(LispObjectPtr obj);
         bool BoolVal(LispObjectPtr obj);
         std::string StringVal(LispObjectPtr obj);
-        bool Eq(LispObjectPtr x, LispObjectPtr y);
         LispObjectPtr Rplaca(LispObjectPtr cons, LispObjectPtr obj);
         LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
+        LispObjectPtr Get(LispObjectPtr key, LispObjectPtr dict, LispObjectPtr notFound);
+        LispObjectPtr Get(LispObjectPtr key, LispObjectPtr dict);
+        LispObjectPtr Put(LispObjectPtr key, LispObjectPtr val, LispObjectPtr dict);
+        LispObjectPtr Keys(LispObjectPtr dict);
+        LispObjectPtr Clear(LispObjectPtr dict);
         // Symbols
         LispObjectPtr SymbolRef(const std::string &name);
         LispObjectPtr SetGlobalCFunction(const std::string &name, lisp_CFunction cfun, void *data);

@@ -80,23 +80,23 @@ TEST_CASE("LispInterpreter::Eq()")
 
     procdraw::LispInterpreter L;
 
-    REQUIRE(L.Eq(L.Nil, L.Nil));
+    REQUIRE(LispObjectEq(L.Nil, L.Nil));
 
-    REQUIRE(L.Eq(L.MakeNumber(42), L.MakeNumber(42)));
-    REQUIRE_FALSE(L.Eq(L.MakeNumber(42), L.MakeNumber(1)));
-    REQUIRE_FALSE(L.Eq(L.MakeNumber(42), L.Nil));
-    REQUIRE_FALSE(L.Eq(L.Nil, L.MakeNumber(42)));
+    REQUIRE(LispObjectEq(L.MakeNumber(42), L.MakeNumber(42)));
+    REQUIRE_FALSE(LispObjectEq(L.MakeNumber(42), L.MakeNumber(1)));
+    REQUIRE_FALSE(LispObjectEq(L.MakeNumber(42), L.Nil));
+    REQUIRE_FALSE(LispObjectEq(L.Nil, L.MakeNumber(42)));
 
-    REQUIRE(L.Eq(L.MakeString("hello"), L.MakeString("hello")));
-    REQUIRE_FALSE(L.Eq(L.MakeString("hello"), L.MakeString("world")));
-    REQUIRE_FALSE(L.Eq(L.MakeString("hello"), L.Nil));
-    REQUIRE_FALSE(L.Eq(L.Nil, L.MakeString("hello")));
+    REQUIRE(LispObjectEq(L.MakeString("hello"), L.MakeString("hello")));
+    REQUIRE_FALSE(LispObjectEq(L.MakeString("hello"), L.MakeString("world")));
+    REQUIRE_FALSE(LispObjectEq(L.MakeString("hello"), L.Nil));
+    REQUIRE_FALSE(LispObjectEq(L.Nil, L.MakeString("hello")));
 
-    REQUIRE(L.Eq(L.SymbolRef("A"), L.SymbolRef("A")));
-    REQUIRE_FALSE(L.Eq(L.SymbolRef("A"), L.SymbolRef("B")));
+    REQUIRE(LispObjectEq(L.SymbolRef("A"), L.SymbolRef("A")));
+    REQUIRE_FALSE(LispObjectEq(L.SymbolRef("A"), L.SymbolRef("B")));
 
     auto list1 = L.MakeList({ L.MakeNumber(42) });
-    REQUIRE(L.Eq(list1, list1));
+    REQUIRE(LispObjectEq(list1, list1));
 }
 
 TEST_CASE("LispInterpreter::Assoc()")
@@ -114,11 +114,11 @@ TEST_CASE("LispInterpreter::Assoc()")
         auto alist = L.MakeList({ L.Cons(symbolA, L.MakeNumber(1)), L.Cons(symbolB, L.MakeNumber(2)) });
 
         auto pairA = L.Assoc(symbolA, alist);
-        REQUIRE(L.Eq(symbolA, L.Car(pairA)));
+        REQUIRE(LispObjectEq(symbolA, L.Car(pairA)));
         REQUIRE(L.NumVal(L.Cdr(pairA)) == 1);
 
         auto pairB = L.Assoc(symbolB, alist);
-        REQUIRE(L.Eq(symbolB, L.Car(pairB)));
+        REQUIRE(LispObjectEq(symbolB, L.Car(pairB)));
         REQUIRE(L.NumVal(L.Cdr(pairB)) == 2);
 
         REQUIRE(L.Null(L.Assoc(L.SymbolRef("C"), alist)));
@@ -135,7 +135,7 @@ TEST_CASE("LispInterpreter::Rplaca()")
     auto result = L.Rplaca(cons, L.MakeNumber(10));
     REQUIRE(L.NumVal(L.Car(cons)) == 10);
     REQUIRE(L.NumVal(L.Cdr(cons)) == 2);
-    REQUIRE(L.Eq(cons, result));
+    REQUIRE(LispObjectEq(cons, result));
 }
 
 TEST_CASE("LispInterpreter::Rplacd()")
@@ -147,7 +147,62 @@ TEST_CASE("LispInterpreter::Rplacd()")
     auto result = L.Rplacd(cons, L.MakeNumber(20));
     REQUIRE(L.NumVal(L.Car(cons)) == 1);
     REQUIRE(L.NumVal(L.Cdr(cons)) == 20);
-    REQUIRE(L.Eq(cons, result));
+    REQUIRE(LispObjectEq(cons, result));
+}
+
+TEST_CASE("Dictionaries")
+{
+
+    procdraw::LispInterpreter L;
+
+    auto dict = L.MakeDict();
+
+    SECTION("notFound is returned when get from empty Dictionary") {
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key1"), dict, L.Nil)));
+        REQUIRE(L.NumVal(L.Get(L.SymbolRef("key1"), dict, L.MakeNumber(100))) == 100);
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key1"), dict)));
+    }
+
+    SECTION("Get, Put, and Clear with symbol keys") {
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key1"), dict)));
+        REQUIRE(L.NumVal(L.Put(L.SymbolRef("key1"), L.MakeNumber(42), dict)) == 42);
+        REQUIRE(L.NumVal(L.Get(L.SymbolRef("key1"), dict)) == 42);
+        REQUIRE(L.NumVal(L.Put(L.SymbolRef("key1"), L.MakeNumber(10), dict)) == 10);
+        REQUIRE(L.NumVal(L.Get(L.SymbolRef("key1"), dict)) == 10);
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key2"), dict)));
+        L.Put(L.SymbolRef("key2"), L.MakeNumber(100), dict);
+        REQUIRE(L.NumVal(L.Get(L.SymbolRef("key2"), dict)) == 100);
+        REQUIRE(L.NumVal(L.Get(L.SymbolRef("key1"), dict)) == 10);
+        L.Clear(dict);
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key1"), dict)));
+        REQUIRE(L.Null(L.Get(L.SymbolRef("key2"), dict)));
+    }
+
+    SECTION("String keys") {
+        REQUIRE(L.Null(L.Get(L.MakeString("key1"), dict)));
+        REQUIRE(L.NumVal(L.Put(L.MakeString("key1"), L.MakeNumber(42), dict)) == 42);
+        REQUIRE(L.NumVal(L.Get(L.MakeString("key1"), dict)) == 42);
+        REQUIRE(L.NumVal(L.Put(L.MakeString("key1"), L.MakeNumber(10), dict)) == 10);
+        REQUIRE(L.NumVal(L.Get(L.MakeString("key1"), dict)) == 10);
+        REQUIRE(L.Null(L.Get(L.MakeString("key2"), dict)));
+    }
+
+    SECTION("Keys") {
+        REQUIRE(L.Null(L.Keys(dict)));
+
+        L.Put(L.SymbolRef("key1"), L.MakeNumber(42), dict);
+        auto singleKey = L.Keys(dict);
+        REQUIRE(L.SymbolName(L.Car(singleKey)) == "key1");
+        REQUIRE(L.Null(L.Cdr(singleKey)));
+
+        L.Put(L.SymbolRef("key2"), L.MakeNumber(10), dict);
+        auto twoKeys = L.Keys(dict);
+        REQUIRE(L.Null(L.Cddr(twoKeys)));
+        auto foundExpectedKeys = (L.SymbolName(L.Car(twoKeys)) == "key1" && L.SymbolName(L.Cadr(twoKeys)) == "key2")
+                                 || (L.SymbolName(L.Car(twoKeys)) == "key2" && L.SymbolName(L.Cadr(twoKeys)) == "key1");
+        REQUIRE(foundExpectedKeys);
+    }
+
 }
 
 TEST_CASE("LispInterpreter implicit type conversion")
@@ -172,6 +227,8 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE(std::isnan(L.NumVal(L.False)));
             // String
             REQUIRE(std::isnan(L.NumVal(L.MakeString("some string"))));
+            // Dictionary
+            REQUIRE(std::isnan(L.NumVal(L.MakeDict())));
             // Eof
             REQUIRE(std::isnan(L.NumVal(L.Eof)));
         }
@@ -194,6 +251,8 @@ TEST_CASE("LispInterpreter implicit type conversion")
             REQUIRE_FALSE(L.BoolVal(L.False));
             // String
             REQUIRE(L.BoolVal(L.MakeString("some string")));
+            // Dictionary
+            REQUIRE(L.BoolVal(L.MakeDict()));
             // Eof
             REQUIRE(L.BoolVal(L.Eof));
         }

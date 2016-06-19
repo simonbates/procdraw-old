@@ -24,14 +24,19 @@ namespace procdraw {
         SetGlobalCFunction("assoc", lisp_Assoc, nullptr);
         SetGlobalCFunction("car", lisp_Car, nullptr);
         SetGlobalCFunction("cdr", lisp_Cdr, nullptr);
+        SetGlobalCFunction("clear", lisp_Clear, nullptr);
         SetGlobalCFunction("cons", lisp_Cons, nullptr);
         SetGlobalCFunction("eq", lisp_Eq, nullptr);
         SetGlobalCFunction("functionp", lisp_Functionp, nullptr);
+        SetGlobalCFunction("get", lisp_Get, nullptr);
+        SetGlobalCFunction("keys", lisp_Keys, nullptr);
         SetGlobalCFunction("lerp", lisp_Lerp, nullptr);
+        SetGlobalCFunction("make-dict", lisp_MakeDict, nullptr);
         SetGlobalCFunction("map-range", lisp_MapRange, nullptr);
         SetGlobalCFunction("memb", lisp_Memb, nullptr);
         SetGlobalCFunction("norm", lisp_Norm, nullptr);
         SetGlobalCFunction("not", lisp_Not, nullptr);
+        SetGlobalCFunction("put", lisp_Put, nullptr);
         SetGlobalCFunction("putassoc", lisp_Putassoc, nullptr);
         SetGlobalCFunction("wrap", lisp_Wrap, nullptr);
         // Constants
@@ -79,7 +84,7 @@ namespace procdraw {
         LispObjectPtr prev = alist;
         while (!Null(next)) {
             auto association = Car(next);
-            if (Eq(key, Car(association))) {
+            if (LispObjectEq(key, Car(association))) {
                 *found = true;
                 return association;
             }
@@ -186,22 +191,22 @@ namespace procdraw {
         }
         else {
             auto first = Car(exp);
-            if (Eq(first, S_DEF)) {
+            if (LispObjectEq(first, S_DEF)) {
                 return Set(Cadr(exp), Cons(S_LAMBDA, Cddr(exp)), env);
             }
-            else if (Eq(first, S_IF)) {
+            else if (LispObjectEq(first, S_IF)) {
                 return Evif(Cdr(exp), env);
             }
-            else if (Eq(first, S_LAMBDA)) {
+            else if (LispObjectEq(first, S_LAMBDA)) {
                 return exp;
             }
-            else if (Eq(first, S_PROGN)) {
+            else if (LispObjectEq(first, S_PROGN)) {
                 return Progn(Cdr(exp), env);
             }
-            else if (Eq(first, S_QUOTE)) {
+            else if (LispObjectEq(first, S_QUOTE)) {
                 return Cadr(exp);
             }
-            else if (Eq(first, S_SETQ)) {
+            else if (LispObjectEq(first, S_SETQ)) {
                 return Set(Cadr(exp), Eval(Caddr(exp), env), env);
             }
             else {
@@ -240,7 +245,7 @@ namespace procdraw {
     bool LispInterpreter::Functionp(LispObjectPtr obj)
     {
         auto type = TypeOf(obj);
-        return (type == LispObjectType::Cons && Eq(Car(obj), S_LAMBDA))
+        return (type == LispObjectType::Cons && LispObjectEq(Car(obj), S_LAMBDA))
                || type == LispObjectType::CFunction;
     }
 
@@ -256,7 +261,7 @@ namespace procdraw {
     bool LispInterpreter::Memb(LispObjectPtr obj, LispObjectPtr list)
     {
         for (LispObjectPtr n = list; !Null(n); n = Cdr(n)) {
-            if (Eq(obj, Car(n))) {
+            if (LispObjectEq(obj, Car(n))) {
                 return true;
             }
         }
