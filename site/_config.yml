@@ -33,9 +33,13 @@ defaults:
       path: ""
       type: functions_generated
     values:
-      layout: docs_page
+      layout: narrow_page
       section: docs
   - scope:
       path: "docs"
     values:
       section: docs
+  - scope:
+      path: "hardware"
+    values:
+      section: hardware

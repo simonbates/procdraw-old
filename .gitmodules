@@ -4,3 +4,6 @@
 [submodule "third_party/google/styleguide"]
 	path = third_party/google/styleguide
 	url = https://github.com/google/styleguide.git
+[submodule "site/media"]
+	path = site/media
+	url = https://github.com/simonbates/procdraw-site-media.git
