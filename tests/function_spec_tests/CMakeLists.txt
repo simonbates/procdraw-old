@@ -1,13 +1,9 @@
-pkg_search_module(LIBXML2 REQUIRED libxml-2.0)
-
-include_directories(${LIBXML2_INCLUDE_DIRS})
-
 add_executable(test_function_spec
     test_function_spec.cpp)
 
 target_link_libraries(test_function_spec
     interpreter
-    ${LIBXML2_LIBRARIES})
+    tinyxml2)
 
 function(add_spec_failure name spec numtests expected)
     add_test("function_spec_${name}_fails" test_function_spec ${spec} ${numtests})
@@ -26,7 +22,7 @@ endfunction()
 # Tests for test_function_spec
 
 add_spec_failure(non_existing_file NON_EXISTING_FILE 0
-                 "File not found: NON_EXISTING_FILE")
+                 "Error loading file: NON_EXISTING_FILE")
 
 add_spec_failure(testcase1
                  ${PROJECT_SOURCE_DIR}/tests/function_spec_tests/testcase1.xml 1

@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include <array>
 #include <string>
 #include <vector>

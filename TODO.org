@@ -61,6 +61,15 @@
 
 ** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
+** TODO Port Procdraw to Windows
+*** DONE Pull GLM in from GitHub
+
+    https://github.com/g-truc/glm
+
+*** DONE Use TinyXML2
+
+    https://github.com/leethomason/tinyxml2
+
 * Documentation
 ** WONTDO Move the documentation into a single file
 ** DONE Rename "arguments" to "parameters"                           :v0_1_0:

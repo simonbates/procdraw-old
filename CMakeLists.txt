@@ -9,12 +9,28 @@ enable_testing()
 
 # Find dependencies
 
-include(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED sdl2)
-pkg_search_module(FT2 REQUIRED freetype2)
-pkg_search_module(ALSA REQUIRED alsa)
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    include(FindPkgConfig)
+    pkg_search_module(SDL2 REQUIRED sdl2)
+    pkg_search_module(FT2 REQUIRED freetype2)
+    pkg_search_module(ALSA REQUIRED alsa)
+    find_package(OpenGL REQUIRED)
+    find_package(GLEW REQUIRED)
+endif()
+
+# Catch
+
+set(CATCH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/Catch/single_include)
+
+# GLM
+
+set(GLM_DIR ${PROJECT_SOURCE_DIR}/third_party/glm)
+
+# TinyXML-2
+
+set(TINYXML2_DIR ${PROJECT_SOURCE_DIR}/third_party/tinyxml2)
+add_library(tinyxml2 ${TINYXML2_DIR}/tinyxml2.cpp)
+target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
 
 # Platform-specific compiler settings
 
@@ -30,9 +46,12 @@ endif()
 
 add_subdirectory(src/utils)
 add_subdirectory(src/interpreter)
-add_subdirectory(src/graphics)
-add_subdirectory(src/alsa_midi)
-add_subdirectory(src/procdraw)
 add_subdirectory(tests/utils_tests)
 add_subdirectory(tests/interpreter_tests)
 add_subdirectory(tests/function_spec_tests)
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    add_subdirectory(src/graphics)
+    add_subdirectory(src/alsa_midi)
+    add_subdirectory(src/procdraw)
+endif()
