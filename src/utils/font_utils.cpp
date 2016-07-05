@@ -27,14 +27,14 @@ namespace procdraw {
                             const procdraw::TextureFontMetrics &fontMetrics)
     {
         GlyphCoords coords;
-        coords.Left = glyphMetrics.LeftBearingPixels;
+        coords.Left = static_cast<float>(glyphMetrics.LeftBearingPixels);
         coords.Right = coords.Left + glyphMetrics.WidthPixels;
-        coords.Top = fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels;
+        coords.Top = static_cast<float>(fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels);
         coords.Bottom = coords.Top + glyphMetrics.HeightPixels;
-        coords.TextureLeft = ((float)glyphMetrics.XoffsetPixels) / fontMetrics.TextureWidth;
-        coords.TextureRight = ((float)glyphMetrics.XoffsetPixels + glyphMetrics.WidthPixels) / fontMetrics.TextureWidth;
+        coords.TextureLeft = static_cast<float>(glyphMetrics.XoffsetPixels) / fontMetrics.TextureWidth;
+        coords.TextureRight = (static_cast<float>(glyphMetrics.XoffsetPixels) + glyphMetrics.WidthPixels) / fontMetrics.TextureWidth;
         coords.TextureTop = 0.0f;
-        coords.TextureBottom = ((float)glyphMetrics.HeightPixels) / fontMetrics.TextureHeight;
+        coords.TextureBottom = static_cast<float>(glyphMetrics.HeightPixels) / fontMetrics.TextureHeight;
         return coords;
     }
 

@@ -166,7 +166,7 @@ namespace procdraw {
 
     bool LispReader::IsStartOfNumber()
     {
-        return isdigit(ch_);
+        return isdigit(ch_) != 0;
     }
 
     void LispReader::GetNumber()

@@ -195,9 +195,9 @@ TEST_CASE("Font utils")
 
     SECTION("LayOutText") {
 
-        float spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
-        float exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
-        float quoteAdvance = fontMetrics.GetGlyph(34).AdvanceWidthPixels;
+        int spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
+        int exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
+        int quoteAdvance = fontMetrics.GetGlyph(34).AdvanceWidthPixels;
 
         SECTION("A layout for an empty string has one empty line") {
             auto layout = procdraw::LayOutText<float>("", fontMetrics, 100, 100);
@@ -226,8 +226,8 @@ TEST_CASE("Font utils")
 
             auto vertices = layout.GetVerticesForLine(0);
             REQUIRE(vertices.size() == 24 * 2);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance, 0, vertices, 0);
-            AssertGlyphVertices(quoteCoords, spaceAdvance * 2 + exclamationAdvance, 0, vertices, 24);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance), 0, vertices, 0);
+            AssertGlyphVertices(quoteCoords, static_cast<float>(spaceAdvance) * 2 + exclamationAdvance, 0, vertices, 24);
         }
 
         SECTION("Text is wrapped when the max number of glyphs is exceeded") {
@@ -254,15 +254,15 @@ TEST_CASE("Font utils")
 
             auto lineOneVertices = layout.GetVerticesForLine(0);
             REQUIRE(lineOneVertices.size() == 24 * 4);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 0, 0, lineOneVertices, 24 * 0);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 1, 0, lineOneVertices, 24 * 1);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 2, 0, lineOneVertices, 24 * 2);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance + exclamationAdvance * 3, 0, lineOneVertices, 24 * 3);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance) + static_cast<float>(exclamationAdvance) * 0, 0, lineOneVertices, 24 * 0);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance) + static_cast<float>(exclamationAdvance) * 1, 0, lineOneVertices, 24 * 1);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance) + static_cast<float>(exclamationAdvance) * 2, 0, lineOneVertices, 24 * 2);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance) + static_cast<float>(exclamationAdvance) * 3, 0, lineOneVertices, 24 * 3);
 
             auto lineTwoVertices = layout.GetVerticesForLine(1);
             REQUIRE(lineTwoVertices.size() == 24 * 2);
-            AssertGlyphVertices(quoteCoords, quoteAdvance * 0, fontMetrics.LinespacePixels, lineTwoVertices, 24 * 0);
-            AssertGlyphVertices(quoteCoords, quoteAdvance * 1, fontMetrics.LinespacePixels, lineTwoVertices, 24 * 1);
+            AssertGlyphVertices(quoteCoords, static_cast<float>(quoteAdvance) * 0, static_cast<float>(fontMetrics.LinespacePixels), lineTwoVertices, 24 * 0);
+            AssertGlyphVertices(quoteCoords, static_cast<float>(quoteAdvance) * 1, static_cast<float>(fontMetrics.LinespacePixels), lineTwoVertices, 24 * 1);
         }
 
         SECTION("Text is wrapped when the max pixel width is exceeded") {
@@ -295,24 +295,39 @@ TEST_CASE("Font utils")
 
             auto lineTwoVertices = layout.GetVerticesForLine(1);
             REQUIRE(lineTwoVertices.size() == 24);
-            AssertGlyphVertices(exclamationCoords, spaceAdvance, fontMetrics.LinespacePixels, lineTwoVertices, 0);
+            AssertGlyphVertices(exclamationCoords, static_cast<float>(spaceAdvance), static_cast<float>(fontMetrics.LinespacePixels), lineTwoVertices, 0);
 
             auto lineThreeVertices = layout.GetVerticesForLine(2);
             REQUIRE(lineThreeVertices.size() == 24 * 5);
-            AssertGlyphVertices(exclamationCoords, exclamationAdvance * 0, fontMetrics.LinespacePixels * 2,
-                                lineThreeVertices, 24 * 0);
-            AssertGlyphVertices(exclamationCoords, exclamationAdvance * 1, fontMetrics.LinespacePixels * 2,
-                                lineThreeVertices, 24 * 1);
-            AssertGlyphVertices(exclamationCoords, exclamationAdvance * 2, fontMetrics.LinespacePixels * 2,
-                                lineThreeVertices, 24 * 2);
-            AssertGlyphVertices(exclamationCoords, exclamationAdvance * 3, fontMetrics.LinespacePixels * 2,
-                                lineThreeVertices, 24 * 3);
-            AssertGlyphVertices(exclamationCoords, exclamationAdvance * 4, fontMetrics.LinespacePixels * 2,
-                                lineThreeVertices, 24 * 4);
+            AssertGlyphVertices(exclamationCoords,
+                                static_cast<float>(exclamationAdvance) * 0,
+                                static_cast<float>(fontMetrics.LinespacePixels) * 2,
+                                lineThreeVertices,
+                                24 * 0);
+            AssertGlyphVertices(exclamationCoords,
+                                static_cast<float>(exclamationAdvance) * 1,
+                                static_cast<float>(fontMetrics.LinespacePixels) * 2,
+                                lineThreeVertices,
+                                24 * 1);
+            AssertGlyphVertices(exclamationCoords,
+                                static_cast<float>(exclamationAdvance) * 2,
+                                static_cast<float>(fontMetrics.LinespacePixels) * 2,
+                                lineThreeVertices,
+                                24 * 2);
+            AssertGlyphVertices(exclamationCoords,
+                                static_cast<float>(exclamationAdvance) * 3,
+                                static_cast<float>(fontMetrics.LinespacePixels) * 2,
+                                lineThreeVertices,
+                                24 * 3);
+            AssertGlyphVertices(exclamationCoords,
+                                static_cast<float>(exclamationAdvance) * 4,
+                                static_cast<float>(fontMetrics.LinespacePixels) * 2,
+                                lineThreeVertices,
+                                24 * 4);
 
             auto lineFourVertices = layout.GetVerticesForLine(3);
             REQUIRE(lineFourVertices.size() == 24);
-            AssertGlyphVertices(exclamationCoords, 0, fontMetrics.LinespacePixels * 3, lineFourVertices, 0);
+            AssertGlyphVertices(exclamationCoords, 0, static_cast<float>(fontMetrics.LinespacePixels) * 3, lineFourVertices, 0);
         }
 
     }

@@ -140,7 +140,7 @@ namespace procdraw {
             index = 0.0;
         }
         PutSlot(L, signal, indexKey, L->MakeNumber(index));
-        int indexBefore = floor(index);
+        int indexBefore = static_cast<int>(floor(index));
         double out = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1], index - indexBefore);
         auto outNum = L->MakeNumber(out);
         PutSlot(L, signal, L->SymbolRef("out"), outNum);
