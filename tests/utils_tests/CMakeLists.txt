@@ -15,13 +15,15 @@ add_test(utils_tests utils_tests)
 
 # Google Test
 
-add_executable(color_test
-    color_test.cpp)
+add_executable(utils_tests_gtest
+    color_test.cpp
+    lsystem_test.cpp
+    utils_test.cpp)
 
-target_link_libraries(color_test
+target_link_libraries(utils_tests_gtest
     utils
     gtest
     gtest_main
     ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(color_test color_test)
+add_test(utils_tests_gtest utils_tests_gtest)
