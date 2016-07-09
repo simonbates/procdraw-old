@@ -44,7 +44,7 @@ procdraw::TextureFontMetrics MakeTestFontMetrics()
 }
 
 void AssertGlyphVertices(const procdraw::GlyphCoords &expected,
-                         float expectedHorizontalOffset, float expectedVerticalOffset,
+                         int expectedHorizontalOffset, int expectedVerticalOffset,
                          const std::vector<float> &vertices, int verticesOffset)
 {
     // Left top
@@ -195,9 +195,9 @@ TEST_CASE("Font utils")
 
     SECTION("LayOutText") {
 
-        float spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
-        float exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
-        float quoteAdvance = fontMetrics.GetGlyph(34).AdvanceWidthPixels;
+        int spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
+        int exclamationAdvance = fontMetrics.GetGlyph(33).AdvanceWidthPixels;
+        int quoteAdvance = fontMetrics.GetGlyph(34).AdvanceWidthPixels;
 
         SECTION("A layout for an empty string has one empty line") {
             auto layout = procdraw::LayOutText<float>("", fontMetrics, 100, 100);

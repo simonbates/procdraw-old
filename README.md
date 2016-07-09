@@ -26,7 +26,7 @@ Building on Linux
 
 ### Install dependencies
 
-Procdraw has the following dependencies:
+Procdraw has the following external dependencies:
 
 * CMake
 * GNU C++ compiler
@@ -34,10 +34,8 @@ Procdraw has the following dependencies:
 * SDL2
 * OpenGL
 * GLEW
-* GLM
 * FreeType 2
 * ALSA (for MIDI input)
-* Libxml2
 
 Optional dependencies:
 
@@ -77,6 +75,33 @@ Procdaw can be run from the build directory:
 ```
 $ src/procdraw/procdraw
 ```
+
+Building on Windows (partial port, work in progress)
+----------------------------------------------------
+
+Dependencies:
+
+- Visual Studio Community 2015 (with C++ tools and Windows SDK)
+- CMake
+
+Run CMake to generate the Visual Studio solution:
+
+```
+> git submodule init
+> git submodule update
+> mkdir build
+> cd build
+> cmake -G "Visual Studio 14" ..
+```
+
+To build in Visual Studio:
+
+- Open `build\Procdraw.sln`
+- Build Solution (Ctrl+Shift+B)
+
+To run the tests in Visual Studio:
+
+- Build the `RUN_TESTS` project
 
 Running Procdraw from Emacs
 ---------------------------
