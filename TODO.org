@@ -1036,7 +1036,7 @@ later look at other analysis such as frequency composition.
    To manage REPL and editors
 
 * Tests
-** TODO Use propositions for test names
+** WONTDO Use propositions for test names
 
    As if prefixed by "test that..." or "check that...".
 
@@ -1049,4 +1049,5 @@ later look at other analysis such as frequency composition.
 *** TODO utils_tests/test_line_buffer.cpp
 *** TODO utils_tests/test_lsystem.cpp
 *** TODO utils_tests/test_utils.cpp
+** INPROGRESS Convert tests to Google Test
 ** TODO Run the function_spec_tests under the Google Test runner

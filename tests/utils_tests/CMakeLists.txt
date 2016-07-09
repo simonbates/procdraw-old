@@ -17,7 +17,10 @@ add_test(utils_tests utils_tests)
 
 add_executable(utils_tests_gtest
     color_test.cpp
+    font_utils_test.cpp
+    line_buffer_test.cpp
     lsystem_test.cpp
+    text_layout_test.cpp
     utils_test.cpp)
 
 target_link_libraries(utils_tests_gtest
