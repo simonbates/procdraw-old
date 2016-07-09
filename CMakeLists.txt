@@ -16,6 +16,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     pkg_search_module(ALSA REQUIRED alsa)
     find_package(OpenGL REQUIRED)
     find_package(GLEW REQUIRED)
+    find_package(Threads REQUIRED)
 endif()
 
 # Catch
@@ -25,6 +26,18 @@ set(CATCH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/Catch/single_include)
 # GLM
 
 set(GLM_DIR ${PROJECT_SOURCE_DIR}/third_party/glm)
+
+# Google Test
+
+set(GTEST_DIR ${PROJECT_SOURCE_DIR}/third_party/google/googletest)
+
+add_library(gtest ${GTEST_DIR}/src/gtest-all.cc)
+target_include_directories(gtest
+    PUBLIC ${GTEST_DIR}/include
+    PRIVATE ${GTEST_DIR})
+
+add_library(gtest_main ${GTEST_DIR}/src/gtest_main.cc)
+target_include_directories(gtest_main PUBLIC ${GTEST_DIR}/include)
 
 # TinyXML-2
 

@@ -1,11 +1,27 @@
-file(GLOB UTILS_TESTS_SOURCES "*.cpp")
-
 include_directories(${CATCH_INCLUDE_DIR})
 
 add_executable(utils_tests
-    ${UTILS_TESTS_SOURCES})
+    main.cpp
+    test_color.cpp
+    test_font_utils.cpp
+    test_line_buffer.cpp
+    test_lsystem.cpp
+    test_utils.cpp)
 
 target_link_libraries(utils_tests
     utils)
 
 add_test(utils_tests utils_tests)
+
+# Google Test
+
+add_executable(color_test
+    color_test.cpp)
+
+target_link_libraries(color_test
+    utils
+    gtest
+    gtest_main
+    ${CMAKE_THREAD_LIBS_INIT})
+
+add_test(color_test color_test)
