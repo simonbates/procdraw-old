@@ -12,21 +12,3 @@ target_link_libraries(utils_tests
     utils)
 
 add_test(utils_tests utils_tests)
-
-# Google Test
-
-add_executable(utils_tests_gtest
-    color_test.cpp
-    font_utils_test.cpp
-    line_buffer_test.cpp
-    lsystem_test.cpp
-    text_layout_test.cpp
-    utils_test.cpp)
-
-target_link_libraries(utils_tests_gtest
-    utils
-    gtest
-    gtest_main
-    ${CMAKE_THREAD_LIBS_INIT})
-
-add_test(utils_tests_gtest utils_tests_gtest)

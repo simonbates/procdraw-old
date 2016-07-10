@@ -59,6 +59,7 @@ endif()
 
 add_subdirectory(src/utils)
 add_subdirectory(src/interpreter)
+add_subdirectory(tests)
 add_subdirectory(tests/utils_tests)
 add_subdirectory(tests/interpreter_tests)
 add_subdirectory(tests/function_spec_tests)
