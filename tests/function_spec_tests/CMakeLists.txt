@@ -64,11 +64,13 @@ add_function_test(sum 5)
 # Google Test
 
 get_filename_component(FUNCTION_SPEC_CHECKER_TESTDATA_DIR "." ABSOLUTE)
+get_filename_component(FUNCTION_SPECS_DIR "${PROJECT_SOURCE_DIR}/Documentation/functions" ABSOLUTE)
 configure_file(function_spec_tests_config.h.in function_spec_tests_config.h)
 
 add_executable(function_spec_tests_gtest
     function_spec_checker.cpp
-    function_spec_checker_test.cpp)
+    function_spec_checker_test.cpp
+    function_specs_test.cpp)
 
 target_include_directories(function_spec_tests_gtest
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR})

@@ -19,7 +19,9 @@ protected:
         EXPECT_FALSE(checker_.Check(fullpath.c_str(), expectedNumTests));
         auto messages = checker_.GetMessages();
         EXPECT_EQ(1, messages.size());
-        EXPECT_EQ(expectedMessage, messages[0]);
+        if (messages.size() > 0) {
+            EXPECT_EQ(expectedMessage, messages[0]);
+        }
     }
 
     static std::string ResolveTestFile(const std::string &filename) {
