@@ -1040,14 +1040,5 @@ later look at other analysis such as frequency composition.
 
    As if prefixed by "test that..." or "check that...".
 
-*** TODO interpreter_tests/test_lisp_interpreter.cpp
-*** DONE interpreter_tests/test_lisp_printer.cpp
-*** TODO interpreter_tests/test_lisp_reader.cpp
-*** TODO interpreter_tests/test_signals.cpp
-*** TODO utils_tests/test_color.cpp
-*** TODO utils_tests/test_font_utils.cpp
-*** TODO utils_tests/test_line_buffer.cpp
-*** TODO utils_tests/test_lsystem.cpp
-*** TODO utils_tests/test_utils.cpp
 ** INPROGRESS Convert tests to Google Test
-** TODO Run the function_spec_tests under the Google Test runner
+** INPROGRESS Run the function_spec_tests under the Google Test runner
