@@ -1,4 +1,5 @@
 add_executable(test_function_spec
+    function_spec_checker.cpp
     test_function_spec.cpp)
 
 target_link_libraries(test_function_spec
