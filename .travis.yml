@@ -5,4 +5,4 @@ compiler: gcc
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install libreadline-dev libsdl2-dev libglew-dev libfreetype6-dev jing
-script: make check-fns && mkdir build && cd build && cmake .. && make && ctest --output-on-failure
+script: make check-fns && mkdir build && cd build && cmake .. && make && ./tests/all-tests && ctest --output-on-failure
