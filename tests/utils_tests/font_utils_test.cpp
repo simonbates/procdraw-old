@@ -160,3 +160,90 @@ TEST_F(FontUtilsTest, TextLayoutForSingleLine)
     ExpectGlyphVertices(exclamationCoords_, spaceAdvance_, 0, vertices, 0);
     ExpectGlyphVertices(quoteCoords_, spaceAdvance_ * 2 + exclamationAdvance_, 0, vertices, 24);
 }
+
+TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxNumberGlyphsExceeded)
+{
+    auto layout = procdraw::LayOutText<float>(" !!!!\"\"", fontMetrics_, 4, 1000);
+
+    // Expect:
+    //
+    // ' !!!!'
+    // '""'
+
+    EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
+    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
+    EXPECT_EQ(1000, layout.MaxLineWidthPixels);
+
+    EXPECT_EQ(2, layout.NumLines());
+
+    // Number of chars in each line
+
+    EXPECT_EQ(5, layout.GetNumCharsInLine(0));
+    EXPECT_EQ(2, layout.GetNumCharsInLine(1));
+
+    // Vertices
+
+    auto lineOneVertices = layout.GetVerticesForLine(0);
+    EXPECT_EQ(24 * 4, lineOneVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_ * 0, 0, lineOneVertices, 24 * 0);
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_ * 1, 0, lineOneVertices, 24 * 1);
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_ * 2, 0, lineOneVertices, 24 * 2);
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_ * 3, 0, lineOneVertices, 24 * 3);
+
+    auto lineTwoVertices = layout.GetVerticesForLine(1);
+    EXPECT_EQ(24 * 2, lineTwoVertices.size());
+    ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 0, fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
+    ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 1, fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
+}
+
+TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxPixelWidthExceeded)
+{
+    auto layout = procdraw::LayOutText<float>("    ! !!!!!!", fontMetrics_, 1000, spaceAdvance_ * 3);
+
+    // Expect:
+    //
+    // '   '
+    // ' ! '
+    // '!!!!!'
+    // '!'
+
+    EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
+    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
+    EXPECT_EQ(spaceAdvance_ * 3, layout.MaxLineWidthPixels);
+
+    EXPECT_EQ(4, layout.NumLines());
+
+    // Number of chars in each line
+
+    EXPECT_EQ(3, layout.GetNumCharsInLine(0));
+    EXPECT_EQ(3, layout.GetNumCharsInLine(1));
+    EXPECT_EQ(5, layout.GetNumCharsInLine(2));
+    EXPECT_EQ(1, layout.GetNumCharsInLine(3));
+
+    // Vertices
+
+    EXPECT_EQ(0, layout.GetVerticesForLine(0).size());
+
+    auto lineTwoVertices = layout.GetVerticesForLine(1);
+    EXPECT_EQ(24, lineTwoVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_, fontMetrics_.LinespacePixels, lineTwoVertices, 0);
+
+    auto lineThreeVertices = layout.GetVerticesForLine(2);
+    EXPECT_EQ(24 * 5, lineThreeVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 0, fontMetrics_.LinespacePixels * 2,
+                        lineThreeVertices, 24 * 0);
+    ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 1, fontMetrics_.LinespacePixels * 2,
+                        lineThreeVertices, 24 * 1);
+    ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 2, fontMetrics_.LinespacePixels * 2,
+                        lineThreeVertices, 24 * 2);
+    ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 3, fontMetrics_.LinespacePixels * 2,
+                        lineThreeVertices, 24 * 3);
+    ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 4, fontMetrics_.LinespacePixels * 2,
+                        lineThreeVertices, 24 * 4);
+
+    auto lineFourVertices = layout.GetVerticesForLine(3);
+    EXPECT_EQ(24, lineFourVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, 0, fontMetrics_.LinespacePixels * 3, lineFourVertices, 0);
+}
