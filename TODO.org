@@ -2,7 +2,7 @@
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: content
 
-* Project level
+* Project
 ** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
 ** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
 ** DONE Add a note on font_config.h to the README.md
@@ -61,7 +61,7 @@
 
 ** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
-** TODO Port Procdraw to Windows
+** INPROGRESS Port Procdraw to Windows
 *** DONE Pull GLM in from GitHub
 
     https://github.com/g-truc/glm
@@ -69,6 +69,34 @@
 *** DONE Use TinyXML2
 
     https://github.com/leethomason/tinyxml2
+
+** TODO Remove top level src directory and add include directory; rename extras to scripts
+
+   procdraw/
+     Documentation/
+     alsa_midi/
+     examples/
+     graphics/
+     include/
+       procdraw/
+         alsa_midi/
+         graphics/
+         interpreter/
+         procdraw/
+         utils/
+     interpreter/
+     procdraw/
+     scripts/
+     site/
+     tests/
+     third_party/
+     utils/
+
+** TODO Move memory out of the Lisp interpreter
+
+   - Make the Procdraw memory interpreter-agnostic to support
+     different interpreters using the same memory
+   - Rename the interpreter subproject to "lisp"
 
 * Documentation
 ** WONTDO Move the documentation into a single file
@@ -900,7 +928,7 @@ TEST_CASE("Environment")
 To make audio reactive graphics. Could start with just volume and
 later look at other analysis such as frequency composition.
 
-* Procdraw
+* Procdraw program
 ** TODO Procdraw client/server
 
    Interact with a running procdraw from another process using a Unix
