@@ -1,6 +1,6 @@
 #+TODO: TODO INPROGRESS | DONE WONTDO
 #+TAGS: { v0_1_0 v0_2_0 }
-#+STARTUP: content
+#+STARTUP: indent
 
 * Project
 ** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
@@ -10,662 +10,663 @@
 ** TODO Set up Procdraw installation and add note to the README.md
 ** TODO Put each class into its own translation unit
 
-   - SomeClass.h
-   - SomeClass.cpp
+- SomeClass.h
+- SomeClass.cpp
 
 ** TODO Version Procdraw
 
-   Could use Semantic Versioning
+Could use Semantic Versioning
 
-   http://semver.org/
+http://semver.org/
 
-   Store the version info in the top CMakeLists.txt
+Store the version info in the top CMakeLists.txt
 
-   Then generate a C header file with version info that I can show in
-   the program.
+Then generate a C header file with version info that I can show in
+the program.
 
-   https://cmake.org/cmake/help/v3.0/command/configure_file.html
+https://cmake.org/cmake/help/v3.0/command/configure_file.html
 
-   For pre-release, append -alpha.SOMETHING
+For pre-release, append -alpha.SOMETHING
 
-   See SemVer 2.0 spec point 11
+See SemVer 2.0 spec point 11
 
-   For example:
+For example:
 
-   0.1.0-alpha.1234
+0.1.0-alpha.1234
 
-   Maybe add +GITHASH ?
+Maybe add +GITHASH ?
 
-   Options for .SOMETHING:
+Options for .SOMETHING:
 
-   - timestamp of HEAD commit
-   - number of commits at HEAD
+- timestamp of HEAD commit
+- number of commits at HEAD
 
-   Can get the timestamp of the HEAD commit with:
+Can get the timestamp of the HEAD commit with:
 
-   git show -s --format=%ct HEAD
+git show -s --format=%ct HEAD
 
-   Can get the number of commits with:
+Can get the number of commits with:
 
-   git rev-list --count HEAD
+git rev-list --count HEAD
 
-   Can get the commit hash with:
+Can get the commit hash with:
 
-   git rev-parse --verify --short HEAD
+git rev-parse --verify --short HEAD
 
-   See also:
+See also:
 
-   - http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
-   - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
-   - http://programmers.stackexchange.com/a/151558
+- http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+- http://www.lionhack.com/2014/03/09/software-versioning-strategies/
+- http://programmers.stackexchange.com/a/151558
 
 ** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
 ** INPROGRESS Port Procdraw to Windows
 *** DONE Pull GLM in from GitHub
 
-    https://github.com/g-truc/glm
+https://github.com/g-truc/glm
 
 *** DONE Use TinyXML2
 
-    https://github.com/leethomason/tinyxml2
+https://github.com/leethomason/tinyxml2
 
 ** TODO Remove top level src directory and add include directory; rename extras to scripts
 
-   procdraw/
-     Documentation/
-     alsa_midi/
-     examples/
-     graphics/
-     include/
-       procdraw/
-         alsa_midi/
-         graphics/
-         interpreter/
-         procdraw/
-         utils/
-     interpreter/
-     procdraw/
-     scripts/
-     site/
-     tests/
-     third_party/
-     utils/
+procdraw/
+  Documentation/
+  alsa_midi/
+  examples/
+  graphics/
+  include/
+    procdraw/
+      alsa_midi/
+      graphics/
+      interpreter/
+      procdraw/
+      utils/
+  interpreter/
+  procdraw/
+  scripts/
+  site/
+  tests/
+  third_party/
+  utils/
 
 ** TODO Move memory out of the Lisp interpreter
 
-   - Make the Procdraw memory interpreter-agnostic to support
-     different interpreters using the same memory
-   - Rename the interpreter subproject to "lisp"
+- Make the Procdraw memory interpreter-agnostic to support
+  different interpreters using the same memory
+- Rename the interpreter subproject to "lisp"
 
 * Documentation
 ** WONTDO Move the documentation into a single file
 ** DONE Rename "arguments" to "parameters"                           :v0_1_0:
 ** TODO Add type of function: special-form or function
 
-   Traditional names used in Lisp:
+Traditional names used in Lisp:
 
-   | SUBR  | system | function     |
-   | FSUBR | system | special-form |
-   | EXPR  | user   | function     |
-   | FEXPR | user   | special-form |
+| SUBR  | system | function     |
+| FSUBR | system | special-form |
+| EXPR  | user   | function     |
+| FEXPR | user   | special-form |
 
 ** DONE Add a description
 ** DONE Add argument details
 * Website
 ** TODO Add breadcrumbs for docs pages
 
-   Docs / Function memb
+Docs / Function memb
 
-   - http://foundation.zurb.com/sites/docs/breadcrumbs.html
-   - https://developers.google.com/structured-data/breadcrumbs
+- http://foundation.zurb.com/sites/docs/breadcrumbs.html
+- https://developers.google.com/structured-data/breadcrumbs
 
 ** TODO Set Cache-Control headers
 
-   See:
-   - https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
-   - https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
-   - https://www.mnot.net/cache_docs/
-   - http://www.askapache.com/htaccess/apache-speed-cache-control.html
-   - https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
-   - https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
+See:
+
+- https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
+- https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
+- https://www.mnot.net/cache_docs/
+- http://www.askapache.com/htaccess/apache-speed-cache-control.html
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
+- https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
 
 ** TODO codes/ascii.html
 * Interpreter
 ** TODO Add pretty printing
 
-   - See: "Prettyprinting" by Derek Oppen
-     - ACM Transactions on Programming Languages and Systems
-     - Volume 2 Issue 4, Oct. 1980
-     - http://dl.acm.org/citation.cfm?id=357114.357115
-   - Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
-     - http://hdl.handle.net/1721.1/6504
+- See: "Prettyprinting" by Derek Oppen
+  - ACM Transactions on Programming Languages and Systems
+  - Volume 2 Issue 4, Oct. 1980
+  - http://dl.acm.org/citation.cfm?id=357114.357115
+- Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
+  - http://hdl.handle.net/1721.1/6504
 
 ** TODO Add binary file utils
 
-   - New byte array data type
-   - Use a hex dump for the string representation of a byte array (what
-     is shown in the Transcript): offset, hex values, and ASCII
-     rendering
-   - (load-file filename)
-     - Load a file from disk, returning a byte array
-   - (strings byte-array)
-     - Works like Unix strings -- returns a list of (offset, string)
-       pairs for ASCII text found in the byte array
+- New byte array data type
+- Use a hex dump for the string representation of a byte array (what
+  is shown in the Transcript): offset, hex values, and ASCII
+  rendering
+- (load-file filename)
+  - Load a file from disk, returning a byte array
+- (strings byte-array)
+  - Works like Unix strings -- returns a list of (offset, string)
+    pairs for ASCII text found in the byte array
 
 ** TODO Use an image file to persist interpreter state
 
-   - Make the image format as human readable as possible
-   - Need to handle references to shared data
-   - Need to handle cycles
-   - Partition the global environment into collections/modules and
-     store each in a separate file
-     - I'm hoping this will make it easier to extract bits of an image
-       for sharing
-     - Start with 2 collections: user and system
-     - By default a symbol is placed into the user collection
-     - Add functions for getting and setting a symbol's collection
-       membership
+- Make the image format as human readable as possible
+- Need to handle references to shared data
+- Need to handle cycles
+- Partition the global environment into collections/modules and
+  store each in a separate file
+  - I'm hoping this will make it easier to extract bits of an image
+    for sharing
+  - Start with 2 collections: user and system
+  - By default a symbol is placed into the user collection
+  - Add functions for getting and setting a symbol's collection
+    membership
 
-   Use a format of one dotted pair per symbol:
+Use a format of one dotted pair per symbol:
 
-   (symbol1 . val1)
-   (symbol2 . val2)
+(symbol1 . val1)
+(symbol2 . val2)
 
-   Depends on:
+Depends on:
 
-   - [[Shared reference support and cycle detection]]
-   - [[Name CFunctions]]
+- [[Shared reference support and cycle detection]]
+- [[Name CFunctions]]
 
 ** TODO Update the Reader to read floating point numbers             :v0_1_0:
 ** TODO Update the Reader API to support reading multiple objects from one input
-   <<Read multiple objects>>
+<<Read multiple objects>>
 
-   LispReader::SetInput(const std::string &str);
-   LispReader::Read(LispInterpreter *L);
+LispReader::SetInput(const std::string &str);
+LispReader::Read(LispInterpreter *L);
 
-   These methods are implemented. I just need to remove the
-   Read(LispInterpreter *L, const std::string &str) and make them
-   public.
+These methods are implemented. I just need to remove the
+Read(LispInterpreter *L, const std::string &str) and make them
+public.
 
-   I will need to add unit tests for multiple inputs.
+I will need to add unit tests for multiple inputs.
 
 ** TODO Implement image frame Signals
 
-   - Streams of bitmap images implementing the Signal interface.
-   - For doing real time image processing.
-   - The rendering process could be modified to act as a signal
-     generator so that I could do full-screen post processing on the
-     rendered images.
+- Streams of bitmap images implementing the Signal interface.
+- For doing real time image processing.
+- The rendering process could be modified to act as a signal
+  generator so that I could do full-screen post processing on the
+  rendered images.
 
 ** TODO Efficient symbol referencing from C++
 
-   Some options:
+Some options:
 
-   - Keep the existing SymbolRef(std::string name) API but use a
-     hashtable
-     - std::unordered_map<std::string, LispObjectPtr>
-   - String interning with a hashtable
-   - A global symbol table rather than per interpreter instance --
-     symbols can then be created and references stored once at program
-     start
-   - Use an object oriented extension API to create symbols needed by
-     an extension at extension registration -- references to the
-     symbols can then be stored on the extension instance and accessed
-     through the callback data argument (similar to how the interpreter
-     itself uses symbols -- references are stored at construction)
-   - Symbol table generation at compile time
-     - Mark symbols in C code with a macro
-     - Make a tool which scans through and generates a symbol table
-     - The symbol table is represented as an array on the interpreter
-     - And the symbol macro expands to a lookup into the array
+- Keep the existing SymbolRef(std::string name) API but use a
+  hashtable
+  - std::unordered_map<std::string, LispObjectPtr>
+- String interning with a hashtable
+- A global symbol table rather than per interpreter instance --
+  symbols can then be created and references stored once at program
+  start
+- Use an object oriented extension API to create symbols needed by
+  an extension at extension registration -- references to the
+  symbols can then be stored on the extension instance and accessed
+  through the callback data argument (similar to how the interpreter
+  itself uses symbols -- references are stored at construction)
+- Symbol table generation at compile time
+  - Mark symbols in C code with a macro
+  - Make a tool which scans through and generates a symbol table
+  - The symbol table is represented as an array on the interpreter
+  - And the symbol macro expands to a lookup into the array
 
 ** TODO Use a shorter name for "lambda"
 
-   Such as:
+Such as:
 
-   - \ (Haskell)
-   - fn (Clojure, newLISP, Standard ML)
-   - fun (Erlang, OCaml)
-   - func (Go)
+- \ (Haskell)
+- fn (Clojure, newLISP, Standard ML)
+- fun (Erlang, OCaml)
+- func (Go)
 
 ** TODO Initialise signal keys at construction
 
-   Some syntax options:
+Some syntax options:
 
-   - (setq saw1 (saw 10))
-   - (setq saw1 (saw 'freq 10))
-   - (setq saw1 (saw {'freq 10}))
+- (setq saw1 (saw 10))
+- (setq saw1 (saw 'freq 10))
+- (setq saw1 (saw {'freq 10}))
 
-   Rather than
+Rather than
 
-   (setq saw1 (saw))
-   (put saw1 'freq 10)
+(setq saw1 (saw))
+(put saw1 'freq 10)
 
 ** TODO Add a /=> disconnect signal function
 ** TODO Use Hz for oscillator frequencies
 
-   Use Hz for oscillator frequencies rather than cycles per frame.
+Use Hz for oscillator frequencies rather than cycles per frame.
 
-   Mapping Hz to cycles per frame will depend on exactly how I proceed
-   with updating the signals vs rendering ('game loop'). But if I
-   continue with vsync, then:
+Mapping Hz to cycles per frame will depend on exactly how I proceed
+with updating the signals vs rendering ('game loop'). But if I
+continue with vsync, then:
 
-   - For windowed mode, I can get the refresh rate from DwmGetCompositionTimingInfo
-   - For full-screen, IDXGIOutput::GetDisplayModeList and what is requested in DXGI_SWAP_CHAIN_DESC.RefreshRate
-   - Or empirically using my existing ProcdrawApp::FramesPerSecond
+- For windowed mode, I can get the refresh rate from DwmGetCompositionTimingInfo
+- For full-screen, IDXGIOutput::GetDisplayModeList and what is requested in DXGI_SWAP_CHAIN_DESC.RefreshRate
+- Or empirically using my existing ProcdrawApp::FramesPerSecond
 
-   See http://stackoverflow.com/questions/18844654/how-to-find-out-real-screen-refresh-rate-not-the-rounded-number
+See http://stackoverflow.com/questions/18844654/how-to-find-out-real-screen-refresh-rate-not-the-rounded-number
 
-   Also could set a value in the interpreter called fixed-fps and use
-   that in signals to calculate update per frame from a frequency in
-   Hz.
+Also could set a value in the interpreter called fixed-fps and use
+that in signals to calculate update per frame from a frequency in
+Hz.
 
 ** TODO Add a for-each function
 
-   (for-each list fun)
+(for-each list fun)
 
 ** TODO Add function(s) for generating ranges of numbers
 
-   Either functions that return actual list data structures or that
-   return iterators/generators that build values lazily.
+Either functions that return actual list data structures or that
+return iterators/generators that build values lazily.
 
-   Like:
+Like:
 
-   - APL iota
-   - Python 2 [[https://docs.python.org/2/library/functions.html#range][range]]
-   - Python 3 [[https://docs.python.org/3/library/stdtypes.html#typesseq-range][Ranges]]
-   - vvvv spreads
-     - http://vvvv.org/documentation/spread-nodes
-     - http://vvvv.org/documentation/linearspread-%28spreads%29
+- APL iota
+- Python 2 [[https://docs.python.org/2/library/functions.html#range][range]]
+- Python 3 [[https://docs.python.org/3/library/stdtypes.html#typesseq-range][Ranges]]
+- vvvv spreads
+  - http://vvvv.org/documentation/spread-nodes
+  - http://vvvv.org/documentation/linearspread-%28spreads%29
 
 ** TODO Add a mechanism for iterating over a cartesian product
 
-   Either with a list comprehension or by building a list of all
-   combinations.
+Either with a list comprehension or by building a list of all
+combinations.
 
-   See:
+See:
 
-   - https://docs.python.org/2/library/itertools.html#itertools.product
-   - http://vvvv.org/documentation/cross-%282d%29
-   - http://vvvv.org/documentation/cross-%283d%29
+- https://docs.python.org/2/library/itertools.html#itertools.product
+- http://vvvv.org/documentation/cross-%282d%29
+- http://vvvv.org/documentation/cross-%283d%29
 
 ** TODO Add a list-length function
 
-   See http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length
+See http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length
 
 ** TODO Add an equal function
 
-   Which recurses into conses, comparing their components.
+Which recurses into conses, comparing their components.
 
-   See http://www.lispworks.com/documentation/HyperSpec/Body/f_equal.htm#equal
+See http://www.lispworks.com/documentation/HyperSpec/Body/f_equal.htm#equal
 
 ** TODO Create an extensions API
-   <<Extensions API>>
+<<Extensions API>>
 
-   And minimise the runtime, with as much as possible structured as
-   extensions.
+And minimise the runtime, with as much as possible structured as
+extensions.
 
-   I have:
+I have:
 
-   - RegisterProcdrawAppFunctions() in procdraw_app_lisp.h
-   - RegisterSignals() in signals.h
+- RegisterProcdrawAppFunctions() in procdraw_app_lisp.h
+- RegisterSignals() in signals.h
 
-   Create a standard structure for expressing extensions. Maybe an
-   object with a Register() function. Or an Exports() function.
+Create a standard structure for expressing extensions. Maybe an
+object with a Register() function. Or an Exports() function.
 
-   With the addition of the void *data parameter to
-   LispInterpreter::SetGlobalCFunction(), I should be able to bind
-   directly to the GLRenderer instance, rather than going through
-   ProcdrawApp.
+With the addition of the void *data parameter to
+LispInterpreter::SetGlobalCFunction(), I should be able to bind
+directly to the GLRenderer instance, rather than going through
+ProcdrawApp.
 
-   First step could be to keep the use of a C function but standardise
-   on a naming convention of Register<Extension name>:
+First step could be to keep the use of a C function but standardise
+on a naming convention of Register<Extension name>:
 
-   - RegisterSignals
-   - RegisterGLRenderer
-   - RegisterUtil
+- RegisterSignals
+- RegisterGLRenderer
+- RegisterUtil
 
-   Cleanup:
+Cleanup:
 
-   - Remove procdraw_app_lisp.* (becomes part of GLRenderer)
-   - Remove lisp_functions.*
-     - The functions that are part of LispInterpreter are bound in
-       LispInterpreter
-     - The functions that are not part of LispInterpreter have
-       Register function(s) added beside the code they bind
-   - Extensions/*_ext.cc and extensions/*_ext.h
+- Remove procdraw_app_lisp.* (becomes part of GLRenderer)
+- Remove lisp_functions.*
+  - The functions that are part of LispInterpreter are bound in
+    LispInterpreter
+  - The functions that are not part of LispInterpreter have
+    Register function(s) added beside the code they bind
+- Extensions/*_ext.cc and extensions/*_ext.h
 
-   Rename util.h to math.h and util.cc to math.cc.
+Rename util.h to math.h and util.cc to math.cc.
 
-   A possible object-based API:
+A possible object-based API:
 
-   class Extension {
-   public:
-       virtual void Register(LispInterpreter &L) = 0;
-       virtual ~Extension() { }
-   };
+class Extension {
+public:
+    virtual void Register(LispInterpreter &L) = 0;
+    virtual ~Extension() { }
+};
 
-   And:
+And:
 
-   LispInterpreter::Extend(Extension &ext)
-   {
-       ext.Register(this);
-   }
+LispInterpreter::Extend(Extension &ext)
+{
+    ext.Register(this);
+}
 
 ** TODO Add shared reference support and cycle detection to data structure printing and reading
-   <<Shared reference support and cycle detection>>
+<<Shared reference support and cycle detection>>
 
 ** TODO Name CFunctions
-   <<Name CFunctions>>
+<<Name CFunctions>>
 
-   When I am further with my serialization and implementation of
-   image-based storage, I will need some way to name CFunctions.
+When I am further with my serialization and implementation of
+image-based storage, I will need some way to name CFunctions.
 
-   Right now, if I implement table printing, I would get something
-   like this for a signal:
+Right now, if I implement table printing, I would get something
+like this for a signal:
 
-   { step <CFunction> }
+{ step <CFunction> }
 
-   But which CFunction?
+But which CFunction?
 
-   Sketch of an initial idea:
+Sketch of an initial idea:
 
-   1. A hash table storing mapping from string name to function
-      pointer
-   2. Functions must be registered in this hash table
-   3. The CFunction object includes the name in addition to the
-      function pointer
-   4. SetGlobalCFunction takes a name (which is looked up in table 1)
-      rather than a function pointer directly
-   5. When we print a CFunction we get <CFunction:NAME> or such
-   6. When we read <CFunction:NAME>, we look up the table 1
+1. A hash table storing mapping from string name to function
+   pointer
+2. Functions must be registered in this hash table
+3. The CFunction object includes the name in addition to the
+   function pointer
+4. SetGlobalCFunction takes a name (which is looked up in table 1)
+   rather than a function pointer directly
+5. When we print a CFunction we get <CFunction:NAME> or such
+6. When we read <CFunction:NAME>, we look up the table 1
 
-   MakeCFunction would also take a name rather than a function
-   pointer.
+MakeCFunction would also take a name rather than a function
+pointer.
 
 ** TODO Add hex literals to the reader syntax
 ** TODO Add signalp
 
-   I have a C function Signalp but it isn't yet accessible from Lisp.
+I have a C function Signalp but it isn't yet accessible from Lisp.
 
 ** TODO Add logical operators: and, or, not
 
-   - not [DONE]
-   - and
-   - or
+- not [DONE]
+- and
+- or
 
 ** WONTDO Remove the Boolean and Null types
 
-   And use the traditional Lisp treatment of boolean values:
+And use the traditional Lisp treatment of boolean values:
 
-   - nil is false
-   - everything else is true
-   - nil and t are Symbols and are self evaluating
+- nil is false
+- everything else is true
+- nil and t are Symbols and are self evaluating
 
-   The not function then becomes an alias of null as they have the same
-   behaviour.
+The not function then becomes an alias of null as they have the same
+behaviour.
 
-   See also: [[Is Constant]]
+See also: [[Is Constant]]
 
-   However, this change would cause trouble for round-tripping with
-   notations that have an explicit Boolean type (such as JSON).
+However, this change would cause trouble for round-tripping with
+notations that have an explicit Boolean type (such as JSON).
 
 ** TODO Add an 'is constant' flag to Symbols
-   <<Is constant>>
+<<Is constant>>
 
-   Add an 'is constant' flag to Symbols. That determines if it's
-   possible to change their value.
+Add an 'is constant' flag to Symbols. That determines if it's
+possible to change their value.
 
-   Set on
+Set on
 
-   - pi
-   - nil
-   - t
+- pi
+- nil
+- t
 
 ** TODO Add a phase offset to my oscillator signals
 ** TODO Minimise the size of the Lisp machine core
 
-   Minimise the size of the Procdraw Lisp machine core
+Minimise the size of the Procdraw Lisp machine core
 
-   - Minimise the number of types
-   - Minimise the number of functions
+- Minimise the number of types
+- Minimise the number of functions
 
-   I'm thinking in terms of scope something like a bytecoded virtual
-   machine: data types, logic, arithmetic, lambdas, and eval.
+I'm thinking in terms of scope something like a bytecoded virtual
+machine: data types, logic, arithmetic, lambdas, and eval.
 
-   Move non-core functions (including read and print) to separate
-   source file(s).
+Move non-core functions (including read and print) to separate
+source file(s).
 
-   See also: [[Extensions API]].
+See also: [[Extensions API]].
 
 ** TODO Add a lisp binding for list
 
-   The interpreter has a list function but it is not accessible from Lisp.
+The interpreter has a list function but it is not accessible from Lisp.
 
 ** TODO Add sigmap and sigmap2 functions
 
-   - (sigmap f signal)
-   - (sigmap2 f signal1 signal2)
+- (sigmap f signal)
+- (sigmap2 f signal1 signal2)
 
-   Returns a new signal that applies the provided function f to the
-   signal input(s).
+Returns a new signal that applies the provided function f to the
+signal input(s).
 
-   Can then remove the optional mapfun parameter from =>.
+Can then remove the optional mapfun parameter from =>.
 
 ** TODO Add support for constant sources to =>
 
-   If the source of a => is a signal (signalp), put a connection.
-   Otherwise, set the value with put-slot and remove any existing
-   connection.
+If the source of a => is a signal (signalp), put a connection.
+Otherwise, set the value with put-slot and remove any existing
+connection.
 
 ** DONE Add a toggle signal type
 
-   Inputs:
+Inputs:
 
-   - Event signal
-   - Signal A (default to constant 0)
-   - Signal B (default to constant 1)
+- Event signal
+- Signal A (default to constant 0)
+- Signal B (default to constant 1)
 
-   The value of the toggle signal is either A or B and toggles between
-   them each time the input event signal is true.
+The value of the toggle signal is either A or B and toggles between
+them each time the input event signal is true.
 
-   Example usage: stopping and starting an oscillation
+Example usage: stopping and starting an oscillation
 
-   (=> (sigmap2 * (toggle key-space) midic-1-1) saw1 'freq)
+(=> (sigmap2 * (toggle key-space) midic-1-1) saw1 'freq)
 
 ** TODO Add a counter signal type
 
-   Inputs:
+Inputs:
 
-   - incr event signal
-   - decr event signal
-   - min (default to 0)
-   - max (default to 1)
-   - incr-amount (default to 1/8)
-   - wrap boolean defaults to false
+- incr event signal
+- decr event signal
+- min (default to 0)
+- max (default to 1)
+- incr-amount (default to 1/8)
+- wrap boolean defaults to false
 
-   Signal value:
+Signal value:
 
-   - A number >= min and <= max
-   - If incr, val += incr-amount
-   - If decr, val -= incr-amount
-   - If wrap is true, the value wraps, otherwise, it stops at the limits
+- A number >= min and <= max
+- If incr, val += incr-amount
+- If decr, val -= incr-amount
+- If wrap is true, the value wraps, otherwise, it stops at the limits
 
 ** TODO JSON parser
-   <<JSON parser>>
+<<JSON parser>>
 
-   Some C/C++ JSON parsers:
+Some C/C++ JSON parsers:
 
-   - https://github.com/open-source-parsers/jsoncpp
-   - https://github.com/nlohmann/json
-   - https://github.com/miloyip/rapidjson
-   - https://github.com/miloyip/nativejson-benchmark
-   - http://en.cppreference.com/w/cpp/links/libs
+- https://github.com/open-source-parsers/jsoncpp
+- https://github.com/nlohmann/json
+- https://github.com/miloyip/rapidjson
+- https://github.com/miloyip/nativejson-benchmark
+- http://en.cppreference.com/w/cpp/links/libs
 
 ** TODO JSON serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
 
-   Some ideas:
+Some ideas:
 
-   - A step sequencer
-   - A sound tracker like sequencer
-   - Algorithmic pattern generation
+- A step sequencer
+- A sound tracker like sequencer
+- Algorithmic pattern generation
 
 ** TODO Add fexprs
 ** TODO New Signals
 *** Desired behaviour and challenges
 
-    - Concise notation for signal value and update expressions; some
-      thoughts:
-      - $sig as reader macro for (sigval sig)
-      - (sig) instead of (sigval sig) -- signal as callable function
-      - [expr] rather than (lambda () expr)
-      - "\" as new spelling for "lambda" -- (\ () expr)
-    - Make update connections between things which are not generators
-      (both as source and target)
-      - such as updating draw colour based on a sin generator
-        - (<- color 'hue (\ () $sin1))
-        - (<- console-font-size [$midic-1-1])
-      - or updating a sin generator frequency from the value of a
-        function call (do I want this second one? that is: a source
-        that is not a generator?)
-    - Being able to update a generator, or processing function, bound
-      to a particular name
-      - for example if I did the following:
-        - (<- sigtarget 'key (sigmap sigsource f))
-        - sigsouce and f are looked up at evaluation of the sigmap
-          call and if I later rebind sigsource or f, the update
-          connection will still use the previous bindings
-      - if I instead use expressions and do name lookup at update time
-        (each frame say)
-        - (<- sigtarget 'key (\ () (f sigsource)))
-        - I can now rebind f or sigsource and the connection will use
-          the new bindings
-        - but it's harder to build dependency information
-        - f may do its own lookup of global names -- that is: there
-          may be dependencies that are within the body of f and not
-          explicitly in the expression provided to <-
-    - How to perform dependency updating?
-      - I currently do it on a lazy pull basis -- if I ask for the
-        value of a signal, I check to see if it's been updated for
-        this frame; if it hasn't yet, then I evaluate any update
-        expressions (and recursively this will result in dependencies
-        being updated)
-        - how should this interact with updates that occur within the
-          draw function? (user code updates a value with a dependent)
-        - if a signal generator is not evaluated for a particular
-          frame, it will not be stepped
-      - Another approach would be to reactively push changes through
-        the system -- if a value changes that others are depending on,
-        they get notifications of the change and update themselves
-        appropriately
-        - how should this interact with a generator that should only
-          update once per frame?
-      - A third approach would be to do all dependency updating at the
-        start of each frame
-        - similarly to the lazy updating: how should this interact
-          with updates that occur with the draw function? (user code
-          updates a value with a dependent)
-    - Signal containment would be good to add so that when an update
-      expression is evaluated, the sub-signals are searched for names
-      before searching globally. Then I can have self-contained
-      related signals that can be passed around, or stored in a
-      collection and iterated over.
-      - This could be done using explicit reference to signal members,
-        such as:
-        - (<- sig1 'key1 (\ (self) (sigval (get self 'subsig1))))
+- Concise notation for signal value and update expressions; some
+  thoughts:
+  - $sig as reader macro for (sigval sig)
+  - (sig) instead of (sigval sig) -- signal as callable function
+  - [expr] rather than (lambda () expr)
+  - "\" as new spelling for "lambda" -- (\ () expr)
+- Make update connections between things which are not generators
+  (both as source and target)
+  - such as updating draw colour based on a sin generator
+    - (<- color 'hue (\ () $sin1))
+    - (<- console-font-size [$midic-1-1])
+  - or updating a sin generator frequency from the value of a
+    function call (do I want this second one? that is: a source
+    that is not a generator?)
+- Being able to update a generator, or processing function, bound
+  to a particular name
+  - for example if I did the following:
+    - (<- sigtarget 'key (sigmap sigsource f))
+    - sigsouce and f are looked up at evaluation of the sigmap
+      call and if I later rebind sigsource or f, the update
+      connection will still use the previous bindings
+  - if I instead use expressions and do name lookup at update time
+    (each frame say)
+    - (<- sigtarget 'key (\ () (f sigsource)))
+    - I can now rebind f or sigsource and the connection will use
+      the new bindings
+    - but it's harder to build dependency information
+    - f may do its own lookup of global names -- that is: there
+      may be dependencies that are within the body of f and not
+      explicitly in the expression provided to <-
+- How to perform dependency updating?
+  - I currently do it on a lazy pull basis -- if I ask for the
+    value of a signal, I check to see if it's been updated for
+    this frame; if it hasn't yet, then I evaluate any update
+    expressions (and recursively this will result in dependencies
+    being updated)
+    - how should this interact with updates that occur within the
+      draw function? (user code updates a value with a dependent)
+    - if a signal generator is not evaluated for a particular
+      frame, it will not be stepped
+  - Another approach would be to reactively push changes through
+    the system -- if a value changes that others are depending on,
+    they get notifications of the change and update themselves
+    appropriately
+    - how should this interact with a generator that should only
+      update once per frame?
+  - A third approach would be to do all dependency updating at the
+    start of each frame
+    - similarly to the lazy updating: how should this interact
+      with updates that occur with the draw function? (user code
+      updates a value with a dependent)
+- Signal containment would be good to add so that when an update
+  expression is evaluated, the sub-signals are searched for names
+  before searching globally. Then I can have self-contained
+  related signals that can be passed around, or stored in a
+  collection and iterated over.
+  - This could be done using explicit reference to signal members,
+    such as:
+    - (<- sig1 'key1 (\ (self) (sigval (get self 'subsig1))))
 
 *** Expressions as signal generator sources
 
-    If I use expressions as update sources, then I no longer need to
-    wrap information sources in signals -- they can be variables or
-    function calls.
+If I use expressions as update sources, then I no longer need to
+wrap information sources in signals -- they can be variables or
+function calls.
 
-    - mouse position
-    - midi input
-    - key press state
+- mouse position
+- midi input
+- key press state
 
 *** Implementation thoughts
 **** Tables
 
-     Add a Table type, with some strategy for stable printing (keys
-     maintain their order). Either store internally as a property
-     list, or as a hashtable and sort keys at print.
+Add a Table type, with some strategy for stable printing (keys
+maintain their order). Either store internally as a property
+list, or as a hashtable and sort keys at print.
 
-     - (put table 'key val)
-     - (get table 'key)
-     - (<- table 'key expr)
-       - where expr is a lambda expression without arguments
-       - for example: (<- color 'hue (\ () (sin1)))
-     - a table may be called as a function
-       - a special key "--call" is looked up when a table is called as
-         a function (like Lua)
-       - for example:
-         - (put t1 '--call (\ (self b) (+ (get self 'a) b)))
-         - (t1 10)
+- (put table 'key val)
+- (get table 'key)
+- (<- table 'key expr)
+  - where expr is a lambda expression without arguments
+  - for example: (<- color 'hue (\ () (sin1)))
+- a table may be called as a function
+  - a special key "--call" is looked up when a table is called as
+    a function (like Lua)
+  - for example:
+    - (put t1 '--call (\ (self b) (+ (get self 'a) b)))
+    - (t1 10)
 
-     Signals (generators?) are then implemented as tables with step
-     functions as --call members.
+Signals (generators?) are then implemented as tables with step
+functions as --call members.
 
 **** Push connections ->
 
-     (-> table 'key 'targetname)
-     (-> table 'key 'target-table-name 'target-key)
-     (-> table 'key 'target-table-name 'target-key expr)
+(-> table 'key 'targetname)
+(-> table 'key 'target-table-name 'target-key)
+(-> table 'key 'target-table-name 'target-key expr)
 
 **** New 'formula' type
 
-     Introduce a new type to the language that works like a
-     spreadsheet formula. An object can either be a value (one of the
-     other types) or a formula. Evaluating a formula gets its value.
+Introduce a new type to the language that works like a
+spreadsheet formula. An object can either be a value (one of the
+other types) or a formula. Evaluating a formula gets its value.
 
-     (setq console-font-size (formula midic-1-1))
-     or
-     (setq console-font-size (<- midic-1-1))
+(setq console-font-size (formula midic-1-1))
+or
+(setq console-font-size (<- midic-1-1))
 
-     > console-font-size
-     36
-     > (formula console-font-size)
-     midic-1-1
-     > (numberp console-font-size)
-     true
-     > (formulap console-font-size)
-     true
+> console-font-size
+36
+> (formula console-font-size)
+midic-1-1
+> (numberp console-font-size)
+true
+> (formulap console-font-size)
+true
 
-     How to do scoped lookup for names in the formula? Such as a
-     generator with sub-generators.
+How to do scoped lookup for names in the formula? Such as a
+generator with sub-generators.
 
 **** Separate signal graph for connections
 
-     (progn
-       (setq saw1 (saw))
-       (setq sin1 (sin-osc))
-       (setq signal-graph
-         '((sin1 (freq (/ (* 11 60))))
-           (saw1 (freq (lerp (/ (* 7 60)) (/ 90) $sin1)))))
-       (def draw ()
-         (background 200 0.6 0.9)
-         (rotate-y $saw1)
-         (translate 3 0 0)
-         (rotate-y $saw1)
-         (color (lerp 5 9 $sin1)
-                (lerp 0.6 0.8 $sin1)
-                (lerp 0.6 0.8 $sin1))
-         (tetrahedron)))
+(progn
+  (setq saw1 (saw))
+  (setq sin1 (sin-osc))
+  (setq signal-graph
+    '((sin1 (freq (/ (* 11 60))))
+      (saw1 (freq (lerp (/ (* 7 60)) (/ 90) $sin1)))))
+  (def draw ()
+    (background 200 0.6 0.9)
+    (rotate-y $saw1)
+    (translate 3 0 0)
+    (rotate-y $saw1)
+    (color (lerp 5 9 $sin1)
+           (lerp 0.6 0.8 $sin1)
+           (lerp 0.6 0.8 $sin1))
+    (tetrahedron)))
 
 ** DONE Implement a Dictionary type
 *** DONE Make strings immutable
 *** DONE Modify LispInterpreter::Eq to compare string contents
 
-    - For numbers, compare val_
-    - For strings, they are equal if they have the same contents
-      - Compute a hash value on construction (make strings immutable)
-      - Compare hash values, if different then not equal, otherwise,
-        compare string contents
-    - For other types compare memory locations
-      - For booleans and null types this is safe as we always share
-        objects: there is exactly one true, false, and nil
+- For numbers, compare val_
+- For strings, they are equal if they have the same contents
+  - Compute a hash value on construction (make strings immutable)
+  - Compare hash values, if different then not equal, otherwise,
+    compare string contents
+- For other types compare memory locations
+  - For booleans and null types this is safe as we always share
+    objects: there is exactly one true, false, and nil
 
 *** DONE Implement C++ hash for LispObjectPtr
 ** TODO Use Dictionary for Signals rather than association list
@@ -673,66 +674,66 @@
 ** TODO Implement read and print Dictionary
 ** TODO Remove dotted pairs
 
-   A linked list element rest pointer always points to another list
-   cell or NIL (and not to any other data type).
+A linked list element rest pointer always points to another list
+cell or NIL (and not to any other data type).
 
-   (cons 'a 'b) => (a b) rather than (a . b)
-   (set-rest 'c '(a b)) => (a c) rather than (a . c)
+(cons 'a 'b) => (a b) rather than (a . b)
+(set-rest 'c '(a b)) => (a c) rather than (a . c)
 
-   NIL continues to represent the empty list.
+NIL continues to represent the empty list.
 
-   List functions:
+List functions:
 
-   (first list)
-   (second list)
-   (rest list)
-   (nth index list)
+(first list)
+(second list)
+(rest list)
+(nth index list)
 
-   would replace (car), (cdr), (cadr), (cddr), and so on.
+would replace (car), (cdr), (cadr), (cddr), and so on.
 
-   And:
+And:
 
-   (set-first val list)
-   (set-rest val list)
-   (set-nth index val list)
+(set-first val list)
+(set-rest val list)
+(set-nth index val list)
 
-   would replace (rplaca) and (rplacd)
+would replace (rplaca) and (rplacd)
 
-   Association lists would change:
+Association lists would change:
 
-   ((k1 v1) (k2 v2))
+((k1 v1) (k2 v2))
 
-   rather than:
+rather than:
 
-   ((k1 . v1) (k2 . v2))
+((k1 . v1) (k2 . v2))
 
-   - https://arclanguage.github.io/ref/assoc.html
-   - http://www.newlisp.org/newlisp_manual.html#lookup
+- https://arclanguage.github.io/ref/assoc.html
+- http://www.newlisp.org/newlisp_manual.html#lookup
 
-   (second (assoc key alist))
+(second (assoc key alist))
 
-   rather than:
+rather than:
 
-   (cdr (assoc key alist))
+(cdr (assoc key alist))
 
 ** TODO Implement lexical scoping instead of dynamic
 
-   - Nested environments
-   - Looking up a bound value starts at the innermost environment and
-     works outwards, returning the value of the first binding found
-   - Setting a binding value starts searching at the innermost
-     environment and sets the value of the first binding found; if
-     none is found a binding is added to the global environment
-   - Don't implement closures initially -- a function application is
-     always evaluated with the global environment plus parameter
-     bindings
-   - For closures, figure out a good way to attach an environment to a
-     lambda such that the lambda expression can be viewed and edited
-     (object metadata?)
+- Nested environments
+- Looking up a bound value starts at the innermost environment and
+  works outwards, returning the value of the first binding found
+- Setting a binding value starts searching at the innermost
+  environment and sets the value of the first binding found; if
+  none is found a binding is added to the global environment
+- Don't implement closures initially -- a function application is
+  always evaluated with the global environment plus parameter
+  bindings
+- For closures, figure out a good way to attach an environment to a
+  lambda such that the lambda expression can be viewed and edited
+  (object metadata?)
 
-   See: http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Environment-Operations.html
+See: http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-ref/Environment-Operations.html
 
-   Use the Dictionary type to store bindings.
+Use the Dictionary type to store bindings.
 
 *** Start of environment unit test
 
@@ -762,166 +763,166 @@ TEST_CASE("Environment")
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 ** TODO Optimize common text layout changes
 
-   At the moment I do a fresh lay out each time a line changes. I
-   could optimize some common text and layout changes. For example,
-   when a character is added to the end of the line, increment the
-   char count for the line and append the glyph.
+At the moment I do a fresh lay out each time a line changes. I
+could optimize some common text and layout changes. For example,
+when a character is added to the end of the line, increment the
+char count for the line and append the glyph.
 
-   I'll need to take care that LineBuffer and TextLayout stay
-   synchronized.
+I'll need to take care that LineBuffer and TextLayout stay
+synchronized.
 
 * Graphics
 ** FtTextRenderer
 *** DONE Calculate the baseline position from font metrics           :v0_1_0:
 *** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
 *** DONE Split FtTextRenderer::Text into separate layout and draw
-    <<Text layout function>>
+<<Text layout function>>
 
-    Then I can cache layouts for text -- very little text will change
-    every frame
+Then I can cache layouts for text -- very little text will change
+every frame
 
 *** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
 *** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
 *** TODO Set text color programmatically
 
-    Right now it is specified directly in the shader source
+Right now it is specified directly in the shader source
 
 ** TODO Add specular lighting
 
-   Use the Phong reflection model or the Blinn–Phong reflection model.
+Use the Phong reflection model or the Blinn–Phong reflection model.
 
 ** TODO Add camera positioning functions
 
-   - (camera x y z)
-   - (look-at x y z)
-   - (camera-up x y z)
+- (camera x y z)
+- (look-at x y z)
+- (camera-up x y z)
 
 ** TODO Add point light source lighting
 ** TODO Add a world matrix stack
 
-   To save and backtrack to world matrix states.
+To save and backtrack to world matrix states.
 
 ** TODO Relative cursor 3D graphics
 
-   Turtle-like graphics for 3D.
+Turtle-like graphics for 3D.
 
-   - (left angle)
-   - (right angle)
-   - (up angle)
-   - (down angle)
-   - (roll angle)
-   - (forward distance)
+- (left angle)
+- (right angle)
+- (up angle)
+- (down angle)
+- (roll angle)
+- (forward distance)
 
-   Object placement (such as drawing a cube) is then made at the cursor
-   position.
+Object placement (such as drawing a cube) is then made at the cursor
+position.
 
-   See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
+See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
 
 ** TODO Try out some simple drawing persistence
 
-   Such as keeping a history of what was drawn and then redrawing it
-   for some number of frames.
+Such as keeping a history of what was drawn and then redrawing it
+for some number of frames.
 
 ** TODO Add a function to draw a sphere
 
-   - UV sphere
-   - and/or Icosphere
+- UV sphere
+- and/or Icosphere
 
-   http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
+http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
 
 ** TODO Add a function to draw a superegg
 
-   https://en.wikipedia.org/wiki/Superegg
+https://en.wikipedia.org/wiki/Superegg
 
 ** TODO Add a function to draw a point
 ** TODO Support resizing of the Procdraw window
 ** TODO Add a material color stack
 
-   And use when drawing the console, so that we don't clobber the
-   color.
+And use when drawing the console, so that we don't clobber the
+color.
 
 ** TODO Add a function to draw the Utah Teapot
 
-   Use the original data set and tessellate it myself.
+Use the original data set and tessellate it myself.
 
-   - https://en.wikipedia.org/wiki/Utah_teapot
-   - http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
-   - http://www.sjbaker.org/teapot/teaset.tgz
+- https://en.wikipedia.org/wiki/Utah_teapot
+- http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
+- http://www.sjbaker.org/teapot/teaset.tgz
 
 ** TODO Have a look at raymarching and sphere tracing with distance functions for geometry
 
-   - https://youtu.be/s8nFqwOho-s
-   - http://mercury.sexy/hg_sdf/
-   - http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
-   - "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
-     - The Visual Computer 12(10) 1996, pp 527-545
-     - http://graphics.cs.illinois.edu/papers/zeno
+- https://youtu.be/s8nFqwOho-s
+- http://mercury.sexy/hg_sdf/
+- http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
+- "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
+  - The Visual Computer 12(10) 1996, pp 527-545
+  - http://graphics.cs.illinois.edu/papers/zeno
 
 ** TODO Vector text rendering
 * Procedural generation
 ** TODO Make L-systems available from Lisp and a mechanism for drawing
 ** TODO Draw a Menger Sponge
 
-   https://en.wikipedia.org/wiki/Menger_sponge
+https://en.wikipedia.org/wiki/Menger_sponge
 
 ** TODO Implement Noise functions
 * Hardware integration
 ** TODO Add Xbox 360 controller input
 ** TODO Add Wacom tablet input
 
-   Either interface directly with the device or via OSC.
+Either interface directly with the device or via OSC.
 
-   - http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
-   - [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
-   - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
+- http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
+- [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
+- http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
 
 ** TODO Serial connection to Arduino
 
-   Some references for information on Arduino serial buffering and
-   latency:
+Some references for information on Arduino serial buffering and
+latency:
 
-   - https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
-   - http://forum.arduino.cc/index.php?topic=96.0
-   - http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
+- https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
+- http://forum.arduino.cc/index.php?topic=96.0
+- http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
 
-   Some data format options:
+Some data format options:
 
-   - Stream of dotted pair s-expressions
-     - (name . val)
-   - https://github.com/bakercp/PacketSerial
-   - https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
+- Stream of dotted pair s-expressions
+  - (name . val)
+- https://github.com/bakercp/PacketSerial
+- https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
 
 ** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
 
-   - https://www.arduino.cc/en/Main/ArduinoBoard101
-   - http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
+- https://www.arduino.cc/en/Main/ArduinoBoard101
+- http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
 
 ** TODO Take a look at the Adafruit BNO055 board
 
-   https://www.adafruit.com/products/2472
+https://www.adafruit.com/products/2472
 
 ** TODO Add Fadecandy integration
 
-   https://github.com/scanlime/fadecandy
+https://github.com/scanlime/fadecandy
 
 ** TODO Add Nexus integration
 
-   Will require a WebSocket library and a [[JSON parser]] for
-   receiving updates.
+Will require a WebSocket library and a [[JSON parser]] for
+receiving updates.
 
-   (nexus-bind hostname port-number component-path model-path var-name)
+(nexus-bind hostname port-number component-path model-path var-name)
 
-   (nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
+(nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
 
-   The value of the Lisp object some-obj will be updated to reflect
-   the value of {nexus.procdraw.someObj}.model.value from the Nexus.
+The value of the Lisp object some-obj will be updated to reflect
+the value of {nexus.procdraw.someObj}.model.value from the Nexus.
 
-   I'll want a way to unbind also.
+I'll want a way to unbind also.
 
-   Some C/C++ WebSocket client libraries:
+Some C/C++ WebSocket client libraries:
 
-   - https://github.com/zaphoyd/websocketpp
-   - https://github.com/dhbaird/easywsclient
+- https://github.com/zaphoyd/websocketpp
+- https://github.com/dhbaird/easywsclient
 
 ** TODO Add audio input
 
@@ -931,142 +932,142 @@ later look at other analysis such as frequency composition.
 * Procdraw program
 ** TODO Procdraw client/server
 
-   Interact with a running procdraw from another process using a Unix
-   domain socket -- make a file in /tmp (private to the user).
+Interact with a running procdraw from another process using a Unix
+domain socket -- make a file in /tmp (private to the user).
 
-   Add command line options to talk to the running procdraw, such as:
+Add command line options to talk to the running procdraw, such as:
 
-   - procdraw eval EXPRESSION
-   - procdraw set IDENTIFIER EXPRESSION
-   - procdraw get IDENTIFIER
+- procdraw eval EXPRESSION
+- procdraw set IDENTIFIER EXPRESSION
+- procdraw get IDENTIFIER
 
 ** TODO Internationalize procdraw using GNU gettext
 ** TODO Add a function to load code from a file                      :v0_1_0:
 
-   (source filename)
+(source filename)
 
-   or
+or
 
-   (load filename)
+(load filename)
 
-   Depends on [[Read multiple objects]]
+Depends on [[Read multiple objects]]
 
 ** TODO Add functions for navigating the filesystem
 
-   - (getcwd) -- POSIX getcwd()
-   - (chdir) -- POSIX chdir()
-   - (list-files)
+- (getcwd) -- POSIX getcwd()
+- (chdir) -- POSIX chdir()
+- (list-files)
 
 ** TODO Add an alternate notation to the command processor
 
-   Similar to the Scheme 48 command processor's comma commands or the
-   BBC BASIC star commands:
+Similar to the Scheme 48 command processor's comma commands or the
+BBC BASIC star commands:
 
-   - http://s48.org/1.9.2/manual/manual-Z-H-4.html#node_chap_3
-   - http://chrisacorns.computinghistory.org.uk/docs/Acorn/Manuals/Acorn_ADFSUG.pdf
+- http://s48.org/1.9.2/manual/manual-Z-H-4.html#node_chap_3
+- http://chrisacorns.computinghistory.org.uk/docs/Acorn/Manuals/Acorn_ADFSUG.pdf
 
-   So, instead of
+So, instead of
 
-   > (pwd)
-   "/home/simon"
-   > (list-files "projects")
-   ("project1" "project2")
+> (pwd)
+"/home/simon"
+> (list-files "projects")
+("project1" "project2")
 
-   We would have
+We would have
 
-   > *pwd
-   /home/simon
-   > *ls projects
-   project1
-   project2
+> *pwd
+/home/simon
+> *ls projects
+project1
+project2
 
-   Maybe PowerShell could also be a model here -- that the outputs of
-   commands are streams of objects that can be both displayed in the
-   REPL and processed with code.
+Maybe PowerShell could also be a model here -- that the outputs of
+commands are streams of objects that can be both displayed in the
+REPL and processed with code.
 
 ** TODO Use tick count for signal updating
 
-   Change the mechanism used to determine if a signal needs to be
-   updated for this frame.
+Change the mechanism used to determine if a signal needs to be
+updated for this frame.
 
-   Rather than a set of updated signals that must be cleared, store a
-   tick or frame count. Each signal keeps the value for when it was
-   last updated. At the end of each frame, the tick count value is
-   incremented.
+Rather than a set of updated signals that must be cleared, store a
+tick or frame count. Each signal keeps the value for when it was
+last updated. At the end of each frame, the tick count value is
+incremented.
 
-   frame_counter.h
+frame_counter.h
 
 ** INPROGRESS Implement a basic console and REPL                     :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
 *** DONE Replace CursorForward(n) and CursorBackward(n)
 
-    Replace CursorForward(n) and CursorBackward(n) with:
+Replace CursorForward(n) and CursorBackward(n) with:
 
-    - ForwardChar()
-    - BackwardChar()
+- ForwardChar()
+- BackwardChar()
 
 *** DONE Add console content lines
 
-    I currently have only a single line, where the cursor is
+I currently have only a single line, where the cursor is
 
 *** DONE Wrap lines longer than the console width
 
-    Probably want to do this with [[Text layout function]]
+Probably want to do this with [[Text layout function]]
 
 *** DONE Position cursor when input line is wrapped
 *** DONE Scroll the console when we reach the bottom
 *** TODO Scolling when cursor at end of full width line
 
-    I'm not scrolling properly when the input line is at the bottom of
-    the screen and the input line fills the width of the console.
+I'm not scrolling properly when the input line is at the bottom of
+the screen and the input line fills the width of the console.
 
-    Either include the wrapped cursor in the inputNumLines, or switch
-    to the use of a right hand side gutter to indicate that the cursor
-    is at the end of a line that has the maximum number of displayable
-    characters.
+Either include the wrapped cursor in the inputNumLines, or switch
+to the use of a right hand side gutter to indicate that the cursor
+is at the end of a line that has the maximum number of displayable
+characters.
 
 *** TODO Provide scrollback to view lines that have scrolled off the top
 
-    Up to some maximum number of stored lines
+Up to some maximum number of stored lines
 
 ** TODO Implement an editor
 
-   Make a TextWidget class that is a super class of Console and
-   TextEditor. Provides common functionality such as:
+Make a TextWidget class that is a super class of Console and
+TextEditor. Provides common functionality such as:
 
-   - list of TextLayout
-   - viewport positioning (what lines to show --
-     displayFromLogicalLine and displayFromPhysicalLine)
-   - cursor position
-   - drawing of text
-   - drawing of cursor
+- list of TextLayout
+- viewport positioning (what lines to show --
+  displayFromLogicalLine and displayFromPhysicalLine)
+- cursor position
+- drawing of text
+- drawing of cursor
 
 ** TODO Implement autocomplete for symbols
 ** TODO Implement matching parens highlighting
 ** TODO Add in-program help
 
-   Read in the Documentation XML
+Read in the Documentation XML
 
 ** TODO Add a watch function
 
-   (watch expr)
+(watch expr)
 
-   such as:
+such as:
 
-   (watch '(frames-per-second))
+(watch '(frames-per-second))
 
-   Evaluates the expression on a regular basis (every frame?
-   configurable?) and displays the result on screen. Maybe in the top
-   right, with multiple watch expressions stacked vertically.
+Evaluates the expression on a regular basis (every frame?
+configurable?) and displays the result on screen. Maybe in the top
+right, with multiple watch expressions stacked vertically.
 
 ** TODO Implement a tiling window manager
 
-   To manage REPL and editors
+To manage REPL and editors
 
 * Tests
 ** TODO Use propositions for test names
 
-   As if prefixed by "test that..." or "check that...".
+As if prefixed by "test that..." or "check that...".
 
 *** TODO interpreter_tests/test_lisp_interpreter.cpp
 *** DONE interpreter_tests/test_lisp_printer.cpp
