@@ -1,6 +1,6 @@
 #pragma once
 
-#include "font_utils.h"
+#include "procdraw/utils/font_utils.h"
 #include <GL/glew.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H

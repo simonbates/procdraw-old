@@ -1,4 +1,4 @@
-#include "alsa_midi_client.h"
+#include "procdraw/alsa_midi/alsa_midi_client.h"
 #include <stdexcept>
 
 namespace procdraw {

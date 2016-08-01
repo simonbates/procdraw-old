@@ -1,4 +1,4 @@
-#include "lsystem.h"
+#include "procdraw/utils/lsystem.h"
 #include "gtest/gtest.h"
 
 TEST(LsystemTest, Algae)

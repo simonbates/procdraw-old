@@ -43,8 +43,8 @@ Optional dependencies:
 
 ### Configure the font
 
-Edit the file `src/graphics/font_config.h` and set `CodeFontFilePath`
-to a suitable monospaced font on your system.
+Edit the file `include/procdraw/graphics/font_config.h` and set
+`CodeFontFilePath` to a suitable monospaced font on your system.
 
 ### Build and run the tests
 

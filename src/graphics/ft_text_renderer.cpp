@@ -1,9 +1,9 @@
 #define GLM_FORCE_RADIANS
 
-#include "ft_text_renderer.h"
-#include "font_config.h"
-#include "gl_util.h"
-#include "utils.h"
+#include "procdraw/graphics/ft_text_renderer.h"
+#include "procdraw/graphics/font_config.h"
+#include "procdraw/graphics/gl_util.h"
+#include "procdraw/utils/utils.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include <stdexcept>

@@ -6,5 +6,5 @@ add_library(utils
     utils.cpp)
 
 target_include_directories(utils
-    PUBLIC .
+    PUBLIC ${PROCDRAW_INCLUDE_DIR}
     PUBLIC ${GLM_DIR})

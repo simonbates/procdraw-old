@@ -1,12 +1,12 @@
 #pragma once
 
-#include "glrenderer.h"
-#include "lisp_interpreter.h"
-#include "cli.h"
-#include "console.h"
-#include "command_processor.h"
-#include "frame_counter.h"
-#include "alsa_midi_client.h"
+#include "procdraw/graphics/glrenderer.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw/procdraw/cli.h"
+#include "procdraw/procdraw/console.h"
+#include "procdraw/procdraw/command_processor.h"
+#include "procdraw/procdraw/frame_counter.h"
+#include "procdraw/alsa_midi/alsa_midi_client.h"
 #include <memory>
 #include <string>
 #include <vector>

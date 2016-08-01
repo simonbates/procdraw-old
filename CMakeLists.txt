@@ -45,6 +45,10 @@ set(TINYXML2_DIR ${PROJECT_SOURCE_DIR}/third_party/tinyxml2)
 add_library(tinyxml2 ${TINYXML2_DIR}/tinyxml2.cpp)
 target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
 
+# Procdraw include directory
+
+set(PROCDRAW_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+
 # Platform-specific compiler settings
 
 if (WIN32)

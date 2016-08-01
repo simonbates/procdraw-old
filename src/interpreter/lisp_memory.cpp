@@ -1,5 +1,5 @@
-#include "lisp_memory.h"
-#include "lisp_interpreter.h"
+#include "procdraw/interpreter/lisp_memory.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
 #include <functional>
 #include <limits>
 #include <memory>

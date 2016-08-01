@@ -7,7 +7,7 @@ add_library(interpreter
     signals.cpp)
 
 target_include_directories(interpreter
-    PUBLIC .)
+    PUBLIC ${PROCDRAW_INCLUDE_DIR})
 
 target_link_libraries(interpreter
     utils)

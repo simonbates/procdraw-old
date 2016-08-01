@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lisp_interpreter.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
 #include "tinyxml2.h"
 #include <string>
 #include <vector>

@@ -1,8 +1,8 @@
-#include "glrenderer.h"
-#include "color.h"
-#include "sdl_util.h"
-#include "gl_util.h"
-#include "utils.h"
+#include "procdraw/graphics/glrenderer.h"
+#include "procdraw/utils/color.h"
+#include "procdraw/graphics/sdl_util.h"
+#include "procdraw/graphics/gl_util.h"
+#include "procdraw/utils/utils.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include <iostream>

@@ -1,6 +1,6 @@
-#include "procdraw_app.h"
-#include "procdraw_app_lisp.h"
-#include "signals.h"
+#include "procdraw/procdraw/procdraw_app.h"
+#include "procdraw/procdraw/procdraw_app_lisp.h"
+#include "procdraw/interpreter/signals.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 

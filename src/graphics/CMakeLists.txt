@@ -6,7 +6,7 @@ add_library(graphics
     sdl_util.cpp)
 
 target_include_directories(graphics
-    PUBLIC .
+    PUBLIC ${PROCDRAW_INCLUDE_DIR}
     PUBLIC ${FT2_INCLUDE_DIRS}
     PRIVATE ${SDL2_INCLUDE_DIRS}
     PRIVATE ${OPENGL_INCLUDE_DIRS}

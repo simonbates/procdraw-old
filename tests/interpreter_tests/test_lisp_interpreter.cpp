@@ -1,4 +1,4 @@
-#include "lisp_interpreter.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
 #include "catch.hpp"
 #include <cmath>
 

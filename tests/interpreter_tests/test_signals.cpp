@@ -1,6 +1,6 @@
-#include "signals.h"
-#include "lisp_interpreter.h"
-#include "utils.h"
+#include "procdraw/interpreter/signals.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw/utils/utils.h"
 #include "catch.hpp"
 
 TEST_CASE("Signals")

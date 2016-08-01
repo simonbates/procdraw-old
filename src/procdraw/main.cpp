@@ -1,5 +1,5 @@
-#include "sdl_util.h"
-#include "procdraw_app.h"
+#include "procdraw/graphics/sdl_util.h"
+#include "procdraw/procdraw/procdraw_app.h"
 
 int main()
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "procdraw_app.h"
-#include "lisp_interpreter.h"
+#include "procdraw/procdraw/procdraw_app.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
 
 namespace procdraw {
 

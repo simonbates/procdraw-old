@@ -1,5 +1,5 @@
-#include "lisp_printer.h"
-#include "lisp_interpreter.h"
+#include "procdraw/interpreter/lisp_printer.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
 
 namespace procdraw {
 

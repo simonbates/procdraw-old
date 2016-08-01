@@ -7,6 +7,7 @@ add_executable(procdraw
     procdraw_app_lisp.cpp)
 
 target_include_directories(procdraw
+    PRIVATE ${PROCDRAW_INCLUDE_DIR}
     PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(procdraw

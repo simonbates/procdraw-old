@@ -1,4 +1,4 @@
-#include "sdl_util.h"
+#include "procdraw/graphics/sdl_util.h"
 #include <stdexcept>
 
 namespace procdraw {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lisp_reader.h"
+#include "procdraw/interpreter/lisp_reader.h"
 #include <string>
 
 namespace procdraw {

@@ -1,5 +1,5 @@
-#include "lisp_interpreter.h"
-#include "lisp_functions.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw/interpreter/lisp_functions.h"
 #include <cmath>
 
 namespace procdraw {
