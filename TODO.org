@@ -1065,16 +1065,10 @@ right, with multiple watch expressions stacked vertically.
 To manage REPL and editors
 
 * Tests
-** TODO Use propositions for test names
+** WONTDO Use propositions for test names
 
 As if prefixed by "test that..." or "check that...".
 
-*** TODO interpreter_tests/test_lisp_interpreter.cpp
-*** DONE interpreter_tests/test_lisp_printer.cpp
-*** TODO interpreter_tests/test_lisp_reader.cpp
-*** TODO interpreter_tests/test_signals.cpp
-*** TODO utils_tests/test_color.cpp
-*** TODO utils_tests/test_font_utils.cpp
-*** TODO utils_tests/test_line_buffer.cpp
-*** TODO utils_tests/test_lsystem.cpp
-*** TODO utils_tests/test_utils.cpp
+** INPROGRESS Convert tests to Google Test
+** INPROGRESS Run the function_spec_tests under the Google Test runner
+** TODO Switch over to a single Google Test runner and don't use CTest
