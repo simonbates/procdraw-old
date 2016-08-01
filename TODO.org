@@ -1070,5 +1070,5 @@ To manage REPL and editors
 As if prefixed by "test that..." or "check that...".
 
 ** INPROGRESS Convert tests to Google Test
-** INPROGRESS Run the function_spec_tests under the Google Test runner
+** DONE Run the function_spec_tests under the Google Test runner
 ** TODO Switch over to a single Google Test runner and don't use CTest
