@@ -12,5 +12,5 @@ check-fns:
 
 .PHONY: cpplint
 cpplint:
-	find src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
+	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +

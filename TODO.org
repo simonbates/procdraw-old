@@ -1004,7 +1004,7 @@ https://github.com/g-truc/glm
 
 https://github.com/leethomason/tinyxml2
 
-** TODO Remove top level src directory and add include directory; rename extras to scripts
+** DONE Remove top level src directory and add include directory; rename extras to scripts
 
 procdraw/
   Documentation/
