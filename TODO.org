@@ -2,102 +2,6 @@
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: indent
 
-* Project
-** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
-** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
-** DONE Add a note on font_config.h to the README.md
-** TODO Add a "Getting Started" section to the README.md
-** TODO Set up Procdraw installation and add note to the README.md
-** TODO Put each class into its own translation unit
-
-- SomeClass.h
-- SomeClass.cpp
-
-** TODO Version Procdraw
-
-Could use Semantic Versioning
-
-http://semver.org/
-
-Store the version info in the top CMakeLists.txt
-
-Then generate a C header file with version info that I can show in
-the program.
-
-https://cmake.org/cmake/help/v3.0/command/configure_file.html
-
-For pre-release, append -alpha.SOMETHING
-
-See SemVer 2.0 spec point 11
-
-For example:
-
-0.1.0-alpha.1234
-
-Maybe add +GITHASH ?
-
-Options for .SOMETHING:
-
-- timestamp of HEAD commit
-- number of commits at HEAD
-
-Can get the timestamp of the HEAD commit with:
-
-git show -s --format=%ct HEAD
-
-Can get the number of commits with:
-
-git rev-list --count HEAD
-
-Can get the commit hash with:
-
-git rev-parse --verify --short HEAD
-
-See also:
-
-- http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
-- http://www.lionhack.com/2014/03/09/software-versioning-strategies/
-- http://programmers.stackexchange.com/a/151558
-
-** DONE Publish the documentation to a static website
-** TODO Set up Cppcheck
-** INPROGRESS Port Procdraw to Windows
-*** DONE Pull GLM in from GitHub
-
-https://github.com/g-truc/glm
-
-*** DONE Use TinyXML2
-
-https://github.com/leethomason/tinyxml2
-
-** TODO Remove top level src directory and add include directory; rename extras to scripts
-
-procdraw/
-  Documentation/
-  alsa_midi/
-  examples/
-  graphics/
-  include/
-    procdraw/
-      alsa_midi/
-      graphics/
-      interpreter/
-      procdraw/
-      utils/
-  interpreter/
-  procdraw/
-  scripts/
-  site/
-  tests/
-  third_party/
-  utils/
-
-** TODO Move memory out of the Lisp interpreter
-
-- Make the Procdraw memory interpreter-agnostic to support
-  different interpreters using the same memory
-- Rename the interpreter subproject to "lisp"
-
 * Documentation
 ** WONTDO Move the documentation into a single file
 ** DONE Rename "arguments" to "parameters"                           :v0_1_0:
@@ -112,26 +16,157 @@ Traditional names used in Lisp:
 
 ** DONE Add a description
 ** DONE Add argument details
-* Website
-** TODO Add breadcrumbs for docs pages
+* Graphics
+** FtTextRenderer
+*** DONE Calculate the baseline position from font metrics           :v0_1_0:
+*** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
+*** DONE Split FtTextRenderer::Text into separate layout and draw
+<<Text layout function>>
 
-Docs / Function memb
+Then I can cache layouts for text -- very little text will change
+every frame
 
-- http://foundation.zurb.com/sites/docs/breadcrumbs.html
-- https://developers.google.com/structured-data/breadcrumbs
+*** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
+*** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
+*** TODO Set text color programmatically
 
-** TODO Set Cache-Control headers
+Right now it is specified directly in the shader source
 
-See:
+** TODO Add specular lighting
 
-- https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
-- https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
-- https://www.mnot.net/cache_docs/
-- http://www.askapache.com/htaccess/apache-speed-cache-control.html
-- https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
-- https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
+Use the Phong reflection model or the Blinn–Phong reflection model.
 
-** TODO codes/ascii.html
+** TODO Add camera positioning functions
+
+- (camera x y z)
+- (look-at x y z)
+- (camera-up x y z)
+
+** TODO Add point light source lighting
+** TODO Add a world matrix stack
+
+To save and backtrack to world matrix states.
+
+** TODO Relative cursor 3D graphics
+
+Turtle-like graphics for 3D.
+
+- (left angle)
+- (right angle)
+- (up angle)
+- (down angle)
+- (roll angle)
+- (forward distance)
+
+Object placement (such as drawing a cube) is then made at the cursor
+position.
+
+See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
+
+** TODO Try out some simple drawing persistence
+
+Such as keeping a history of what was drawn and then redrawing it
+for some number of frames.
+
+** TODO Add a function to draw a sphere
+
+- UV sphere
+- and/or Icosphere
+
+http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
+
+** TODO Add a function to draw a superegg
+
+https://en.wikipedia.org/wiki/Superegg
+
+** TODO Add a function to draw a point
+** TODO Support resizing of the Procdraw window
+** TODO Add a material color stack
+
+And use when drawing the console, so that we don't clobber the
+color.
+
+** TODO Add a function to draw the Utah Teapot
+
+Use the original data set and tessellate it myself.
+
+- https://en.wikipedia.org/wiki/Utah_teapot
+- http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
+- http://www.sjbaker.org/teapot/teaset.tgz
+
+** TODO Have a look at raymarching and sphere tracing with distance functions for geometry
+
+- https://youtu.be/s8nFqwOho-s
+- http://mercury.sexy/hg_sdf/
+- http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
+- "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
+  - The Visual Computer 12(10) 1996, pp 527-545
+  - http://graphics.cs.illinois.edu/papers/zeno
+
+** TODO Vector text rendering
+* Hardware integration
+** TODO Add Xbox 360 controller input
+** TODO Add Wacom tablet input
+
+Either interface directly with the device or via OSC.
+
+- http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
+- [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
+- http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
+
+** TODO Serial connection to Arduino
+
+Some references for information on Arduino serial buffering and
+latency:
+
+- https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
+- http://forum.arduino.cc/index.php?topic=96.0
+- http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
+
+Some data format options:
+
+- Stream of dotted pair s-expressions
+  - (name . val)
+- https://github.com/bakercp/PacketSerial
+- https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
+
+** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
+
+- https://www.arduino.cc/en/Main/ArduinoBoard101
+- http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
+
+** TODO Take a look at the Adafruit BNO055 board
+
+https://www.adafruit.com/products/2472
+
+** TODO Add Fadecandy integration
+
+https://github.com/scanlime/fadecandy
+
+** TODO Add Nexus integration
+
+Will require a WebSocket library and a [[JSON parser]] for
+receiving updates.
+
+(nexus-bind hostname port-number component-path model-path var-name)
+
+(nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
+
+The value of the Lisp object some-obj will be updated to reflect
+the value of {nexus.procdraw.someObj}.model.value from the Nexus.
+
+I'll want a way to unbind also.
+
+Some C/C++ WebSocket client libraries:
+
+- https://github.com/zaphoyd/websocketpp
+- https://github.com/dhbaird/easywsclient
+
+** TODO Add audio input
+
+To make audio reactive graphics. Could start with just volume and
+later look at other analysis such as frequency composition.
+
 * Interpreter
 ** TODO Add pretty printing
 
@@ -759,176 +794,6 @@ TEST_CASE("Environment")
 
 }
 
-* Utils
-** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
-** TODO Optimize common text layout changes
-
-At the moment I do a fresh lay out each time a line changes. I
-could optimize some common text and layout changes. For example,
-when a character is added to the end of the line, increment the
-char count for the line and append the glyph.
-
-I'll need to take care that LineBuffer and TextLayout stay
-synchronized.
-
-* Graphics
-** FtTextRenderer
-*** DONE Calculate the baseline position from font metrics           :v0_1_0:
-*** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
-*** DONE Split FtTextRenderer::Text into separate layout and draw
-<<Text layout function>>
-
-Then I can cache layouts for text -- very little text will change
-every frame
-
-*** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
-*** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
-*** TODO Set text color programmatically
-
-Right now it is specified directly in the shader source
-
-** TODO Add specular lighting
-
-Use the Phong reflection model or the Blinn–Phong reflection model.
-
-** TODO Add camera positioning functions
-
-- (camera x y z)
-- (look-at x y z)
-- (camera-up x y z)
-
-** TODO Add point light source lighting
-** TODO Add a world matrix stack
-
-To save and backtrack to world matrix states.
-
-** TODO Relative cursor 3D graphics
-
-Turtle-like graphics for 3D.
-
-- (left angle)
-- (right angle)
-- (up angle)
-- (down angle)
-- (roll angle)
-- (forward distance)
-
-Object placement (such as drawing a cube) is then made at the cursor
-position.
-
-See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
-
-** TODO Try out some simple drawing persistence
-
-Such as keeping a history of what was drawn and then redrawing it
-for some number of frames.
-
-** TODO Add a function to draw a sphere
-
-- UV sphere
-- and/or Icosphere
-
-http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
-
-** TODO Add a function to draw a superegg
-
-https://en.wikipedia.org/wiki/Superegg
-
-** TODO Add a function to draw a point
-** TODO Support resizing of the Procdraw window
-** TODO Add a material color stack
-
-And use when drawing the console, so that we don't clobber the
-color.
-
-** TODO Add a function to draw the Utah Teapot
-
-Use the original data set and tessellate it myself.
-
-- https://en.wikipedia.org/wiki/Utah_teapot
-- http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
-- http://www.sjbaker.org/teapot/teaset.tgz
-
-** TODO Have a look at raymarching and sphere tracing with distance functions for geometry
-
-- https://youtu.be/s8nFqwOho-s
-- http://mercury.sexy/hg_sdf/
-- http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
-- "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
-  - The Visual Computer 12(10) 1996, pp 527-545
-  - http://graphics.cs.illinois.edu/papers/zeno
-
-** TODO Vector text rendering
-* Procedural generation
-** TODO Make L-systems available from Lisp and a mechanism for drawing
-** TODO Draw a Menger Sponge
-
-https://en.wikipedia.org/wiki/Menger_sponge
-
-** TODO Implement Noise functions
-* Hardware integration
-** TODO Add Xbox 360 controller input
-** TODO Add Wacom tablet input
-
-Either interface directly with the device or via OSC.
-
-- http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
-- [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
-- http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
-
-** TODO Serial connection to Arduino
-
-Some references for information on Arduino serial buffering and
-latency:
-
-- https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
-- http://forum.arduino.cc/index.php?topic=96.0
-- http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
-
-Some data format options:
-
-- Stream of dotted pair s-expressions
-  - (name . val)
-- https://github.com/bakercp/PacketSerial
-- https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
-
-** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
-
-- https://www.arduino.cc/en/Main/ArduinoBoard101
-- http://www.intel.com/content/www/us/en/do-it-yourself/arduino-101.html
-
-** TODO Take a look at the Adafruit BNO055 board
-
-https://www.adafruit.com/products/2472
-
-** TODO Add Fadecandy integration
-
-https://github.com/scanlime/fadecandy
-
-** TODO Add Nexus integration
-
-Will require a WebSocket library and a [[JSON parser]] for
-receiving updates.
-
-(nexus-bind hostname port-number component-path model-path var-name)
-
-(nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
-
-The value of the Lisp object some-obj will be updated to reflect
-the value of {nexus.procdraw.someObj}.model.value from the Nexus.
-
-I'll want a way to unbind also.
-
-Some C/C++ WebSocket client libraries:
-
-- https://github.com/zaphoyd/websocketpp
-- https://github.com/dhbaird/easywsclient
-
-** TODO Add audio input
-
-To make audio reactive graphics. Could start with just volume and
-later look at other analysis such as frequency composition.
-
 * Procdraw program
 ** TODO Procdraw client/server
 
@@ -1064,6 +929,109 @@ right, with multiple watch expressions stacked vertically.
 
 To manage REPL and editors
 
+* Procedural generation
+** TODO Make L-systems available from Lisp and a mechanism for drawing
+** TODO Draw a Menger Sponge
+
+https://en.wikipedia.org/wiki/Menger_sponge
+
+** TODO Implement Noise functions
+* Project
+** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
+** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
+** DONE Add a note on font_config.h to the README.md
+** TODO Add a "Getting Started" section to the README.md
+** TODO Set up Procdraw installation and add note to the README.md
+** TODO Put each class into its own translation unit
+
+- SomeClass.h
+- SomeClass.cpp
+
+** TODO Version Procdraw
+
+Could use Semantic Versioning
+
+http://semver.org/
+
+Store the version info in the top CMakeLists.txt
+
+Then generate a C header file with version info that I can show in
+the program.
+
+https://cmake.org/cmake/help/v3.0/command/configure_file.html
+
+For pre-release, append -alpha.SOMETHING
+
+See SemVer 2.0 spec point 11
+
+For example:
+
+0.1.0-alpha.1234
+
+Maybe add +GITHASH ?
+
+Options for .SOMETHING:
+
+- timestamp of HEAD commit
+- number of commits at HEAD
+
+Can get the timestamp of the HEAD commit with:
+
+git show -s --format=%ct HEAD
+
+Can get the number of commits with:
+
+git rev-list --count HEAD
+
+Can get the commit hash with:
+
+git rev-parse --verify --short HEAD
+
+See also:
+
+- http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+- http://www.lionhack.com/2014/03/09/software-versioning-strategies/
+- http://programmers.stackexchange.com/a/151558
+
+** DONE Publish the documentation to a static website
+** TODO Set up Cppcheck
+** INPROGRESS Port Procdraw to Windows
+*** DONE Pull GLM in from GitHub
+
+https://github.com/g-truc/glm
+
+*** DONE Use TinyXML2
+
+https://github.com/leethomason/tinyxml2
+
+** TODO Remove top level src directory and add include directory; rename extras to scripts
+
+procdraw/
+  Documentation/
+  alsa_midi/
+  examples/
+  graphics/
+  include/
+    procdraw/
+      alsa_midi/
+      graphics/
+      interpreter/
+      procdraw/
+      utils/
+  interpreter/
+  procdraw/
+  scripts/
+  site/
+  tests/
+  third_party/
+  utils/
+
+** TODO Move memory out of the Lisp interpreter
+
+- Make the Procdraw memory interpreter-agnostic to support
+  different interpreters using the same memory
+- Rename the interpreter subproject to "lisp"
+
 * Tests
 ** WONTDO Use propositions for test names
 
@@ -1072,3 +1040,35 @@ As if prefixed by "test that..." or "check that...".
 ** INPROGRESS Convert tests to Google Test
 ** DONE Run the function_spec_tests under the Google Test runner
 ** TODO Switch over to a single Google Test runner and don't use CTest
+* Utils
+** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
+** TODO Optimize common text layout changes
+
+At the moment I do a fresh lay out each time a line changes. I
+could optimize some common text and layout changes. For example,
+when a character is added to the end of the line, increment the
+char count for the line and append the glyph.
+
+I'll need to take care that LineBuffer and TextLayout stay
+synchronized.
+
+* Website
+** TODO Add breadcrumbs for docs pages
+
+Docs / Function memb
+
+- http://foundation.zurb.com/sites/docs/breadcrumbs.html
+- https://developers.google.com/structured-data/breadcrumbs
+
+** TODO Set Cache-Control headers
+
+See:
+
+- https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
+- https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
+- https://www.mnot.net/cache_docs/
+- http://www.askapache.com/htaccess/apache-speed-cache-control.html
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
+- https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
+
+** TODO codes/ascii.html
