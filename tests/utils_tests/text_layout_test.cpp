@@ -13,7 +13,7 @@ protected:
     procdraw::TextLayout<float> layout_;
 };
 
-TEST_F(TextLayoutTest, BlockCursorAt0_0ForEmptyLayout)
+TEST_F(TextLayoutTest, BlockCursorAtOriginForEmptyLayout)
 {
     int x, y, width, height;
     layout_.CalculateFixedWidthBlockCursorPos(0, x, y, width, height);
@@ -23,7 +23,7 @@ TEST_F(TextLayoutTest, BlockCursorAt0_0ForEmptyLayout)
     EXPECT_EQ(14, height);
 }
 
-TEST_F(TextLayoutTest, BlockCursorAt0_0ForSingleEmptyLine)
+TEST_F(TextLayoutTest, BlockCursorAtOriginForSingleEmptyLine)
 {
     int x, y, width, height;
     layout_.OpenNewLine();

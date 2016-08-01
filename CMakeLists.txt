@@ -60,7 +60,6 @@ endif()
 add_subdirectory(src/utils)
 add_subdirectory(src/interpreter)
 add_subdirectory(tests)
-add_subdirectory(tests/utils_tests)
 add_subdirectory(tests/interpreter_tests)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
