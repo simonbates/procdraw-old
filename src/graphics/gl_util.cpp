@@ -3,13 +3,6 @@
 
 namespace procdraw {
 
-    void ThrowOnGlewError(GLenum err)
-    {
-        if (err != GLEW_OK) {
-            throw std::runtime_error(reinterpret_cast<const char*>(glewGetErrorString(err)));
-        }
-    }
-
     GLuint CompileProgram(const GLchar **vertexShaderSource, const GLchar **fragmentShaderSource,
                           std::map<GLuint, const GLchar*> attribLocations)
     {

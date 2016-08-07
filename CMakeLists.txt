@@ -12,16 +12,46 @@ enable_testing()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     include(FindPkgConfig)
     pkg_search_module(SDL2 REQUIRED sdl2)
-    pkg_search_module(FT2 REQUIRED freetype2)
     pkg_search_module(ALSA REQUIRED alsa)
     find_package(OpenGL REQUIRED)
-    find_package(GLEW REQUIRED)
     find_package(Threads REQUIRED)
 endif()
 
 # Catch
 
 set(CATCH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/Catch/single_include)
+
+# FreeType 2
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(FREETYPE2_DIR ${PROJECT_SOURCE_DIR}/third_party/freetype-2.6.5)
+    add_library(freetype2
+        ${FREETYPE2_DIR}/src/base/ftsystem.c
+        ${FREETYPE2_DIR}/src/base/ftinit.c
+        ${FREETYPE2_DIR}/src/base/ftdebug.c
+        ${FREETYPE2_DIR}/src/base/ftbase.c
+        ${FREETYPE2_DIR}/src/base/ftbitmap.c
+        ${FREETYPE2_DIR}/src/sfnt/sfnt.c
+        ${FREETYPE2_DIR}/src/truetype/truetype.c
+        ${FREETYPE2_DIR}/src/raster/raster.c
+        ${FREETYPE2_DIR}/src/smooth/smooth.c
+        ${FREETYPE2_DIR}/src/autofit/autofit.c
+        ${FREETYPE2_DIR}/src/pshinter/pshinter.c
+        ${FREETYPE2_DIR}/src/psnames/psnames.c)
+    target_include_directories(freetype2
+        PUBLIC ${PROJECT_SOURCE_DIR}/third_party/freetype2-custom
+        PUBLIC ${FREETYPE2_DIR}/include)
+    target_compile_definitions(freetype2 PRIVATE FT2_BUILD_LIBRARY)
+endif()
+
+# GL3W
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
+    add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
+    target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
+    target_link_libraries(gl3w dl)
+endif()
 
 # GLM
 

@@ -275,10 +275,10 @@ namespace procdraw {
             ThrowSdlError();
         }
 
-        glewExperimental = GL_TRUE;
-        ThrowOnGlewError(glewInit());
+        if (gl3wInit()) {
+            throw std::runtime_error("Failed to initialize OpenGL");
+        }
 
-        std::cout << "GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
         std::cout << "OpenGL vendor: " << glGetString(GL_VENDOR) << std::endl;
         std::cout << "OpenGL renderer: " << glGetString(GL_RENDERER) << std::endl;
         std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;

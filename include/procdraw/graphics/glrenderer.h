@@ -4,7 +4,7 @@
 
 #include "camera.h"
 #include "ft_text_renderer.h"
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include "glm/glm.hpp"

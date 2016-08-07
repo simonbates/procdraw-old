@@ -26,16 +26,14 @@ Building on Linux
 
 ### Install dependencies
 
-Procdraw has the following external dependencies:
+Procdraw has the following system dependencies:
 
-* CMake
+* OpenGL 3.2
 * GNU C++ compiler
-* GNU Readline
+* CMake
 * SDL2
-* OpenGL
-* GLEW
-* FreeType 2
 * ALSA (for MIDI input)
+* GNU Readline
 
 Optional dependencies:
 
@@ -46,7 +44,7 @@ Optional dependencies:
 Edit the file `include/procdraw/graphics/font_config.h` and set
 `CodeFontFilePath` to a suitable monospaced font on your system.
 
-### Build and run the tests
+### Build Procdraw and run the tests
 
 Procdraw uses the CMake build system. To build Procdraw and run the
 tests:

@@ -14,3 +14,8 @@ check-fns:
 cpplint:
 	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
+
+.PHONY: gl3w
+gl3w:
+	mkdir -p third_party/gl3w_out
+	cd third_party/gl3w_out && python ../gl3w/gl3w_gen.py

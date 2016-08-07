@@ -1,7 +1,7 @@
 #pragma once
 
 #include "procdraw/utils/font_utils.h"
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "glm/glm.hpp"
