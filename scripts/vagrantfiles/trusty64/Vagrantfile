@@ -1,0 +1,15 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.vm.box = "ubuntu/trusty64"
+    config.vm.synced_folder "../../..", "/procdraw"
+
+    config.vm.provision "shell", inline: "sudo apt-get -y update"
+    config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
+    config.vm.provision "shell", inline: "sudo apt-get -y install build-essential cmake"
+    config.vm.provision "shell", inline: "sudo apt-get -y install libreadline-dev libsdl2-dev jing"
+
+    config.vm.provision "shell", path: "install_user_files.sh", privileged: false
+
+end
