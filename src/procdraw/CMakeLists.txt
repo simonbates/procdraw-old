@@ -11,5 +11,8 @@ target_include_directories(procdraw
 
 target_link_libraries(procdraw
     interpreter
-    graphics
-    alsa_midi)
+    graphics)
+
+if(PROCDRAW_ENABLE_ALSA_MIDI)
+    target_link_libraries(procdraw alsa_midi)
+endif()

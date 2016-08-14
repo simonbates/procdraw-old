@@ -3,7 +3,10 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Procdraw)
 
 # Generate compile_commands.json for use with irony-mode
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# CTest
 
 enable_testing()
 
@@ -12,9 +15,14 @@ enable_testing()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     include(FindPkgConfig)
     pkg_search_module(SDL2 REQUIRED sdl2)
-    pkg_search_module(ALSA REQUIRED alsa)
     find_package(OpenGL REQUIRED)
     find_package(Threads REQUIRED)
+    set(PROCDRAW_ENABLE_ALSA_MIDI ON)
+endif()
+
+if(PROCDRAW_ENABLE_ALSA_MIDI)
+    find_package(ALSA REQUIRED)
+    add_definitions(-DPROCDRAW_ENABLE_ALSA_MIDI)
 endif()
 
 # Catch
@@ -81,11 +89,11 @@ set(PROCDRAW_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 # Platform-specific compiler settings
 
-if (WIN32)
+if(WIN32)
     add_definitions(-DUNICODE -D_UNICODE -D_USE_MATH_DEFINES)
 endif()
 
-if (CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wpedantic -Wall")
 endif()
 
@@ -96,8 +104,11 @@ add_subdirectory(src/interpreter)
 add_subdirectory(tests)
 add_subdirectory(tests/interpreter_tests)
 
+if(PROCDRAW_ENABLE_ALSA_MIDI)
+    add_subdirectory(src/alsa_midi)
+endif()
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_subdirectory(src/graphics)
-    add_subdirectory(src/alsa_midi)
     add_subdirectory(src/procdraw)
 endif()
