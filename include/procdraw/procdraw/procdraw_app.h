@@ -2,7 +2,6 @@
 
 #include "procdraw/graphics/glrenderer.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
-#include "procdraw/procdraw/cli.h"
 #include "procdraw/procdraw/console.h"
 #include "procdraw/procdraw/command_processor.h"
 #include "procdraw/procdraw/frame_counter.h"
@@ -33,7 +32,6 @@ namespace procdraw {
         LispObjectPtr S_LOG_MIDI;
         LispObjectPtr S_SHOW_REPL;
         LispObjectPtr S_OUT;
-        std::unique_ptr<CLI> cli_;
         std::unique_ptr<Console> console_;
         FrameCounter frameCounter_;
         AlsaMidiClient midiClient_;

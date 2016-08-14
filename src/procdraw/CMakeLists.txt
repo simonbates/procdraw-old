@@ -1,5 +1,4 @@
 add_executable(procdraw
-    cli.cpp
     console.cpp
     frame_counter.cpp
     main.cpp
@@ -13,5 +12,4 @@ target_include_directories(procdraw
 target_link_libraries(procdraw
     interpreter
     graphics
-    alsa_midi
-    readline)
+    alsa_midi)

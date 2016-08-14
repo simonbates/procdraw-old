@@ -27,7 +27,6 @@ namespace procdraw {
         L_.Set(S_LOG_MIDI, L_.False, L_.Nil);
         L_.Set(S_SHOW_REPL, L_.True, L_.Nil);
 
-        cli_ = std::unique_ptr<CLI>(new CLI(this));
         console_ = std::unique_ptr<Console>(new Console(&renderer_, this, renderer_.Width(), renderer_.Height()));
 
         console_->Println("Procdraw");
@@ -73,7 +72,6 @@ namespace procdraw {
                     break;
                 }
             }
-            cli_->Poll();
             midiClient_.Poll(this);
             L_.Call("draw");
             if (showReplVal) {

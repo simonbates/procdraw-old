@@ -33,7 +33,6 @@ Procdraw has the following system dependencies:
 * CMake
 * SDL2
 * ALSA (for MIDI input)
-* GNU Readline
 
 Optional dependencies:
 
