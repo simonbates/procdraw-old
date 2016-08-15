@@ -5,8 +5,8 @@
 #include "camera.h"
 #include "ft_text_renderer.h"
 #include <GL/gl3w.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+#include PROCDRAW_SDL2_H
+#include PROCDRAW_SDL2_OPENGL_H
 #include "glm/glm.hpp"
 #include <memory>
 #include <string>

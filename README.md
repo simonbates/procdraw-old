@@ -26,7 +26,7 @@ Building on Linux
 
 ### Install dependencies
 
-Procdraw has the following system dependencies:
+Procdraw has the following build dependencies:
 
 * OpenGL 3.2
 * GNU C++ compiler
@@ -73,13 +73,32 @@ Procdaw can be run from the build directory:
 $ src/procdraw/procdraw
 ```
 
-Building on Windows (partial port, work in progress)
-----------------------------------------------------
+Building on Windows
+-------------------
 
-Dependencies:
+### Install dependencies
 
-- Visual Studio Community 2015 (with C++ tools and Windows SDK)
-- CMake
+Procdraw has the following build dependencies:
+
+* OpenGL 3.2
+* Visual Studio Community 2015 (with C++ tools and Windows SDK)
+* CMake
+* SDL2
+
+SDL2 can be downloaded from the [SDL
+website](https://www.libsdl.org/). Download the development libraries
+for Windows Visual C++ and unpack to your filesystem. To tell Procdraw
+where to find the SDL2 files, please set an environment variable,
+`PROCDRAW_SDL2_DIR`, to the location that the distribution was
+unpacked to (such as `C:/SDL/SDL2-2.0.4`).
+
+### Configure the font
+
+Edit the file `include/procdraw/graphics/font_config.h` and set
+`CodeFontFilePath` to a suitable monospaced font on your system (such
+as `"C:/Windows/Fonts/consola.ttf"`).
+
+### Build Procdraw and run the tests
 
 Run CMake to generate the Visual Studio solution:
 
@@ -99,30 +118,6 @@ To build in Visual Studio:
 To run the tests in Visual Studio:
 
 - Build the `RUN_TESTS` project
-
-Running Procdraw from Emacs
----------------------------
-
-Start by configuring Procdraw as the inferior lisp program:
-
-```
-(setq inferior-lisp-program "/path/to/procdraw")
-```
-
-Procdraw can then be started from Emacs with:
-
-```
-M-x run-lisp
-```
-
-When expressions are evaluated (C-x C-e) in Lisp mode, they will be
-sent to Procdraw. To make a Lisp buffer, you can open a Lisp file, or
-create a new buffer with:
-
-```
-C-x b BUFFER-NAME (such as *procdraw*)
-M-x lisp-mode
-```
 
 Connecting ALSA MIDI to Procdraw
 --------------------------------

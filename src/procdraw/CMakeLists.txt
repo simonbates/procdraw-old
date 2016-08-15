@@ -16,3 +16,10 @@ target_link_libraries(procdraw
 if(PROCDRAW_ENABLE_ALSA_MIDI)
     target_link_libraries(procdraw alsa_midi)
 endif()
+
+if(WIN32)
+    add_custom_command(TARGET procdraw POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            ${PROCDRAW_SDL2_DLL}
+            $<TARGET_FILE_DIR:procdraw>)
+endif()

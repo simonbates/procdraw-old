@@ -995,7 +995,7 @@ See also:
 
 ** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
-** INPROGRESS Port Procdraw to Windows
+** DONE Port Procdraw to Windows
 *** DONE Pull GLM in from GitHub
 
 https://github.com/g-truc/glm

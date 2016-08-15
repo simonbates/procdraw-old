@@ -1,7 +1,7 @@
 #include "procdraw/procdraw/procdraw_app.h"
 #include "procdraw/procdraw/procdraw_app_lisp.h"
 #include "procdraw/interpreter/signals.h"
-#include <SDL2/SDL.h>
+#include PROCDRAW_SDL2_H
 #include <iostream>
 
 static const int numMidiControllers = 33;

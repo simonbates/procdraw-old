@@ -3,7 +3,7 @@
 #include "procdraw/graphics/glrenderer.h"
 #include "procdraw/utils/line_buffer.h"
 #include "procdraw/procdraw/command_processor.h"
-#include <SDL2/SDL.h>
+#include PROCDRAW_SDL2_H
 #include <vector>
 
 namespace procdraw {

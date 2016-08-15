@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include "procdraw/graphics/sdl_util.h"
 #include "procdraw/procdraw/procdraw_app.h"
 
