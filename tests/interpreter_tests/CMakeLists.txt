@@ -1,9 +1,11 @@
-file(GLOB INTERPRETER_TESTS_SOURCES "*.cpp")
-
 include_directories(${CATCH_INCLUDE_DIR})
 
 add_executable(interpreter_tests
-    ${INTERPRETER_TESTS_SOURCES})
+    main.cpp
+    test_lisp_interpreter.cpp
+    test_lisp_printer.cpp
+    test_lisp_reader.cpp
+    test_signals.cpp)
 
 target_link_libraries(interpreter_tests
     interpreter)

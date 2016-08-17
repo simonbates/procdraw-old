@@ -278,6 +278,11 @@ namespace procdraw {
         }
     }
 
+    std::string LispInterpreter::PrettyPrintToString(LispObjectPtr obj, int margin, int indent)
+    {
+        return prettyPrinter_.PrintToString(this, obj, margin, indent);
+    }
+
     std::string LispInterpreter::PrintToString(LispObjectPtr obj)
     {
         return printer_.PrintToString(this, obj);

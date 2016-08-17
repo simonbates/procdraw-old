@@ -3,6 +3,7 @@
 #include "lisp_memory.h"
 #include "lisp_reader.h"
 #include "lisp_printer.h"
+#include "prettyprinter.h"
 #include <string>
 #include <vector>
 
@@ -72,6 +73,7 @@ namespace procdraw {
         LispObjectPtr MakeList(std::vector<LispObjectPtr> objs);
         bool Memb(LispObjectPtr obj, LispObjectPtr list);
         LispObjectPtr Not(LispObjectPtr obj);
+        std::string PrettyPrintToString(LispObjectPtr obj, int margin, int indent);
         std::string PrintToString(LispObjectPtr obj);
         LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);
         LispObjectPtr Putassoc(LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist);
@@ -82,6 +84,7 @@ namespace procdraw {
         LispObjectPtr symbols_;
         LispReader reader_;
         LispPrinter printer_;
+        PrettyPrinter prettyPrinter_;
         LispObjectPtr S_DEF;
         LispObjectPtr S_IF;
         LispObjectPtr S_LAMBDA;

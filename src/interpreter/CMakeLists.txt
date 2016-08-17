@@ -4,6 +4,7 @@ add_library(interpreter
     lisp_memory.cpp
     lisp_printer.cpp
     lisp_reader.cpp
+    prettyprinter.cpp
     signals.cpp)
 
 target_include_directories(interpreter

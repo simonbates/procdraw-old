@@ -6,6 +6,7 @@ add_executable(all_tests
     function_spec_tests/function_spec_checker.cpp
     function_spec_tests/function_spec_checker_test.cpp
     function_spec_tests/function_specs_test.cpp
+    interpreter_tests/prettyprinter_test.cpp
     utils_tests/color_test.cpp
     utils_tests/font_utils_test.cpp
     utils_tests/line_buffer_test.cpp
