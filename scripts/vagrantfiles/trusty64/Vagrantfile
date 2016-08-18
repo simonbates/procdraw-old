@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision "shell", inline: "sudo apt-get -y update"
     config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
-    config.vm.provision "shell", inline: "sudo apt-get -y install build-essential cmake"
+    config.vm.provision "shell", inline: "sudo apt-get -y install build-essential cmake git"
     config.vm.provision "shell", inline: "sudo apt-get -y install libsdl2-dev jing"
 
     config.vm.provision "shell", path: "install_user_files.sh", privileged: false
