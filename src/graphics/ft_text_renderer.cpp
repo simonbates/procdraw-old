@@ -90,9 +90,9 @@ namespace procdraw {
 
     TextLayout<GLfloat> FtTextRenderer::LayOutText(const std::string &text, int maxLineWidthPixels)
     {
-        return procdraw::LayOutText<GLfloat>(text, asciiFontMetrics_,
-                                             FT_TEXT_RENDERER_MAX_DRAW_GLYPHS,
-                                             maxLineWidthPixels);
+        return textLayoutEngine_.LayOutText(text, asciiFontMetrics_,
+                                            FT_TEXT_RENDERER_MAX_DRAW_GLYPHS,
+                                            maxLineWidthPixels);
     }
 
     void FtTextRenderer::CompileShaders()

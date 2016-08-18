@@ -1,13 +1,13 @@
-#include "procdraw/utils/font_utils.h"
+#include "procdraw/utils/text_layout_engine.h"
 #include "gtest/gtest.h"
 #include <sstream>
 
-class FontUtilsTest : public ::testing::Test {
+class TextLayoutEngineTest : public ::testing::Test {
 protected:
     virtual void SetUp() {
         fontMetrics_ = MakeTestFontMetrics();
-        exclamationCoords_ = procdraw::LayOutGlyph(fontMetrics_.GetGlyph(33), fontMetrics_);
-        quoteCoords_ = procdraw::LayOutGlyph(fontMetrics_.GetGlyph(34), fontMetrics_);
+        exclamationCoords_ = layoutEngine_.LayOutGlyph(fontMetrics_.GetGlyph(33), fontMetrics_);
+        quoteCoords_ = layoutEngine_.LayOutGlyph(fontMetrics_.GetGlyph(34), fontMetrics_);
         spaceAdvance_ = fontMetrics_.GetGlyph(32).AdvanceWidthPixels;
         exclamationAdvance_ = fontMetrics_.GetGlyph(33).AdvanceWidthPixels;
         quoteAdvance_ = fontMetrics_.GetGlyph(34).AdvanceWidthPixels;
@@ -100,6 +100,7 @@ protected:
         EXPECT_EQ(expected.TextureTop,               vertices[verticesOffset + 23]);
     }
 
+    procdraw::TextLayoutEngine<float> layoutEngine_;
     procdraw::TextureFontMetrics fontMetrics_;
     procdraw::GlyphCoords exclamationCoords_;
     procdraw::GlyphCoords quoteCoords_;
@@ -109,7 +110,7 @@ protected:
     int fontGlyphHeight_;
 };
 
-TEST_F(FontUtilsTest, LayOutGlyph)
+TEST_F(TextLayoutEngineTest, LayOutGlyph)
 {
     EXPECT_EQ(2, exclamationCoords_.Left);
     EXPECT_EQ(16, exclamationCoords_.Right);
@@ -130,9 +131,9 @@ TEST_F(FontUtilsTest, LayOutGlyph)
     EXPECT_EQ(0.1875f, quoteCoords_.TextureBottom);
 }
 
-TEST_F(FontUtilsTest, TextLayoutEmptyStringHasOneEmptyLine)
+TEST_F(TextLayoutEngineTest, LayOutTextEmptyStringHasOneEmptyLine)
 {
-    auto layout = procdraw::LayOutText<float>("", fontMetrics_, 100, 100);
+    auto layout = layoutEngine_.LayOutText("", fontMetrics_, 100, 100);
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
     EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
@@ -144,9 +145,9 @@ TEST_F(FontUtilsTest, TextLayoutEmptyStringHasOneEmptyLine)
     EXPECT_EQ(0, layout.GetVerticesForLine(0).size());
 }
 
-TEST_F(FontUtilsTest, TextLayoutSingleLine)
+TEST_F(TextLayoutEngineTest, LayOutTextSingleLine)
 {
-    auto layout = procdraw::LayOutText<float>(" ! \"", fontMetrics_, 10, 1000);
+    auto layout = layoutEngine_.LayOutText(" ! \"", fontMetrics_, 10, 1000);
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
     EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
@@ -163,9 +164,9 @@ TEST_F(FontUtilsTest, TextLayoutSingleLine)
     ExpectGlyphVertices(quoteCoords_, spaceAdvance_ * 2 + exclamationAdvance_, 0, vertices, 24);
 }
 
-TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxNumberGlyphsExceeded)
+TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
 {
-    auto layout = procdraw::LayOutText<float>(" !!!!\"\"", fontMetrics_, 4, 1000);
+    auto layout = layoutEngine_.LayOutText(" !!!!\"\"", fontMetrics_, 4, 1000);
 
     // Expect:
     //
@@ -199,9 +200,9 @@ TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxNumberGlyphsExceeded)
     ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 1, fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
 }
 
-TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxPixelWidthExceeded)
+TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
 {
-    auto layout = procdraw::LayOutText<float>("    ! !!!!!!", fontMetrics_, 1000, spaceAdvance_ * 3);
+    auto layout = layoutEngine_.LayOutText("    ! !!!!!!", fontMetrics_, 1000, spaceAdvance_ * 3);
 
     // Expect:
     //
@@ -250,9 +251,9 @@ TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxPixelWidthExceeded)
     ExpectGlyphVertices(exclamationCoords_, 0, fontMetrics_.LinespacePixels * 3, lineFourVertices, 0);
 }
 
-TEST_F(FontUtilsTest, TextLayoutEmbeddedNewline)
+TEST_F(TextLayoutEngineTest, LayOutTextEmbeddedNewline)
 {
-    auto layout = procdraw::LayOutText<float>("!\n !!", fontMetrics_, 100, 1000);
+    auto layout = layoutEngine_.LayOutText("!\n !!", fontMetrics_, 100, 1000);
 
     // Expect:
     //

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw/utils/font_utils.h"
+#include "procdraw/utils/text_layout_engine.h"
 #include <GL/gl3w.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -41,6 +41,7 @@ namespace procdraw {
         GLuint glyphQuadVertexBuffer_;
         GLuint glyphQuadVao_;
         glm::mat4 orthoProjection_;
+        TextLayoutEngine<GLfloat> textLayoutEngine_;
         TextureFontMetrics asciiFontMetrics_;
         GLuint asciiFontTexture_;
         void Cleanup();
