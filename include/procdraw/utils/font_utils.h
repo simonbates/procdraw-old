@@ -209,7 +209,16 @@ namespace procdraw {
         int spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
 
         for (const char &ch : text) {
-            if (ch <= 32 || ch > maxCharCode) {
+            if (ch == '\n') {
+                // TODO: This block of 6 lines occurs 3 times -- remove the duplication
+                layout.SetNumCharsInLine(numCharsThisLine);
+                layout.OpenNewLine();
+                cursorX = 0;
+                cursorY += fontMetrics.LinespacePixels;
+                numGlyphsThisLine = 0;
+                numCharsThisLine = 0;
+            }
+            else if (ch <= 32 || ch > maxCharCode) {
                 if (cursorX + spaceAdvance > maxLineWidthPixels) {
                     layout.SetNumCharsInLine(numCharsThisLine);
                     layout.OpenNewLine();

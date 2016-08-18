@@ -11,6 +11,7 @@ protected:
         spaceAdvance_ = fontMetrics_.GetGlyph(32).AdvanceWidthPixels;
         exclamationAdvance_ = fontMetrics_.GetGlyph(33).AdvanceWidthPixels;
         quoteAdvance_ = fontMetrics_.GetGlyph(34).AdvanceWidthPixels;
+        fontGlyphHeight_ = fontMetrics_.AscenderPixels - fontMetrics_.DescenderPixels;
     }
 
     static procdraw::TextureFontMetrics MakeTestFontMetrics() {
@@ -105,6 +106,7 @@ protected:
     int spaceAdvance_;
     int exclamationAdvance_;
     int quoteAdvance_;
+    int fontGlyphHeight_;
 };
 
 TEST_F(FontUtilsTest, LayOutGlyph)
@@ -128,12 +130,12 @@ TEST_F(FontUtilsTest, LayOutGlyph)
     EXPECT_EQ(0.1875f, quoteCoords_.TextureBottom);
 }
 
-TEST_F(FontUtilsTest, TextLayoutForEmptyStringHasOneEmptyLine)
+TEST_F(FontUtilsTest, TextLayoutEmptyStringHasOneEmptyLine)
 {
     auto layout = procdraw::LayOutText<float>("", fontMetrics_, 100, 100);
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
-    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
     EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
     EXPECT_EQ(100, layout.MaxLineWidthPixels);
 
@@ -142,12 +144,12 @@ TEST_F(FontUtilsTest, TextLayoutForEmptyStringHasOneEmptyLine)
     EXPECT_EQ(0, layout.GetVerticesForLine(0).size());
 }
 
-TEST_F(FontUtilsTest, TextLayoutForSingleLine)
+TEST_F(FontUtilsTest, TextLayoutSingleLine)
 {
     auto layout = procdraw::LayOutText<float>(" ! \"", fontMetrics_, 10, 1000);
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
-    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
     EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
     EXPECT_EQ(1000, layout.MaxLineWidthPixels);
 
@@ -171,7 +173,7 @@ TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxNumberGlyphsExceeded)
     // '""'
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
-    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
     EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
     EXPECT_EQ(1000, layout.MaxLineWidthPixels);
 
@@ -209,7 +211,7 @@ TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxPixelWidthExceeded)
     // '!'
 
     EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
-    EXPECT_EQ(40, layout.GlyphHeight);
+    EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
     EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
     EXPECT_EQ(spaceAdvance_ * 3, layout.MaxLineWidthPixels);
 
@@ -246,4 +248,37 @@ TEST_F(FontUtilsTest, TextLayoutWrapWhenMaxPixelWidthExceeded)
     auto lineFourVertices = layout.GetVerticesForLine(3);
     EXPECT_EQ(24, lineFourVertices.size());
     ExpectGlyphVertices(exclamationCoords_, 0, fontMetrics_.LinespacePixels * 3, lineFourVertices, 0);
+}
+
+TEST_F(FontUtilsTest, TextLayoutEmbeddedNewline)
+{
+    auto layout = procdraw::LayOutText<float>("!\n !!", fontMetrics_, 100, 1000);
+
+    // Expect:
+    //
+    // '!'
+    // ' !!'
+
+    EXPECT_EQ(spaceAdvance_, layout.FixedGlyphWidth);
+    EXPECT_EQ(fontGlyphHeight_, layout.GlyphHeight);
+    EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
+    EXPECT_EQ(1000, layout.MaxLineWidthPixels);
+
+    EXPECT_EQ(2, layout.NumLines());
+
+    // Number of chars in each line
+
+    EXPECT_EQ(1, layout.GetNumCharsInLine(0));
+    EXPECT_EQ(3, layout.GetNumCharsInLine(1));
+
+    // Vertices
+
+    auto lineOneVertices = layout.GetVerticesForLine(0);
+    EXPECT_EQ(24, lineOneVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, 0, 0, lineOneVertices, 0);
+
+    auto lineTwoVertices = layout.GetVerticesForLine(1);
+    EXPECT_EQ(24 * 2, lineTwoVertices.size());
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_, fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
+    ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_, fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
 }
