@@ -9,10 +9,10 @@ namespace procdraw {
     template <typename T>
     class TextLayoutEngine {
     public:
-        TextLayout<T> LayOutText(const std::string &text, TextureFontMetrics &fontMetrics,
+        TextLayout<T> LayOutText(const std::string &text, BitmapFontMetrics &fontMetrics,
                                  int maxDrawGlyphsPerLine, int maxLineWidthPixels);
-        GlyphCoords LayOutGlyph(const procdraw::TextureGlyphMetrics &glyphMetrics,
-                                const procdraw::TextureFontMetrics &fontMetrics);
+        GlyphCoords LayOutGlyph(const procdraw::BitmapGlyphMetrics &glyphMetrics,
+                                const procdraw::BitmapFontMetrics &fontMetrics);
     private:
         int cursorX;
         int cursorY;
@@ -22,7 +22,7 @@ namespace procdraw {
     };
 
     template <typename T>
-    TextLayout<T> TextLayoutEngine<T>::LayOutText(const std::string &text, TextureFontMetrics &fontMetrics,
+    TextLayout<T> TextLayoutEngine<T>::LayOutText(const std::string &text, BitmapFontMetrics &fontMetrics,
                                                   int maxDrawGlyphsPerLine, int maxLineWidthPixels)
     {
         TextLayout<T> layout;
@@ -40,7 +40,7 @@ namespace procdraw {
         numCharsThisLine = 0;
 
         int maxCharCode = fontMetrics.MaxCharCode();
-        TextureGlyphMetrics glyphMetrics;
+        BitmapGlyphMetrics glyphMetrics;
         GlyphCoords glyphCoords;
         int spaceAdvance = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
 
@@ -77,18 +77,18 @@ namespace procdraw {
     }
 
     template <typename T>
-    GlyphCoords TextLayoutEngine<T>::LayOutGlyph(const procdraw::TextureGlyphMetrics &glyphMetrics,
-                                                 const procdraw::TextureFontMetrics &fontMetrics)
+    GlyphCoords TextLayoutEngine<T>::LayOutGlyph(const procdraw::BitmapGlyphMetrics &glyphMetrics,
+                                                 const procdraw::BitmapFontMetrics &fontMetrics)
     {
         GlyphCoords coords;
         coords.Left = static_cast<float>(glyphMetrics.LeftBearingPixels);
         coords.Right = coords.Left + glyphMetrics.WidthPixels;
         coords.Top = static_cast<float>(fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels);
         coords.Bottom = coords.Top + glyphMetrics.HeightPixels;
-        coords.TextureLeft = static_cast<float>(glyphMetrics.XoffsetPixels) / fontMetrics.TextureWidth;
-        coords.TextureRight = (static_cast<float>(glyphMetrics.XoffsetPixels) + glyphMetrics.WidthPixels) / fontMetrics.TextureWidth;
+        coords.TextureLeft = static_cast<float>(glyphMetrics.XoffsetPixels) / fontMetrics.BitmapWidth;
+        coords.TextureRight = (static_cast<float>(glyphMetrics.XoffsetPixels) + glyphMetrics.WidthPixels) / fontMetrics.BitmapWidth;
         coords.TextureTop = 0.0f;
-        coords.TextureBottom = static_cast<float>(glyphMetrics.HeightPixels) / fontMetrics.TextureHeight;
+        coords.TextureBottom = static_cast<float>(glyphMetrics.HeightPixels) / fontMetrics.BitmapHeight;
         return coords;
     }
 

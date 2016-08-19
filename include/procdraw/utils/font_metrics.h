@@ -4,8 +4,8 @@
 
 namespace procdraw {
 
-    struct TextureGlyphMetrics {
-        // Location of the glyph in the texture
+    struct BitmapGlyphMetrics {
+        // Location of the glyph in the bitmap
         int XoffsetPixels;
         // Width of the glyph bitmap
         int WidthPixels;
@@ -17,7 +17,7 @@ namespace procdraw {
         int LeftBearingPixels;
         // Distance from the baseline to the top of the glyph's bitmap
         int TopBearingPixels;
-        TextureGlyphMetrics()
+        BitmapGlyphMetrics()
         {
             this->XoffsetPixels = 0;
             this->WidthPixels = 0;
@@ -28,22 +28,22 @@ namespace procdraw {
         }
     };
 
-    class TextureFontMetrics {
+    class BitmapFontMetrics {
     public:
-        // Distance from baseline to highest point in face
+        // Distance from baseline to highest point in the face
         int AscenderPixels = 0;
-        // Distance from baseline to lowest point in face (negative)
+        // Distance from baseline to lowest point in the face (negative)
         int DescenderPixels = 0;
         // Vertical distance between two consecutive baselines
         int LinespacePixels = 0;
-        int TextureWidth = 0;
-        int TextureHeight = 0;
+        int BitmapWidth = 0;
+        int BitmapHeight = 0;
         void ClearGlyphs(int maxCharCode);
         int MaxCharCode();
-        void SetGlyph(int charCode, const TextureGlyphMetrics &glyphMetrics);
-        TextureGlyphMetrics& GetGlyph(int charCode);
+        void SetGlyph(int charCode, const BitmapGlyphMetrics &glyphMetrics);
+        BitmapGlyphMetrics& GetGlyph(int charCode);
     private:
-        std::vector<TextureGlyphMetrics> glyphMetrics_;
+        std::vector<BitmapGlyphMetrics> glyphMetrics_;
     };
 
 }

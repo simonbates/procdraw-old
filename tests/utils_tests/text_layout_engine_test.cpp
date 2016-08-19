@@ -14,18 +14,18 @@ protected:
         fontGlyphHeight_ = fontMetrics_.AscenderPixels - fontMetrics_.DescenderPixels;
     }
 
-    static procdraw::TextureFontMetrics MakeTestFontMetrics() {
-        procdraw::TextureFontMetrics metrics;
+    static procdraw::BitmapFontMetrics MakeTestFontMetrics() {
+        procdraw::BitmapFontMetrics metrics;
 
         metrics.AscenderPixels = 32;
         metrics.DescenderPixels = -8;
         metrics.LinespacePixels = 48;
-        metrics.TextureWidth = 128;
-        metrics.TextureHeight = 64;
+        metrics.BitmapWidth = 128;
+        metrics.BitmapHeight = 64;
 
         metrics.ClearGlyphs(34);
 
-        procdraw::TextureGlyphMetrics space;
+        procdraw::BitmapGlyphMetrics space;
         space.XoffsetPixels = 0;
         space.WidthPixels = 0;
         space.HeightPixels = 0;
@@ -34,7 +34,7 @@ protected:
         space.TopBearingPixels = 0;
         metrics.SetGlyph(32, space);
 
-        procdraw::TextureGlyphMetrics exclamation;
+        procdraw::BitmapGlyphMetrics exclamation;
         exclamation.XoffsetPixels = 0;
         exclamation.WidthPixels = 14;
         exclamation.HeightPixels = 28;
@@ -43,7 +43,7 @@ protected:
         exclamation.TopBearingPixels = 26;
         metrics.SetGlyph(33, exclamation);
 
-        procdraw::TextureGlyphMetrics quote;
+        procdraw::BitmapGlyphMetrics quote;
         quote.XoffsetPixels = 32;
         quote.WidthPixels = 16;
         quote.HeightPixels = 12;
@@ -101,7 +101,7 @@ protected:
     }
 
     procdraw::TextLayoutEngine<float> layoutEngine_;
-    procdraw::TextureFontMetrics fontMetrics_;
+    procdraw::BitmapFontMetrics fontMetrics_;
     procdraw::GlyphCoords exclamationCoords_;
     procdraw::GlyphCoords quoteCoords_;
     int spaceAdvance_;

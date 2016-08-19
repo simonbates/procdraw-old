@@ -145,7 +145,7 @@ namespace procdraw {
 
     void FtTextRenderer::MakeFontTexture(FT_ULong fromCharCode,
                                          FT_ULong toCharCode,
-                                         TextureFontMetrics &fontMetrics,
+                                         BitmapFontMetrics &fontMetrics,
                                          GLuint *fontTexture)
     {
         glActiveTexture(GL_TEXTURE0);
@@ -157,14 +157,14 @@ namespace procdraw {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.TextureWidth), &(fontMetrics.TextureHeight));
+        CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.BitmapWidth), &(fontMetrics.BitmapHeight));
 
         // Allocate the texture memory
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RED,
-                     fontMetrics.TextureWidth,
-                     fontMetrics.TextureHeight,
+                     fontMetrics.BitmapWidth,
+                     fontMetrics.BitmapHeight,
                      0,
                      GL_RED,
                      GL_UNSIGNED_BYTE,
@@ -192,13 +192,13 @@ namespace procdraw {
     }
 
     void FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                                         TextureFontMetrics &fontMetrics)
+                                         BitmapFontMetrics &fontMetrics)
     {
         fontMetrics.ClearGlyphs(toCharCode);
 
         GLint xoffset = 0;
 
-        TextureGlyphMetrics glyphMetrics;
+        BitmapGlyphMetrics glyphMetrics;
 
         for (auto charCode = fromCharCode; charCode < toCharCode; ++charCode) {
             RenderChar(charCode);

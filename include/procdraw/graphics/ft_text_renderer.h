@@ -42,16 +42,16 @@ namespace procdraw {
         GLuint glyphQuadVao_;
         glm::mat4 orthoProjection_;
         TextLayoutEngine<GLfloat> textLayoutEngine_;
-        TextureFontMetrics asciiFontMetrics_;
+        BitmapFontMetrics asciiFontMetrics_;
         GLuint asciiFontTexture_;
         void Cleanup();
         void CompileShaders();
         void MakeGlyphQuadVao();
         void MakeFontTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                             TextureFontMetrics &fontMetrics, GLuint *fontTexture);
+                             BitmapFontMetrics &fontMetrics, GLuint *fontTexture);
         void CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
                                   int *width, int *height);
-        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, TextureFontMetrics &fontMetrics);
+        void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode, BitmapFontMetrics &fontMetrics);
         void RenderChar(FT_ULong charCode);
     };
 
