@@ -90,7 +90,7 @@ namespace procdraw {
         std::string val;
         try {
             // TODO: Use actual console width, rather than hardcoding a value
-            val = L_.PrettyPrintToString(L_.Eval(L_.Read(cmd)), 40, 2);
+            val = L_.PrettyPrintToString(L_.Eval(L_.Read(cmd)), 40);
         }
         catch (std::exception e) {
             val = e.what();

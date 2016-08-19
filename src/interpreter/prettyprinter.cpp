@@ -1,16 +1,18 @@
 #include "procdraw/interpreter/prettyprinter.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
 
+static const int blockFits = -1;
+
 namespace procdraw {
 
     PrettyPrinterToken PrettyPrinterToken::Begin()
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::Begin);
+        return PrettyPrinterToken(PrettyPrinterTokenType::Begin, 0);
     }
 
     PrettyPrinterToken PrettyPrinterToken::End()
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::End);
+        return PrettyPrinterToken(PrettyPrinterTokenType::End, 0);
     }
 
     PrettyPrinterToken PrettyPrinterToken::String(const std::string &str)
@@ -20,17 +22,16 @@ namespace procdraw {
 
     PrettyPrinterToken PrettyPrinterToken::Blank()
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::Blank);
+        return PrettyPrinterToken(PrettyPrinterTokenType::Blank, 1);
     }
 
-    std::string PrettyPrinter::PrintToString(LispInterpreter *L, LispObjectPtr obj, int margin, int indent)
+    std::string PrettyPrinter::PrintToString(LispInterpreter *L, LispObjectPtr obj, int margin)
     {
         margin_ = margin;
-        indentAmount_ = indent;
         delimiterStack_ = std::stack<int>();
         indentStack_ = std::stack<int>();
         outstr_.clear();
-        space_ = margin;
+        printCol_ = 0;
         Scan(L, obj);
         return outstr_;
     }
@@ -89,6 +90,7 @@ namespace procdraw {
             if (delimiterStack_.empty()) {
                 stream_.clear();
                 streamCharLen_ = 0;
+                endedWithoutBlank_.clear();
             }
             token.Size = -streamCharLen_;
             stream_.push_back(token);
@@ -96,70 +98,69 @@ namespace procdraw {
             break;
         case PrettyPrinterTokenType::End:
         {
-            token.Size = 0;
             stream_.push_back(token);
             int x = delimiterStack_.top();
             delimiterStack_.pop();
             stream_.at(x).Size = streamCharLen_ + stream_.at(x).Size;
-            if (stream_.at(x).Type == PrettyPrinterTokenType::Blank) {
-                x = delimiterStack_.top();
-                delimiterStack_.pop();
-                stream_.at(x).Size = streamCharLen_ + stream_.at(x).Size;
-            }
+            endedWithoutBlank_.push_back(x);
             if (delimiterStack_.empty()) {
                 for (auto t : stream_) {
-                    Print(t, t.Size);
+                    Print(t);
                 }
             }
             break;
         }
         case PrettyPrinterTokenType::Blank:
         {
-            int x = delimiterStack_.top();
-            if (stream_.at(x).Type == PrettyPrinterTokenType::Blank) {
-                delimiterStack_.pop();
-                stream_.at(x).Size = streamCharLen_ + stream_.at(x).Size;
-            }
-            token.Size = -streamCharLen_;
             stream_.push_back(token);
-            delimiterStack_.push(stream_.size() - 1);
-            ++streamCharLen_;
+            streamCharLen_ += token.Size;
+            endedWithoutBlank_.clear();
             break;
         }
         case PrettyPrinterTokenType::String:
             if (delimiterStack_.empty()) {
-                Print(token, token.Str.length());
+                Print(token);
             }
             else {
                 stream_.push_back(token);
-                streamCharLen_ += token.Str.length();
+                streamCharLen_ += token.Size;
+                for (auto x : endedWithoutBlank_) {
+                    // Extend the sizes of any blocks that have ended without
+                    // a blank occuring
+                    stream_.at(x).Size += token.Size;
+                }
             }
             break;
         }
     }
 
-    void PrettyPrinter::Print(PrettyPrinterToken token, int len)
+    void PrettyPrinter::Print(PrettyPrinterToken token)
     {
         switch (token.Type) {
         case PrettyPrinterTokenType::String:
             outstr_.append(token.Str);
-            space_ -= len;
+            printCol_ += token.Size;
             break;
         case PrettyPrinterTokenType::Begin:
-            indentStack_.push(space_);
+            if (token.Size <= (margin_ - printCol_)) {
+                indentStack_.push(blockFits);
+            }
+            else {
+                indentStack_.push(printCol_);
+            }
             break;
         case PrettyPrinterTokenType::End:
             indentStack_.pop();
             break;
         case PrettyPrinterTokenType::Blank:
-            if (len > space_) {
-                space_ = indentStack_.top() - indentAmount_;
-                outstr_.append("\n");
-                outstr_.append(std::string(margin_ - space_, ' '));
+            if (indentStack_.top() == blockFits) {
+                outstr_.append(" ");
+                ++printCol_;
             }
             else {
-                outstr_.append(" ");
-                --space_;
+                printCol_ = indentStack_.top() + indentAmount_;
+                outstr_.append("\n");
+                outstr_.append(std::string(printCol_, ' '));
             }
             break;
         }

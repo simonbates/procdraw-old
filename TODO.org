@@ -178,7 +178,7 @@ later look at other analysis such as frequency composition.
 - Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
   - http://hdl.handle.net/1721.1/6504
 
-*** TODO Update text layout to support newlines
+*** DONE Update text layout to support newlines
 *** TODO Remove previous, non-pretty, printer
 
 If in the future I need non-pretty printing, I can incorporate it into
