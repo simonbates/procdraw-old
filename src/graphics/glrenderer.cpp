@@ -275,6 +275,11 @@ namespace procdraw {
             ThrowSdlError();
         }
 
+        // Turn on VSYNC
+        if (SDL_GL_SetSwapInterval(1)) {
+            ThrowSdlError();
+        }
+
         if (gl3wInit()) {
             throw std::runtime_error("Failed to initialize OpenGL");
         }
