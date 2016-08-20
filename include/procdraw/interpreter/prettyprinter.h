@@ -33,13 +33,13 @@ namespace procdraw {
     private:
         int indentAmount_ = 1;
         int margin_;
-        std::stack<int> delimiterStack_;
+        std::stack<int> blockStack_;
         std::stack<int> indentStack_;
         std::string outstr_;
         int printCol_;
         std::vector<PrettyPrinterToken> stream_;
         int streamCharLen_;
-        std::vector<int> endedWithoutBlank_;
+        std::vector<int> endedSinceBlank_;
         void Scan(LispInterpreter *L, LispObjectPtr obj);
         void Emit(PrettyPrinterToken token);
         void Print(PrettyPrinterToken token);

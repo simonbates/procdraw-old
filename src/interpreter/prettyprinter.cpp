@@ -28,7 +28,7 @@ namespace procdraw {
     std::string PrettyPrinter::PrintToString(LispInterpreter *L, LispObjectPtr obj, int margin)
     {
         margin_ = margin;
-        delimiterStack_ = std::stack<int>();
+        blockStack_ = std::stack<int>();
         indentStack_ = std::stack<int>();
         outstr_.clear();
         printCol_ = 0;
@@ -87,23 +87,23 @@ namespace procdraw {
     {
         switch (token.Type) {
         case PrettyPrinterTokenType::Begin:
-            if (delimiterStack_.empty()) {
+            if (blockStack_.empty()) {
                 stream_.clear();
                 streamCharLen_ = 0;
-                endedWithoutBlank_.clear();
+                endedSinceBlank_.clear();
             }
             token.Size = -streamCharLen_;
             stream_.push_back(token);
-            delimiterStack_.push(stream_.size() - 1);
+            blockStack_.push(stream_.size() - 1);
             break;
         case PrettyPrinterTokenType::End:
         {
             stream_.push_back(token);
-            int x = delimiterStack_.top();
-            delimiterStack_.pop();
+            int x = blockStack_.top();
+            blockStack_.pop();
             stream_.at(x).Size = streamCharLen_ + stream_.at(x).Size;
-            endedWithoutBlank_.push_back(x);
-            if (delimiterStack_.empty()) {
+            endedSinceBlank_.push_back(x);
+            if (blockStack_.empty()) {
                 for (auto t : stream_) {
                     Print(t);
                 }
@@ -114,17 +114,17 @@ namespace procdraw {
         {
             stream_.push_back(token);
             streamCharLen_ += token.Size;
-            endedWithoutBlank_.clear();
+            endedSinceBlank_.clear();
             break;
         }
         case PrettyPrinterTokenType::String:
-            if (delimiterStack_.empty()) {
+            if (blockStack_.empty()) {
                 Print(token);
             }
             else {
                 stream_.push_back(token);
                 streamCharLen_ += token.Size;
-                for (auto x : endedWithoutBlank_) {
+                for (auto x : endedSinceBlank_) {
                     // Extend the sizes of any blocks that have ended without
                     // a blank occuring
                     stream_.at(x).Size += token.Size;
