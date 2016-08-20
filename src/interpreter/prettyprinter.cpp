@@ -5,14 +5,16 @@ static const int blockFits = -1;
 
 namespace procdraw {
 
-    PrettyPrinterToken PrettyPrinterToken::Begin()
+    PrettyPrinterToken PrettyPrinterToken::Begin(int indentAmount)
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::Begin, 0);
+        PrettyPrinterToken token(PrettyPrinterTokenType::Begin);
+        token.IndentAmount = indentAmount;
+        return token;
     }
 
     PrettyPrinterToken PrettyPrinterToken::End()
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::End, 0);
+        return PrettyPrinterToken(PrettyPrinterTokenType::End);
     }
 
     PrettyPrinterToken PrettyPrinterToken::String(const std::string &str)
@@ -22,7 +24,9 @@ namespace procdraw {
 
     PrettyPrinterToken PrettyPrinterToken::Blank()
     {
-        return PrettyPrinterToken(PrettyPrinterTokenType::Blank, 1);
+        PrettyPrinterToken token(PrettyPrinterTokenType::Blank);
+        token.Size = 1;
+        return token;
     }
 
     std::string PrettyPrinter::PrintToString(LispInterpreter *L, LispObjectPtr obj, int margin)
@@ -52,32 +56,35 @@ namespace procdraw {
             Emit(PrettyPrinterToken::String(L->SymbolName(obj)));
             break;
         case LispObjectType::Cons: {
-            if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
-                Emit(PrettyPrinterToken::String("$"));
-                Scan(L, L->Cadr(obj));
-                break;
+            if (LispObjectEq(L->Car(obj), L->SymbolRef("lambda"))) {
+                Emit(PrettyPrinterToken::Begin(lambdaIndentAmount_));
+                Emit(PrettyPrinterToken::String("("));
+                Scan(L, L->Car(obj)); // lambda
+                if (!L->Null(L->Cdr(obj))) {
+                    Emit(PrettyPrinterToken::String(" "));
+                    Scan(L, L->Cadr(obj)); // parameter list
+                    if (!L->Null(L->Cddr(obj))) {
+                        Emit(PrettyPrinterToken::Blank());
+                        ScanListContents(L, L->Cddr(obj)); // body forms
+                    }
+                }
+                Emit(PrettyPrinterToken::String(")"));
+                Emit(PrettyPrinterToken::End());
             }
             else if (LispObjectEq(L->Car(obj), L->SymbolRef("quote"))) {
                 Emit(PrettyPrinterToken::String("'"));
                 Scan(L, L->Cadr(obj));
                 break;
             }
+            else if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
+                Emit(PrettyPrinterToken::String("$"));
+                Scan(L, L->Cadr(obj));
+                break;
+            }
             else {
-                Emit(PrettyPrinterToken::Begin());
+                Emit(PrettyPrinterToken::Begin(indentAmount_));
                 Emit(PrettyPrinterToken::String("("));
-                LispObjectPtr n = obj;
-                while (!L->Null(n)) {
-                    Scan(L, L->Car(n));
-                    n = L->Cdr(n);
-                    if (!L->Null(n) && L->Atom(n)) {
-                        Emit(PrettyPrinterToken::String(" . "));
-                        Scan(L, n);
-                        n = L->Nil;
-                    }
-                    if (!L->Null(n)) {
-                        Emit(PrettyPrinterToken::Blank());
-                    }
-                }
+                ScanListContents(L, obj);
                 Emit(PrettyPrinterToken::String(")"));
                 Emit(PrettyPrinterToken::End());
             }
@@ -101,6 +108,23 @@ namespace procdraw {
         default:
             Emit(PrettyPrinterToken::String(""));
             break;
+        }
+    }
+
+    void PrettyPrinter::ScanListContents(LispInterpreter *L, LispObjectPtr obj)
+    {
+        LispObjectPtr n = obj;
+        while (!L->Null(n)) {
+            Scan(L, L->Car(n));
+            n = L->Cdr(n);
+            if (!L->Null(n) && L->Atom(n)) {
+                Emit(PrettyPrinterToken::String(" . "));
+                Scan(L, n);
+                n = L->Nil;
+            }
+            if (!L->Null(n)) {
+                Emit(PrettyPrinterToken::Blank());
+            }
         }
     }
 
@@ -186,7 +210,7 @@ namespace procdraw {
                 indentStack_.push(blockFits);
             }
             else {
-                indentStack_.push(printCol_);
+                indentStack_.push(printCol_ + token.IndentAmount);
             }
             break;
         case PrettyPrinterTokenType::End:
@@ -198,7 +222,7 @@ namespace procdraw {
                 ++printCol_;
             }
             else {
-                printCol_ = indentStack_.top() + indentAmount_;
+                printCol_ = indentStack_.top();
                 outstr_.append("\n");
                 outstr_.append(std::string(printCol_, ' '));
             }

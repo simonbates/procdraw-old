@@ -180,7 +180,7 @@ later look at other analysis such as frequency composition.
 
 *** DONE Update text layout to support newlines
 *** DONE Remove previous, non-pretty, printer
-*** TODO Add special formatting for lambda forms
+*** DONE Add special formatting for lambda forms
 *** TODO Implement support for non-pretty printing
 
 I currently have a kludge in LispInterpreter:

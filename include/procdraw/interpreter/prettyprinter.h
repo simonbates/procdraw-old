@@ -17,13 +17,14 @@ namespace procdraw {
     public:
         PrettyPrinterTokenType Type;
         std::string Str;
-        int Size;
-        static PrettyPrinterToken Begin();
+        int Size = 0;
+        int IndentAmount = 0;
+        static PrettyPrinterToken Begin(int indentAmount);
         static PrettyPrinterToken End();
         static PrettyPrinterToken String(const std::string &str);
         static PrettyPrinterToken Blank();
     private:
-        PrettyPrinterToken(PrettyPrinterTokenType t, int size) : Type(t), Size(size) { }
+        PrettyPrinterToken(PrettyPrinterTokenType t) : Type(t) { }
         PrettyPrinterToken(const std::string &s) : Type(PrettyPrinterTokenType::String), Str(s), Size(s.length()) { }
     };
 
@@ -32,6 +33,7 @@ namespace procdraw {
         std::string PrintToString(LispInterpreter *L, LispObjectPtr obj, int margin);
     private:
         int indentAmount_ = 1;
+        int lambdaIndentAmount_ = 2;
         int margin_;
         std::stack<int> blockStack_;
         std::stack<int> indentStack_;
@@ -41,6 +43,7 @@ namespace procdraw {
         int streamCharLen_;
         std::vector<int> endedSinceBlank_;
         void Scan(LispInterpreter *L, LispObjectPtr obj);
+        void ScanListContents(LispInterpreter *L, LispObjectPtr obj);
         void Emit(PrettyPrinterToken token);
         void Print(PrettyPrinterToken token);
     };
