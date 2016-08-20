@@ -3,7 +3,6 @@ include_directories(${CATCH_INCLUDE_DIR})
 add_executable(interpreter_tests
     main.cpp
     test_lisp_interpreter.cpp
-    test_lisp_printer.cpp
     test_lisp_reader.cpp
     test_signals.cpp)
 

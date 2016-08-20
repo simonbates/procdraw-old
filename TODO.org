@@ -168,8 +168,8 @@ To make audio reactive graphics. Could start with just volume and
 later look at other analysis such as frequency composition.
 
 * Interpreter
-** TODO Add pretty printing
-*** INPROGRESS Implement a PrettyPrinter
+** Pretty printing
+*** DONE Implement a PrettyPrinter
 
 - See: "Prettyprinting" by Derek Oppen
   - ACM Transactions on Programming Languages and Systems
@@ -179,10 +179,16 @@ later look at other analysis such as frequency composition.
   - http://hdl.handle.net/1721.1/6504
 
 *** DONE Update text layout to support newlines
-*** TODO Remove previous, non-pretty, printer
+*** DONE Remove previous, non-pretty, printer
+*** TODO Add special formatting for lambda forms
+*** TODO Implement support for non-pretty printing
 
-If in the future I need non-pretty printing, I can incorporate it into
-the new printer.
+I currently have a kludge in LispInterpreter:
+
+std::string LispInterpreter::PrintToString(LispObjectPtr obj)
+{
+    return prettyPrinter_.PrintToString(this, obj, 1000);
+}
 
 ** TODO Add binary file utils
 

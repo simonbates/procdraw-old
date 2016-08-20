@@ -19,9 +19,17 @@ protected:
 
 TEST_F(PrettyPrinterTest, PrintAtoms)
 {
-    EXPECT_EQ("42", prettyPrinter_.PrintToString(&L_, L_.MakeNumber(42), 20));
+    EXPECT_EQ("42", prettyPrinter_.PrintToString(&L_, L_.MakeNumber(42), 100));
+    EXPECT_EQ("-42", prettyPrinter_.PrintToString(&L_, L_.MakeNumber(-42), 100));
+    EXPECT_EQ("true", prettyPrinter_.PrintToString(&L_, L_.True, 100));
+    EXPECT_EQ("false", prettyPrinter_.PrintToString(&L_, L_.False, 100));
+    EXPECT_EQ("\"some string\"", prettyPrinter_.PrintToString(&L_, L_.MakeString("some string"), 100));
+    EXPECT_EQ("HELLO", prettyPrinter_.PrintToString(&L_, L_.SymbolRef("HELLO"), 100));
+}
 
-    // TODO: Test other atoms
+TEST_F(PrettyPrinterTest, PrintEmptyListAsNil)
+{
+    EXPECT_EQ("nil", prettyPrinter_.PrintToString(&L_, L_.MakeList({}), 100));
 }
 
 TEST_F(PrettyPrinterTest, PrintListOfNumbersAllOneLine)
@@ -92,4 +100,22 @@ TEST_F(PrettyPrinterTest, PrintListOfListsAllBreaks)
         "  ccc\n"
         "  ddd))";
     EXPECT_EQ(expected, prettyPrinter_.PrintToString(&L_, listOfLists_, 18));
+}
+
+TEST_F(PrettyPrinterTest, PrintDottedPairs)
+{
+    EXPECT_EQ("(1 . 2)", prettyPrinter_.PrintToString(&L_, L_.Cons(L_.MakeNumber(1), L_.MakeNumber(2)), 100));
+    EXPECT_EQ("(2 3 . 4)", prettyPrinter_.PrintToString(&L_, L_.Cons(L_.MakeNumber(2), L_.Cons(L_.MakeNumber(3), L_.MakeNumber(4))), 100));
+}
+
+TEST_F(PrettyPrinterTest, PrintQuoteForm) {
+    EXPECT_EQ("'42", prettyPrinter_.PrintToString(&L_, L_.MakeList({ L_.SymbolRef("quote"), L_.MakeNumber(42) }), 100));
+}
+
+TEST_F(PrettyPrinterTest, PrintSigvalForm) {
+    EXPECT_EQ("$foo", prettyPrinter_.PrintToString(&L_, L_.MakeList({ L_.SymbolRef("sigval"), L_.SymbolRef("foo") }), 100));
+}
+
+TEST_F(PrettyPrinterTest, PrintDictionaries) {
+    EXPECT_EQ("<Dictionary>", prettyPrinter_.PrintToString(&L_, L_.MakeDict(), 100));
 }

@@ -285,7 +285,8 @@ namespace procdraw {
 
     std::string LispInterpreter::PrintToString(LispObjectPtr obj)
     {
-        return printer_.PrintToString(this, obj);
+        // TODO: Using a value of 1000 here is a kludge -- implement proper support for printing without newlines
+        return prettyPrinter_.PrintToString(this, obj, 1000);
     }
 
     LispObjectPtr LispInterpreter::Progn(LispObjectPtr actions, LispObjectPtr env)

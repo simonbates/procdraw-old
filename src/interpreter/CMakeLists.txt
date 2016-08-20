@@ -2,7 +2,6 @@ add_library(interpreter
     lisp_functions.cpp
     lisp_interpreter.cpp
     lisp_memory.cpp
-    lisp_printer.cpp
     lisp_reader.cpp
     prettyprinter.cpp
     signals.cpp)

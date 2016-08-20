@@ -38,27 +38,69 @@ namespace procdraw {
 
     void PrettyPrinter::Scan(LispInterpreter *L, LispObjectPtr obj)
     {
-        if (L->TypeOf(obj) == LispObjectType::Cons) {
-            Emit(PrettyPrinterToken::Begin());
-            Emit(PrettyPrinterToken::String("("));
-            LispObjectPtr n = obj;
-            while (!L->Null(n)) {
-                Scan(L, L->Car(n));
-                n = L->Cdr(n);
-                if (!L->Null(n) && L->Atom(n)) {
-                    Emit(PrettyPrinterToken::String(" . "));
-                    Scan(L, n);
-                    n = L->Nil;
-                }
-                if (!L->Null(n)) {
-                    Emit(PrettyPrinterToken::Blank());
-                }
-            }
-            Emit(PrettyPrinterToken::String(")"));
-            Emit(PrettyPrinterToken::End());
+        switch (L->TypeOf(obj)) {
+        case LispObjectType::Null:
+            Emit(PrettyPrinterToken::String("nil"));
+            break;
+        case LispObjectType::Number: {
+            std::ostringstream s;
+            s << L->NumVal(obj);
+            Emit(PrettyPrinterToken::String(s.str()));
+            break;
         }
-        else {
-            Emit(PrettyPrinterToken::String(L->PrintToString(obj)));
+        case LispObjectType::Symbol:
+            Emit(PrettyPrinterToken::String(L->SymbolName(obj)));
+            break;
+        case LispObjectType::Cons: {
+            if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
+                Emit(PrettyPrinterToken::String("$"));
+                Scan(L, L->Cadr(obj));
+                break;
+            }
+            else if (LispObjectEq(L->Car(obj), L->SymbolRef("quote"))) {
+                Emit(PrettyPrinterToken::String("'"));
+                Scan(L, L->Cadr(obj));
+                break;
+            }
+            else {
+                Emit(PrettyPrinterToken::Begin());
+                Emit(PrettyPrinterToken::String("("));
+                LispObjectPtr n = obj;
+                while (!L->Null(n)) {
+                    Scan(L, L->Car(n));
+                    n = L->Cdr(n);
+                    if (!L->Null(n) && L->Atom(n)) {
+                        Emit(PrettyPrinterToken::String(" . "));
+                        Scan(L, n);
+                        n = L->Nil;
+                    }
+                    if (!L->Null(n)) {
+                        Emit(PrettyPrinterToken::Blank());
+                    }
+                }
+                Emit(PrettyPrinterToken::String(")"));
+                Emit(PrettyPrinterToken::End());
+            }
+            break;
+        }
+        case LispObjectType::CFunction:
+            Emit(PrettyPrinterToken::String("<CFunction>"));
+            break;
+        case LispObjectType::Boolean:
+            Emit(PrettyPrinterToken::String(L->BoolVal(obj) ? "true" : "false"));
+            break;
+        case LispObjectType::String:
+            Emit(PrettyPrinterToken::String("\"" + L->StringVal(obj) + "\""));
+            break;
+        case LispObjectType::Dictionary:
+            Emit(PrettyPrinterToken::String("<Dictionary>"));
+            break;
+        case LispObjectType::Eof:
+            Emit(PrettyPrinterToken::String("<Eof>"));
+            break;
+        default:
+            Emit(PrettyPrinterToken::String(""));
+            break;
         }
     }
 
@@ -96,8 +138,7 @@ namespace procdraw {
             stream_.push_back(token);
             blockStack_.push(stream_.size() - 1);
             break;
-        case PrettyPrinterTokenType::End:
-        {
+        case PrettyPrinterTokenType::End: {
             stream_.push_back(token);
             int x = blockStack_.top();
             blockStack_.pop();
@@ -110,8 +151,7 @@ namespace procdraw {
             }
             break;
         }
-        case PrettyPrinterTokenType::Blank:
-        {
+        case PrettyPrinterTokenType::Blank: {
             stream_.push_back(token);
             streamCharLen_ += token.Size;
             endedSinceBlank_.clear();

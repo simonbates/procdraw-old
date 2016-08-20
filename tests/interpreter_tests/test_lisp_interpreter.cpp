@@ -53,6 +53,13 @@ TEST_CASE("LispInterpreter::MakeList()")
     }
 }
 
+TEST_CASE("LispInterpreter::PrettyPrintToString()")
+{
+    procdraw::LispInterpreter L;
+
+    REQUIRE(L.PrettyPrintToString(L.MakeList({ L.MakeNumber(42) }), 100) == "(42)");
+}
+
 TEST_CASE("LispInterpreter::PrintToString()")
 {
     procdraw::LispInterpreter L;
