@@ -15,6 +15,11 @@ cpplint:
 	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
 
+.PHONY: format
+format:
+	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
+	-exec clang-format -i -style=Mozilla {} +
+
 .PHONY: gl3w
 gl3w:
 	mkdir -p third_party/gl3w_out
