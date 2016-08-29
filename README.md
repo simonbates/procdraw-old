@@ -13,13 +13,27 @@ In its current form, it consists of:
     * list-structured memory
     * procedures stored as list structures and always recoverable and
       modifiable at run time
-* A data-flow model ("signals")
+* A dataflow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
 
-The primary target platform is currently Linux but, where possible,
-Procdraw uses cross-platform technologies (such as CMake, SDL2, and
-OpenGL) with the hope of easing the work of porting to other platforms
-in the future.
+It runs on Linux and Windows (the Windows port is still a little rough).
+
+I'm still working on the basics at the moment: memory model,
+interpreters, editing interfaces. Once I'm a little further along, I'd
+like to use Procdraw to explore:
+
+* Systems, interfaces, and notations for experimental modification of
+  running systems ('circuit bending of code', towers of interpreters,
+  self-modifying code, evolutionary algorithms and "artist as
+  gardener")
+* Designing a runtime environment that trys to continue running in the
+  presence of 'errors' -- potentially providing a result or behaviour
+  even if it isn't 'correct'
+* Coordination of different interfaces/notations for inspection and
+  editing such as using both direct manipulation and text-based
+  notations
+* Runtime modification of as much as possible, including the Procdraw
+  user interfaces
 
 Building on Linux
 -----------------
@@ -36,6 +50,8 @@ Procdraw has the following build dependencies:
 
 Optional dependencies:
 
+* clang-format: for code formatting
+* Python 2: for running cpplint
 * Jing: to validate the XML function-specs
 
 ### Configure the font
