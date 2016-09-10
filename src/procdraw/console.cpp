@@ -1,5 +1,6 @@
 #include "procdraw/procdraw/console.h"
 #include <algorithm>
+#include <string>
 
 namespace procdraw {
 

@@ -7,6 +7,7 @@
 #include "procdraw/graphics/gl_util.h"
 #include "procdraw/utils/utils.h"
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 
 namespace procdraw {

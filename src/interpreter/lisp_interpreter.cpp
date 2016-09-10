@@ -1,6 +1,8 @@
 #include "procdraw/interpreter/lisp_interpreter.h"
 #include "procdraw/interpreter/lisp_functions.h"
 #include <cmath>
+#include <string>
+#include <vector>
 
 namespace procdraw {
 

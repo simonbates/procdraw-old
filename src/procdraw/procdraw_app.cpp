@@ -3,6 +3,8 @@
 #include "procdraw/procdraw/procdraw_app_lisp.h"
 #include PROCDRAW_SDL2_H
 #include <iostream>
+#include <string>
+#include <vector>
 
 static const int numMidiControllers = 33;
 

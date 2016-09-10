@@ -1,4 +1,5 @@
 #include "procdraw/utils/line_buffer.h"
+#include <string>
 
 namespace procdraw {
 

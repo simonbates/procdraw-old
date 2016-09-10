@@ -4,6 +4,7 @@
 #include "procdraw/procdraw/command_processor.h"
 #include "procdraw/utils/line_buffer.h"
 #include PROCDRAW_SDL2_H
+#include <string>
 #include <vector>
 
 namespace procdraw {

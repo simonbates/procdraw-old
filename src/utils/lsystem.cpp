@@ -1,4 +1,5 @@
 #include "procdraw/utils/lsystem.h"
+#include <string>
 
 namespace procdraw {
 

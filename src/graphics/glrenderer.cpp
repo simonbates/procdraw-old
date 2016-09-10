@@ -6,6 +6,7 @@
 #include "procdraw/utils/color.h"
 #include "procdraw/utils/utils.h"
 #include <iostream>
+#include <string>
 
 namespace procdraw {
 

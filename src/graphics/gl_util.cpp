@@ -1,4 +1,5 @@
 #include "procdraw/graphics/gl_util.h"
+#include <map>
 #include <stdexcept>
 
 namespace procdraw {

@@ -1,6 +1,7 @@
 #include "procdraw/interpreter/prettyprinter.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
 #include "gtest/gtest.h"
+#include <string>
 
 class PrettyPrinterTest : public ::testing::Test
 {

@@ -1,5 +1,7 @@
 #include "procdraw/interpreter/prettyprinter.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
+#include <stack>
+#include <string>
 
 static const int blockFits = -1;
 
