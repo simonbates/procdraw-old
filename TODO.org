@@ -1032,6 +1032,7 @@ procdraw/
   different interpreters using the same memory
 - Rename the interpreter subproject to "lisp"
 
+** TODO Switch to pointers for function out parameters
 * Tests
 ** WONTDO Use propositions for test names
 
