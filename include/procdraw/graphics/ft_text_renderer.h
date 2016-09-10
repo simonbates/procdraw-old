@@ -51,11 +51,11 @@ private:
   void CompileShaders();
   void MakeGlyphQuadVao();
   void MakeFontTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                       BitmapFontMetrics& fontMetrics, GLuint* fontTexture);
+                       BitmapFontMetrics* fontMetrics, GLuint* fontTexture);
   void CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
                             int* width, int* height);
   void PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                       BitmapFontMetrics& fontMetrics);
+                       BitmapFontMetrics* fontMetrics);
   void RenderChar(FT_ULong charCode);
 };
 }

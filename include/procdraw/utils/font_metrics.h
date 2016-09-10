@@ -41,9 +41,9 @@ public:
   int BitmapWidth = 0;
   int BitmapHeight = 0;
   void ClearGlyphs(int maxCharCode);
-  int MaxCharCode();
+  int MaxCharCode() const;
   void SetGlyph(int charCode, const BitmapGlyphMetrics& glyphMetrics);
-  BitmapGlyphMetrics& GetGlyph(int charCode);
+  BitmapGlyphMetrics GetGlyph(int charCode) const;
 
 private:
   std::vector<BitmapGlyphMetrics> glyphMetrics_;

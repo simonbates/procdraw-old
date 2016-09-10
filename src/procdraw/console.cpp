@@ -35,7 +35,7 @@ Console::Draw()
   // TODO: Don't need to calculate the cursor pos each time, only when changes
   int cursorX, cursorY, cursorWidth, cursorHeight;
   inputLineLayout_.CalculateFixedWidthBlockCursorPos(
-    inputLine_.GetCursorPos(), cursorX, cursorY, cursorWidth, cursorHeight);
+    inputLine_.GetCursorPos(), &cursorX, &cursorY, &cursorWidth, &cursorHeight);
 
   // Scroll if needed
   ScrollShowInput(inputLineLayout_.NumLines());

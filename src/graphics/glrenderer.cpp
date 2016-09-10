@@ -70,7 +70,7 @@ void
 GlRenderer::AmbientLightColor(float h, float s, float v)
 {
   float r, g, b;
-  Hsv2Rgb(h, s, v, r, g, b);
+  Hsv2Rgb(h, s, v, &r, &g, &b);
   ambientLightColor_.x = r;
   ambientLightColor_.y = g;
   ambientLightColor_.z = b;
@@ -81,7 +81,7 @@ void
 GlRenderer::Background(float h, float s, float v)
 {
   float r, g, b;
-  Hsv2Rgb(h, s, v, r, g, b);
+  Hsv2Rgb(h, s, v, &r, &g, &b);
   glClearColor(r, g, b, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   ResetMatrix();
@@ -125,7 +125,7 @@ GlRenderer::BeginText()
 void
 GlRenderer::Color(float h, float s, float v, float a)
 {
-  Hsv2Rgb(h, s, v, materialR_, materialG_, materialB_);
+  Hsv2Rgb(h, s, v, &materialR_, &materialG_, &materialB_);
   materialA_ = a;
 }
 
@@ -198,7 +198,7 @@ void
 GlRenderer::LightColor(float h, float s, float v)
 {
   float r, g, b;
-  Hsv2Rgb(h, s, v, r, g, b);
+  Hsv2Rgb(h, s, v, &r, &g, &b);
   lightColor_.x = r;
   lightColor_.y = g;
   lightColor_.z = b;

@@ -18,7 +18,7 @@ protected:
 TEST_F(TextLayoutTest, BlockCursorAtOriginForEmptyLayout)
 {
   int x, y, width, height;
-  layout_.CalculateFixedWidthBlockCursorPos(0, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(0, &x, &y, &width, &height);
   EXPECT_EQ(0, x);
   EXPECT_EQ(0, y);
   EXPECT_EQ(10, width);
@@ -29,7 +29,7 @@ TEST_F(TextLayoutTest, BlockCursorAtOriginForSingleEmptyLine)
 {
   int x, y, width, height;
   layout_.OpenNewLine();
-  layout_.CalculateFixedWidthBlockCursorPos(0, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(0, &x, &y, &width, &height);
   EXPECT_EQ(0, x);
   EXPECT_EQ(0, y);
   EXPECT_EQ(10, width);
@@ -41,7 +41,7 @@ TEST_F(TextLayoutTest, BlockCursorAtEndOfSingleLine)
   int x, y, width, height;
   layout_.OpenNewLine();
   layout_.SetNumCharsInLine(8);
-  layout_.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(8, &x, &y, &width, &height);
   EXPECT_EQ(80, x);
   EXPECT_EQ(0, y);
   EXPECT_EQ(10, width);
@@ -54,7 +54,7 @@ TEST_F(TextLayoutTest, BlockCursorWrapsWhenExceedsMaxLineWidthPixels)
   layout_.MaxLineWidthPixels = 89;
   layout_.OpenNewLine();
   layout_.SetNumCharsInLine(8);
-  layout_.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(8, &x, &y, &width, &height);
   EXPECT_EQ(0, x);
   EXPECT_EQ(16, y);
   EXPECT_EQ(10, width);
@@ -67,7 +67,7 @@ TEST_F(TextLayoutTest, BlockCursorNoWrapWhenRightAtMaxLineWidthPixels)
   layout_.MaxLineWidthPixels = 90;
   layout_.OpenNewLine();
   layout_.SetNumCharsInLine(8);
-  layout_.CalculateFixedWidthBlockCursorPos(8, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(8, &x, &y, &width, &height);
   EXPECT_EQ(80, x);
   EXPECT_EQ(0, y);
   EXPECT_EQ(10, width);
@@ -81,7 +81,7 @@ TEST_F(TextLayoutTest, BlockCursorOnSecondLine)
   layout_.SetNumCharsInLine(8);
   layout_.OpenNewLine();
   layout_.SetNumCharsInLine(4);
-  layout_.CalculateFixedWidthBlockCursorPos(10, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(10, &x, &y, &width, &height);
   EXPECT_EQ(20, x);
   EXPECT_EQ(16, y);
   EXPECT_EQ(10, width);
@@ -93,7 +93,7 @@ TEST_F(TextLayoutTest, BlockCursorBeyondCharCount)
   int x, y, width, height;
   layout_.OpenNewLine();
   layout_.SetNumCharsInLine(8);
-  layout_.CalculateFixedWidthBlockCursorPos(100, x, y, width, height);
+  layout_.CalculateFixedWidthBlockCursorPos(100, &x, &y, &width, &height);
   EXPECT_EQ(0, x);
   EXPECT_EQ(32, y);
   EXPECT_EQ(10, width);

@@ -11,7 +11,7 @@ class TextLayoutEngine
 {
 public:
   TextLayout<T> LayOutText(const std::string& text,
-                           BitmapFontMetrics& fontMetrics,
+                           const BitmapFontMetrics& fontMetrics,
                            int maxDrawGlyphsPerLine, int maxLineWidthPixels);
   GlyphCoords LayOutGlyph(const procdraw::BitmapGlyphMetrics& glyphMetrics,
                           const procdraw::BitmapFontMetrics& fontMetrics);
@@ -21,13 +21,13 @@ private:
   int cursorY;
   int numGlyphsThisLine;
   int numCharsThisLine;
-  void NewLine(TextLayout<T>& layout);
+  void NewLine(TextLayout<T>* layout);
 };
 
 template <typename T>
 TextLayout<T>
 TextLayoutEngine<T>::LayOutText(const std::string& text,
-                                BitmapFontMetrics& fontMetrics,
+                                const BitmapFontMetrics& fontMetrics,
                                 int maxDrawGlyphsPerLine,
                                 int maxLineWidthPixels)
 {
@@ -52,10 +52,10 @@ TextLayoutEngine<T>::LayOutText(const std::string& text,
 
   for (const char& ch : text) {
     if (ch == '\n') {
-      NewLine(layout);
+      NewLine(&layout);
     } else if (ch <= 32 || ch > maxCharCode) {
       if (cursorX + spaceAdvance > maxLineWidthPixels) {
-        NewLine(layout);
+        NewLine(&layout);
       }
       ++numCharsThisLine;
       cursorX += spaceAdvance;
@@ -65,7 +65,7 @@ TextLayoutEngine<T>::LayOutText(const std::string& text,
 
       if ((cursorX + glyphMetrics.AdvanceWidthPixels > maxLineWidthPixels) ||
           (numGlyphsThisLine >= maxDrawGlyphsPerLine)) {
-        NewLine(layout);
+        NewLine(&layout);
       }
 
       layout.AddGlyph(glyphCoords, cursorX, cursorY);
@@ -105,12 +105,12 @@ TextLayoutEngine<T>::LayOutGlyph(
 
 template <typename T>
 void
-TextLayoutEngine<T>::NewLine(TextLayout<T>& layout)
+TextLayoutEngine<T>::NewLine(TextLayout<T>* layout)
 {
-  layout.SetNumCharsInLine(numCharsThisLine);
-  layout.OpenNewLine();
+  layout->SetNumCharsInLine(numCharsThisLine);
+  layout->OpenNewLine();
   cursorX = 0;
-  cursorY += layout.LinespacePixels;
+  cursorY += layout->LinespacePixels;
   numGlyphsThisLine = 0;
   numCharsThisLine = 0;
 }

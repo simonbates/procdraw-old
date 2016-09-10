@@ -32,7 +32,7 @@ FtTextRenderer::FtTextRenderer()
     asciiFontMetrics_.AscenderPixels = face_->size->metrics.ascender / 64;
     asciiFontMetrics_.DescenderPixels = face_->size->metrics.descender / 64;
     asciiFontMetrics_.LinespacePixels = face_->size->metrics.height / 64;
-    MakeFontTexture(32, FT_TEXT_RENDERER_MAX_ASCII_CODE, asciiFontMetrics_,
+    MakeFontTexture(32, FT_TEXT_RENDERER_MAX_ASCII_CODE, &asciiFontMetrics_,
                     &asciiFontTexture_);
   } catch (...) {
     Cleanup();
@@ -170,7 +170,7 @@ FtTextRenderer::MakeGlyphQuadVao()
 
 void
 FtTextRenderer::MakeFontTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                                BitmapFontMetrics& fontMetrics,
+                                BitmapFontMetrics* fontMetrics,
                                 GLuint* fontTexture)
 {
   glActiveTexture(GL_TEXTURE0);
@@ -182,12 +182,12 @@ FtTextRenderer::MakeFontTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics.BitmapWidth),
-                       &(fontMetrics.BitmapHeight));
+  CalculateTextureSize(fromCharCode, toCharCode, &(fontMetrics->BitmapWidth),
+                       &(fontMetrics->BitmapHeight));
 
   // Allocate the texture memory
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontMetrics.BitmapWidth,
-               fontMetrics.BitmapHeight, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontMetrics->BitmapWidth,
+               fontMetrics->BitmapHeight, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
   PopulateTexture(fromCharCode, toCharCode, fontMetrics);
 }
@@ -213,9 +213,9 @@ FtTextRenderer::CalculateTextureSize(FT_ULong fromCharCode, FT_ULong toCharCode,
 
 void
 FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
-                                BitmapFontMetrics& fontMetrics)
+                                BitmapFontMetrics* fontMetrics)
 {
-  fontMetrics.ClearGlyphs(toCharCode);
+  fontMetrics->ClearGlyphs(toCharCode);
 
   GLint xoffset = 0;
 
@@ -235,7 +235,7 @@ FtTextRenderer::PopulateTexture(FT_ULong fromCharCode, FT_ULong toCharCode,
     glyphMetrics.LeftBearingPixels = g->bitmap_left;
     glyphMetrics.TopBearingPixels = g->bitmap_top;
 
-    fontMetrics.SetGlyph(charCode, glyphMetrics);
+    fontMetrics->SetGlyph(charCode, glyphMetrics);
 
     xoffset += g->bitmap.width;
   }

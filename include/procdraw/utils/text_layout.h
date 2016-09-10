@@ -31,9 +31,9 @@ public:
   const std::vector<T>& GetVerticesForLine(size_type lineNum) const;
   void SetNumCharsInLine(int n);
   int GetNumCharsInLine(size_type lineNum) const;
-  void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int& out_x,
-                                         int& out_y, int& out_width,
-                                         int& out_height) const;
+  void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int* out_x,
+                                         int* out_y, int* out_width,
+                                         int* out_height) const;
 
 private:
   std::vector<std::vector<T>> lines_;
@@ -123,9 +123,9 @@ TextLayout<T>::GetNumCharsInLine(size_type lineNum) const
 template <typename T>
 void
 TextLayout<T>::CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
-                                                 int& out_x, int& out_y,
-                                                 int& out_width,
-                                                 int& out_height) const
+                                                 int* out_x, int* out_y,
+                                                 int* out_width,
+                                                 int* out_height) const
 {
   int physicalCursorTextPosition = cursorTextPosition;
   int physicalLineNum = 0;
@@ -146,9 +146,9 @@ TextLayout<T>::CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
     ++physicalLineNum;
   }
 
-  out_x = x;
-  out_y = physicalLineNum * this->LinespacePixels;
-  out_width = this->FixedGlyphWidth;
-  out_height = this->GlyphHeight;
+  *out_x = x;
+  *out_y = physicalLineNum * this->LinespacePixels;
+  *out_width = this->FixedGlyphWidth;
+  *out_height = this->GlyphHeight;
 }
 }
