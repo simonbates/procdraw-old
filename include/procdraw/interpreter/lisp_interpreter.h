@@ -1,9 +1,8 @@
 #pragma once
 
-#include "lisp_memory.h"
-#include "lisp_printer.h"
-#include "lisp_reader.h"
-#include "prettyprinter.h"
+#include "procdraw/interpreter/lisp_memory.h"
+#include "procdraw/interpreter/lisp_reader.h"
+#include "procdraw/interpreter/prettyprinter.h"
 #include <string>
 #include <vector>
 

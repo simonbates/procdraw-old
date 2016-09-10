@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lisp_memory.h"
+#include "procdraw/interpreter/lisp_memory.h"
 #include <sstream>
 #include <string>
 
