@@ -5,11 +5,11 @@
 
 namespace procdraw {
 
-    class LispInterpreter;
+class LispInterpreter;
 
-    class LispPrinter {
-    public:
-        std::string PrintToString(LispInterpreter *L, LispObjectPtr obj);
-    };
-
+class LispPrinter
+{
+public:
+  std::string PrintToString(LispInterpreter* L, LispObjectPtr obj);
+};
 }

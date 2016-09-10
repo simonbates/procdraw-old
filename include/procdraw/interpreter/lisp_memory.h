@@ -4,9 +4,8 @@
 
 namespace procdraw {
 
-    class LispObject;
-    typedef std::shared_ptr<LispObject> LispObjectPtr;
+class LispObject;
+typedef std::shared_ptr<LispObject> LispObjectPtr;
 
-    bool LispObjectEq(const LispObjectPtr &x, const LispObjectPtr &y);
-
+bool LispObjectEq(const LispObjectPtr& x, const LispObjectPtr& y);
 }

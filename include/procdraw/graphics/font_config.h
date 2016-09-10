@@ -4,7 +4,7 @@
 
 namespace procdraw {
 
-    const std::string CodeFontFilePath = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
-    const int CodeFontSizePixels = 24;
-
+const std::string CodeFontFilePath =
+  "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
+const int CodeFontSizePixels = 24;
 }
