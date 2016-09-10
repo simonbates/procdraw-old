@@ -190,6 +190,8 @@ std::string LispInterpreter::PrintToString(LispObjectPtr obj)
     return prettyPrinter_.PrintToString(this, obj, 1000);
 }
 
+*** TODO In procdraw_app.cpp use console width for pretty printing rather than hardcoded value
+
 ** TODO Add binary file utils
 
 - New byte array data type
