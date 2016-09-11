@@ -57,7 +57,7 @@ Optional dependencies:
 ### Configure the font
 
 Edit the file `include/procdraw/graphics/font_config.h` and set
-`CodeFontFilePath` to a suitable monospaced font on your system.
+`MonospaceFontFilePath` to a suitable monospaced font on your system.
 
 ### Build Procdraw and run the tests
 
@@ -111,8 +111,8 @@ unpacked to (such as `C:/SDL/SDL2-2.0.4`).
 ### Configure the font
 
 Edit the file `include/procdraw/graphics/font_config.h` and set
-`CodeFontFilePath` to a suitable monospaced font on your system (such
-as `"C:/Windows/Fonts/consola.ttf"`).
+`MonospaceFontFilePath` to a suitable monospaced font on your system
+(such as `"C:/Windows/Fonts/consola.ttf"`).
 
 ### Build Procdraw and run the tests
 

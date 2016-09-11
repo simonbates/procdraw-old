@@ -2,8 +2,8 @@
 
 #define GLM_FORCE_RADIANS
 
+#include "procdraw/graphics/bitmap_text_renderer.h"
 #include "procdraw/graphics/camera.h"
-#include "procdraw/graphics/ft_text_renderer.h"
 #include <GL/gl3w.h>
 #include PROCDRAW_SDL2_H
 #include PROCDRAW_SDL2_OPENGL_H
@@ -77,7 +77,7 @@ public:
 private:
   SDL_Window* window_;
   SDL_GLContext glcontext_;
-  std::unique_ptr<FtTextRenderer> textRenderer_;
+  std::unique_ptr<BitmapTextRenderer> textRenderer_;
   GLuint program_;
   GLint worldViewProjectionLoc_;
   GLint lightDirectionLoc_;

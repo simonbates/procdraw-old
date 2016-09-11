@@ -34,14 +34,14 @@ GlRenderer::GlRenderer()
   InitMaterial();
 
   // Create the text renderer after we have initialized OpenGL
-  textRenderer_ = std::unique_ptr<FtTextRenderer>(new FtTextRenderer());
+  textRenderer_ = std::unique_ptr<BitmapTextRenderer>(new BitmapTextRenderer());
 
   Begin3D();
 }
 
 GlRenderer::~GlRenderer()
 {
-  // TODO The constructor/destructor design here is not safe -- if the
+  // TODO: The constructor/destructor design here is not safe -- if the
   // constructor throws an exception, the destructor will not be called
 
   glDeleteVertexArrays(1, &tetrahedronVao_);

@@ -1,10 +1,8 @@
 #pragma once
 
-#include <string>
-
 namespace procdraw {
 
-const std::string CodeFontFilePath =
+const char MonospaceFontFilePath[] =
   "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
-const int CodeFontSizePixels = 24;
+const int MonospaceFontSizePixels = 24;
 }

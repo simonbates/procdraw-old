@@ -1,6 +1,7 @@
 add_library(graphics
+    bitmap_text_renderer.cpp
     camera.cpp
-    ft_text_renderer.cpp
+    freetype_font_loader.cpp
     glrenderer.cpp
     gl_util.cpp
     sdl_util.cpp)
