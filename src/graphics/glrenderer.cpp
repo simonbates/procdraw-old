@@ -462,12 +462,12 @@ GlRenderer::MakeTetrahedronVao()
 
   // Positions
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void*)offsetof(Vertex, x));
+                        reinterpret_cast<void*>(offsetof(Vertex, x)));
   glEnableVertexAttribArray(0);
 
   // Normals
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void*)offsetof(Vertex, nx));
+                        reinterpret_cast<void*>(offsetof(Vertex, nx)));
   glEnableVertexAttribArray(1);
 }
 
@@ -513,12 +513,12 @@ GlRenderer::MakeCubeVao()
 
   // Positions
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void*)offsetof(Vertex, x));
+                        reinterpret_cast<void*>(offsetof(Vertex, x)));
   glEnableVertexAttribArray(0);
 
   // Normals
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        (void*)offsetof(Vertex, nx));
+                        reinterpret_cast<void*>(offsetof(Vertex, nx)));
   glEnableVertexAttribArray(1);
 
   // Indices

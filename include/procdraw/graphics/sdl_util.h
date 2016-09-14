@@ -9,7 +9,7 @@ void ThrowSdlError();
 class SDL
 {
 public:
-  SDL(Uint32 flags);
+  explicit SDL(Uint32 flags);
   ~SDL();
 };
 }

@@ -67,13 +67,13 @@ PrettyPrinter::Scan(LispInterpreter* L, LispObjectPtr obj)
       if (LispObjectEq(L->Car(obj), L->SymbolRef("lambda"))) {
         Emit(PrettyPrinterToken::Begin(lambdaIndentAmount_));
         Emit(PrettyPrinterToken::String("("));
-        Scan(L, L->Car(obj)); // lambda
+        Scan(L, L->Car(obj));  // lambda
         if (!L->Null(L->Cdr(obj))) {
           Emit(PrettyPrinterToken::String(" "));
-          Scan(L, L->Cadr(obj)); // parameter list
+          Scan(L, L->Cadr(obj));  // parameter list
           if (!L->Null(L->Cddr(obj))) {
             Emit(PrettyPrinterToken::Blank());
-            ScanListContents(L, L->Cddr(obj)); // body forms
+            ScanListContents(L, L->Cddr(obj));  // body forms
           }
         }
         Emit(PrettyPrinterToken::String(")"));

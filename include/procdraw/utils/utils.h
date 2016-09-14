@@ -32,7 +32,7 @@ template <typename T>
 class SimpleMovingAverage
 {
 public:
-  SimpleMovingAverage(int numDataPoints);
+  explicit SimpleMovingAverage(int numDataPoints);
   void AddDataPoint(T dataPoint);
   T GetMean();
 

@@ -13,7 +13,7 @@ public:
     , cursorPos_(0)
   {
   }
-  LineBuffer(const std::string& prompt)
+  explicit LineBuffer(const std::string& prompt)
     : line_(prompt)
     , promptLen_(prompt.length())
     , cursorPos_(promptLen_)

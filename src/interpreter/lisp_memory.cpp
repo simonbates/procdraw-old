@@ -13,7 +13,7 @@ size_t LispObjectHash(const LispObjectPtr& obj);
 class LispObject
 {
 public:
-  LispObject(LispObjectType t)
+  explicit LispObject(LispObjectType t)
     : Type(t)
   {
   }
@@ -24,7 +24,7 @@ public:
 class LispNumber : public LispObject
 {
 public:
-  LispNumber(double val)
+  explicit LispNumber(double val)
     : LispObject(LispObjectType::Number)
     , val_(val)
   {
@@ -74,7 +74,7 @@ public:
 class LispBoolean : public LispObject
 {
 public:
-  LispBoolean(bool val)
+  explicit LispBoolean(bool val)
     : LispObject(LispObjectType::Boolean)
     , val_(val)
   {
@@ -85,7 +85,7 @@ public:
 class LispString : public LispObject
 {
 public:
-  LispString(const std::string& str)
+  explicit LispString(const std::string& str)
     : LispObject(LispObjectType::String)
     , str_(str)
   {

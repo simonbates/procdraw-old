@@ -1,6 +1,7 @@
 #include "procdraw/graphics/freetype_font_loader.h"
 #include "procdraw/utils/utils.h"
 #include <stdexcept>
+#include <string>
 
 namespace procdraw {
 

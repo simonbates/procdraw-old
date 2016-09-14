@@ -30,11 +30,11 @@ public:
   static PrettyPrinterToken Blank();
 
 private:
-  PrettyPrinterToken(PrettyPrinterTokenType t)
+  explicit PrettyPrinterToken(PrettyPrinterTokenType t)
     : Type(t)
   {
   }
-  PrettyPrinterToken(const std::string& s)
+  explicit PrettyPrinterToken(const std::string& s)
     : Type(PrettyPrinterTokenType::String)
     , Str(s)
     , Size(s.length())

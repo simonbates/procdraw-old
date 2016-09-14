@@ -13,7 +13,7 @@ struct ConsoleLine
 {
   std::string text;
   TextLayout<GLfloat> layout;
-  ConsoleLine(const std::string& text)
+  explicit ConsoleLine(const std::string& text)
     : text(text)
   {
   }

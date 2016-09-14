@@ -12,12 +12,12 @@ check-fns:
 
 .PHONY: cpplint
 cpplint:
-	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
+	find include src tests -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
 
 .PHONY: format
 format:
-	find include src tests -type f -not -name CMakeLists.txt -not -name \*.xml \
+	find include src tests -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec clang-format -i -style=Mozilla {} +
 
 .PHONY: gl3w
