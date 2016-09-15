@@ -5,7 +5,6 @@ add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_C
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
 add_executable(all_tests
-    function_spec_tests/function_spec_checker.cpp
     function_spec_tests/function_spec_checker_test.cpp
     function_spec_tests/function_specs_test.cpp
     interpreter_tests/prettyprinter_test.cpp
@@ -18,9 +17,9 @@ add_executable(all_tests
 
 target_link_libraries(all_tests
     interpreter
+    procdraw_test
     gtest
     gtest_main
-    tinyxml2
     ${CMAKE_THREAD_LIBS_INIT})
 
 add_test(all_tests all_tests)

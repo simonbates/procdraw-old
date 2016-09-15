@@ -128,5 +128,6 @@ if(PROCDRAW_ENABLE_ALSA_MIDI)
 endif()
 
 add_subdirectory(src/procdraw)
+add_subdirectory(src/test)
 add_subdirectory(tests)
 add_subdirectory(tests/interpreter_tests)

@@ -1,4 +1,6 @@
-#include "function_spec_checker.h"
+#include "procdraw/test/function_spec_checker.h"
+#include <string>
+#include <vector>
 
 namespace procdraw_test {
 
