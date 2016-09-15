@@ -1,6 +1,8 @@
 get_filename_component(FUNCTION_SPEC_CHECKER_TESTDATA_DIR "function_spec_tests" ABSOLUTE)
 get_filename_component(FUNCTION_SPECS_DIR "${PROJECT_SOURCE_DIR}/Documentation/functions" ABSOLUTE)
-configure_file(procdraw_tests_config.h.in procdraw_tests_config.h)
+
+add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_CHECKER_TESTDATA_DIR}")
+add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
 add_executable(all_tests
     function_spec_tests/function_spec_checker.cpp
@@ -13,9 +15,6 @@ add_executable(all_tests
     utils_tests/text_layout_engine_test.cpp
     utils_tests/text_layout_test.cpp
     utils_tests/utils_test.cpp)
-
-target_include_directories(all_tests
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(all_tests
     interpreter
