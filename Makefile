@@ -18,7 +18,7 @@ cpplint:
 .PHONY: format
 format:
 	find include src tests -type f \( -name \*.cpp -o -name \*.h \) \
-	-exec clang-format -i -style="{BasedOnStyle: Mozilla, SpacesBeforeTrailingComments: 2}" {} +
+	-exec clang-format -i '-style={BasedOnStyle: Mozilla, SpacesBeforeTrailingComments: 2}' {} +
 
 .PHONY: gl3w
 gl3w:
