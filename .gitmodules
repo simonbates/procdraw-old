@@ -1,6 +1,3 @@
-[submodule "site/media"]
-	path = site/media
-	url = https://github.com/simonbates/procdraw-site-media.git
 [submodule "third_party/Catch"]
 	path = third_party/Catch
 	url = https://github.com/philsquared/Catch.git
@@ -19,3 +16,6 @@
 [submodule "third_party/tinyxml2"]
 	path = third_party/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
+[submodule "website/media"]
+	path = website/media
+	url = https://github.com/simonbates/procdraw-site-media.git
