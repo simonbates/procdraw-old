@@ -16,7 +16,7 @@ add_executable(all_tests
     utils_tests/utils_test.cpp)
 
 target_link_libraries(all_tests
-    interpreter
+    procdraw_lib
     procdraw_test
     gtest
     gtest_main

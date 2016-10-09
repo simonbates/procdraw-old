@@ -1,4 +1,4 @@
-#include "procdraw/utils/line_buffer.h"
+#include "procdraw/line_buffer.h"
 #include "gtest/gtest.h"
 #include <string>
 

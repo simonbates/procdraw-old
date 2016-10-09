@@ -2,10 +2,10 @@
 
 #include "procdraw/graphics/glrenderer.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
-#include "procdraw/procdraw/command_processor.h"
-#include "procdraw/procdraw/console.h"
-#include "procdraw/procdraw/frame_counter.h"
-#include "procdraw/utils/midi_listener.h"
+#include "procdraw/command_processor.h"
+#include "procdraw/console.h"
+#include "procdraw/frame_counter.h"
+#include "procdraw/midi_listener.h"
 
 #ifdef PROCDRAW_ENABLE_ALSA_MIDI
 #include "procdraw/alsa_midi/alsa_midi_client.h"

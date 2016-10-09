@@ -1,8 +1,8 @@
 #pragma once
 
 #include "procdraw/graphics/glrenderer.h"
-#include "procdraw/procdraw/command_processor.h"
-#include "procdraw/utils/line_buffer.h"
+#include "procdraw/command_processor.h"
+#include "procdraw/line_buffer.h"
 #include PROCDRAW_SDL2_H
 #include <string>
 #include <vector>

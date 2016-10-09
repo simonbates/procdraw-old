@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw/utils/font_metrics.h"
+#include "procdraw/font_metrics.h"
 #include <GL/gl3w.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H

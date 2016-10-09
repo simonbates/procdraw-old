@@ -1,4 +1,4 @@
-#include "procdraw/utils/text_layout.h"
+#include "procdraw/text_layout.h"
 #include "gtest/gtest.h"
 
 class TextLayoutTest : public ::testing::Test

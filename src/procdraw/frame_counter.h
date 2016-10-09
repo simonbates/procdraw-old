@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw/utils/utils.h"
+#include "procdraw/utils.h"
 #include PROCDRAW_SDL2_H
 
 namespace procdraw {

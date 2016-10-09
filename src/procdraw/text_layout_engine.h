@@ -1,7 +1,7 @@
 #pragma once
 
-#include "procdraw/utils/font_metrics.h"
-#include "procdraw/utils/text_layout.h"
+#include "procdraw/font_metrics.h"
+#include "procdraw/text_layout.h"
 #include <string>
 
 namespace procdraw {

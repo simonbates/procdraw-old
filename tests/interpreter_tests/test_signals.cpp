@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "procdraw/interpreter/lisp_interpreter.h"
 #include "procdraw/interpreter/signals.h"
-#include "procdraw/utils/utils.h"
+#include "procdraw/utils.h"
 
 TEST_CASE("Signals")
 {

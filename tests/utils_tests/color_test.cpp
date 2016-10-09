@@ -1,4 +1,4 @@
-#include "procdraw/utils/color.h"
+#include "procdraw/color.h"
 #include "gtest/gtest.h"
 
 TEST(ColorTest, Hsv2RgbRed)

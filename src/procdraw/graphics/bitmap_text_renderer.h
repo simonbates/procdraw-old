@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "procdraw/graphics/freetype_font_loader.h"
-#include "procdraw/utils/text_layout_engine.h"
+#include "procdraw/text_layout_engine.h"
 #include <GL/gl3w.h>
 #include <string>
 

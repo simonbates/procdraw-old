@@ -1,4 +1,4 @@
-#include "procdraw/utils/lsystem.h"
+#include "procdraw/lsystem.h"
 #include "gtest/gtest.h"
 #include <string>
 

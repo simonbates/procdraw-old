@@ -1,4 +1,4 @@
-#include "procdraw/utils/utils.h"
+#include "procdraw/utils.h"
 #include "gtest/gtest.h"
 
 TEST(UtilsTest, ClampInt)

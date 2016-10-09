@@ -3,8 +3,8 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "procdraw/graphics/gl_util.h"
 #include "procdraw/graphics/sdl_util.h"
-#include "procdraw/utils/color.h"
-#include "procdraw/utils/utils.h"
+#include "procdraw/color.h"
+#include "procdraw/utils.h"
 #include <iostream>
 #include <string>
 

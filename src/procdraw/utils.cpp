@@ -1,4 +1,4 @@
-#include "procdraw/utils/utils.h"
+#include "procdraw/utils.h"
 #include <cmath>
 
 namespace procdraw {

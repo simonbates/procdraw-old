@@ -99,10 +99,6 @@ set(TINYXML2_DIR ${PROJECT_SOURCE_DIR}/third_party/tinyxml2)
 add_library(tinyxml2 ${TINYXML2_DIR}/tinyxml2.cpp)
 target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
 
-# Procdraw include directory
-
-set(PROCDRAW_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-
 # Platform-specific compiler settings
 
 if(WIN32)
@@ -115,15 +111,6 @@ endif()
 
 # Projects
 
-add_subdirectory(src/utils)
-add_subdirectory(src/interpreter)
-add_subdirectory(src/graphics)
-
-if(PROCDRAW_ENABLE_ALSA_MIDI)
-    add_subdirectory(src/alsa_midi)
-endif()
-
-add_subdirectory(src/procdraw)
-add_subdirectory(src/test)
+add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(tests/interpreter_tests)

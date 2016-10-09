@@ -1,4 +1,4 @@
-#include "procdraw/utils/font_metrics.h"
+#include "procdraw/font_metrics.h"
 
 namespace procdraw {
 

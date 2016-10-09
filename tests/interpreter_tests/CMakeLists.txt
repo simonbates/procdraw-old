@@ -7,6 +7,6 @@ add_executable(interpreter_tests
     test_signals.cpp)
 
 target_link_libraries(interpreter_tests
-    interpreter)
+    procdraw_lib)
 
 add_test(interpreter_tests interpreter_tests)
