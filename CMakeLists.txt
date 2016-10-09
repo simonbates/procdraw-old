@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Procdraw)
 
-# Generate compile_commands.json for use with irony-mode
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 # CTest
 
 enable_testing()

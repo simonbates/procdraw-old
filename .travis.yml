@@ -6,4 +6,4 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install libsdl2-dev jing
   - cmake --version
-script: make check-fns && mkdir build && cd build && cmake .. && make && ./tests/all_tests && ctest --output-on-failure
+script: make lint && mkdir build && cd build && cmake .. && make && ./tests/all_tests && ctest --output-on-failure
