@@ -8,7 +8,7 @@
 #include "procdraw/midi_listener.h"
 
 #ifdef PROCDRAW_ENABLE_ALSA_MIDI
-#include "procdraw/alsa_midi/alsa_midi_client.h"
+#include "procdraw_alsa_midi/alsa_midi_client.h"
 #endif
 
 #include <memory>

@@ -2,13 +2,13 @@ FUNCTIONS_SRC_DIR = Documentation/functions
 FUNCTION_SCHEMA = $(FUNCTIONS_SRC_DIR)/function-spec.rnc
 
 format:
-	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
+	find src -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec clang-format -i '-style={BasedOnStyle: Mozilla, SpacesBeforeTrailingComments: 2}' {} +
 
 .PHONY: format
 
 cpplint:
-	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
+	find src -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
 
 .PHONY: cpplint

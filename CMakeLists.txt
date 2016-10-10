@@ -109,7 +109,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wpedantic -Wall")
 endif()
 
-# Add subdirectories
+# Add Procdraw source
 
 add_subdirectory(src)
-add_subdirectory(tests)
