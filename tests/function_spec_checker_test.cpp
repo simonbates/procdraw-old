@@ -1,4 +1,4 @@
-#include "procdraw/test/function_spec_checker.h"
+#include "function_spec_checker.h"  // NOLINT
 #include "gtest/gtest.h"
 #include <string>
 
