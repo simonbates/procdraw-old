@@ -3,28 +3,28 @@ set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 # procdraw library
 
 add_library(procdraw_lib
-    procdraw/graphics/bitmap_text_renderer.cpp
-    procdraw/graphics/camera.cpp
-    procdraw/graphics/freetype_font_loader.cpp
-    procdraw/graphics/glrenderer.cpp
-    procdraw/graphics/gl_util.cpp
-    procdraw/graphics/sdl_util.cpp
-    procdraw/interpreter/lisp_functions.cpp
-    procdraw/interpreter/lisp_interpreter.cpp
-    procdraw/interpreter/lisp_memory.cpp
-    procdraw/interpreter/lisp_reader.cpp
-    procdraw/interpreter/prettyprinter.cpp
-    procdraw/interpreter/signals.cpp
-    procdraw/color.cpp
-    procdraw/console.cpp
-    procdraw/font_metrics.cpp
-    procdraw/frame_counter.cpp
-    procdraw/line_buffer.cpp
-    procdraw/lsystem.cpp
-    procdraw/utils.cpp)
+    procdraw_lib/procdraw/graphics/bitmap_text_renderer.cpp
+    procdraw_lib/procdraw/graphics/camera.cpp
+    procdraw_lib/procdraw/graphics/freetype_font_loader.cpp
+    procdraw_lib/procdraw/graphics/glrenderer.cpp
+    procdraw_lib/procdraw/graphics/gl_util.cpp
+    procdraw_lib/procdraw/graphics/sdl_util.cpp
+    procdraw_lib/procdraw/interpreter/lisp_functions.cpp
+    procdraw_lib/procdraw/interpreter/lisp_interpreter.cpp
+    procdraw_lib/procdraw/interpreter/lisp_memory.cpp
+    procdraw_lib/procdraw/interpreter/lisp_reader.cpp
+    procdraw_lib/procdraw/interpreter/prettyprinter.cpp
+    procdraw_lib/procdraw/interpreter/signals.cpp
+    procdraw_lib/procdraw/color.cpp
+    procdraw_lib/procdraw/console.cpp
+    procdraw_lib/procdraw/font_metrics.cpp
+    procdraw_lib/procdraw/frame_counter.cpp
+    procdraw_lib/procdraw/line_buffer.cpp
+    procdraw_lib/procdraw/lsystem.cpp
+    procdraw_lib/procdraw/utils.cpp)
 
 target_include_directories(procdraw_lib
-    PUBLIC ${PROCDRAW_SRC_DIR}
+    PUBLIC ${PROCDRAW_SRC_DIR}/procdraw_lib
     PUBLIC ${GLM_DIR}
     PUBLIC ${SDL2_INCLUDE_DIRS}
     PRIVATE ${OPENGL_INCLUDE_DIRS})
@@ -35,9 +35,6 @@ target_link_libraries(procdraw_lib
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES})
 
-set_target_properties(procdraw_lib
-    PROPERTIES OUTPUT_NAME procdraw)
-
 # procdraw_alsa_midi
 
 if(PROCDRAW_ENABLE_ALSA_MIDI)
@@ -46,6 +43,7 @@ if(PROCDRAW_ENABLE_ALSA_MIDI)
 
     target_include_directories(procdraw_alsa_midi
         PUBLIC ${PROCDRAW_SRC_DIR}
+        PUBLIC ${PROCDRAW_SRC_DIR}/procdraw_lib
         PRIVATE ${ALSA_INCLUDE_DIRS})
 
     target_link_libraries(procdraw_alsa_midi
