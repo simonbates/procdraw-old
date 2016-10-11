@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw_core/interpreter/lisp_interpreter.h"
 #include <cmath>
 
 TEST_CASE("LispInterpreter::MakeList()")

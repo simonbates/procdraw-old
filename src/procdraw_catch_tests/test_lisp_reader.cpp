@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "procdraw/interpreter/lisp_interpreter.h"
-#include "procdraw/interpreter/lisp_reader.h"
+#include "procdraw_core/interpreter/lisp_interpreter.h"
+#include "procdraw_core/interpreter/lisp_reader.h"
 
 TEST_CASE("Lisp reader")
 {
