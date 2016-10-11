@@ -12,15 +12,14 @@ title: Procdraw
 markdown: kramdown
 
 exclude: [
+  "bower_components",
+  "node_modules",
+  "Makefile",
+  "README.md",
   "bower.json",
   "browserslist",
-  "gulpfile.js",
-  "Makefile",
-  "node_modules",
   "npm-debug.log",
-  "bower_components",
-  "package.json",
-  "README.md"
+  "package.json"
 ]
 
 collections:
