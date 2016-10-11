@@ -1,6 +1,6 @@
 set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
-# procdraw library
+# procdraw_core
 
 add_library(procdraw_core
     procdraw_core/graphics/bitmap_text_renderer.cpp
