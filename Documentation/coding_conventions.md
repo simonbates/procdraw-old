@@ -1,5 +1,5 @@
-Coding
-======
+Procdraw Coding Conventions
+===========================
 
 C++ Conventions
 ---------------
@@ -35,11 +35,3 @@ If a function has a single return value (including compound objects),
 prefer return by value. If there are situations where there is
 evidence (profiling) that return by value is too slow, then use a
 different approach (such as pass modifiable object by pointer).
-
-Pre-commit checklist
---------------------
-
-- Run `make format` to format the source code
-- Run `make cpplint`
-- Build and run the tests
-- Run Procdraw
