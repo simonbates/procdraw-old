@@ -58,6 +58,8 @@ Edit the file `src/procdraw_core/graphics/font_config.h` and set
 Procdraw uses the CMake build system:
 
 ```
+$ git clone https://github.com/simonbates/procdraw.git
+$ cd procdraw
 $ git submodule update --init
 $ mkdir build
 $ cd build
@@ -123,6 +125,8 @@ Edit the file `src/procdraw_core/graphics/font_config.h` and set
 Run CMake to generate the Visual Studio solution:
 
 ```
+> git clone https://github.com/simonbates/procdraw.git
+> cd procdraw
 > git submodule update --init
 > mkdir build
 > cd build
