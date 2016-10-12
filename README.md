@@ -48,6 +48,13 @@ Procdraw has the following build dependencies:
 * SDL2
 * ALSA (for MIDI input)
 
+### Clone the Procdraw repo and submodules
+
+```
+$ git clone https://github.com/simonbates/procdraw.git
+$ cd procdraw
+$ git submodule update --init
+```
 ### Configure the font
 
 Edit the file `src/procdraw_core/graphics/font_config.h` and set
@@ -58,9 +65,7 @@ Edit the file `src/procdraw_core/graphics/font_config.h` and set
 Procdraw uses the CMake build system:
 
 ```
-$ git clone https://github.com/simonbates/procdraw.git
 $ cd procdraw
-$ git submodule update --init
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -114,6 +119,14 @@ where to find the SDL2 files, please set an environment variable,
 `PROCDRAW_SDL2_DIR`, to the location that the distribution was
 unpacked to (such as `C:/SDL/SDL2-2.0.4`).
 
+### Clone the Procdraw repo and submodules
+
+```
+> git clone https://github.com/simonbates/procdraw.git
+> cd procdraw
+> git submodule update --init
+```
+
 ### Configure the font
 
 Edit the file `src/procdraw_core/graphics/font_config.h` and set
@@ -125,9 +138,7 @@ Edit the file `src/procdraw_core/graphics/font_config.h` and set
 Run CMake to generate the Visual Studio solution:
 
 ```
-> git clone https://github.com/simonbates/procdraw.git
 > cd procdraw
-> git submodule update --init
 > mkdir build
 > cd build
 > cmake -G "Visual Studio 14" ..
