@@ -35,8 +35,8 @@ like to use Procdraw to explore:
 * Runtime modification of as much as possible, including the Procdraw
   user interfaces
 
-Building on Linux
------------------
+Building and running Procdraw on Linux
+--------------------------------------
 
 ### Install dependencies
 
@@ -79,8 +79,7 @@ To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
 $ cmake -DCMAKE_BUILD_TYPE=Debug ..
 ```
 
-Running Procdraw
-----------------
+### Running Procdraw
 
 Procdaw can be run from the build directory:
 
@@ -88,8 +87,8 @@ Procdaw can be run from the build directory:
 $ src/procdraw
 ```
 
-Building on Windows
--------------------
+Building and running Procdraw on Windows
+----------------------------------------
 
 ### Install dependencies
 
@@ -132,6 +131,10 @@ To build in Visual Studio:
 To run the tests in Visual Studio:
 
 - Build the `RUN_TESTS` project
+
+### Running Procdraw
+
+In Visual Studio, start a new instance of the `procdraw_app` project.
 
 License
 -------
