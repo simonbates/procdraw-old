@@ -55,8 +55,7 @@ Edit the file `src/procdraw_core/graphics/font_config.h` and set
 
 ### Build Procdraw and run the tests
 
-Procdraw uses the CMake build system. To build Procdraw and run the
-tests:
+Procdraw uses the CMake build system:
 
 ```
 $ git submodule update --init
@@ -67,12 +66,6 @@ $ make
 $ ctest -V
 ```
 
-To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
-
-```
-$ cmake -DCMAKE_BUILD_TYPE=Debug ..
-```
-
 ### Running Procdraw
 
 Procdaw can be run from the build directory:
@@ -81,12 +74,18 @@ Procdaw can be run from the build directory:
 $ src/procdraw
 ```
 
+### Making a debug build
+
+To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
+
+```
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
 ### Additional make targets
 
 Procdraw includes a `Makefile` at the root of the project with some
 additional targets:
-
-Optional dependencies:
 
 * `format`: format the source code (requires `clang-format`)
 * `cpplint`: run `cpplint` on the source code (requires Python 2)
