@@ -17,7 +17,7 @@ protected:
     }
     EXPECT_FALSE(checker_.Check(fullpath.c_str(), expectedNumTests));
     auto messages = checker_.GetMessages();
-    EXPECT_EQ(1, messages.size());
+    EXPECT_EQ(static_cast<size_t>(1), messages.size());
     if (messages.size() > 0) {
       EXPECT_EQ(expectedMessage, messages[0]);
     }
@@ -66,5 +66,5 @@ TEST_F(FunctionSpecCheckerTest, TooManyTests)
 TEST_F(FunctionSpecCheckerTest, Passing)
 {
   EXPECT_TRUE(checker_.Check(ResolveTestFile("passing.xml").c_str(), 2));
-  EXPECT_EQ(0, checker_.GetMessages().size());
+  EXPECT_EQ(static_cast<size_t>(0), checker_.GetMessages().size());
 }

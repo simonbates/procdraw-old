@@ -1,6 +1,10 @@
 FUNCTIONS_SRC_DIR = Documentation/functions
 FUNCTION_SCHEMA = $(FUNCTIONS_SRC_DIR)/function-spec.rnc
 
+default: lint
+
+.PHONY: default
+
 format:
 	find src -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec clang-format -i '-style={BasedOnStyle: Mozilla, SpacesBeforeTrailingComments: 2}' {} +

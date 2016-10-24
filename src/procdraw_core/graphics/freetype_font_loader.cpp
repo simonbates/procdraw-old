@@ -2,6 +2,7 @@
 #include "procdraw_core/utils.h"
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 
 namespace procdraw {
 
@@ -69,8 +70,10 @@ FreeTypeFontLoader::CalculateTextureSize(FT_Face face, FT_ULong fromCharCode,
     RenderChar(face, charCode);
     FT_GlyphSlot g = face->glyph;
     *width += g->bitmap.width;
-    if (g->bitmap.rows > *height) {
-      *height = g->bitmap.rows;
+    if (static_cast<std::remove_pointer<decltype(height)>::type>(
+          g->bitmap.rows) > *height) {
+      *height = static_cast<std::remove_pointer<decltype(height)>::type>(
+        g->bitmap.rows);
     }
   }
   // Ensure that the texture dimensions are powers of 2

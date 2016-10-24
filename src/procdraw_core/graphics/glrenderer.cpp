@@ -1,9 +1,9 @@
 #include "procdraw_core/graphics/glrenderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "procdraw_core/color.h"
 #include "procdraw_core/graphics/gl_util.h"
 #include "procdraw_core/graphics/sdl_util.h"
-#include "procdraw_core/color.h"
 #include "procdraw_core/utils.h"
 #include <iostream>
 #include <string>

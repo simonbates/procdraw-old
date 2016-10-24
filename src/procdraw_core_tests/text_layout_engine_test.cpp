@@ -149,9 +149,9 @@ TEST_F(TextLayoutEngineTest, LayOutTextEmptyStringHasOneEmptyLine)
   EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
   EXPECT_EQ(100, layout.MaxLineWidthPixels);
 
-  EXPECT_EQ(1, layout.NumLines());
+  EXPECT_EQ(static_cast<size_t>(1), layout.NumLines());
   EXPECT_EQ(0, layout.GetNumCharsInLine(0));
-  EXPECT_EQ(0, layout.GetVerticesForLine(0).size());
+  EXPECT_EQ(static_cast<size_t>(0), layout.GetVerticesForLine(0).size());
 }
 
 TEST_F(TextLayoutEngineTest, LayOutTextSingleLine)
@@ -163,12 +163,12 @@ TEST_F(TextLayoutEngineTest, LayOutTextSingleLine)
   EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
   EXPECT_EQ(1000, layout.MaxLineWidthPixels);
 
-  EXPECT_EQ(1, layout.NumLines());
+  EXPECT_EQ(static_cast<size_t>(1), layout.NumLines());
 
   EXPECT_EQ(4, layout.GetNumCharsInLine(0));
 
   auto vertices = layout.GetVerticesForLine(0);
-  EXPECT_EQ(24 * 2, vertices.size());
+  EXPECT_EQ(static_cast<size_t>(24 * 2), vertices.size());
   ExpectGlyphVertices(exclamationCoords_, spaceAdvance_, 0, vertices, 0);
   ExpectGlyphVertices(quoteCoords_, spaceAdvance_ * 2 + exclamationAdvance_, 0,
                       vertices, 24);
@@ -188,7 +188,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
   EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
   EXPECT_EQ(1000, layout.MaxLineWidthPixels);
 
-  EXPECT_EQ(2, layout.NumLines());
+  EXPECT_EQ(static_cast<size_t>(2), layout.NumLines());
 
   // Number of chars in each line
 
@@ -198,7 +198,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
   // Vertices
 
   auto lineOneVertices = layout.GetVerticesForLine(0);
-  EXPECT_EQ(24 * 4, lineOneVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24 * 4), lineOneVertices.size());
   ExpectGlyphVertices(exclamationCoords_,
                       spaceAdvance_ + exclamationAdvance_ * 0, 0,
                       lineOneVertices, 24 * 0);
@@ -213,7 +213,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
                       lineOneVertices, 24 * 3);
 
   auto lineTwoVertices = layout.GetVerticesForLine(1);
-  EXPECT_EQ(24 * 2, lineTwoVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24 * 2), lineTwoVertices.size());
   ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 0,
                       fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
   ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 1,
@@ -237,7 +237,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
   EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
   EXPECT_EQ(spaceAdvance_ * 3, layout.MaxLineWidthPixels);
 
-  EXPECT_EQ(4, layout.NumLines());
+  EXPECT_EQ(static_cast<size_t>(4), layout.NumLines());
 
   // Number of chars in each line
 
@@ -248,15 +248,15 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
 
   // Vertices
 
-  EXPECT_EQ(0, layout.GetVerticesForLine(0).size());
+  EXPECT_EQ(static_cast<size_t>(0), layout.GetVerticesForLine(0).size());
 
   auto lineTwoVertices = layout.GetVerticesForLine(1);
-  EXPECT_EQ(24, lineTwoVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24), lineTwoVertices.size());
   ExpectGlyphVertices(exclamationCoords_, spaceAdvance_,
                       fontMetrics_.LinespacePixels, lineTwoVertices, 0);
 
   auto lineThreeVertices = layout.GetVerticesForLine(2);
-  EXPECT_EQ(24 * 5, lineThreeVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24 * 5), lineThreeVertices.size());
   ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 0,
                       fontMetrics_.LinespacePixels * 2, lineThreeVertices,
                       24 * 0);
@@ -274,7 +274,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
                       24 * 4);
 
   auto lineFourVertices = layout.GetVerticesForLine(3);
-  EXPECT_EQ(24, lineFourVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24), lineFourVertices.size());
   ExpectGlyphVertices(exclamationCoords_, 0, fontMetrics_.LinespacePixels * 3,
                       lineFourVertices, 0);
 }
@@ -293,7 +293,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextEmbeddedNewline)
   EXPECT_EQ(fontMetrics_.LinespacePixels, layout.LinespacePixels);
   EXPECT_EQ(1000, layout.MaxLineWidthPixels);
 
-  EXPECT_EQ(2, layout.NumLines());
+  EXPECT_EQ(static_cast<size_t>(2), layout.NumLines());
 
   // Number of chars in each line
 
@@ -303,11 +303,11 @@ TEST_F(TextLayoutEngineTest, LayOutTextEmbeddedNewline)
   // Vertices
 
   auto lineOneVertices = layout.GetVerticesForLine(0);
-  EXPECT_EQ(24, lineOneVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24), lineOneVertices.size());
   ExpectGlyphVertices(exclamationCoords_, 0, 0, lineOneVertices, 0);
 
   auto lineTwoVertices = layout.GetVerticesForLine(1);
-  EXPECT_EQ(24 * 2, lineTwoVertices.size());
+  EXPECT_EQ(static_cast<size_t>(24 * 2), lineTwoVertices.size());
   ExpectGlyphVertices(exclamationCoords_, spaceAdvance_,
                       fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
   ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_,

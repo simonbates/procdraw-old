@@ -1,6 +1,6 @@
 #define SDL_MAIN_HANDLED
-#include "procdraw_core/graphics/sdl_util.h"
 #include "procdraw_app/procdraw_app.h"
+#include "procdraw_core/graphics/sdl_util.h"
 
 int
 main()

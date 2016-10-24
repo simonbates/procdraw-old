@@ -1,10 +1,10 @@
 #pragma once
 
-#include "procdraw_core/graphics/glrenderer.h"
-#include "procdraw_core/interpreter/lisp_interpreter.h"
 #include "procdraw_core/command_processor.h"
 #include "procdraw_core/console.h"
 #include "procdraw_core/frame_counter.h"
+#include "procdraw_core/graphics/glrenderer.h"
+#include "procdraw_core/interpreter/lisp_interpreter.h"
 #include "procdraw_core/midi_listener.h"
 
 #ifdef PROCDRAW_ENABLE_ALSA_MIDI

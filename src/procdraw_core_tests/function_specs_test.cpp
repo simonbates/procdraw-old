@@ -7,8 +7,8 @@ class FunctionSpecsTest : public ::testing::Test
 protected:
   void CheckSpec(const std::string& filename, int expectedNumTests)
   {
-    bool passed = checker_.Check(ResolveSpecFile(filename).c_str(),
-                                 expectedNumTests);
+    bool passed =
+      checker_.Check(ResolveSpecFile(filename).c_str(), expectedNumTests);
     EXPECT_TRUE(passed);
     if (!passed) {
       for (auto message : checker_.GetMessages()) {
