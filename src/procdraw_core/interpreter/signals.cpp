@@ -96,13 +96,6 @@ MakeEventRelaySignal(LispInterpreter* L)
 }
 
 static bool
-Signalp(LispInterpreter* L, LispObjectPtr obj)
-{
-  return L->TypeOf(obj) == LispObjectType::Cons &&
-         LispObjectEq(L->Car(obj), L->SymbolRef("signal"));
-}
-
-static bool
 HasBeenStepped(LispInterpreter* L, LispObjectPtr signal)
 {
   return L->Memb(signal, L->SymbolValue(L->SymbolRef("stepped-signals")));
