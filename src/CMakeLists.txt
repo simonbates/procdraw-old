@@ -41,11 +41,11 @@ add_library(procdraw_core
     procdraw_core/line_buffer.h
     procdraw_core/lsystem.cpp
     procdraw_core/lsystem.h
+    procdraw_core/math.cpp
+    procdraw_core/math.h
     procdraw_core/midi_listener.h
     procdraw_core/text_layout_engine.h
-    procdraw_core/text_layout.h
-    procdraw_core/utils.cpp
-    procdraw_core/utils.h)
+    procdraw_core/text_layout.h)
 
 target_include_directories(procdraw_core
     PUBLIC ${PROCDRAW_SRC_DIR}
@@ -122,9 +122,9 @@ add_executable(procdraw_core_tests
     procdraw_core_tests/function_specs_test.cpp
     procdraw_core_tests/line_buffer_test.cpp
     procdraw_core_tests/lsystem_test.cpp
+    procdraw_core_tests/math_test.cpp
     procdraw_core_tests/text_layout_engine_test.cpp
-    procdraw_core_tests/text_layout_test.cpp
-    procdraw_core_tests/utils_test.cpp)
+    procdraw_core_tests/text_layout_test.cpp)
 
 target_include_directories(procdraw_core_tests
     PRIVATE ${PROCDRAW_SRC_DIR})

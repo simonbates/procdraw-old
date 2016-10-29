@@ -1,6 +1,6 @@
 #include "procdraw_core/interpreter/signals.h"
 #include "procdraw_core/interpreter/lisp_interpreter.h"
-#include "procdraw_core/utils.h"
+#include "procdraw_core/math.h"
 #include "gtest/gtest.h"
 
 class SignalsTest : public ::testing::Test

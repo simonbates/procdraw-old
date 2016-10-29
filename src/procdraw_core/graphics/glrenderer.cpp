@@ -4,7 +4,7 @@
 #include "procdraw_core/color.h"
 #include "procdraw_core/graphics/gl_util.h"
 #include "procdraw_core/graphics/sdl_util.h"
-#include "procdraw_core/utils.h"
+#include "procdraw_core/math.h"
 #include <iostream>
 #include <string>
 

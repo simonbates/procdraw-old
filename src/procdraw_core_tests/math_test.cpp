@@ -1,28 +1,28 @@
-#include "procdraw_core/utils.h"
+#include "procdraw_core/math.h"
 #include "gtest/gtest.h"
 
-TEST(UtilsTest, ClampInt)
+TEST(MathTest, ClampInt)
 {
   EXPECT_EQ(100, procdraw::Clamp(50, 100, 200));
   EXPECT_EQ(150, procdraw::Clamp(150, 100, 200));
   EXPECT_EQ(200, procdraw::Clamp(250, 100, 200));
 }
 
-TEST(UtilsTest, ClampFloat)
+TEST(MathTest, ClampFloat)
 {
   EXPECT_EQ(100.0f, procdraw::Clamp(50.0f, 100.0f, 200.0f));
   EXPECT_EQ(150.0f, procdraw::Clamp(150.0f, 100.0f, 200.0f));
   EXPECT_EQ(200.0f, procdraw::Clamp(250.0f, 100.0f, 200.0f));
 }
 
-TEST(UtilsTest, ApproximatelyEqual)
+TEST(MathTest, ApproximatelyEqual)
 {
   EXPECT_FALSE(procdraw::ApproximatelyEqual(1, 1.05, 0.001));
   EXPECT_FALSE(procdraw::ApproximatelyEqual(1, 1.05, 0.01));
   EXPECT_TRUE(procdraw::ApproximatelyEqual(1, 1.05, 0.1));
 }
 
-TEST(UtilsTest, Lerp)
+TEST(MathTest, Lerp)
 {
   // [0, 8]
 
@@ -41,7 +41,7 @@ TEST(UtilsTest, Lerp)
   EXPECT_EQ(-4.0, procdraw::Lerp(4.0, -4.0, 1.0));
 }
 
-TEST(UtilsTest, MapRange)
+TEST(MathTest, MapRange)
 {
   // [0, 10] to [-1, 0]
 
@@ -60,7 +60,7 @@ TEST(UtilsTest, MapRange)
   EXPECT_EQ(-1.0, procdraw::MapRange(0.0, 10.0, 1.0, -1.0, 10.0));
 }
 
-TEST(UtilsTest, Norm)
+TEST(MathTest, Norm)
 {
   // [0, 8]
 
@@ -79,7 +79,7 @@ TEST(UtilsTest, Norm)
   EXPECT_EQ(1.0, procdraw::Norm(4.0, -4.0, -4.0));
 }
 
-TEST(UtilsTest, PowerOf2Gte)
+TEST(MathTest, PowerOf2Gte)
 {
   EXPECT_EQ(0, procdraw::PowerOf2Gte(0));
   EXPECT_EQ(0, procdraw::PowerOf2Gte(-1));
@@ -93,7 +93,7 @@ TEST(UtilsTest, PowerOf2Gte)
   EXPECT_EQ(128, procdraw::PowerOf2Gte(128));
 }
 
-TEST(UtilsTest, Wrap)
+TEST(MathTest, Wrap)
 {
   // [0, 10]
 
@@ -120,7 +120,7 @@ TEST(UtilsTest, Wrap)
   EXPECT_EQ(-13.0, procdraw::Wrap(-20.0, -10.0, -33.0));
 }
 
-TEST(UtilsTest, SimpleMovingAverage)
+TEST(MathTest, SimpleMovingAverage)
 {
   procdraw::SimpleMovingAverage<int> sma(4);
 

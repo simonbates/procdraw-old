@@ -1,5 +1,5 @@
 #include "procdraw_core/interpreter/signals.h"
-#include "procdraw_core/utils.h"
+#include "procdraw_core/math.h"
 #include <cmath>
 
 #define TRI_WAVETABLE_LEN 3

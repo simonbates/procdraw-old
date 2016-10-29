@@ -1,5 +1,5 @@
 #include "procdraw_core/interpreter/lisp_functions.h"
-#include "procdraw_core/utils.h"
+#include "procdraw_core/math.h"
 
 #define FOR_EACH(L, n, lst)                                                    \
   for (LispObjectPtr n = lst; !L->Null(n); n = L->Cdr(n))
