@@ -70,10 +70,10 @@ FreeTypeFontLoader::CalculateTextureSize(FT_Face face, FT_ULong fromCharCode,
     RenderChar(face, charCode);
     FT_GlyphSlot g = face->glyph;
     *width += g->bitmap.width;
-    if (static_cast<std::remove_pointer<decltype(height)>::type>(
-          g->bitmap.rows) > *height) {
-      *height = static_cast<std::remove_pointer<decltype(height)>::type>(
-        g->bitmap.rows);
+    auto bitmapRows =
+      static_cast<std::remove_pointer<decltype(height)>::type>(g->bitmap.rows);
+    if (bitmapRows > *height) {
+      *height = bitmapRows;
     }
   }
   // Ensure that the texture dimensions are powers of 2
