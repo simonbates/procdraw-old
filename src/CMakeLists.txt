@@ -112,6 +112,7 @@ add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_C
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
 add_executable(procdraw_core_tests
+    procdraw_core_tests/interpreter/lisp_interpreter_test.cpp
     procdraw_core_tests/interpreter/lisp_reader_test.cpp
     procdraw_core_tests/interpreter/prettyprinter_test.cpp
     procdraw_core_tests/interpreter/signals_test.cpp
