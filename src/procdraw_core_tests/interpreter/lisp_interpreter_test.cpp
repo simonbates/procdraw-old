@@ -341,234 +341,213 @@ TEST_F(LispInterpreterTest, EvalLambdaReturnsValueOfLastExpression)
   EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.Read("((lambda () 1 2 3 (+ 40 2)))"))));
 }
 
+TEST_F(LispInterpreterTest, EvalPrognReturnsValueOfLastExpression)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(progn)"))));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("(progn 1)"))));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("(progn 1 2 3)"))));
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.Read("(progn 1 2 3 (+ 40 2))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalSetqTopLevel)
+{
+  auto setqReturn = L_.Eval(L_.Read("(setq a 10)"));
+  EXPECT_EQ(10, L_.NumVal(setqReturn));
+  EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("a"))));
+}
+
+TEST_F(LispInterpreterTest, EvalSetqInLambdaModifiesEnvironment)
+{
+  auto setqReturn = L_.Eval(L_.Read("(setq a 1)"));
+  EXPECT_EQ(1, L_.NumVal(setqReturn));
+  L_.Eval(
+    L_.Read("(setq f (lambda (a) (progn (setq b a) (setq a 3) (setq c a))))"));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("(f 2)"))));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("a"))));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"))));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("c"))));
+}
+
+TEST_F(LispInterpreterTest, EvalDefNoArgs)
+{
+  auto defReturn = L_.Eval(L_.Read("(def f () (+ 1 2))"));
+  EXPECT_EQ(procdraw::LispObjectType::Cons, L_.TypeOf(defReturn));
+  EXPECT_EQ("lambda", L_.SymbolName(L_.Car(defReturn)));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("(f)"))));
+}
+
+TEST_F(LispInterpreterTest, EvalDefOneArg)
+{
+  auto defReturn = L_.Eval(L_.Read("(def f (n) (+ n 1))"));
+  EXPECT_EQ(procdraw::LispObjectType::Cons, L_.TypeOf(defReturn));
+  EXPECT_EQ("lambda", L_.SymbolName(L_.Car(defReturn)));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("(f 1)"))));
+}
+
+TEST_F(LispInterpreterTest, EvalApplyNoArgs)
+{
+  EXPECT_EQ(3,
+    L_.NumVal(L_.Eval(L_.Read("(apply (lambda () (+ 1 2)) (quote ()))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalApplyOneArg)
+{
+  EXPECT_EQ(2, L_.NumVal(
+            L_.Eval(L_.Read("(apply (lambda (n) (+ n 1)) (quote (1)))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalApplyTwoArgs)
+{
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.Read(
+            "(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalCar)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(car nil)"))));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("(car (quote (1 . 2)))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalCdr)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(cdr nil)"))));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("(cdr (quote (1 . 2)))"))));
+}
+
+TEST_F(LispInterpreterTest, EvalIfTrueWithElse)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                           L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+  EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10) (setq b 20))"),
+                          env)));
+  EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("a"), env)));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
+}
+
+TEST_F(LispInterpreterTest, EvalIfTrueWithoutElse)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                           L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+  EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10))"), env)));
+  EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("a"), env)));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
+}
+
+TEST_F(LispInterpreterTest, EvalIfFalseWithElse)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                           L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+  EXPECT_EQ(20, L_.NumVal(L_.Eval(L_.Read("(if (eq 1 2) (setq a 10) (setq b 20))"),
+                          env)));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("a"), env)));
+  EXPECT_EQ(20, L_.NumVal(L_.Eval(L_.Read("b"), env)));
+}
+
+TEST_F(LispInterpreterTest, EvalIfFalseWithoutElse)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                           L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(if (eq 1 2) (setq a 10))"), env)));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("a"), env)));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
+}
+
+TEST_F(LispInterpreterTest, EvalRecursion)
+{
+  auto exp = "(progn"
+             "  (setq f (lambda (n)"
+             "    (if (eq n 0)"
+             "      1"
+             "      (* n (f (- n 1))))))"
+             "  (f 5))";
+  EXPECT_EQ(120, L_.NumVal(L_.Eval(L_.Read(exp))));
+}
+
+TEST_F(LispInterpreterTest, EvalLerp)
+{
+  // [0, 8]
+
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 0)"))));
+  EXPECT_EQ(2.0, L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 4))"))));
+  EXPECT_EQ(4.0, L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 2))"))));
+  EXPECT_EQ(6.0, L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 3 4))"))));
+  EXPECT_EQ(8.0, L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 1)"))));
+
+  // [4, -4]
+
+  EXPECT_EQ(4.0, L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 0)"))));
+  EXPECT_EQ(2.0, L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 4))"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 2 ))"))));
+  EXPECT_EQ(-2.0, L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 3 4))"))));
+  EXPECT_EQ(-4.0, L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 1)"))));
+}
+
+TEST_F(LispInterpreterTest, EvalMapRange)
+{
+  // [0, 10] to [-1, 0]
+
+  EXPECT_EQ(-1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 0)"))));
+  EXPECT_EQ(-0.75, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 10 4))"))));
+  EXPECT_EQ(-0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 5)"))));
+  EXPECT_EQ(-0.25, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 30 4))"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 10)"))));
+
+  // [0, 10] to [1, -1]
+
+  EXPECT_EQ(1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 0)"))));
+  EXPECT_EQ(0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 10 4))"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 5)"))));
+  EXPECT_EQ(-0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 30 4))"))));
+  EXPECT_EQ(-1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 10)"))));
+}
+
+TEST_F(LispInterpreterTest, EvalNorm)
+{
+  // [0, 8]
+
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(norm 0 8 0)"))));
+  EXPECT_EQ(0.25, L_.NumVal(L_.Eval(L_.Read("(norm 0 8 2)"))));
+  EXPECT_EQ(0.5, L_.NumVal(L_.Eval(L_.Read("(norm 0 8 4)"))));
+  EXPECT_EQ(0.75, L_.NumVal(L_.Eval(L_.Read("(norm 0 8 6)"))));
+  EXPECT_EQ(1.0, L_.NumVal(L_.Eval(L_.Read("(norm 0 8 8)"))));
+
+  // [4, -4]
+
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 4)"))));
+  EXPECT_EQ(0.25, L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 2)"))));
+  EXPECT_EQ(0.5, L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 0)"))));
+  EXPECT_EQ(0.75, L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 -2)"))));
+  EXPECT_EQ(1.0, L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 -4)"))));
+}
+
+TEST_F(LispInterpreterTest, EvalWrap)
+{
+  // [0, 10]
+
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 0)"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 10)"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 20)"))));
+  EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -10)"))));
+  EXPECT_EQ(8.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 8)"))));
+  EXPECT_EQ(2.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 12)"))));
+  EXPECT_EQ(3.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 23)"))));
+  EXPECT_EQ(8.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -2)"))));
+  EXPECT_EQ(7.0, L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -13)"))));
+
+  // [-20, -10]
+
+  EXPECT_EQ(-20.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -20)"))));
+  EXPECT_EQ(-20.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -10)"))));
+  EXPECT_EQ(-20.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 0)"))));
+  EXPECT_EQ(-20.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -30)"))));
+  EXPECT_EQ(-12.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -12)"))));
+  EXPECT_EQ(-18.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -8)"))));
+  EXPECT_EQ(-17.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 13)"))));
+  EXPECT_EQ(-12.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -22)"))));
+  EXPECT_EQ(-13.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -33)"))));
+}
+
 /*
-
-  TEST_F(LispInterpreterTest, "PROGN returns the value of the last expression")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(progn)"))));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(progn 1)"))) == 1);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(progn 1 2 3)"))) == 3);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(progn 1 2 3 (+ 40 2))"))) == 42);
-  }
-
-  TEST_F(LispInterpreterTest, "SETQ top level")
-  {
-    auto setqReturn = L_.Eval(L_.Read("(setq a 10)"));
-    EXPECT_EQ(L_.NumVal(setqReturn) == 10);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"))) == 10);
-  }
-
-  TEST_F(LispInterpreterTest, "SETQ in LAMBDA modifies the environment")
-  {
-    auto setqReturn = L_.Eval(L_.Read("(setq a 1)"));
-    EXPECT_EQ(L_.NumVal(setqReturn) == 1);
-    L_.Eval(
-      L_.Read("(setq f (lambda (a) (progn (setq b a) (setq a 3) (setq c a))))"));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(f 2)"))) == 3);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"))) == 1);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("b"))) == 2);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("c"))) == 3);
-  }
-
-  TEST_F(LispInterpreterTest, "DEF no args")
-  {
-    auto defReturn = L_.Eval(L_.Read("(def f () (+ 1 2))"));
-    EXPECT_EQ(L_.TypeOf(defReturn) == procdraw::LispObjectType::Cons);
-    EXPECT_EQ(L_.SymbolName(L_.Car(defReturn)) == "lambda");
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(f)"))) == 3);
-  }
-
-  TEST_F(LispInterpreterTest, "DEF 1 arg")
-  {
-    auto defReturn = L_.Eval(L_.Read("(def f (n) (+ n 1))"));
-    EXPECT_EQ(L_.TypeOf(defReturn) == procdraw::LispObjectType::Cons);
-    EXPECT_EQ(L_.SymbolName(L_.Car(defReturn)) == "lambda");
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(f 1)"))) == 2);
-  }
-
-  TEST_F(LispInterpreterTest, "APPLY no args")
-  {
-    EXPECT_EQ(
-      L_.NumVal(L_.Eval(L_.Read("(apply (lambda () (+ 1 2)) (quote ()))"))) == 3);
-  }
-
-  TEST_F(LispInterpreterTest, "APPLY 1 arg")
-  {
-    EXPECT_EQ(L_.NumVal(
-              L_.Eval(L_.Read("(apply (lambda (n) (+ n 1)) (quote (1)))"))) == 2);
-  }
-
-  TEST_F(LispInterpreterTest, "APPLY 2 args")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read(
-              "(apply (lambda (m n) (+ m n 10)) (quote (30 2)))"))) == 42);
-  }
-
-  TEST_F(LispInterpreterTest, "CAR")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(car nil)"))));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(car (quote (1 . 2)))"))) == 1);
-  }
-
-  TEST_F(LispInterpreterTest, "CDR")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(cdr nil)"))));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(cdr (quote (1 . 2)))"))) == 2);
-  }
-
-  TEST_F(LispInterpreterTest, "EQ")
-  {
-    EXPECT_TRUE(L_.BoolVal(L_.Eval(L_.Read("(eq 42 42)"))));
-    EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(eq 1 2)"))));
-  }
-
-  TEST_F(LispInterpreterTest, "IF")
-  {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
-
-    TEST_F(LispInterpreterTest, "true with else")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10) (setq b 20))"),
-                              env)) == 10);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"), env)) == 10);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("b"), env)) == 2);
-    }
-
-    TEST_F(LispInterpreterTest, "true without else")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10))"), env)) ==
-              10);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"), env)) == 10);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("b"), env)) == 2);
-    }
-
-    TEST_F(LispInterpreterTest, "false with else")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(if (eq 1 2) (setq a 10) (setq b 20))"),
-                              env)) == 20);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"), env)) == 1);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("b"), env)) == 20);
-    }
-
-    TEST_F(LispInterpreterTest, "false without else")
-    {
-      EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(if (eq 1 2) (setq a 10))"), env)));
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("a"), env)) == 1);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("b"), env)) == 2);
-    }
-  }
-
-  TEST_F(LispInterpreterTest, "Recursion")
-  {
-    auto exp = "(progn"
-               "  (setq f (lambda (n)"
-               "    (if (eq n 0)"
-               "      1"
-               "      (* n (f (- n 1))))))"
-               "  (f 5))";
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read(exp))) == 120);
-  }
-
-  TEST_F(LispInterpreterTest, "LERP")
-  {
-
-    TEST_F(LispInterpreterTest, "interpolates values for [0, 8]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 0)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 4))"))) == 2.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 2))"))) == 4.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 (/ 3 4))"))) == 6.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 0 8 1)"))) == 8.0);
-    }
-
-    TEST_F(LispInterpreterTest, "interpolates values for [4, -4]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 0)"))) == 4.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 4))"))) == 2.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 2 ))"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 (/ 3 4))"))) == -2.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(lerp 4 -4 1)"))) == -4.0);
-    }
-  }
-
-  TEST_F(LispInterpreterTest, "MAP-RANGE")
-  {
-
-    TEST_F(LispInterpreterTest, "maps values from [0, 10] to [-1, 0]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 0)"))) == -1.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 10 4))"))) ==
-              -0.75);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 5)"))) == -0.5);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 30 4))"))) ==
-              -0.25);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 10)"))) == 0.0);
-    }
-
-    TEST_F(LispInterpreterTest, "maps values from [0, 10] to [1, -1]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 0)"))) == 1.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 10 4))"))) ==
-              0.5);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 5)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 30 4))"))) ==
-              -0.5);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 10)"))) == -1.0);
-    }
-  }
-
-  TEST_F(LispInterpreterTest, "NORM")
-  {
-
-    TEST_F(LispInterpreterTest, "normalizes values for [0, 8]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 0 8 0)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 0 8 2)"))) == 0.25);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 0 8 4)"))) == 0.5);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 0 8 6)"))) == 0.75);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 0 8 8)"))) == 1.0);
-    }
-
-    TEST_F(LispInterpreterTest, "normalizes values for [4, -4]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 4)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 2)"))) == 0.25);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 0)"))) == 0.5);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 -2)"))) == 0.75);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(norm 4 -4 -4)"))) == 1.0);
-    }
-  }
-
-  TEST_F(LispInterpreterTest, "WRAP")
-  {
-
-    TEST_F(LispInterpreterTest, "wraps values for [0, 10]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 0)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 10)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 20)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -10)"))) == 0.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 8)"))) == 8.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 12)"))) == 2.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 23)"))) == 3.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -2)"))) == 8.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap 0 10 -13)"))) == 7.0);
-    }
-
-    TEST_F(LispInterpreterTest, "wraps values for [-20, -10]")
-    {
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -20)"))) == -20.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -10)"))) == -20.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 0)"))) == -20.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -30)"))) == -20.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -12)"))) == -12.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -8)"))) == -18.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 13)"))) == -17.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -22)"))) == -12.0);
-      EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -33)"))) == -13.0);
-    }
-  }
 
   TEST_F(LispInterpreterTest, "ASSOC returns nil if key is not found")
   {
