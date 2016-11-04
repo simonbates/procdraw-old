@@ -143,285 +143,205 @@ TEST_F(LispInterpreterTest, Rplacd)
   EXPECT_TRUE(LispObjectEq(cons, result));
 }
 
-/*
-
-TEST_F(LispInterpreterTest, "Dictionaries")
+TEST_F(LispInterpreterTest, GetWithEmptyDictionary)
 {
+  auto dict = L_.MakeDict();
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict, L_.Nil)));
+  EXPECT_EQ(100, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict, L_.MakeNumber(100))));
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
+}
 
-  procdraw::LispInterpreter L;
+TEST_F(LispInterpreterTest, GetAndPutAndClearWithSymbolKeys)
+{
+  auto dict = L_.MakeDict();
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
+  EXPECT_EQ(42, L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict)));
+  EXPECT_EQ(42, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)));
+  EXPECT_EQ(10, L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(10), dict)));
+  EXPECT_EQ(10, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)));
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key2"), dict)));
+  L_.Put(L_.SymbolRef("key2"), L_.MakeNumber(100), dict);
+  EXPECT_EQ(100, L_.NumVal(L_.Get(L_.SymbolRef("key2"), dict)));
+  EXPECT_EQ(10, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)));
+  L_.Clear(dict);
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
+  EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key2"), dict)));
+}
 
+TEST_F(LispInterpreterTest, GetAndPutWithStringKeys)
+{
+  auto dict = L_.MakeDict();
+  EXPECT_TRUE(L_.Null(L_.Get(L_.MakeString("key1"), dict)));
+  EXPECT_EQ(42, L_.NumVal(L_.Put(L_.MakeString("key1"), L_.MakeNumber(42), dict)));
+  EXPECT_EQ(42, L_.NumVal(L_.Get(L_.MakeString("key1"), dict)));
+  EXPECT_EQ(10, L_.NumVal(L_.Put(L_.MakeString("key1"), L_.MakeNumber(10), dict)));
+  EXPECT_EQ(10, L_.NumVal(L_.Get(L_.MakeString("key1"), dict)));
+  EXPECT_TRUE(L_.Null(L_.Get(L_.MakeString("key2"), dict)));
+}
+
+TEST_F(LispInterpreterTest, Keys)
+{
   auto dict = L_.MakeDict();
 
-  TEST_F(LispInterpreterTest, "notFound is returned when get from empty Dictionary")
-  {
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict, L_.Nil)));
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict, L_.MakeNumber(100))) ==
-            100);
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
-  }
+  EXPECT_TRUE(L_.Null(L_.Keys(dict)));
 
-  TEST_F(LispInterpreterTest, "Get, Put, and Clear with symbol keys")
-  {
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
-    EXPECT_EQ(L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict)) == 42);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)) == 42);
-    EXPECT_EQ(L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(10), dict)) == 10);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)) == 10);
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key2"), dict)));
-    L_.Put(L_.SymbolRef("key2"), L_.MakeNumber(100), dict);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.SymbolRef("key2"), dict)) == 100);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)) == 10);
-    L_.Clear(dict);
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
-    EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key2"), dict)));
-  }
+  L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict);
+  auto singleKey = L_.Keys(dict);
+  EXPECT_EQ("key1", L_.SymbolName(L_.Car(singleKey)));
+  EXPECT_TRUE(L_.Null(L_.Cdr(singleKey)));
 
-  TEST_F(LispInterpreterTest, "String keys")
-  {
-    EXPECT_TRUE(L_.Null(L_.Get(L_.MakeString("key1"), dict)));
-    EXPECT_EQ(L_.NumVal(L_.Put(L_.MakeString("key1"), L_.MakeNumber(42), dict)) ==
-            42);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.MakeString("key1"), dict)) == 42);
-    EXPECT_EQ(L_.NumVal(L_.Put(L_.MakeString("key1"), L_.MakeNumber(10), dict)) ==
-            10);
-    EXPECT_EQ(L_.NumVal(L_.Get(L_.MakeString("key1"), dict)) == 10);
-    EXPECT_TRUE(L_.Null(L_.Get(L_.MakeString("key2"), dict)));
-  }
-
-  TEST_F(LispInterpreterTest, "Keys")
-  {
-    EXPECT_TRUE(L_.Null(L_.Keys(dict)));
-
-    L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict);
-    auto singleKey = L_.Keys(dict);
-    EXPECT_EQ(L_.SymbolName(L_.Car(singleKey)) == "key1");
-    EXPECT_TRUE(L_.Null(L_.Cdr(singleKey)));
-
-    L_.Put(L_.SymbolRef("key2"), L_.MakeNumber(10), dict);
-    auto twoKeys = L_.Keys(dict);
-    EXPECT_TRUE(L_.Null(L_.Cddr(twoKeys)));
-    auto foundExpectedKeys = (L_.SymbolName(L_.Car(twoKeys)) == "key1" &&
-                              L_.SymbolName(L_.Cadr(twoKeys)) == "key2") ||
-                             (L_.SymbolName(L_.Car(twoKeys)) == "key2" &&
-                              L_.SymbolName(L_.Cadr(twoKeys)) == "key1");
-    EXPECT_TRUE(foundExpectedKeys);
-  }
+  L_.Put(L_.SymbolRef("key2"), L_.MakeNumber(10), dict);
+  auto twoKeys = L_.Keys(dict);
+  EXPECT_TRUE(L_.Null(L_.Cddr(twoKeys)));
+  auto foundExpectedKeys = (L_.SymbolName(L_.Car(twoKeys)) == "key1" &&
+                            L_.SymbolName(L_.Cadr(twoKeys)) == "key2") ||
+                           (L_.SymbolName(L_.Car(twoKeys)) == "key2" &&
+                            L_.SymbolName(L_.Cadr(twoKeys)) == "key1");
+  EXPECT_TRUE(foundExpectedKeys);
 }
 
-TEST_F(LispInterpreterTest, "LispInterpreter implicit type conversion")
+TEST_F(LispInterpreterTest, ImplicitTypeConversionToNumber)
 {
-
-  procdraw::LispInterpreter L;
-
-  TEST_F(LispInterpreterTest, "to number")
-  {
-    TEST_F(LispInterpreterTest, "should preserve numbers and convert non-numbers to NaN")
-    {
-      // Nil
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.Nil)));
-      // Number
-      EXPECT_EQ(L_.NumVal(L_.MakeNumber(42)) == 42);
-      // Symbol
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.SymbolRef("SYMBOL"))));
-      // Cons
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.Cons(L_.MakeNumber(1), L_.MakeNumber(2)))));
-      // CFunction
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeCFunction(nullptr, nullptr))));
-      // Boolean
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.True)));
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.False)));
-      // String
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeString("some string"))));
-      // Dictionary
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeDict())));
-      // Eof
-      EXPECT_TRUE(std::isnan(L_.NumVal(L_.Eof)));
-    }
-  }
-
-  TEST_F(LispInterpreterTest, "to bool")
-  {
-    TEST_F(LispInterpreterTest, "should preserve booleans, convert nil to false, and other "
-            "non-booleans to true")
-    {
-      // Nil
-      EXPECT_FALSE(L_.BoolVal(L_.Nil));
-      // Number
-      EXPECT_TRUE(L_.BoolVal(L_.MakeNumber(42)));
-      // Symbol
-      EXPECT_TRUE(L_.BoolVal(L_.SymbolRef("SYMBOL")));
-      // Cons
-      EXPECT_TRUE(L_.BoolVal(L_.Cons(L_.MakeNumber(1), L_.MakeNumber(2))));
-      // CFunction
-      EXPECT_TRUE(L_.BoolVal(L_.MakeCFunction(nullptr, nullptr)));
-      // Boolean
-      EXPECT_TRUE(L_.BoolVal(L_.True));
-      EXPECT_FALSE(L_.BoolVal(L_.False));
-      // String
-      EXPECT_TRUE(L_.BoolVal(L_.MakeString("some string")));
-      // Dictionary
-      EXPECT_TRUE(L_.BoolVal(L_.MakeDict()));
-      // Eof
-      EXPECT_TRUE(L_.BoolVal(L_.Eof));
-    }
-  }
+  // Nil
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.Nil)));
+  // Number
+  EXPECT_EQ(42, L_.NumVal(L_.MakeNumber(42)));
+  // Symbol
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.SymbolRef("SYMBOL"))));
+  // Cons
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.Cons(L_.MakeNumber(1), L_.MakeNumber(2)))));
+  // CFunction
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeCFunction(nullptr, nullptr))));
+  // Boolean
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.True)));
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.False)));
+  // String
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeString("some string"))));
+  // Dictionary
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.MakeDict())));
+  // Eof
+  EXPECT_TRUE(std::isnan(L_.NumVal(L_.Eof)));
 }
 
-TEST_F(LispInterpreterTest, "LispInterpreter::Eval")
+TEST_F(LispInterpreterTest, ImplicitTypeConversionToBool)
 {
+  // Nil
+  EXPECT_FALSE(L_.BoolVal(L_.Nil));
+  // Number
+  EXPECT_TRUE(L_.BoolVal(L_.MakeNumber(42)));
+  // Symbol
+  EXPECT_TRUE(L_.BoolVal(L_.SymbolRef("SYMBOL")));
+  // Cons
+  EXPECT_TRUE(L_.BoolVal(L_.Cons(L_.MakeNumber(1), L_.MakeNumber(2))));
+  // CFunction
+  EXPECT_TRUE(L_.BoolVal(L_.MakeCFunction(nullptr, nullptr)));
+  // Boolean
+  EXPECT_TRUE(L_.BoolVal(L_.True));
+  EXPECT_FALSE(L_.BoolVal(L_.False));
+  // String
+  EXPECT_TRUE(L_.BoolVal(L_.MakeString("some string")));
+  // Dictionary
+  EXPECT_TRUE(L_.BoolVal(L_.MakeDict()));
+  // Eof
+  EXPECT_TRUE(L_.BoolVal(L_.Eof));
+}
 
-  // TODO Rework these tests as lists of [input, expected output, expected type]
-  // For each input, call L_.PrintToString(L_.Eval(L_.Read(input))) and check the
-  // result.
-  // It would also be really good to connect these test cases with documentation
-  // for each function: either store the test cases in the documentation and
-  // extract, or store in some machine readable format and generate parts of the
-  // documentation from them.
-  // Like Python's doctest: https://en.wikipedia.org/wiki/Doctest
+TEST_F(LispInterpreterTest, EvalNil)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Nil)));
+}
 
-  procdraw::LispInterpreter L;
+TEST_F(LispInterpreterTest, EvalNumber)
+{
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.MakeNumber(42))));
+}
 
-  TEST_F(LispInterpreterTest, "NIL evaluates to itself") { EXPECT_TRUE(L_.Null(L_.Eval(L_.Nil))); }
+TEST_F(LispInterpreterTest, EvalBool)
+{
+  EXPECT_TRUE(L_.BoolVal(L_.Eval(L_.True)));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.False)));
+}
 
-  TEST_F(LispInterpreterTest, "A number evaluates to itself")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.MakeNumber(42))) == 42);
-  }
+TEST_F(LispInterpreterTest, EvalUnboundSymbol)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.SymbolRef("a"))));
+}
 
-  TEST_F(LispInterpreterTest, "Booleans evaluate to themselves")
-  {
-    EXPECT_TRUE(L_.BoolVal(L_.Eval(L_.True)));
-    EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.False)));
-  }
+TEST_F(LispInterpreterTest, EvalBoundSymbol)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(42)) });
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.SymbolRef("a"), env)));
+}
 
-  TEST_F(LispInterpreterTest, "An unbound symbol evaluates to nil")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.SymbolRef("a"))));
-  }
+TEST_F(LispInterpreterTest, EvalString)
+{
+  EXPECT_EQ("some string", L_.StringVal(L_.Eval(L_.MakeString("some string"))));
+}
 
-  TEST_F(LispInterpreterTest, "A bound symbol evaluates to the bound value")
-  {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(42)) });
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.SymbolRef("a"), env)) == 42);
-  }
+TEST_F(LispInterpreterTest, EvalEof)
+{
+  EXPECT_TRUE(L_.IsEof(L_.Eval(L_.Eof)));
+}
 
-  TEST_F(LispInterpreterTest, "A string evaluates to itself")
-  {
-    EXPECT_EQ(L_.StringVal(L_.Eval(L_.MakeString("some string"))) == "some string");
-  }
+TEST_F(LispInterpreterTest, EvalQuote)
+{
+  EXPECT_EQ("foo", L_.SymbolName(L_.Eval(L_.Read("(quote foo)"))));
+  EXPECT_EQ("foo", L_.SymbolName(L_.Eval(L_.Read("'foo"))));
+}
 
-  TEST_F(LispInterpreterTest, "Eof evaluates to itself") { EXPECT_TRUE(L_.IsEof(L_.Eval(L_.Eof))); }
+TEST_F(LispInterpreterTest, EvalSumWithSubexpressions)
+{
+  auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                          L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)),
+                          L_.Cons(L_.SymbolRef("c"), L_.MakeNumber(4)) });
+  EXPECT_EQ(31, L_.NumVal(L_.Eval(L_.Read("(+ (+ a b 8) 16 c)"), env)));
+}
 
-  TEST_F(LispInterpreterTest, "A QUOTE form evaluates to its argument, unevaluated")
-  {
-    EXPECT_EQ(L_.SymbolName(L_.Eval(L_.Read("(quote foo)"))) == "foo");
-    EXPECT_EQ(L_.SymbolName(L_.Eval(L_.Read("'foo"))) == "foo");
-  }
+TEST_F(LispInterpreterTest, EvalDifferenceOfZeroArgsIs0)
+{
+  EXPECT_EQ(0, L_.NumVal(L_.Eval(L_.Read("(-)"))));
+}
 
-  TEST_F(LispInterpreterTest, "SUM of zero arguments is 0")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+)"))) == 0);
-  }
+TEST_F(LispInterpreterTest, EvalQuotientOfZeroArgsIs1)
+{
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("(/)"))));
+}
 
-  TEST_F(LispInterpreterTest, "SUM of one or more arguments is the sum of all arguments")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+ 0)"))) == 0);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+ 2)"))) == 2);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+ 2 3)"))) == 5);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+ 2 3 4)"))) == 9);
-  }
+TEST_F(LispInterpreterTest, EvalQuotientWithDivisorOf0IsInfinity)
+{
+  EXPECT_TRUE(std::isinf(L_.NumVal(L_.Eval(L_.Read("(/ 0)")))));
+  EXPECT_TRUE(std::isinf(L_.NumVal(L_.Eval(L_.Read("(/ 1 0)")))));
+}
 
-  TEST_F(LispInterpreterTest, "SUM works with subexpressions")
-  {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)),
-                            L_.Cons(L_.SymbolRef("c"), L_.MakeNumber(4)) });
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(+ (+ a b 8) 16 c)"), env)) == 31);
-  }
+TEST_F(LispInterpreterTest, EvalLambdaExpressionEvaluatesToSelf)
+{
+  EXPECT_EQ("(lambda (n) (+ n 1))", L_.PrintToString(L_.Eval(L_.Read("(lambda (n) (+ n 1))"))));
+}
 
-  TEST_F(LispInterpreterTest, "DIFFERENCE of zero arguments is 0")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(-)"))) == 0);
-  }
+TEST_F(LispInterpreterTest, EvalLambdaCallNoArgs)
+{
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("((lambda () (+ 1 2)))"))));
+}
 
-  TEST_F(LispInterpreterTest, "DIFFERENCE of one argument is the negation of the argument")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(- 0)"))) == 0);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(- 2)"))) == -2);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(- -2)"))) == 2);
-  }
+TEST_F(LispInterpreterTest, EvalLambdaCallOneArg)
+{
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("((lambda (n) (+ n 1)) 1)"))));
+}
 
-  TEST_F(LispInterpreterTest, "DIFFERENCE of two or more arguments is the first minus the others")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(- 5 2)"))) == 3);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(- 5 2 7)"))) == -4);
-  }
+TEST_F(LispInterpreterTest, EvalLambdaCallTwoArgs)
+{
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.Read("((lambda (m n) (+ m n 10)) 30 2)"))));
+}
 
-  TEST_F(LispInterpreterTest, "PRODUCT of zero arguments is 1")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(*)"))) == 1);
-  }
+TEST_F(LispInterpreterTest, EvalLambdaReturnsValueOfLastExpression)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("((lambda ()))"))));
+  EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("((lambda (n) n) 1)"))));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("((lambda (n) 1 2 n) 3)"))));
+  EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.Read("((lambda () 1 2 3 (+ 40 2)))"))));
+}
 
-  TEST_F(LispInterpreterTest, "PRODUCT of one or more arguments is the product of all arguments")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(* 0)"))) == 0);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(* 1)"))) == 1);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(* 2)"))) == 2);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(* 2 3)"))) == 6);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(* 2 3 4)"))) == 24);
-  }
-
-  TEST_F(LispInterpreterTest, "QUOTIENT of zero arguments is 1")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(/)"))) == 1);
-  }
-
-  TEST_F(LispInterpreterTest, "QUOTIENT of one argument is its reciprocal")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(/ 2)"))) == 0.5);
-  }
-
-  TEST_F(LispInterpreterTest, "QUOTIENT of 0 is infinity")
-  {
-    EXPECT_TRUE(std::isinf(L_.NumVal(L_.Eval(L_.Read("(/ 0)")))));
-    EXPECT_TRUE(std::isinf(L_.NumVal(L_.Eval(L_.Read("(/ 1 0)")))));
-  }
-
-  TEST_F(LispInterpreterTest,
-    "QUOTIENT of two or more arguments is the first divided by the others")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(/ 8 5)"))) == 1.6);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(/ 360 4 3)"))) == 30);
-  }
-
-  TEST_F(LispInterpreterTest, "A LAMBDA expression evaluates to itself")
-  {
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("(lambda (n) (+ n 1))"))) ==
-            "(lambda (n) (+ n 1))");
-  }
-
-  TEST_F(LispInterpreterTest, "LAMBDA call no args")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda () (+ 1 2)))"))) == 3);
-  }
-
-  TEST_F(LispInterpreterTest, "LAMBDA call 1 arg")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda (n) (+ n 1)) 1)"))) == 2);
-  }
-
-  TEST_F(LispInterpreterTest, "LAMBDA call 2 args")
-  {
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda (m n) (+ m n 10)) 30 2)"))) == 42);
-  }
-
-  TEST_F(LispInterpreterTest, "LAMBDA returns the value of the last expression")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("((lambda ()))"))));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda (n) n) 1)"))) == 1);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda (n) 1 2 n) 3)"))) == 3);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("((lambda () 1 2 3 (+ 40 2)))"))) == 42);
-  }
+/*
 
   TEST_F(LispInterpreterTest, "PROGN returns the value of the last expression")
   {
