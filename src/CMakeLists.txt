@@ -137,18 +137,6 @@ target_link_libraries(procdraw_core_tests
     tinyxml2
     ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(procdraw_core_tests procdraw_core_tests)
-
-# Legacy Catch tests
-
-add_executable(procdraw_catch_tests
-    procdraw_catch_tests/main.cpp
-    procdraw_catch_tests/test_lisp_interpreter.cpp)
-
-target_include_directories(procdraw_catch_tests
-    PRIVATE ${CATCH_INCLUDE_DIR})
-
-target_link_libraries(procdraw_catch_tests
-    procdraw_core)
-
-add_test(procdraw_catch_tests procdraw_catch_tests)
+add_custom_target(check
+    COMMAND procdraw_core_tests
+    DEPENDS procdraw_core_tests)

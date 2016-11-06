@@ -547,56 +547,46 @@ TEST_F(LispInterpreterTest, EvalWrap)
   EXPECT_EQ(-13.0, L_.NumVal(L_.Eval(L_.Read("(wrap -20 -10 -33)"))));
 }
 
-/*
+TEST_F(LispInterpreterTest, EvalAssoc)
+{
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '())"))));
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1)))"))));
+  EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1) (c . 2)))"))));
 
-  TEST_F(LispInterpreterTest, "ASSOC returns nil if key is not found")
-  {
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '())"))));
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1)))"))));
-    EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1) (c . 2)))"))));
-  }
+  EXPECT_EQ("(a . 1)", L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((a . 1)))"))));
+  EXPECT_EQ("(a . 2)", L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((b . 1) (a . 2)))"))));
+  EXPECT_EQ("(a . 2)", L_.PrintToString(L_.Eval(
+            L_.Read("(assoc 'a '((b . 1) (a . 2) (a . 3)))"))));
+}
 
-  TEST_F(LispInterpreterTest, "ASSOC returns the first match")
-  {
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((a . 1)))"))) ==
-            "(a . 1)");
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((b . 1) (a . 2)))"))) ==
-            "(a . 2)");
-    EXPECT_EQ(L_.PrintToString(L_.Eval(
-              L_.Read("(assoc 'a '((b . 1) (a . 2) (a . 3)))"))) == "(a . 2)");
-  }
+TEST_F(LispInterpreterTest, EvalPutassocUpdateFirstMatch)
+{
+  L_.Eval(L_.Read("(setq alist '((a . 1)))"));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 2 alist)"))));
+  EXPECT_EQ("((a . 2))", L_.PrintToString(L_.Eval(L_.Read("alist"))));
+  L_.Eval(L_.Read("(setq alist '((b . 1) (a . 2) (a . 3)))"));
+  EXPECT_EQ(4, L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 4 alist)"))));
+  EXPECT_EQ("((b . 1) (a . 4) (a . 3))", L_.PrintToString(L_.Eval(L_.Read("alist"))));
+}
 
-  TEST_F(LispInterpreterTest, "PUTASSOC updates the first match, if one is found, and returns val")
-  {
-    L_.Eval(L_.Read("(setq alist '((a . 1)))"));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 2 alist)"))) == 2);
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("alist"))) == "((a . 2))");
-    L_.Eval(L_.Read("(setq alist '((b . 1) (a . 2) (a . 3)))"));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 4 alist)"))) == 4);
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("alist"))) ==
-            "((b . 1) (a . 4) (a . 3))");
-  }
+TEST_F(LispInterpreterTest, EvalPutassocNoMatch)
+{
+  L_.Eval(L_.Read("(setq alist '((b . 1)))"));
+  EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 2 alist)"))));
+  EXPECT_EQ("((b . 1) (a . 2))", L_.PrintToString(L_.Eval(L_.Read("alist"))));
+  EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("(putassoc 'c 3 alist)"))));
+  EXPECT_EQ("((b . 1) (a . 2) (c . 3))", L_.PrintToString(L_.Eval(L_.Read("alist"))));
+}
 
-  TEST_F(LispInterpreterTest, "PUTASSOC adds onto the end if no match is found and returns val")
-  {
-    L_.Eval(L_.Read("(setq alist '((b . 1)))"));
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 2 alist)"))) == 2);
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("alist"))) == "((b . 1) (a . 2))");
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(putassoc 'c 3 alist)"))) == 3);
-    EXPECT_EQ(L_.PrintToString(L_.Eval(L_.Read("alist"))) ==
-            "((b . 1) (a . 2) (c . 3))");
-  }
-
-  TEST_F(LispInterpreterTest, "NOT negates the boolean value of an expression")
-  {
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not true)"))) == false);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not false)"))) == true);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not nil)"))) == true);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not 0)"))) == false);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not 1)"))) == false);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not 2)"))) == false);
-    EXPECT_EQ(L_.BoolVal(L_.Eval(L_.Read("(not 'hello)"))) == false);
-  }
+TEST_F(LispInterpreterTest, EvalNot)
+{
+  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not true)"))));
+  EXPECT_EQ(true, L_.BoolVal(L_.Eval(L_.Read("(not false)"))));
+  EXPECT_EQ(true, L_.BoolVal(L_.Eval(L_.Read("(not nil)"))));
+  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 0)"))));
+  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 1)"))));
+  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 2)"))));
+  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 'hello)"))));
 }
 
 static int testCfunData = 42;
@@ -605,22 +595,14 @@ static procdraw::LispObjectPtr
 TestCfun(procdraw::LispInterpreter* L, procdraw::LispObjectPtr args,
          procdraw::LispObjectPtr env, void* data)
 {
-  EXPECT_EQ(data == &testCfunData);
+  EXPECT_EQ(&testCfunData, data);
   int dataval = *(static_cast<int*>(data));
-  EXPECT_EQ(dataval == 42);
+  EXPECT_EQ(42, dataval);
   return L->MakeNumber(L->NumVal(L->Car(args)) + dataval);
 }
 
-TEST_F(LispInterpreterTest, "LispInterpreter::SetGlobalCFunction")
+TEST_F(LispInterpreterTest, SetGlobalCFunction)
 {
-  procdraw::LispInterpreter L;
-
-  TEST_F(LispInterpreterTest,
-    "test-cfun should return the sum of its first argument and testCfunData")
-  {
-    L_.SetGlobalCFunction("test-cfun", TestCfun, &testCfunData);
-    EXPECT_EQ(L_.NumVal(L_.Eval(L_.Read("(test-cfun 10)"))) == 52);
-  }
+  L_.SetGlobalCFunction("test-cfun", TestCfun, &testCfunData);
+  EXPECT_EQ(52, L_.NumVal(L_.Eval(L_.Read("(test-cfun 10)"))));
 }
-
-*/
