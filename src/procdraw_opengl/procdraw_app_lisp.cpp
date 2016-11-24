@@ -1,4 +1,4 @@
-#include "procdraw_app/procdraw_app_lisp.h"
+#include "procdraw_opengl/procdraw_app_lisp.h"
 #include "procdraw_core/interpreter/signals.h"
 
 namespace procdraw {

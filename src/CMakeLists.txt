@@ -3,19 +3,6 @@ set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 # procdraw_core
 
 add_library(procdraw_core
-    procdraw_core/graphics/bitmap_text_renderer.cpp
-    procdraw_core/graphics/bitmap_text_renderer.h
-    procdraw_core/graphics/camera.cpp
-    procdraw_core/graphics/camera.h
-    procdraw_core/graphics/font_config.h
-    procdraw_core/graphics/freetype_font_loader.cpp
-    procdraw_core/graphics/freetype_font_loader.h
-    procdraw_core/graphics/glrenderer.cpp
-    procdraw_core/graphics/glrenderer.h
-    procdraw_core/graphics/gl_util.cpp
-    procdraw_core/graphics/gl_util.h
-    procdraw_core/graphics/sdl_util.cpp
-    procdraw_core/graphics/sdl_util.h
     procdraw_core/interpreter/lisp_functions.cpp
     procdraw_core/interpreter/lisp_functions.h
     procdraw_core/interpreter/lisp_interpreter.cpp
@@ -31,12 +18,8 @@ add_library(procdraw_core
     procdraw_core/color.cpp
     procdraw_core/color.h
     procdraw_core/command_processor.h
-    procdraw_core/console.cpp
-    procdraw_core/console.h
     procdraw_core/font_metrics.cpp
     procdraw_core/font_metrics.h
-    procdraw_core/frame_counter.cpp
-    procdraw_core/frame_counter.h
     procdraw_core/line_buffer.cpp
     procdraw_core/line_buffer.h
     procdraw_core/lsystem.cpp
@@ -49,19 +32,14 @@ add_library(procdraw_core
 
 target_include_directories(procdraw_core
     PUBLIC ${PROCDRAW_SRC_DIR}
-    PUBLIC ${GLM_DIR}
-    PUBLIC ${SDL2_INCLUDE_DIRS}
-    PRIVATE ${OPENGL_INCLUDE_DIRS})
+    PUBLIC ${GLM_DIR})
 
 target_link_libraries(procdraw_core
-    freetype2
-    gl3w
-    ${OPENGL_LIBRARIES}
-    ${SDL2_LIBRARIES})
+    freetype2)
 
 # procdraw_alsa_midi
 
-if(PROCDRAW_ENABLE_ALSA_MIDI)
+if(ENABLE_ALSA_MIDI)
     add_library(procdraw_alsa_midi
         procdraw_alsa_midi/alsa_midi_client.cpp
         procdraw_alsa_midi/alsa_midi_client.h)
@@ -74,33 +52,71 @@ if(PROCDRAW_ENABLE_ALSA_MIDI)
         ${ALSA_LIBRARIES})
 endif()
 
-# procdraw_app
+# procdraw_opengl
 
-add_executable(procdraw_app
-    procdraw_app/main.cpp
-    procdraw_app/procdraw_app.cpp
-    procdraw_app/procdraw_app.h
-    procdraw_app/procdraw_app_lisp.cpp
-    procdraw_app/procdraw_app_lisp.h)
+if(ENABLE_OPENGL)
+    add_library(procdraw_opengl
+        procdraw_opengl/bitmap_text_renderer.cpp
+        procdraw_opengl/bitmap_text_renderer.h
+        procdraw_opengl/camera.cpp
+        procdraw_opengl/camera.h
+        procdraw_opengl/console.cpp
+        procdraw_opengl/console.h
+        procdraw_opengl/font_config.h
+        procdraw_opengl/frame_counter.cpp
+        procdraw_opengl/frame_counter.h
+        procdraw_opengl/freetype_font_loader.cpp
+        procdraw_opengl/freetype_font_loader.h
+        procdraw_opengl/glrenderer.cpp
+        procdraw_opengl/glrenderer.h
+        procdraw_opengl/gl_util.cpp
+        procdraw_opengl/gl_util.h
+        procdraw_opengl/procdraw_app.cpp
+        procdraw_opengl/procdraw_app.h
+        procdraw_opengl/procdraw_app_lisp.cpp
+        procdraw_opengl/procdraw_app_lisp.h
+        procdraw_opengl/sdl_util.cpp
+        procdraw_opengl/sdl_util.h)
 
-target_include_directories(procdraw_app
-    PRIVATE ${PROCDRAW_SRC_DIR})
+    target_include_directories(procdraw_opengl
+        PUBLIC ${PROCDRAW_SRC_DIR}
+        PUBLIC ${SDL2_INCLUDE_DIRS}
+        PRIVATE ${OPENGL_INCLUDE_DIRS})
 
-target_link_libraries(procdraw_app
-    procdraw_core)
-
-if(PROCDRAW_ENABLE_ALSA_MIDI)
-    target_link_libraries(procdraw_app procdraw_alsa_midi)
+    target_link_libraries(procdraw_opengl
+        procdraw_core
+        gl3w
+        ${OPENGL_LIBRARIES}
+        ${SDL2_LIBRARIES})
 endif()
 
-set_target_properties(procdraw_app
+# procdraw_main
+
+add_executable(procdraw_main
+    procdraw_main/main.cpp)
+
+target_include_directories(procdraw_main
+    PRIVATE ${PROCDRAW_SRC_DIR})
+
+target_link_libraries(procdraw_main
+    procdraw_core)
+
+if(ENABLE_OPENGL)
+    target_link_libraries(procdraw_main procdraw_opengl)
+endif()
+
+if(ENABLE_ALSA_MIDI)
+    target_link_libraries(procdraw_main procdraw_alsa_midi)
+endif()
+
+set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)
 
 if(WIN32)
-    add_custom_command(TARGET procdraw_app POST_BUILD
+    add_custom_command(TARGET procdraw_main POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             ${PROCDRAW_SDL2_DLL}
-            $<TARGET_FILE_DIR:procdraw_app>)
+            $<TARGET_FILE_DIR:procdraw_main>)
 endif()
 
 # procdraw_core_tests

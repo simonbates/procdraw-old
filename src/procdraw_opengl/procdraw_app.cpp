@@ -1,6 +1,6 @@
-#include "procdraw_app/procdraw_app.h"
-#include "procdraw_app/procdraw_app_lisp.h"
+#include "procdraw_opengl/procdraw_app.h"
 #include "procdraw_core/interpreter/signals.h"
+#include "procdraw_opengl/procdraw_app_lisp.h"
 #include PROCDRAW_SDL2_H
 #include <iostream>
 #include <string>

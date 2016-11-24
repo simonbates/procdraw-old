@@ -1,10 +1,10 @@
-#include "procdraw_core/graphics/glrenderer.h"
+#include "procdraw_opengl/glrenderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "procdraw_core/color.h"
-#include "procdraw_core/graphics/gl_util.h"
-#include "procdraw_core/graphics/sdl_util.h"
 #include "procdraw_core/math.h"
+#include "procdraw_opengl/gl_util.h"
+#include "procdraw_opengl/sdl_util.h"
 #include <iostream>
 #include <string>
 
@@ -42,7 +42,8 @@ GlRenderer::GlRenderer()
 GlRenderer::~GlRenderer()
 {
   // TODO: The constructor/destructor design here is not safe -- if the
-  // constructor throws an exception, the destructor will not be called
+  // constructor throws an exception, the destructor will not be called.
+  // See BitmapTextRenderer
 
   glDeleteVertexArrays(1, &tetrahedronVao_);
   glDeleteBuffers(1, &tetrahedronVertexBuffer_);

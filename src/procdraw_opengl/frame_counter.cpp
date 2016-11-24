@@ -1,4 +1,4 @@
-#include "procdraw_core/frame_counter.h"
+#include "procdraw_opengl/frame_counter.h"
 
 namespace procdraw {
 

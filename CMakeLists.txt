@@ -6,26 +6,41 @@ project(Procdraw)
 
 enable_testing()
 
-# Find dependencies
-
-find_package(OpenGL REQUIRED)
+# Options
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    include(FindPkgConfig)
-    pkg_search_module(SDL2 REQUIRED sdl2)
-    find_package(Threads REQUIRED)
-    set(PROCDRAW_ENABLE_ALSA_MIDI ON)
-elseif(WIN32)
-    set(PROCDRAW_SDL2_DIR $ENV{PROCDRAW_SDL2_DIR})
-    set(PROCDRAW_SDL2_LIB "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.lib")
-    set(PROCDRAW_SDL2_DLL "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.dll")
-    set(SDL2_INCLUDE_DIRS "${PROCDRAW_SDL2_DIR}/include")
-    set(SDL2_LIBRARIES ${PROCDRAW_SDL2_LIB})
+    option(ENABLE_ALSA_MIDI "Enable ALSA MIDI" ON)
+else()
+    option(ENABLE_ALSA_MIDI "Enable ALSA MIDI" OFF)
 endif()
 
-if(PROCDRAW_ENABLE_ALSA_MIDI)
+option(ENABLE_OPENGL "Enable OpenGL" ON)
+
+# Find dependencies
+
+if(ENABLE_ALSA_MIDI)
     find_package(ALSA REQUIRED)
     add_definitions(-DPROCDRAW_ENABLE_ALSA_MIDI)
+endif()
+
+if(ENABLE_OPENGL)
+    find_package(OpenGL REQUIRED)
+    add_definitions(-DPROCDRAW_ENABLE_OPENGL)
+
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+        include(FindPkgConfig)
+        pkg_search_module(SDL2 REQUIRED sdl2)
+    elseif(WIN32)
+        set(PROCDRAW_SDL2_DIR $ENV{PROCDRAW_SDL2_DIR})
+        set(PROCDRAW_SDL2_LIB "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.lib")
+        set(PROCDRAW_SDL2_DLL "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.dll")
+        set(SDL2_INCLUDE_DIRS "${PROCDRAW_SDL2_DIR}/include")
+        set(SDL2_LIBRARIES ${PROCDRAW_SDL2_LIB})
+    endif()
+endif()
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    find_package(Threads REQUIRED)
 endif()
 
 # Configure SDL2 include names
@@ -69,12 +84,14 @@ target_compile_definitions(freetype2 PRIVATE FT2_BUILD_LIBRARY)
 
 # GL3W
 
-set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
-add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
-target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
+if(ENABLE_OPENGL)
+    set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
+    add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
+    target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    target_link_libraries(gl3w dl)
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+        target_link_libraries(gl3w dl)
+    endif()
 endif()
 
 # GLM

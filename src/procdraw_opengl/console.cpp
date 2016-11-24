@@ -1,4 +1,4 @@
-#include "procdraw_core/console.h"
+#include "procdraw_opengl/console.h"
 #include <algorithm>
 #include <string>
 

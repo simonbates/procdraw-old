@@ -1,8 +1,8 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "procdraw_core/graphics/freetype_font_loader.h"
 #include "procdraw_core/text_layout_engine.h"
+#include "procdraw_opengl/freetype_font_loader.h"
 #include <GL/gl3w.h>
 #include <string>
 

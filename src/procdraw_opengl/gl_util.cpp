@@ -1,4 +1,4 @@
-#include "procdraw_core/graphics/gl_util.h"
+#include "procdraw_opengl/gl_util.h"
 #include <map>
 #include <stdexcept>
 

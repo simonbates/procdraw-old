@@ -1,4 +1,4 @@
-#include "procdraw_core/graphics/camera.h"
+#include "procdraw_opengl/camera.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace procdraw {
