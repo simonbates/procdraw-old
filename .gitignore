@@ -1,6 +1,9 @@
 /build/
 /procdraw.sublime-workspace
 
+/Documentation/node_modules/
+/Documentation/out/
+
 /website/_functions_generated/
 /website/_site/
 /website/bower_components/

@@ -1,0 +1,87 @@
+@charset 'utf-8';
+
+@import 'settings';
+@import 'foundation';
+
+@include foundation-global-styles;
+@include foundation-grid;
+@include foundation-typography;
+@include foundation-table;
+
+.procdraw-header {
+    background-color: #ebebe8;
+    padding: 1.5rem 0;
+    margin: 0 0 2.5rem 0;
+}
+
+.procdraw-header a {
+    color: $body-font-color;
+}
+
+.procdraw-header a:hover {
+    color: $primary-color;
+    text-decoration: none;
+}
+
+.procdraw-sitename {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.procdraw-nav a {
+    padding: 0 0 0.25em 0;
+    margin: 0 1.5em 0 0;
+}
+
+a.procdraw-active-section {
+    border-bottom: 0.35em solid #707070;
+}
+
+a.procdraw-active-section:hover {
+    border-bottom-color: $primary-color;
+}
+
+.procdraw-site h1 {
+    font-weight: 300;
+}
+
+.procdraw-site h2 {
+    font-weight: 700;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.procdraw-content {
+    padding-bottom: 8rem;
+}
+
+.procdraw-home h1 {
+    font-weight: 400;
+    margin: 0 0 1rem 0;
+}
+
+.procdraw-home p {
+    font-size: 1.6rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+.procdraw-docs-index li {
+    font-size: 0.95rem;
+}
+
+pre {
+    font-family: $font-family-monospace;
+}
+
+.procdraw-paramname {
+    font-style: italic;
+}
+
+.procdraw-media-block {
+    margin: 1rem 0 2rem 0;
+}
+
+.procdraw-centered-img {
+    display: block;
+    margin: 1rem auto 2rem auto;
+}
