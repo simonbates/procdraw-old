@@ -559,7 +559,7 @@ TEST_F(LispInterpreterTest, EvalAssoc)
             L_.Read("(assoc 'a '((b . 1) (a . 2) (a . 3)))"))));
 }
 
-TEST_F(LispInterpreterTest, EvalPutassocUpdateFirstMatch)
+TEST_F(LispInterpreterTest, EvalPutassocUpdatesFirstMatch)
 {
   L_.Eval(L_.Read("(setq alist '((a . 1)))"));
   EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 2 alist)"))));
@@ -580,13 +580,13 @@ TEST_F(LispInterpreterTest, EvalPutassocNoMatch)
 
 TEST_F(LispInterpreterTest, EvalNot)
 {
-  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not true)"))));
-  EXPECT_EQ(true, L_.BoolVal(L_.Eval(L_.Read("(not false)"))));
-  EXPECT_EQ(true, L_.BoolVal(L_.Eval(L_.Read("(not nil)"))));
-  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 0)"))));
-  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 1)"))));
-  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 2)"))));
-  EXPECT_EQ(false, L_.BoolVal(L_.Eval(L_.Read("(not 'hello)"))));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(not true)"))));
+  EXPECT_TRUE(L_.BoolVal(L_.Eval(L_.Read("(not false)"))));
+  EXPECT_TRUE(L_.BoolVal(L_.Eval(L_.Read("(not nil)"))));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(not 0)"))));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(not 1)"))));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(not 2)"))));
+  EXPECT_FALSE(L_.BoolVal(L_.Eval(L_.Read("(not 'hello)"))));
 }
 
 static int testCfunData = 42;
