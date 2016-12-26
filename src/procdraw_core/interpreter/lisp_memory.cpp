@@ -104,8 +104,7 @@ public:
   {
   }
   std::unordered_map<LispObjectPtr, LispObjectPtr, decltype(LispObjectHash)*,
-                     decltype(LispObjectEq)*>
-    dictData_;
+                     decltype(LispObjectEq)*> dictData_;
 };
 
 bool
