@@ -70,7 +70,7 @@ $ mkdir build
 $ cd build
 $ cmake ..
 $ make
-$ ctest -V
+$ make check
 ```
 
 ### Running Procdraw
@@ -151,7 +151,7 @@ To build in Visual Studio:
 
 To run the tests in Visual Studio:
 
-- Build the `RUN_TESTS` project
+- Build the `check` project
 
 ### Running Procdraw
 
