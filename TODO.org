@@ -3,8 +3,6 @@
 #+STARTUP: indent
 
 * Documentation
-** WONTDO Move the documentation into a single file
-** DONE Rename "arguments" to "parameters"                           :v0_1_0:
 ** TODO Add type of function: special-form or function
 
 Traditional names used in Lisp:
@@ -14,20 +12,8 @@ Traditional names used in Lisp:
 | EXPR  | user   | function     |
 | FEXPR | user   | special-form |
 
-** DONE Add a description
-** DONE Add argument details
 * Graphics
 ** FtTextRenderer
-*** DONE Calculate the baseline position from font metrics           :v0_1_0:
-*** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
-*** DONE Split FtTextRenderer::Text into separate layout and draw
-<<Text layout function>>
-
-Then I can cache layouts for text -- very little text will change
-every frame
-
-*** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
-*** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
 *** TODO Set text color programmatically
 
 Right now it is specified directly in the shader source
@@ -169,18 +155,6 @@ later look at other analysis such as frequency composition.
 
 * Interpreter
 ** Pretty printing
-*** DONE Implement a PrettyPrinter
-
-- See: "Prettyprinting" by Derek Oppen
-  - ACM Transactions on Programming Languages and Systems
-  - Volume 2 Issue 4, Oct. 1980
-  - http://dl.acm.org/citation.cfm?id=357114.357115
-- Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
-  - http://hdl.handle.net/1721.1/6504
-
-*** DONE Update text layout to support newlines
-*** DONE Remove previous, non-pretty, printer
-*** DONE Add special formatting for lambda forms
 *** TODO Implement support for non-pretty printing
 
 I currently have a kludge in LispInterpreter:
@@ -446,22 +420,6 @@ I have a C function Signalp but it isn't yet accessible from Lisp.
 - and
 - or
 
-** WONTDO Remove the Boolean and Null types
-
-And use the traditional Lisp treatment of boolean values:
-
-- nil is false
-- everything else is true
-- nil and t are Symbols and are self evaluating
-
-The not function then becomes an alias of null as they have the same
-behaviour.
-
-See also: [[Is Constant]]
-
-However, this change would cause trouble for round-tripping with
-notations that have an explicit Boolean type (such as JSON).
-
 ** TODO Add an 'is constant' flag to Symbols
 <<Is constant>>
 
@@ -509,21 +467,6 @@ Can then remove the optional mapfun parameter from =>.
 If the source of a => is a signal (signalp), put a connection.
 Otherwise, set the value with put-slot and remove any existing
 connection.
-
-** DONE Add a toggle signal type
-
-Inputs:
-
-- Event signal
-- Signal A (default to constant 0)
-- Signal B (default to constant 1)
-
-The value of the toggle signal is either A or B and toggles between
-them each time the input event signal is true.
-
-Example usage: stopping and starting an oscillation
-
-(=> (sigmap2 * (toggle key-space) midic-1-1) saw1 'freq)
 
 ** TODO Add a counter signal type
 
@@ -705,20 +648,6 @@ generator with sub-generators.
            (lerp 0.6 0.8 $sin1))
     (tetrahedron)))
 
-** DONE Implement a Dictionary type
-*** DONE Make strings immutable
-*** DONE Modify LispInterpreter::Eq to compare string contents
-
-- For numbers, compare val_
-- For strings, they are equal if they have the same contents
-  - Compute a hash value on construction (make strings immutable)
-  - Compare hash values, if different then not equal, otherwise,
-    compare string contents
-- For other types compare memory locations
-  - For booleans and null types this is safe as we always share
-    objects: there is exactly one true, false, and nil
-
-*** DONE Implement C++ hash for LispObjectPtr
 ** TODO Use Dictionary for Signals rather than association list
 ** TODO Remove putassoc
 ** TODO Implement read and print Dictionary
@@ -879,23 +808,6 @@ frame_counter.h
 
 ** INPROGRESS Implement a basic console and REPL                     :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
-*** DONE Replace CursorForward(n) and CursorBackward(n)
-
-Replace CursorForward(n) and CursorBackward(n) with:
-
-- ForwardChar()
-- BackwardChar()
-
-*** DONE Add console content lines
-
-I currently have only a single line, where the cursor is
-
-*** DONE Wrap lines longer than the console width
-
-Probably want to do this with [[Text layout function]]
-
-*** DONE Position cursor when input line is wrapped
-*** DONE Scroll the console when we reach the bottom
 *** TODO Scolling when cursor at end of full width line
 
 I'm not scrolling properly when the input line is at the bottom of
@@ -952,9 +864,6 @@ https://en.wikipedia.org/wiki/Menger_sponge
 
 ** TODO Implement Noise functions
 * Project
-** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
-** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
-** DONE Add a note on font_config.h to the README.md
 ** TODO Add a "Getting Started" section to the README.md
 ** TODO Set up Procdraw installation and add note to the README.md
 ** TODO Put each class into its own translation unit
@@ -1008,55 +917,16 @@ See also:
 - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
 - http://programmers.stackexchange.com/a/151558
 
-** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
-** DONE Port Procdraw to Windows
-*** DONE Pull GLM in from GitHub
-
-https://github.com/g-truc/glm
-
-*** DONE Use TinyXML2
-
-https://github.com/leethomason/tinyxml2
-
-** DONE Remove top level src directory and add include directory; rename extras to scripts
-
-procdraw/
-  Documentation/
-  alsa_midi/
-  examples/
-  graphics/
-  include/
-    procdraw/
-      alsa_midi/
-      graphics/
-      interpreter/
-      procdraw/
-      utils/
-  interpreter/
-  procdraw/
-  scripts/
-  site/
-  tests/
-  third_party/
-  utils/
-
 ** TODO Move memory out of the Lisp interpreter
 
 - Make the Procdraw memory interpreter-agnostic to support
   different interpreters using the same memory
 - Rename the interpreter subproject to "lisp"
 
-** DONE Switch to pointers for function out parameters
 ** TODO Use the term "procedure" rather than "function" (as in Scheme)
 ** TODO Use "util" rather than "utils"
 * Tests
-** WONTDO Use propositions for test names
-
-As if prefixed by "test that..." or "check that...".
-
-** INPROGRESS Convert tests to Google Test
-** DONE Run the function_spec_tests under the Google Test runner
 ** TODO Switch over to a single Google Test runner and don't use CTest
 * Utils
 ** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
