@@ -16,6 +16,7 @@ add_library(procdraw_core
     procdraw_core/graphics/gl_util.h
     procdraw_core/graphics/sdl_util.cpp
     procdraw_core/graphics/sdl_util.h
+    procdraw_core/graphics/vertex.h
     procdraw_core/interpreter/lisp_functions.cpp
     procdraw_core/interpreter/lisp_functions.h
     procdraw_core/interpreter/lisp_interpreter.cpp

@@ -4,6 +4,7 @@
 
 #include "procdraw_core/graphics/bitmap_text_renderer.h"
 #include "procdraw_core/graphics/camera.h"
+#include "procdraw_core/graphics/vertex.h"
 #include <GL/gl3w.h>
 #include PROCDRAW_SDL2_H
 #include PROCDRAW_SDL2_OPENGL_H
@@ -12,29 +13,6 @@
 #include <string>
 
 namespace procdraw {
-
-struct Vertex
-{
-  // Position
-  GLfloat x;
-  GLfloat y;
-  GLfloat z;
-  GLfloat w;
-  // Normal
-  GLfloat nx;
-  GLfloat ny;
-  GLfloat nz;
-  Vertex(glm::vec3 pos, glm::vec3 normal)
-  {
-    this->x = pos.x;
-    this->y = pos.y;
-    this->z = pos.z;
-    this->w = 1.0f;
-    this->nx = normal.x;
-    this->ny = normal.y;
-    this->nz = normal.z;
-  }
-};
 
 class GlRenderer
 {
