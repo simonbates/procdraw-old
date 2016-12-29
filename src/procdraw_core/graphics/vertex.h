@@ -3,8 +3,6 @@
 #define GLM_FORCE_RADIANS
 
 #include <GL/gl3w.h>
-#include PROCDRAW_SDL2_H
-#include PROCDRAW_SDL2_OPENGL_H
 #include "glm/glm.hpp"
 
 namespace procdraw {

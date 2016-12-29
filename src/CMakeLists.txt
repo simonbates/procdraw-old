@@ -34,6 +34,7 @@ add_library(procdraw_core
     procdraw_core/command_processor.h
     procdraw_core/console.cpp
     procdraw_core/console.h
+    procdraw_core/console_line.h
     procdraw_core/font_metrics.cpp
     procdraw_core/font_metrics.h
     procdraw_core/frame_counter.cpp

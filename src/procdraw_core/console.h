@@ -1,6 +1,7 @@
 #pragma once
 
 #include "procdraw_core/command_processor.h"
+#include "procdraw_core/console_line.h"
 #include "procdraw_core/graphics/glrenderer.h"
 #include "procdraw_core/line_buffer.h"
 #include PROCDRAW_SDL2_H
@@ -8,16 +9,6 @@
 #include <vector>
 
 namespace procdraw {
-
-struct ConsoleLine
-{
-  std::string text;
-  TextLayout<GLfloat> layout;
-  explicit ConsoleLine(const std::string& text)
-    : text(text)
-  {
-  }
-};
 
 class Console
 {
