@@ -4,7 +4,6 @@
 
 #include "procdraw_core/graphics/bitmap_text_renderer.h"
 #include "procdraw_core/graphics/camera.h"
-#include "procdraw_core/graphics/vertex.h"
 #include <GL/gl3w.h>
 #include PROCDRAW_SDL2_H
 #include PROCDRAW_SDL2_OPENGL_H

@@ -46,6 +46,7 @@ add_library(procdraw_core
     procdraw_core/math.cpp
     procdraw_core/math.h
     procdraw_core/midi_listener.h
+    procdraw_core/simple_moving_average.h
     procdraw_core/text_layout_engine.h
     procdraw_core/text_layout.h)
 
@@ -126,6 +127,7 @@ add_executable(procdraw_core_tests
     procdraw_core_tests/line_buffer_test.cpp
     procdraw_core_tests/lsystem_test.cpp
     procdraw_core_tests/math_test.cpp
+    procdraw_core_tests/simple_moving_average_test.cpp
     procdraw_core_tests/text_layout_engine_test.cpp
     procdraw_core_tests/text_layout_test.cpp)
 
