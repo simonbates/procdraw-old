@@ -1,7 +1,7 @@
 #include "procdraw_core/simple_moving_average.h"
 #include "gtest/gtest.h"
 
-TEST(MathTest, SimpleMovingAverage)
+TEST(SimpleMovingAverageTest, SimpleMovingAverage)
 {
   procdraw::SimpleMovingAverage<int> sma(4);
 
