@@ -1,4 +1,4 @@
-#include "procdraw_core/font_metrics.h"
+#include "procdraw_core/bitmap_font_metrics.h"
 
 namespace procdraw {
 

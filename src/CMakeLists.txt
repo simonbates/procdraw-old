@@ -29,14 +29,15 @@ add_library(procdraw_core
     procdraw_core/interpreter/prettyprinter.h
     procdraw_core/interpreter/signals.cpp
     procdraw_core/interpreter/signals.h
+    procdraw_core/bitmap_font_metrics.cpp
+    procdraw_core/bitmap_font_metrics.h
+    procdraw_core/bitmap_glyph_metrics.h
     procdraw_core/color.cpp
     procdraw_core/color.h
     procdraw_core/command_processor.h
     procdraw_core/console.cpp
     procdraw_core/console.h
     procdraw_core/console_line.h
-    procdraw_core/font_metrics.cpp
-    procdraw_core/font_metrics.h
     procdraw_core/frame_counter.cpp
     procdraw_core/frame_counter.h
     procdraw_core/line_buffer.cpp
