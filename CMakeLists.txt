@@ -121,3 +121,4 @@ endif()
 # Add Procdraw source and tests
 
 add_subdirectory(src)
+add_subdirectory(tests)

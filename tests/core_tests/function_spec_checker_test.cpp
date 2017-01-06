@@ -1,4 +1,4 @@
-#include "procdraw/core_tests/function_spec_checker.h"
+#include "procdraw/test_support/function_spec_checker.h"
 #include "gtest/gtest.h"
 #include <string>
 
