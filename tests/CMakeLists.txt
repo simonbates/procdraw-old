@@ -1,12 +1,10 @@
-# procdraw_core_tests
-
 get_filename_component(FUNCTION_SPEC_CHECKER_TESTDATA_DIR "core_tests/testdata" ABSOLUTE)
 get_filename_component(FUNCTION_SPECS_DIR "${PROJECT_SOURCE_DIR}/Documentation/functions" ABSOLUTE)
 
 add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_CHECKER_TESTDATA_DIR}")
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
-add_executable(procdraw_core_tests
+add_executable(procdraw_all_tests
     core_tests/interpreter/lisp_interpreter_test.cpp
     core_tests/interpreter/lisp_reader_test.cpp
     core_tests/interpreter/prettyprinter_test.cpp
@@ -21,7 +19,7 @@ add_executable(procdraw_core_tests
     core_tests/text_layout_engine_test.cpp
     core_tests/text_layout_test.cpp)
 
-target_link_libraries(procdraw_core_tests
+target_link_libraries(procdraw_all_tests
     procdraw_core
     procdraw_test_support
     gtest
@@ -29,5 +27,5 @@ target_link_libraries(procdraw_core_tests
     ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_target(check
-    COMMAND procdraw_core_tests
-    DEPENDS procdraw_core_tests)
+    COMMAND procdraw_all_tests
+    DEPENDS procdraw_all_tests)
