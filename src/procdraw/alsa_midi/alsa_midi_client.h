@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw/core/midi_listener.h"
+#include "procdraw/midi_listener.h"
 #include <alsa/asoundlib.h>
 
 namespace procdraw {

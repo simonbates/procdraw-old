@@ -1,42 +1,42 @@
 set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
-# procdraw_core
+# procdraw_lib
 
-add_library(procdraw_core
-    procdraw/core/interpreter/lisp_functions.cpp
-    procdraw/core/interpreter/lisp_functions.h
-    procdraw/core/interpreter/lisp_interpreter.cpp
-    procdraw/core/interpreter/lisp_interpreter.h
-    procdraw/core/interpreter/lisp_memory.cpp
-    procdraw/core/interpreter/lisp_memory.h
-    procdraw/core/interpreter/lisp_reader.cpp
-    procdraw/core/interpreter/lisp_reader.h
-    procdraw/core/interpreter/prettyprinter.cpp
-    procdraw/core/interpreter/prettyprinter.h
-    procdraw/core/interpreter/signals.cpp
-    procdraw/core/interpreter/signals.h
-    procdraw/core/bitmap_font_metrics.cpp
-    procdraw/core/bitmap_font_metrics.h
-    procdraw/core/bitmap_glyph_metrics.h
-    procdraw/core/color.cpp
-    procdraw/core/color.h
-    procdraw/core/command_processor.h
-    procdraw/core/line_buffer.cpp
-    procdraw/core/line_buffer.h
-    procdraw/core/lsystem.cpp
-    procdraw/core/lsystem.h
-    procdraw/core/math.cpp
-    procdraw/core/math.h
-    procdraw/core/midi_listener.h
-    procdraw/core/simple_moving_average.h
-    procdraw/core/text_layout_engine.h
-    procdraw/core/text_layout.h)
+add_library(procdraw_lib
+    procdraw/interpreter/lisp_functions.cpp
+    procdraw/interpreter/lisp_functions.h
+    procdraw/interpreter/lisp_interpreter.cpp
+    procdraw/interpreter/lisp_interpreter.h
+    procdraw/interpreter/lisp_memory.cpp
+    procdraw/interpreter/lisp_memory.h
+    procdraw/interpreter/lisp_reader.cpp
+    procdraw/interpreter/lisp_reader.h
+    procdraw/interpreter/prettyprinter.cpp
+    procdraw/interpreter/prettyprinter.h
+    procdraw/interpreter/signals.cpp
+    procdraw/interpreter/signals.h
+    procdraw/bitmap_font_metrics.cpp
+    procdraw/bitmap_font_metrics.h
+    procdraw/bitmap_glyph_metrics.h
+    procdraw/color.cpp
+    procdraw/color.h
+    procdraw/command_processor.h
+    procdraw/line_buffer.cpp
+    procdraw/line_buffer.h
+    procdraw/lsystem.cpp
+    procdraw/lsystem.h
+    procdraw/math.cpp
+    procdraw/math.h
+    procdraw/midi_listener.h
+    procdraw/simple_moving_average.h
+    procdraw/text_layout_engine.h
+    procdraw/text_layout.h)
 
-target_include_directories(procdraw_core
+target_include_directories(procdraw_lib
     PUBLIC ${PROCDRAW_SRC_DIR}
     PUBLIC ${GLM_DIR})
 
-target_link_libraries(procdraw_core
+target_link_libraries(procdraw_lib
     freetype2)
 
 # procdraw_alsa_midi
@@ -88,7 +88,7 @@ if(ENABLE_OPENGL)
         PRIVATE ${OPENGL_INCLUDE_DIRS})
 
     target_link_libraries(procdraw_opengl
-        procdraw_core
+        procdraw_lib
         gl3w
         ${OPENGL_LIBRARIES}
         ${SDL2_LIBRARIES})
@@ -104,7 +104,7 @@ target_include_directories(procdraw_test_support
     PUBLIC ${PROCDRAW_SRC_DIR})
 
 target_link_libraries(procdraw_test_support
-    procdraw_core
+    procdraw_lib
     tinyxml2)
 
 # procdraw_main
@@ -116,7 +116,7 @@ target_include_directories(procdraw_main
     PRIVATE ${PROCDRAW_SRC_DIR})
 
 target_link_libraries(procdraw_main
-    procdraw_core)
+    procdraw_lib)
 
 if(ENABLE_OPENGL)
     target_link_libraries(procdraw_main procdraw_opengl)

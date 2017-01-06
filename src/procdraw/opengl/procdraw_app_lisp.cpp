@@ -1,5 +1,5 @@
 #include "procdraw/opengl/procdraw_app_lisp.h"
-#include "procdraw/core/interpreter/signals.h"
+#include "procdraw/interpreter/signals.h"
 
 namespace procdraw {
 
