@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw/text_layout.h"
+#include "procdraw/core/text_layout.h"
 #include <GL/gl3w.h>
 #include <string>
 

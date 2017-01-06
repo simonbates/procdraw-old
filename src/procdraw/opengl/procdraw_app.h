@@ -1,8 +1,8 @@
 #pragma once
 
-#include "procdraw/command_processor.h"
-#include "procdraw/interpreter/lisp_interpreter.h"
-#include "procdraw/midi_listener.h"
+#include "procdraw/core/command_processor.h"
+#include "procdraw/core/interpreter/lisp_interpreter.h"
+#include "procdraw/core/midi_listener.h"
 #include "procdraw/opengl/console.h"
 #include "procdraw/opengl/frame_counter.h"
 #include "procdraw/opengl/glrenderer.h"

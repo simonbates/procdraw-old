@@ -5,7 +5,7 @@
 #include "procdraw/opengl/sdl_util.h"
 #endif
 
-#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw/core/interpreter/lisp_interpreter.h"
 #include <iostream>
 #include <string>
 

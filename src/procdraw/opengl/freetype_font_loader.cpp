@@ -1,5 +1,5 @@
 #include "procdraw/opengl/freetype_font_loader.h"
-#include "procdraw/math.h"
+#include "procdraw/core/math.h"
 #include <stdexcept>
 #include <string>
 #include <type_traits>

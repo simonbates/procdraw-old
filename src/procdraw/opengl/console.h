@@ -1,7 +1,7 @@
 #pragma once
 
-#include "procdraw/command_processor.h"
-#include "procdraw/line_buffer.h"
+#include "procdraw/core/command_processor.h"
+#include "procdraw/core/line_buffer.h"
 #include "procdraw/opengl/console_line.h"
 #include "procdraw/opengl/glrenderer.h"
 #include PROCDRAW_SDL2_H
