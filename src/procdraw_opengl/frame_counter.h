@@ -1,6 +1,6 @@
 #pragma once
 
-#include "procdraw_core/math.h"
+#include "procdraw_core/simple_moving_average.h"
 #include PROCDRAW_SDL2_H
 
 namespace procdraw {

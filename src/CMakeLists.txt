@@ -15,11 +15,12 @@ add_library(procdraw_core
     procdraw_core/interpreter/prettyprinter.h
     procdraw_core/interpreter/signals.cpp
     procdraw_core/interpreter/signals.h
+    procdraw_core/bitmap_font_metrics.cpp
+    procdraw_core/bitmap_font_metrics.h
+    procdraw_core/bitmap_glyph_metrics.h
     procdraw_core/color.cpp
     procdraw_core/color.h
     procdraw_core/command_processor.h
-    procdraw_core/font_metrics.cpp
-    procdraw_core/font_metrics.h
     procdraw_core/line_buffer.cpp
     procdraw_core/line_buffer.h
     procdraw_core/lsystem.cpp
@@ -27,6 +28,7 @@ add_library(procdraw_core
     procdraw_core/math.cpp
     procdraw_core/math.h
     procdraw_core/midi_listener.h
+    procdraw_core/simple_moving_average.h
     procdraw_core/text_layout_engine.h
     procdraw_core/text_layout.h)
 
@@ -62,6 +64,7 @@ if(ENABLE_OPENGL)
         procdraw_opengl/camera.h
         procdraw_opengl/console.cpp
         procdraw_opengl/console.h
+        procdraw_opengl/console_line.h
         procdraw_opengl/font_config.h
         procdraw_opengl/frame_counter.cpp
         procdraw_opengl/frame_counter.h
@@ -76,7 +79,8 @@ if(ENABLE_OPENGL)
         procdraw_opengl/procdraw_app_lisp.cpp
         procdraw_opengl/procdraw_app_lisp.h
         procdraw_opengl/sdl_util.cpp
-        procdraw_opengl/sdl_util.h)
+        procdraw_opengl/sdl_util.h
+        procdraw_opengl/vertex.h)
 
     target_include_directories(procdraw_opengl
         PUBLIC ${PROCDRAW_SRC_DIR}
@@ -128,6 +132,7 @@ add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_C
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
 add_executable(procdraw_core_tests
+    procdraw_core_tests/interpreter/lisp_interpreter_test.cpp
     procdraw_core_tests/interpreter/lisp_reader_test.cpp
     procdraw_core_tests/interpreter/prettyprinter_test.cpp
     procdraw_core_tests/interpreter/signals_test.cpp
@@ -139,6 +144,7 @@ add_executable(procdraw_core_tests
     procdraw_core_tests/line_buffer_test.cpp
     procdraw_core_tests/lsystem_test.cpp
     procdraw_core_tests/math_test.cpp
+    procdraw_core_tests/simple_moving_average_test.cpp
     procdraw_core_tests/text_layout_engine_test.cpp
     procdraw_core_tests/text_layout_test.cpp)
 
@@ -152,18 +158,6 @@ target_link_libraries(procdraw_core_tests
     tinyxml2
     ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(procdraw_core_tests procdraw_core_tests)
-
-# Legacy Catch tests
-
-add_executable(procdraw_catch_tests
-    procdraw_catch_tests/main.cpp
-    procdraw_catch_tests/test_lisp_interpreter.cpp)
-
-target_include_directories(procdraw_catch_tests
-    PRIVATE ${CATCH_INCLUDE_DIR})
-
-target_link_libraries(procdraw_catch_tests
-    procdraw_core)
-
-add_test(procdraw_catch_tests procdraw_catch_tests)
+add_custom_target(check
+    COMMAND procdraw_core_tests
+    DEPENDS procdraw_core_tests)

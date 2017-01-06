@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Procdraw)
 
-# CTest
-
-enable_testing()
-
 # Options
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -56,10 +52,6 @@ elseif(WIN32)
     add_definitions(-DPROCDRAW_SDL2_H=<SDL.h>)
     add_definitions(-DPROCDRAW_SDL2_OPENGL_H=<SDL_opengl.h>)
 endif()
-
-# Catch
-
-set(CATCH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/Catch/single_include)
 
 # FreeType 2
 

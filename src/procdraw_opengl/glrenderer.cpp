@@ -5,6 +5,7 @@
 #include "procdraw_core/math.h"
 #include "procdraw_opengl/gl_util.h"
 #include "procdraw_opengl/sdl_util.h"
+#include "procdraw_opengl/vertex.h"
 #include <iostream>
 #include <string>
 

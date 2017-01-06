@@ -2,22 +2,13 @@
 
 #include "procdraw_core/command_processor.h"
 #include "procdraw_core/line_buffer.h"
+#include "procdraw_opengl/console_line.h"
 #include "procdraw_opengl/glrenderer.h"
 #include PROCDRAW_SDL2_H
 #include <string>
 #include <vector>
 
 namespace procdraw {
-
-struct ConsoleLine
-{
-  std::string text;
-  TextLayout<GLfloat> layout;
-  explicit ConsoleLine(const std::string& text)
-    : text(text)
-  {
-  }
-};
 
 class Console
 {
