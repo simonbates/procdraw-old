@@ -2,8 +2,20 @@ sudo: required
 dist: trusty
 language: cpp
 compiler: gcc
+env:
+  - ENABLE_ALSA_MIDI=OFF ENABLE_OPENGL=OFF
+  - ENABLE_ALSA_MIDI=OFF ENABLE_OPENGL=ON
+  - ENABLE_ALSA_MIDI=ON  ENABLE_OPENGL=OFF
+  - ENABLE_ALSA_MIDI=ON  ENABLE_OPENGL=ON
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -qq install libsdl2-dev jing
+  - sudo apt-get -qq install jing
+  - if [ $ENABLE_OPENGL = ON ] ; then sudo apt-get -qq install libsdl2-dev ; fi
   - cmake --version
-script: make lint && mkdir build && cd build && cmake .. && make && make check
+script: >
+  make lint
+  && mkdir build
+  && cd build
+  && cmake -DENABLE_ALSA_MIDI=$ENABLE_ALSA_MIDI -DENABLE_OPENGL=$ENABLE_OPENGL ..
+  && make
+  && make check
