@@ -17,7 +17,7 @@ RunSuperSimpleRepl()
   while (true) {
     std::cout << "> ";
     std::getline(std::cin, expr);
-    // Note the hardcoded 40 char width
+    // TODO: Note the hardcoded 40 char width
     std::cout << interpreter.PrettyPrintToString(
                    interpreter.Eval(interpreter.Read(expr)), 40)
               << std::endl;
@@ -25,14 +25,22 @@ RunSuperSimpleRepl()
   return 0;
 }
 
+#ifdef PROCDRAW_ENABLE_OPENGL
+int
+RunGui()
+{
+  procdraw::SDL sdl(SDL_INIT_VIDEO);
+  procdraw::ProcdrawApp app;
+  return app.MainLoop();
+}
+#endif
+
 int
 main()
 {
 #ifdef PROCDRAW_ENABLE_OPENGL
-  procdraw::SDL sdl(SDL_INIT_VIDEO);
-  procdraw::ProcdrawApp app;
-  return app.MainLoop();
+  return RunGui();
 #else
-  RunSuperSimpleRepl();
+  return RunSuperSimpleRepl();
 #endif
 }
