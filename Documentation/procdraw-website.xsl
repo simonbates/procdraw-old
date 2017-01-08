@@ -196,7 +196,7 @@
 </xsl:text>
   </xsl:template>
 
-  <!-- Common elements -->
+  <!-- Text markup -->
 
   <xsl:template match="p|ul|li|strong">
     <xsl:copy>

@@ -13,7 +13,5 @@ Dependencies
 Building the website
 --------------------
 
-```
-$ npm install
-$ make
-```
+    $ npm install
+    $ make
