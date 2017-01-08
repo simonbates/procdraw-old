@@ -46,6 +46,7 @@ int main()
 #endif
 }
 
+#ifdef _WIN32
 int CALLBACK WinMain(
     _In_ HINSTANCE hInstance,
     _In_ HINSTANCE hPrevInstance,
@@ -55,3 +56,4 @@ int CALLBACK WinMain(
     // Delegate to the main() function
     return main();
 }
+#endif
