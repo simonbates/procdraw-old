@@ -1,7 +1,0 @@
-{
-    "name": "procdraw-site",
-    "dependencies": {
-        "foundation-sites": "6.2.1"
-    },
-    "private": true
-}

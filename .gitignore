@@ -1,13 +1,8 @@
 /build/
 /procdraw.sublime-workspace
 
-/website/_functions_generated/
-/website/_site/
-/website/bower_components/
-/website/node_modules/
-/website/.jekyll-metadata
-/website/.sass-cache
-/website/css/main.css
+/Documentation/node_modules/
+/Documentation/out/
 
 .vagrant/
 npm-debug.log

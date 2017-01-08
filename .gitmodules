@@ -13,6 +13,3 @@
 [submodule "third_party/tinyxml2"]
 	path = third_party/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
-[submodule "website/media"]
-	path = website/media
-	url = https://github.com/simonbates/procdraw-site-media.git

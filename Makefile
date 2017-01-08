@@ -1,4 +1,4 @@
-FUNCTIONS_SRC_DIR = Documentation/functions
+FUNCTIONS_SRC_DIR = Documentation/docs/functions
 FUNCTION_SCHEMA = $(FUNCTIONS_SRC_DIR)/function-spec.rnc
 
 default: lint
@@ -18,7 +18,7 @@ cpplint:
 .PHONY: cpplint
 
 validate-function-specs:
-	find $(FUNCTIONS_SRC_DIR) -name \*.xml -not -name schemas.xml \
+	find $(FUNCTIONS_SRC_DIR) -name \*.xml \
 	-exec jing -c $(FUNCTION_SCHEMA) {} +
 
 .PHONY: validate-function-specs
