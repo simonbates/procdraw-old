@@ -5,6 +5,10 @@
 #include "procdraw/opengl/sdl_util.h"
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "procdraw/core/interpreter/lisp_interpreter.h"
 #include <iostream>
 #include <string>
@@ -40,4 +44,14 @@ int main()
 #else
     return RunSuperSimpleRepl();
 #endif
+}
+
+int CALLBACK WinMain(
+    _In_ HINSTANCE hInstance,
+    _In_ HINSTANCE hPrevInstance,
+    _In_ LPSTR lpCmdLine,
+    _In_ int nCmdShow)
+{
+    // Delegate to the main() function
+    return main();
 }

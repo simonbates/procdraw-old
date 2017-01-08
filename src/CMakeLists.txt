@@ -129,7 +129,9 @@ endif()
 set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)
 
-if(WIN32)
+if(WIN32 AND ENABLE_OPENGL)
+    set_target_properties(procdraw_main
+        PROPERTIES WIN32_EXECUTABLE TRUE)
     add_custom_command(TARGET procdraw_main POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             ${PROCDRAW_SDL2_DLL}
