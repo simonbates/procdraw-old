@@ -57,7 +57,7 @@ $ git submodule update --init
 ```
 ### Configure the font
 
-Edit the file `src/procdraw_core/graphics/font_config.h` and set
+Edit the file `src/procdraw/opengl/font_config.h` and set
 `MonospaceFontFilePath` to a suitable monospaced font on your system.
 
 ### Build Procdraw and run the tests
@@ -129,7 +129,7 @@ unpacked to (such as `C:/SDL/SDL2-2.0.4`).
 
 ### Configure the font
 
-Edit the file `src/procdraw_core/graphics/font_config.h` and set
+Edit the file `src/procdraw/opengl/font_config.h` and set
 `MonospaceFontFilePath` to a suitable monospaced font on your system
 (such as `"C:/Windows/Fonts/consola.ttf"`).
 
@@ -155,7 +155,7 @@ To run the tests in Visual Studio:
 
 ### Running Procdraw
 
-In Visual Studio, start a new instance of the `procdraw_app` project.
+In Visual Studio, start a new instance of the `procdraw_main` project.
 
 License
 -------
