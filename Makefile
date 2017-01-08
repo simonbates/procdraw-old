@@ -6,13 +6,13 @@ default: lint
 .PHONY: default
 
 format:
-	find src -type f \( -name \*.cpp -o -name \*.h \) \
+	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec clang-format -i '-style={BasedOnStyle: Mozilla, SpacesBeforeTrailingComments: 2}' {} +
 
 .PHONY: format
 
 cpplint:
-	find src -type f \( -name \*.cpp -o -name \*.h \) \
+	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
 	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
 
 .PHONY: cpplint

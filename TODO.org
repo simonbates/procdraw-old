@@ -2,89 +2,11 @@
 #+TAGS: { v0_1_0 v0_2_0 }
 #+STARTUP: indent
 
-* Documentation
-** WONTDO Move the documentation into a single file
-** DONE Rename "arguments" to "parameters"                           :v0_1_0:
-** TODO Add type of function: special-form or function
-
-Traditional names used in Lisp:
-
-| SUBR  | system | function     |
-| FSUBR | system | special-form |
-| EXPR  | user   | function     |
-| FEXPR | user   | special-form |
-
-** DONE Add a description
-** DONE Add argument details
 * Graphics
-** FtTextRenderer
-*** DONE Calculate the baseline position from font metrics           :v0_1_0:
-*** DONE Ensure that the texture dimensions are powers of 2          :v0_1_0:
-*** DONE Split FtTextRenderer::Text into separate layout and draw
-<<Text layout function>>
-
-Then I can cache layouts for text -- very little text will change
-every frame
-
-*** DONE Extract font metrics to a new type TextureFontMetrics       :v0_1_0:
-*** DONE Move FtTextRenderer::LayoutText to font_utils and unit test :v0_1_0:
-*** TODO Set text color programmatically
-
-Right now it is specified directly in the shader source
-
-** TODO Add specular lighting
-
-Use the Phong reflection model or the Blinn–Phong reflection model.
-
-** TODO Add camera positioning functions
-
-- (camera x y z)
-- (look-at x y z)
-- (camera-up x y z)
-
-** TODO Add point light source lighting
-** TODO Add a world matrix stack
-
-To save and backtrack to world matrix states.
-
-** TODO Relative cursor 3D graphics
-
-Turtle-like graphics for 3D.
-
-- (left angle)
-- (right angle)
-- (up angle)
-- (down angle)
-- (roll angle)
-- (forward distance)
-
-Object placement (such as drawing a cube) is then made at the cursor
-position.
-
-See: https://en.wikipedia.org/wiki/Aircraft_principal_axes
-
 ** TODO Try out some simple drawing persistence
 
 Such as keeping a history of what was drawn and then redrawing it
 for some number of frames.
-
-** TODO Add a function to draw a sphere
-
-- UV sphere
-- and/or Icosphere
-
-http://blender.stackexchange.com/questions/72/what-is-the-difference-between-a-uv-sphere-and-an-icosphere
-
-** TODO Add a function to draw a superegg
-
-https://en.wikipedia.org/wiki/Superegg
-
-** TODO Add a function to draw a point
-** TODO Support resizing of the Procdraw window
-** TODO Add a material color stack
-
-And use when drawing the console, so that we don't clobber the
-color.
 
 ** TODO Add a function to draw the Utah Teapot
 
@@ -94,18 +16,8 @@ Use the original data set and tessellate it myself.
 - http://www.sjbaker.org/wiki/index.php?title=The_History_of_The_Teapot
 - http://www.sjbaker.org/teapot/teaset.tgz
 
-** TODO Have a look at raymarching and sphere tracing with distance functions for geometry
-
-- https://youtu.be/s8nFqwOho-s
-- http://mercury.sexy/hg_sdf/
-- http://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing
-- "Sphere tracing: a geometric method for the antialiased ray tracing of implicit surfaces" by John C. Hart
-  - The Visual Computer 12(10) 1996, pp 527-545
-  - http://graphics.cs.illinois.edu/papers/zeno
-
 ** TODO Vector text rendering
 * Hardware integration
-** TODO Add Xbox 360 controller input
 ** TODO Add Wacom tablet input
 
 Either interface directly with the device or via OSC.
@@ -113,22 +25,6 @@ Either interface directly with the device or via OSC.
 - http://www.wacomeng.com/windows/docs/WacomWindevFAQ.html
 - [[http://opensoundcontrol.org/topic/61][An OSC Address Subspace for Wacom Tablet Data]]
 - http://opensoundcontrol.org/publication/ten-years-tablet-musical-interfaces-cnmat
-
-** TODO Serial connection to Arduino
-
-Some references for information on Arduino serial buffering and
-latency:
-
-- https://projectgus.com/2011/10/notes-on-ftdi-latency-with-arduino/
-- http://forum.arduino.cc/index.php?topic=96.0
-- http://superuser.com/questions/411616/how-to-enable-and-set-event-characters-for-ftdi-drivers
-
-Some data format options:
-
-- Stream of dotted pair s-expressions
-  - (name . val)
-- https://github.com/bakercp/PacketSerial
-- https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
 
 ** TODO Arduino 101 Intel Curie 6-axis accelerometer and gyroscope
 
@@ -143,25 +39,6 @@ https://www.adafruit.com/products/2472
 
 https://github.com/scanlime/fadecandy
 
-** TODO Add Nexus integration
-
-Will require a WebSocket library and a [[JSON parser]] for
-receiving updates.
-
-(nexus-bind hostname port-number component-path model-path var-name)
-
-(nexus-bind "localhost" 9081 "nexus.procdraw.someObj" "value" 'some-obj)
-
-The value of the Lisp object some-obj will be updated to reflect
-the value of {nexus.procdraw.someObj}.model.value from the Nexus.
-
-I'll want a way to unbind also.
-
-Some C/C++ WebSocket client libraries:
-
-- https://github.com/zaphoyd/websocketpp
-- https://github.com/dhbaird/easywsclient
-
 ** TODO Add audio input
 
 To make audio reactive graphics. Could start with just volume and
@@ -169,18 +46,6 @@ later look at other analysis such as frequency composition.
 
 * Interpreter
 ** Pretty printing
-*** DONE Implement a PrettyPrinter
-
-- See: "Prettyprinting" by Derek Oppen
-  - ACM Transactions on Programming Languages and Systems
-  - Volume 2 Issue 4, Oct. 1980
-  - http://dl.acm.org/citation.cfm?id=357114.357115
-- Also: "XP. A Common Lisp Pretty Printing System" by Richard C. Waters
-  - http://hdl.handle.net/1721.1/6504
-
-*** DONE Update text layout to support newlines
-*** DONE Remove previous, non-pretty, printer
-*** DONE Add special formatting for lambda forms
 *** TODO Implement support for non-pretty printing
 
 I currently have a kludge in LispInterpreter:
@@ -203,43 +68,6 @@ std::string LispInterpreter::PrintToString(LispObjectPtr obj)
 - (strings byte-array)
   - Works like Unix strings -- returns a list of (offset, string)
     pairs for ASCII text found in the byte array
-
-** TODO Use an image file to persist interpreter state
-
-- Make the image format as human readable as possible
-- Need to handle references to shared data
-- Need to handle cycles
-- Partition the global environment into collections/modules and
-  store each in a separate file
-  - I'm hoping this will make it easier to extract bits of an image
-    for sharing
-  - Start with 2 collections: user and system
-  - By default a symbol is placed into the user collection
-  - Add functions for getting and setting a symbol's collection
-    membership
-
-Use a format of one dotted pair per symbol:
-
-(symbol1 . val1)
-(symbol2 . val2)
-
-Depends on:
-
-- [[Shared reference support and cycle detection]]
-- [[Name CFunctions]]
-
-** TODO Update the Reader to read floating point numbers             :v0_1_0:
-** TODO Update the Reader API to support reading multiple objects from one input
-<<Read multiple objects>>
-
-LispReader::SetInput(const std::string &str);
-LispReader::Read(LispInterpreter *L);
-
-These methods are implemented. I just need to remove the
-Read(LispInterpreter *L, const std::string &str) and make them
-public.
-
-I will need to add unit tests for multiple inputs.
 
 ** TODO Implement image frame Signals
 
@@ -446,22 +274,6 @@ I have a C function Signalp but it isn't yet accessible from Lisp.
 - and
 - or
 
-** WONTDO Remove the Boolean and Null types
-
-And use the traditional Lisp treatment of boolean values:
-
-- nil is false
-- everything else is true
-- nil and t are Symbols and are self evaluating
-
-The not function then becomes an alias of null as they have the same
-behaviour.
-
-See also: [[Is Constant]]
-
-However, this change would cause trouble for round-tripping with
-notations that have an explicit Boolean type (such as JSON).
-
 ** TODO Add an 'is constant' flag to Symbols
 <<Is constant>>
 
@@ -510,21 +322,6 @@ If the source of a => is a signal (signalp), put a connection.
 Otherwise, set the value with put-slot and remove any existing
 connection.
 
-** DONE Add a toggle signal type
-
-Inputs:
-
-- Event signal
-- Signal A (default to constant 0)
-- Signal B (default to constant 1)
-
-The value of the toggle signal is either A or B and toggles between
-them each time the input event signal is true.
-
-Example usage: stopping and starting an oscillation
-
-(=> (sigmap2 * (toggle key-space) midic-1-1) saw1 'freq)
-
 ** TODO Add a counter signal type
 
 Inputs:
@@ -542,17 +339,6 @@ Signal value:
 - If incr, val += incr-amount
 - If decr, val -= incr-amount
 - If wrap is true, the value wraps, otherwise, it stops at the limits
-
-** TODO JSON parser
-<<JSON parser>>
-
-Some C/C++ JSON parsers:
-
-- https://github.com/open-source-parsers/jsoncpp
-- https://github.com/nlohmann/json
-- https://github.com/miloyip/rapidjson
-- https://github.com/miloyip/nativejson-benchmark
-- http://en.cppreference.com/w/cpp/links/libs
 
 ** TODO JSON serializer
 ** TODO Add some form of sequencing and/or pattern generation mechanism
@@ -705,67 +491,8 @@ generator with sub-generators.
            (lerp 0.6 0.8 $sin1))
     (tetrahedron)))
 
-** DONE Implement a Dictionary type
-*** DONE Make strings immutable
-*** DONE Modify LispInterpreter::Eq to compare string contents
-
-- For numbers, compare val_
-- For strings, they are equal if they have the same contents
-  - Compute a hash value on construction (make strings immutable)
-  - Compare hash values, if different then not equal, otherwise,
-    compare string contents
-- For other types compare memory locations
-  - For booleans and null types this is safe as we always share
-    objects: there is exactly one true, false, and nil
-
-*** DONE Implement C++ hash for LispObjectPtr
 ** TODO Use Dictionary for Signals rather than association list
 ** TODO Remove putassoc
-** TODO Implement read and print Dictionary
-** TODO Remove dotted pairs
-
-A linked list element rest pointer always points to another list
-cell or NIL (and not to any other data type).
-
-(cons 'a 'b) => (a b) rather than (a . b)
-(set-rest 'c '(a b)) => (a c) rather than (a . c)
-
-NIL continues to represent the empty list.
-
-List functions:
-
-(first list)
-(second list)
-(rest list)
-(nth index list)
-
-would replace (car), (cdr), (cadr), (cddr), and so on.
-
-And:
-
-(set-first val list)
-(set-rest val list)
-(set-nth index val list)
-
-would replace (rplaca) and (rplacd)
-
-Association lists would change:
-
-((k1 v1) (k2 v2))
-
-rather than:
-
-((k1 . v1) (k2 . v2))
-
-- https://arclanguage.github.io/ref/assoc.html
-- http://www.newlisp.org/newlisp_manual.html#lookup
-
-(second (assoc key alist))
-
-rather than:
-
-(cdr (assoc key alist))
-
 ** TODO Implement lexical scoping instead of dynamic
 
 - Nested environments
@@ -822,16 +549,6 @@ Add command line options to talk to the running procdraw, such as:
 - procdraw get IDENTIFIER
 
 ** TODO Internationalize procdraw using GNU gettext
-** TODO Add a function to load code from a file                      :v0_1_0:
-
-(source filename)
-
-or
-
-(load filename)
-
-Depends on [[Read multiple objects]]
-
 ** TODO Add functions for navigating the filesystem
 
 - (getcwd) -- POSIX getcwd()
@@ -879,23 +596,6 @@ frame_counter.h
 
 ** INPROGRESS Implement a basic console and REPL                     :v0_1_0:
 *** TODO Move cursor drawing into GlRenderer::Text
-*** DONE Replace CursorForward(n) and CursorBackward(n)
-
-Replace CursorForward(n) and CursorBackward(n) with:
-
-- ForwardChar()
-- BackwardChar()
-
-*** DONE Add console content lines
-
-I currently have only a single line, where the cursor is
-
-*** DONE Wrap lines longer than the console width
-
-Probably want to do this with [[Text layout function]]
-
-*** DONE Position cursor when input line is wrapped
-*** DONE Scroll the console when we reach the bottom
 *** TODO Scolling when cursor at end of full width line
 
 I'm not scrolling properly when the input line is at the bottom of
@@ -909,18 +609,6 @@ characters.
 *** TODO Provide scrollback to view lines that have scrolled off the top
 
 Up to some maximum number of stored lines
-
-** TODO Implement an editor
-
-Make a TextWidget class that is a super class of Console and
-TextEditor. Provides common functionality such as:
-
-- list of TextLayout
-- viewport positioning (what lines to show --
-  displayFromLogicalLine and displayFromPhysicalLine)
-- cursor position
-- drawing of text
-- drawing of cursor
 
 ** TODO Implement autocomplete for symbols
 ** TODO Implement matching parens highlighting
@@ -945,23 +633,13 @@ right, with multiple watch expressions stacked vertically.
 To manage REPL and editors
 
 * Procedural generation
-** TODO Make L-systems available from Lisp and a mechanism for drawing
 ** TODO Draw a Menger Sponge
 
 https://en.wikipedia.org/wiki/Menger_sponge
 
-** TODO Implement Noise functions
 * Project
-** DONE Close GitHub issues that have been moved to TODO.org         :v0_1_0:
-** WONTDO Rename "Procdraw" to "ProcDraw"                            :v0_1_0:
-** DONE Add a note on font_config.h to the README.md
 ** TODO Add a "Getting Started" section to the README.md
 ** TODO Set up Procdraw installation and add note to the README.md
-** TODO Put each class into its own translation unit
-
-- SomeClass.h
-- SomeClass.cpp
-
 ** TODO Version Procdraw
 
 Could use Semantic Versioning
@@ -1008,58 +686,8 @@ See also:
 - http://www.lionhack.com/2014/03/09/software-versioning-strategies/
 - http://programmers.stackexchange.com/a/151558
 
-** DONE Publish the documentation to a static website
 ** TODO Set up Cppcheck
-** DONE Port Procdraw to Windows
-*** DONE Pull GLM in from GitHub
-
-https://github.com/g-truc/glm
-
-*** DONE Use TinyXML2
-
-https://github.com/leethomason/tinyxml2
-
-** DONE Remove top level src directory and add include directory; rename extras to scripts
-
-procdraw/
-  Documentation/
-  alsa_midi/
-  examples/
-  graphics/
-  include/
-    procdraw/
-      alsa_midi/
-      graphics/
-      interpreter/
-      procdraw/
-      utils/
-  interpreter/
-  procdraw/
-  scripts/
-  site/
-  tests/
-  third_party/
-  utils/
-
-** TODO Move memory out of the Lisp interpreter
-
-- Make the Procdraw memory interpreter-agnostic to support
-  different interpreters using the same memory
-- Rename the interpreter subproject to "lisp"
-
-** DONE Switch to pointers for function out parameters
-** TODO Use the term "procedure" rather than "function" (as in Scheme)
-** TODO Use "util" rather than "utils"
-* Tests
-** WONTDO Use propositions for test names
-
-As if prefixed by "test that..." or "check that...".
-
-** INPROGRESS Convert tests to Google Test
-** DONE Run the function_spec_tests under the Google Test runner
-** TODO Switch over to a single Google Test runner and don't use CTest
 * Utils
-** TODO Change Hsv2Rgb to use turns for Hue rather than degrees
 ** TODO Optimize common text layout changes
 
 At the moment I do a fresh lay out each time a line changes. I
@@ -1069,24 +697,3 @@ char count for the line and append the glyph.
 
 I'll need to take care that LineBuffer and TextLayout stay
 synchronized.
-
-* Website
-** TODO Add breadcrumbs for docs pages
-
-Docs / Function memb
-
-- http://foundation.zurb.com/sites/docs/breadcrumbs.html
-- https://developers.google.com/structured-data/breadcrumbs
-
-** TODO Set Cache-Control headers
-
-See:
-
-- https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
-- https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=en
-- https://www.mnot.net/cache_docs/
-- http://www.askapache.com/htaccess/apache-speed-cache-control.html
-- https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching_FAQ
-- https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers
-
-** TODO codes/ascii.html
