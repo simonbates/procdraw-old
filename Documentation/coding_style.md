@@ -7,7 +7,7 @@ C++ Coding Style
 * Layout
     * Indentation is 4 spaces
     * The maximum line length is 80 characters
-    * Code is formatted in the [WebKit coding style](https://webkit.org/code-style-guidelines/)
+    * Program text is formatted in the [WebKit coding style](https://webkit.org/code-style-guidelines/)
 * Names
     * Types: PascalCase
     * Functions and methods: PascalCase
