@@ -7,8 +7,8 @@ C++ Coding Style
 * Layout
     * Indentation is 4 spaces
     * The maximum line length is 80 characters
-    * Code layout follows the [WebKit coding style](https://webkit.org/code-style-guidelines/)
-* Naming
+    * Procdraw follows the code layout conventions of the [WebKit coding style](https://webkit.org/code-style-guidelines/)
+* Names
     * Types: PascalCase
     * Functions and methods: PascalCase
     * Public data members: PascalCase
