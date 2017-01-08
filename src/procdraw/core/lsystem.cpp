@@ -3,24 +3,19 @@
 
 namespace procdraw {
 
-std::string
-Lsystem::GetString()
-{
-  return current_;
-}
+std::string Lsystem::GetString() { return current_; }
 
-void
-Lsystem::Next()
+void Lsystem::Next()
 {
-  std::string next;
-  for (auto c : current_) {
-    auto iter = rules_.find(c);
-    if (iter != rules_.end()) {
-      next += iter->second;
-    } else {
-      next += c;
+    std::string next;
+    for (auto c : current_) {
+        auto iter = rules_.find(c);
+        if (iter != rules_.end()) {
+            next += iter->second;
+        } else {
+            next += c;
+        }
     }
-  }
-  current_ = next;
+    current_ = next;
 }
 }

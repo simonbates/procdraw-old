@@ -6,13 +6,12 @@
 
 namespace procdraw {
 
-class Camera
-{
+class Camera {
 public:
-  Camera();
-  glm::mat4 ViewProjectionMatrix();
+    Camera();
+    glm::mat4 ViewProjectionMatrix();
 
 private:
-  glm::mat4 viewProjectionMatrix_;
+    glm::mat4 viewProjectionMatrix_;
 };
 }

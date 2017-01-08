@@ -5,14 +5,13 @@
 
 namespace procdraw {
 
-class AlsaMidiClient
-{
+class AlsaMidiClient {
 public:
-  AlsaMidiClient();
-  void Poll(MidiListener* listener);
+    AlsaMidiClient();
+    void Poll(MidiListener* listener);
 
 private:
-  snd_seq_t* seq_;
-  int portid_;
+    snd_seq_t* seq_;
+    int portid_;
 };
 }

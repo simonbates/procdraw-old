@@ -6,13 +6,12 @@
 
 namespace procdraw {
 
-struct ConsoleLine
-{
-  std::string text;
-  TextLayout<GLfloat> layout;
-  explicit ConsoleLine(const std::string& text)
-    : text(text)
-  {
-  }
+struct ConsoleLine {
+    std::string text;
+    TextLayout<GLfloat> layout;
+    explicit ConsoleLine(const std::string& text)
+        : text(text)
+    {
+    }
 };
 }

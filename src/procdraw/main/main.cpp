@@ -9,38 +9,35 @@
 #include <iostream>
 #include <string>
 
-int
-RunSuperSimpleRepl()
+int RunSuperSimpleRepl()
 {
-  procdraw::LispInterpreter interpreter;
-  std::string expr;
-  while (true) {
-    std::cout << "> ";
-    std::getline(std::cin, expr);
-    // TODO: Note the hardcoded 40 char width
-    std::cout << interpreter.PrettyPrintToString(
-                   interpreter.Eval(interpreter.Read(expr)), 40)
-              << std::endl;
-  }
-  return 0;
+    procdraw::LispInterpreter interpreter;
+    std::string expr;
+    while (true) {
+        std::cout << "> ";
+        std::getline(std::cin, expr);
+        // TODO: Note the hardcoded 40 char width
+        std::cout << interpreter.PrettyPrintToString(
+                         interpreter.Eval(interpreter.Read(expr)), 40)
+                  << std::endl;
+    }
+    return 0;
 }
 
 #ifdef PROCDRAW_ENABLE_OPENGL
-int
-RunGui()
+int RunGui()
 {
-  procdraw::SDL sdl(SDL_INIT_VIDEO);
-  procdraw::ProcdrawApp app;
-  return app.MainLoop();
+    procdraw::SDL sdl(SDL_INIT_VIDEO);
+    procdraw::ProcdrawApp app;
+    return app.MainLoop();
 }
 #endif
 
-int
-main()
+int main()
 {
 #ifdef PROCDRAW_ENABLE_OPENGL
-  return RunGui();
+    return RunGui();
 #else
-  return RunSuperSimpleRepl();
+    return RunSuperSimpleRepl();
 #endif
 }

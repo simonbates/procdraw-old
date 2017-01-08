@@ -6,10 +6,9 @@ namespace procdraw {
 
 void ThrowSdlError();
 
-class SDL
-{
+class SDL {
 public:
-  explicit SDL(Uint32 flags);
-  ~SDL();
+    explicit SDL(Uint32 flags);
+    ~SDL();
 };
 }

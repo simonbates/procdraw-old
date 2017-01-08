@@ -11,132 +11,125 @@ namespace procdraw {
 
 BitmapTextRenderer::BitmapTextRenderer()
 {
-  try {
-    CompileShaders();
-    MakeGlyphQuadVao();
-    fontLoader_.LoadFont(MonospaceFontFilePath, MonospaceFontSizePixels,
-                         &monospaceFontMetrics_, &monospaceFontTexture_);
-  } catch (...) {
-    Cleanup();
-    throw;
-  }
+    try {
+        CompileShaders();
+        MakeGlyphQuadVao();
+        fontLoader_.LoadFont(MonospaceFontFilePath, MonospaceFontSizePixels,
+            &monospaceFontMetrics_, &monospaceFontTexture_);
+    } catch (...) {
+        Cleanup();
+        throw;
+    }
 }
 
-BitmapTextRenderer::~BitmapTextRenderer()
+BitmapTextRenderer::~BitmapTextRenderer() { Cleanup(); }
+
+void BitmapTextRenderer::Cleanup()
 {
-  Cleanup();
+    glDeleteVertexArrays(1, &glyphQuadVao_);
+    glDeleteBuffers(1, &glyphQuadVertexBuffer_);
+    glDeleteTextures(1, &monospaceFontTexture_);
+    glDeleteProgram(program_);
 }
 
-void
-BitmapTextRenderer::Cleanup()
+void BitmapTextRenderer::BeginText(int width, int height)
 {
-  glDeleteVertexArrays(1, &glyphQuadVao_);
-  glDeleteBuffers(1, &glyphQuadVertexBuffer_);
-  glDeleteTextures(1, &monospaceFontTexture_);
-  glDeleteProgram(program_);
+    glUseProgram(program_);
+    // TODO: Cache the 2d projection matrix -- no need to calculate
+    // each time, only when the renderer size changes
+    orthoProjection_ = glm::ortho(
+        0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f);
+    glUniform1i(texLoc_, 0);
+    glDisable(GL_DEPTH_TEST);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, monospaceFontTexture_);
+    glBindVertexArray(glyphQuadVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
 }
 
-void
-BitmapTextRenderer::BeginText(int width, int height)
+void BitmapTextRenderer::DrawText(int x, int y,
+    const TextLayout<GLfloat>& layout,
+    TextLayout<GLfloat>::size_type startLineNum,
+    TextLayout<GLfloat>::size_type endLineNum)
 {
-  glUseProgram(program_);
-  // TODO: Cache the 2d projection matrix -- no need to calculate
-  // each time, only when the renderer size changes
-  orthoProjection_ = glm::ortho(0.0f, static_cast<float>(width),
-                                static_cast<float>(height), 0.0f);
-  glUniform1i(texLoc_, 0);
-  glDisable(GL_DEPTH_TEST);
+    int startLineY = y - (startLineNum * layout.LinespacePixels);
+    auto projectionMatrix
+        = glm::translate(orthoProjection_, glm::vec3(x, startLineY, 0));
+    glUniformMatrix4fv(
+        projectionLoc_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, monospaceFontTexture_);
-  glBindVertexArray(glyphQuadVao_);
-  glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+    for (std::remove_reference<decltype(layout)>::type::size_type i
+         = startLineNum;
+         i < endLineNum; ++i) {
+        auto vertices = layout.GetVerticesForLine(i);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(),
+            vertices.data());
+        glDrawArrays(GL_TRIANGLES, 0,
+            vertices.size() / BitmapTextRendererComponentsPerVertex);
+    }
 }
 
-void
-BitmapTextRenderer::DrawText(int x, int y, const TextLayout<GLfloat>& layout,
-                             TextLayout<GLfloat>::size_type startLineNum,
-                             TextLayout<GLfloat>::size_type endLineNum)
+int BitmapTextRenderer::GetLinespace()
 {
-  int startLineY = y - (startLineNum * layout.LinespacePixels);
-  auto projectionMatrix =
-    glm::translate(orthoProjection_, glm::vec3(x, startLineY, 0));
-  glUniformMatrix4fv(projectionLoc_, 1, GL_FALSE,
-                     glm::value_ptr(projectionMatrix));
-
-  for (std::remove_reference<decltype(layout)>::type::size_type i =
-         startLineNum;
-       i < endLineNum; ++i) {
-    auto vertices = layout.GetVerticesForLine(i);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * vertices.size(),
-                    vertices.data());
-    glDrawArrays(GL_TRIANGLES, 0,
-                 vertices.size() / BitmapTextRendererComponentsPerVertex);
-  }
+    return monospaceFontMetrics_.LinespacePixels;
 }
 
-int
-BitmapTextRenderer::GetLinespace()
+TextLayout<GLfloat> BitmapTextRenderer::LayOutText(
+    const std::string& text, int maxLineWidthPixels)
 {
-  return monospaceFontMetrics_.LinespacePixels;
+    return textLayoutEngine_.LayOutText(text, monospaceFontMetrics_,
+        BitmapTextRendererMaxDrawGlyphs, maxLineWidthPixels);
 }
 
-TextLayout<GLfloat>
-BitmapTextRenderer::LayOutText(const std::string& text, int maxLineWidthPixels)
+void BitmapTextRenderer::CompileShaders()
 {
-  return textLayoutEngine_.LayOutText(text, monospaceFontMetrics_,
-                                      BitmapTextRendererMaxDrawGlyphs,
-                                      maxLineWidthPixels);
+    static const GLchar* vertexShaderSource[] = {
+        "#version 150                                                       \n"
+        "uniform mat4 projection;                                           \n"
+        "in vec4 position;                                                  \n"
+        "out vec2 tc;                                                       \n"
+        "void main(void)                                                    \n"
+        "{                                                                  \n"
+        "  gl_Position = projection * vec4(position.xy, 0, 1);              \n"
+        "  tc = position.zw;                                                \n"
+        "}                                                                  "
+        "\n"
+    };
+
+    static const GLchar* fragmentShaderSource[] = {
+        "#version 150                                                       \n"
+        "uniform sampler2D tex;                                             \n"
+        "in vec2 tc;                                                        \n"
+        "out vec4 color;                                                    \n"
+        "void main(void)                                                    \n"
+        "{                                                                  \n"
+        "  color = vec4(0.96875, 0.96875, 0.96875, texture(tex, tc).r);     \n"
+        "}                                                                  "
+        "\n"
+    };
+
+    program_ = CompileProgram(
+        vertexShaderSource, fragmentShaderSource, { { 0, "position" } });
+    projectionLoc_ = glGetUniformLocation(program_, "projection");
+    texLoc_ = glGetUniformLocation(program_, "tex");
 }
 
-void
-BitmapTextRenderer::CompileShaders()
+void BitmapTextRenderer::MakeGlyphQuadVao()
 {
-  static const GLchar* vertexShaderSource[] = {
-    "#version 150                                                       \n"
-    "uniform mat4 projection;                                           \n"
-    "in vec4 position;                                                  \n"
-    "out vec2 tc;                                                       \n"
-    "void main(void)                                                    \n"
-    "{                                                                  \n"
-    "  gl_Position = projection * vec4(position.xy, 0, 1);              \n"
-    "  tc = position.zw;                                                \n"
-    "}                                                                  \n"
-  };
+    glGenVertexArrays(1, &glyphQuadVao_);
+    glBindVertexArray(glyphQuadVao_);
 
-  static const GLchar* fragmentShaderSource[] = {
-    "#version 150                                                       \n"
-    "uniform sampler2D tex;                                             \n"
-    "in vec2 tc;                                                        \n"
-    "out vec4 color;                                                    \n"
-    "void main(void)                                                    \n"
-    "{                                                                  \n"
-    "  color = vec4(0.96875, 0.96875, 0.96875, texture(tex, tc).r);     \n"
-    "}                                                                  \n"
-  };
+    auto vertexBufferSize = sizeof(GLfloat) * BitmapTextRendererMaxDrawGlyphs
+        * BitmapTextRendererVerticesPerGlyph
+        * BitmapTextRendererComponentsPerVertex;
 
-  program_ = CompileProgram(vertexShaderSource, fragmentShaderSource,
-                            { { 0, "position" } });
-  projectionLoc_ = glGetUniformLocation(program_, "projection");
-  texLoc_ = glGetUniformLocation(program_, "tex");
-}
+    glGenBuffers(1, &glyphQuadVertexBuffer_);
+    glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_DYNAMIC_DRAW);
 
-void
-BitmapTextRenderer::MakeGlyphQuadVao()
-{
-  glGenVertexArrays(1, &glyphQuadVao_);
-  glBindVertexArray(glyphQuadVao_);
-
-  auto vertexBufferSize = sizeof(GLfloat) * BitmapTextRendererMaxDrawGlyphs *
-                          BitmapTextRendererVerticesPerGlyph *
-                          BitmapTextRendererComponentsPerVertex;
-
-  glGenBuffers(1, &glyphQuadVertexBuffer_);
-  glBindBuffer(GL_ARRAY_BUFFER, glyphQuadVertexBuffer_);
-  glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_DYNAMIC_DRAW);
-
-  glVertexAttribPointer(0, BitmapTextRendererComponentsPerVertex, GL_FLOAT,
-                        GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(0);
+    glVertexAttribPointer(
+        0, BitmapTextRendererComponentsPerVertex, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
 }
 }
