@@ -1,23 +1,28 @@
-Procdraw Coding Style
-=====================
+Procdraw C++ Coding Style
+=========================
 
-C++ Coding Style
-----------------
+Layout
+------
 
-* Layout
-    * Indentation is 4 spaces
-    * The maximum line length is 80 characters
-    * Program text is formatted in the [WebKit coding style](https://webkit.org/code-style-guidelines/)
-* Names
-    * Types: PascalCase
-    * Functions and methods: PascalCase
-    * Public data members: PascalCase
-    * Variables and parameters: lowerCamelCase
-    * Private class data members: mCamelCase
-    * Output pointer parameters: outCamelCase
-* Exceptions can be used
-* RAII (Resource Acquisition Is Initialization) is used
-* Text is encoded in UTF-8 and put in std::strings
+* Indentation is 4 spaces
+* Use a maximum line length of 80 characters
+
+Naming
+------
+
+* Types: PascalCase
+* Functions and methods: PascalCase
+* Public data members: PascalCase
+* Variables and parameters: lowerCamelCase
+* Private class data members: mCamelCase
+* Output pointer parameters: outCamelCase
+
+Conditional Compilation
+-----------------------
+
+* Avoid #ifdefs in .c or .cpp files
+* Instead, put conditionals into header files and provide no-op
+  functions or classes
 
 Passing data to functions
 -------------------------
