@@ -21,8 +21,8 @@ Conditional Compilation
 -----------------------
 
 * Avoid #ifdefs in .c or .cpp files
-* Instead, put conditionals into header files and provide no-op
-  functions or classes
+* Instead, put conditionals into header files and (if applicable)
+  provide no-op functions or classes
 
 Passing data to functions
 -------------------------
