@@ -31,18 +31,18 @@ Passing data to functions
 |-----------|------|
 | By value | Use for read-only primitive types |
 | By reference | Use const references for passing read-only structs and classes |
+| By pointer | Use pointers for passing modifiable objects; or for returning multiple values, prefixing each parameter name with "out" (but for a single return value, prefer return by value) |
 | By smart pointer | Use for objects with automatic memory management |
-| By pointer | Use pointers for the purpose of returning multiple values, prefixing each parameter name with "out" (but for a single return value, prefer return by value) |
 
-Returning data from functions
------------------------------
+Function return styles
+----------------------
 
 | Mechanism | When |
 |-----------|------|
-| By value | This is the preferred mechanism to use when returning a single value (including compound objects) |
-| By reference | Use with care; a valid use case would be returning access to a collection member |
-| By smart pointer | Use for objects with automatic memory management |
-| By pointer | Use with care; for example to provide access to an object with program-lifetime temporal scope |
+| Value | This is the preferred mechanism to use when returning a single value (including compound objects) |
+| Reference | Use with care; a valid use case would be returning access to a collection member |
+| Pointer | Use with care; for example to provide access to an object with program-lifetime temporal scope |
+| Smart pointer | Use for objects with automatic memory management |
 
 If a function has a single return value (including compound objects),
 prefer return by value. If there are situations where there is evidence
