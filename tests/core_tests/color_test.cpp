@@ -1,28 +1,28 @@
 #include "procdraw/core/color.h"
 #include "gtest/gtest.h"
 
-TEST(ColorTest, Hsv2RgbRed)
+TEST(ColorTest, hsv2rgb_red)
 {
     float r, g, b;
-    procdraw::Hsv2Rgb(0.0f, 1.0f, 1.0f, &r, &g, &b);
+    std::tie(r, g, b) = procdraw::hsv2rgb(0.0f, 1.0f, 1.0f);
     EXPECT_EQ(1.0f, r);
     EXPECT_EQ(0.0f, g);
     EXPECT_EQ(0.0f, b);
 }
 
-TEST(ColorTest, Hsv2RgbGreen)
+TEST(ColorTest, hsv2rgb_green)
 {
     float r, g, b;
-    procdraw::Hsv2Rgb(120.0f, 1.0f, 1.0f, &r, &g, &b);
+    std::tie(r, g, b) = procdraw::hsv2rgb(120.0f, 1.0f, 1.0f);
     EXPECT_EQ(0.0f, r);
     EXPECT_EQ(1.0f, g);
     EXPECT_EQ(0.0f, b);
 }
 
-TEST(ColorTest, Hsv2RgbBlue)
+TEST(ColorTest, hsv2rgb_blue)
 {
     float r, g, b;
-    procdraw::Hsv2Rgb(240.0f, 1.0f, 1.0f, &r, &g, &b);
+    std::tie(r, g, b) = procdraw::hsv2rgb(240.0f, 1.0f, 1.0f);
     EXPECT_EQ(0.0f, r);
     EXPECT_EQ(0.0f, g);
     EXPECT_EQ(1.0f, b);

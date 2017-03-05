@@ -6,17 +6,16 @@ namespace procdraw {
 // h [0, 360)
 // s [0, 1]
 // v [0, 1]
-void Hsv2Rgb(
-    float h, float s, float v, float* out_r, float* out_g, float* out_b)
+std::tuple<float, float, float> hsv2rgb(float h, float s, float v)
 {
-    *out_r = 0.0f;
-    *out_g = 0.0f;
-    *out_b = 0.0f;
+    float r = 0.0f;
+    float g = 0.0f;
+    float b = 0.0f;
 
     if (s == 0) {
-        *out_r = v;
-        *out_g = v;
-        *out_b = v;
+        r = v;
+        g = v;
+        b = v;
     } else {
         if (h == 360) {
             h = 0;
@@ -29,36 +28,38 @@ void Hsv2Rgb(
         float t = v * (1 - (s * (1 - f)));
         switch (i) {
         case 0:
-            *out_r = v;
-            *out_g = t;
-            *out_b = p;
+            r = v;
+            g = t;
+            b = p;
             break;
         case 1:
-            *out_r = q;
-            *out_g = v;
-            *out_b = p;
+            r = q;
+            g = v;
+            b = p;
             break;
         case 2:
-            *out_r = p;
-            *out_g = v;
-            *out_b = t;
+            r = p;
+            g = v;
+            b = t;
             break;
         case 3:
-            *out_r = p;
-            *out_g = q;
-            *out_b = v;
+            r = p;
+            g = q;
+            b = v;
             break;
         case 4:
-            *out_r = t;
-            *out_g = p;
-            *out_b = v;
+            r = t;
+            g = p;
+            b = v;
             break;
         case 5:
-            *out_r = v;
-            *out_g = p;
-            *out_b = q;
+            r = v;
+            g = p;
+            b = q;
             break;
         }
     }
+
+    return std::make_tuple(r, g, b);
 }
 }

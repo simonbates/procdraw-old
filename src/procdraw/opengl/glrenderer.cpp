@@ -72,7 +72,7 @@ GlRenderer::~GlRenderer()
 void GlRenderer::AmbientLightColor(float h, float s, float v)
 {
     float r, g, b;
-    Hsv2Rgb(h, s, v, &r, &g, &b);
+    std::tie(r, g, b) = hsv2rgb(h, s, v);
     ambientLightColor_.x = r;
     ambientLightColor_.y = g;
     ambientLightColor_.z = b;
@@ -82,7 +82,7 @@ void GlRenderer::AmbientLightColor(float h, float s, float v)
 void GlRenderer::Background(float h, float s, float v)
 {
     float r, g, b;
-    Hsv2Rgb(h, s, v, &r, &g, &b);
+    std::tie(r, g, b) = hsv2rgb(h, s, v);
     glClearColor(r, g, b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     ResetMatrix();
@@ -122,7 +122,7 @@ void GlRenderer::BeginText()
 
 void GlRenderer::Color(float h, float s, float v, float a)
 {
-    Hsv2Rgb(h, s, v, &materialR_, &materialG_, &materialB_);
+    std::tie(materialR_, materialG_, materialB_) = hsv2rgb(h, s, v);
     materialA_ = a;
 }
 
@@ -177,7 +177,7 @@ TextLayout<GLfloat> GlRenderer::LayOutText(
 void GlRenderer::LightColor(float h, float s, float v)
 {
     float r, g, b;
-    Hsv2Rgb(h, s, v, &r, &g, &b);
+    std::tie(r, g, b) = hsv2rgb(h, s, v);
     lightColor_.x = r;
     lightColor_.y = g;
     lightColor_.z = b;
