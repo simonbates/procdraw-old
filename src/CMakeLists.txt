@@ -56,43 +56,41 @@ endif()
 
 # procdraw_opengl
 
-if(ENABLE_OPENGL)
-    add_library(procdraw_opengl
-        procdraw/opengl/bitmap_text_renderer.cpp
-        procdraw/opengl/bitmap_text_renderer.h
-        procdraw/opengl/camera.cpp
-        procdraw/opengl/camera.h
-        procdraw/opengl/console.cpp
-        procdraw/opengl/console.h
-        procdraw/opengl/console_line.h
-        procdraw/opengl/font_config.h
-        procdraw/opengl/frame_counter.cpp
-        procdraw/opengl/frame_counter.h
-        procdraw/opengl/freetype_font_loader.cpp
-        procdraw/opengl/freetype_font_loader.h
-        procdraw/opengl/glrenderer.cpp
-        procdraw/opengl/glrenderer.h
-        procdraw/opengl/gl_util.cpp
-        procdraw/opengl/gl_util.h
-        procdraw/opengl/procdraw_app.cpp
-        procdraw/opengl/procdraw_app.h
-        procdraw/opengl/procdraw_app_lisp.cpp
-        procdraw/opengl/procdraw_app_lisp.h
-        procdraw/opengl/sdl_util.cpp
-        procdraw/opengl/sdl_util.h
-        procdraw/opengl/vertex.h)
+add_library(procdraw_opengl
+    procdraw/opengl/bitmap_text_renderer.cpp
+    procdraw/opengl/bitmap_text_renderer.h
+    procdraw/opengl/camera.cpp
+    procdraw/opengl/camera.h
+    procdraw/opengl/console.cpp
+    procdraw/opengl/console.h
+    procdraw/opengl/console_line.h
+    procdraw/opengl/font_config.h
+    procdraw/opengl/frame_counter.cpp
+    procdraw/opengl/frame_counter.h
+    procdraw/opengl/freetype_font_loader.cpp
+    procdraw/opengl/freetype_font_loader.h
+    procdraw/opengl/glrenderer.cpp
+    procdraw/opengl/glrenderer.h
+    procdraw/opengl/gl_util.cpp
+    procdraw/opengl/gl_util.h
+    procdraw/opengl/procdraw_app.cpp
+    procdraw/opengl/procdraw_app.h
+    procdraw/opengl/procdraw_app_lisp.cpp
+    procdraw/opengl/procdraw_app_lisp.h
+    procdraw/opengl/sdl_util.cpp
+    procdraw/opengl/sdl_util.h
+    procdraw/opengl/vertex.h)
 
-    target_include_directories(procdraw_opengl
-        PUBLIC ${PROCDRAW_SRC_DIR}
-        PUBLIC ${SDL2_INCLUDE_DIRS}
-        PRIVATE ${OPENGL_INCLUDE_DIRS})
+target_include_directories(procdraw_opengl
+    PUBLIC ${PROCDRAW_SRC_DIR}
+    PUBLIC ${SDL2_INCLUDE_DIRS}
+    PRIVATE ${OPENGL_INCLUDE_DIRS})
 
-    target_link_libraries(procdraw_opengl
-        procdraw_core
-        gl3w
-        ${OPENGL_LIBRARIES}
-        ${SDL2_LIBRARIES})
-endif()
+target_link_libraries(procdraw_opengl
+    procdraw_core
+    gl3w
+    ${OPENGL_LIBRARIES}
+    ${SDL2_LIBRARIES})
 
 # procdraw_test_support
 
@@ -116,11 +114,8 @@ target_include_directories(procdraw_main
     PRIVATE ${PROCDRAW_SRC_DIR})
 
 target_link_libraries(procdraw_main
-    procdraw_core)
-
-if(ENABLE_OPENGL)
-    target_link_libraries(procdraw_main procdraw_opengl)
-endif()
+    procdraw_core
+    procdraw_opengl)
 
 if(ENABLE_ALSA_MIDI)
     target_link_libraries(procdraw_main procdraw_alsa_midi)
@@ -129,7 +124,7 @@ endif()
 set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)
 
-if(WIN32 AND ENABLE_OPENGL)
+if(WIN32)
     set_target_properties(procdraw_main
         PROPERTIES WIN32_EXECUTABLE TRUE)
     add_custom_command(TARGET procdraw_main POST_BUILD

@@ -10,8 +10,6 @@ else()
     option(ENABLE_ALSA_MIDI "Enable ALSA MIDI" OFF)
 endif()
 
-option(ENABLE_OPENGL "Enable OpenGL" ON)
-
 # Find dependencies
 
 if(ENABLE_ALSA_MIDI)
@@ -19,24 +17,18 @@ if(ENABLE_ALSA_MIDI)
     add_definitions(-DPROCDRAW_ENABLE_ALSA_MIDI)
 endif()
 
-if(ENABLE_OPENGL)
-    find_package(OpenGL REQUIRED)
-    add_definitions(-DPROCDRAW_ENABLE_OPENGL)
-
-    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-        include(FindPkgConfig)
-        pkg_search_module(SDL2 REQUIRED sdl2)
-    elseif(WIN32)
-        set(PROCDRAW_SDL2_DIR $ENV{PROCDRAW_SDL2_DIR})
-        set(PROCDRAW_SDL2_LIB "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.lib")
-        set(PROCDRAW_SDL2_DLL "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.dll")
-        set(SDL2_INCLUDE_DIRS "${PROCDRAW_SDL2_DIR}/include")
-        set(SDL2_LIBRARIES ${PROCDRAW_SDL2_LIB})
-    endif()
-endif()
+find_package(OpenGL REQUIRED)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    include(FindPkgConfig)
+    pkg_search_module(SDL2 REQUIRED sdl2)
     find_package(Threads REQUIRED)
+elseif(WIN32)
+    set(PROCDRAW_SDL2_DIR $ENV{PROCDRAW_SDL2_DIR})
+    set(PROCDRAW_SDL2_LIB "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.lib")
+    set(PROCDRAW_SDL2_DLL "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.dll")
+    set(SDL2_INCLUDE_DIRS "${PROCDRAW_SDL2_DIR}/include")
+    set(SDL2_LIBRARIES ${PROCDRAW_SDL2_LIB})
 endif()
 
 # Configure SDL2 include names
@@ -76,14 +68,12 @@ target_compile_definitions(freetype2 PRIVATE FT2_BUILD_LIBRARY)
 
 # GL3W
 
-if(ENABLE_OPENGL)
-    set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
-    add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
-    target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
+set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
+add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
+target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
 
-    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-        target_link_libraries(gl3w dl)
-    endif()
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    target_link_libraries(gl3w dl)
 endif()
 
 # GLM
