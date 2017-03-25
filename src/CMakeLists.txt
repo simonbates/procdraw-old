@@ -1,43 +1,71 @@
 set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
-# procdraw_core
+# procdraw_lib
 
-add_library(procdraw_core
-    procdraw/core/interpreter/lisp_functions.cpp
-    procdraw/core/interpreter/lisp_functions.h
-    procdraw/core/interpreter/lisp_interpreter.cpp
-    procdraw/core/interpreter/lisp_interpreter.h
-    procdraw/core/interpreter/lisp_memory.cpp
-    procdraw/core/interpreter/lisp_memory.h
-    procdraw/core/interpreter/lisp_reader.cpp
-    procdraw/core/interpreter/lisp_reader.h
-    procdraw/core/interpreter/prettyprinter.cpp
-    procdraw/core/interpreter/prettyprinter.h
-    procdraw/core/interpreter/signals.cpp
-    procdraw/core/interpreter/signals.h
-    procdraw/core/bitmap_font_metrics.cpp
-    procdraw/core/bitmap_font_metrics.h
-    procdraw/core/bitmap_glyph_metrics.h
-    procdraw/core/color.cpp
-    procdraw/core/color.h
-    procdraw/core/command_processor.h
-    procdraw/core/line_buffer.cpp
-    procdraw/core/line_buffer.h
-    procdraw/core/lsystem.cpp
-    procdraw/core/lsystem.h
-    procdraw/core/math.cpp
-    procdraw/core/math.h
-    procdraw/core/midi_listener.h
-    procdraw/core/simple_moving_average.h
-    procdraw/core/text_layout_engine.h
-    procdraw/core/text_layout.h)
+add_library(procdraw_lib
+    procdraw/graphics/bitmap_text_renderer.cpp
+    procdraw/graphics/bitmap_text_renderer.h
+    procdraw/graphics/camera.cpp
+    procdraw/graphics/camera.h
+    procdraw/graphics/console.cpp
+    procdraw/graphics/console.h
+    procdraw/graphics/console_line.h
+    procdraw/graphics/font_config.h
+    procdraw/graphics/frame_counter.cpp
+    procdraw/graphics/frame_counter.h
+    procdraw/graphics/freetype_font_loader.cpp
+    procdraw/graphics/freetype_font_loader.h
+    procdraw/graphics/glrenderer.cpp
+    procdraw/graphics/glrenderer.h
+    procdraw/graphics/gl_util.cpp
+    procdraw/graphics/gl_util.h
+    procdraw/graphics/sdl_util.cpp
+    procdraw/graphics/sdl_util.h
+    procdraw/graphics/vertex.h
+    procdraw/interpreter/lisp_functions.cpp
+    procdraw/interpreter/lisp_functions.h
+    procdraw/interpreter/lisp_interpreter.cpp
+    procdraw/interpreter/lisp_interpreter.h
+    procdraw/interpreter/lisp_memory.cpp
+    procdraw/interpreter/lisp_memory.h
+    procdraw/interpreter/lisp_reader.cpp
+    procdraw/interpreter/lisp_reader.h
+    procdraw/interpreter/prettyprinter.cpp
+    procdraw/interpreter/prettyprinter.h
+    procdraw/interpreter/signals.cpp
+    procdraw/interpreter/signals.h
+    procdraw/bitmap_font_metrics.cpp
+    procdraw/bitmap_font_metrics.h
+    procdraw/bitmap_glyph_metrics.h
+    procdraw/color.cpp
+    procdraw/color.h
+    procdraw/command_processor.h
+    procdraw/line_buffer.cpp
+    procdraw/line_buffer.h
+    procdraw/lsystem.cpp
+    procdraw/lsystem.h
+    procdraw/math.cpp
+    procdraw/math.h
+    procdraw/midi_listener.h
+    procdraw/procdraw_app.cpp
+    procdraw/procdraw_app.h
+    procdraw/procdraw_app_lisp.cpp
+    procdraw/procdraw_app_lisp.h
+    procdraw/simple_moving_average.h
+    procdraw/text_layout_engine.h
+    procdraw/text_layout.h)
 
-target_include_directories(procdraw_core
+target_include_directories(procdraw_lib
     PUBLIC ${PROCDRAW_SRC_DIR}
-    PUBLIC ${GLM_DIR})
+    PUBLIC ${GLM_DIR}
+    PUBLIC ${SDL2_INCLUDE_DIRS}
+    PRIVATE ${OPENGL_INCLUDE_DIRS})
 
-target_link_libraries(procdraw_core
-    freetype2)
+target_link_libraries(procdraw_lib
+    freetype2
+    gl3w
+    ${OPENGL_LIBRARIES}
+    ${SDL2_LIBRARIES})
 
 # procdraw_alsa_midi
 
@@ -54,44 +82,6 @@ if(ENABLE_ALSA_MIDI)
         ${ALSA_LIBRARIES})
 endif()
 
-# procdraw_opengl
-
-add_library(procdraw_opengl
-    procdraw/opengl/bitmap_text_renderer.cpp
-    procdraw/opengl/bitmap_text_renderer.h
-    procdraw/opengl/camera.cpp
-    procdraw/opengl/camera.h
-    procdraw/opengl/console.cpp
-    procdraw/opengl/console.h
-    procdraw/opengl/console_line.h
-    procdraw/opengl/font_config.h
-    procdraw/opengl/frame_counter.cpp
-    procdraw/opengl/frame_counter.h
-    procdraw/opengl/freetype_font_loader.cpp
-    procdraw/opengl/freetype_font_loader.h
-    procdraw/opengl/glrenderer.cpp
-    procdraw/opengl/glrenderer.h
-    procdraw/opengl/gl_util.cpp
-    procdraw/opengl/gl_util.h
-    procdraw/opengl/procdraw_app.cpp
-    procdraw/opengl/procdraw_app.h
-    procdraw/opengl/procdraw_app_lisp.cpp
-    procdraw/opengl/procdraw_app_lisp.h
-    procdraw/opengl/sdl_util.cpp
-    procdraw/opengl/sdl_util.h
-    procdraw/opengl/vertex.h)
-
-target_include_directories(procdraw_opengl
-    PUBLIC ${PROCDRAW_SRC_DIR}
-    PUBLIC ${SDL2_INCLUDE_DIRS}
-    PRIVATE ${OPENGL_INCLUDE_DIRS})
-
-target_link_libraries(procdraw_opengl
-    procdraw_core
-    gl3w
-    ${OPENGL_LIBRARIES}
-    ${SDL2_LIBRARIES})
-
 # procdraw_test_support
 
 add_library(procdraw_test_support
@@ -102,7 +92,7 @@ target_include_directories(procdraw_test_support
     PUBLIC ${PROCDRAW_SRC_DIR})
 
 target_link_libraries(procdraw_test_support
-    procdraw_core
+    procdraw_lib
     tinyxml2)
 
 # procdraw_main
@@ -114,8 +104,7 @@ target_include_directories(procdraw_main
     PRIVATE ${PROCDRAW_SRC_DIR})
 
 target_link_libraries(procdraw_main
-    procdraw_core
-    procdraw_opengl)
+    procdraw_lib)
 
 if(ENABLE_ALSA_MIDI)
     target_link_libraries(procdraw_main procdraw_alsa_midi)

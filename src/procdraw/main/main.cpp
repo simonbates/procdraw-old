@@ -4,8 +4,8 @@
 #include <windows.h>
 #endif
 
-#include "procdraw/opengl/procdraw_app.h"
-#include "procdraw/opengl/sdl_util.h"
+#include "procdraw/graphics/sdl_util.h"
+#include "procdraw/procdraw_app.h"
 
 int main()
 {
