@@ -4,8 +4,8 @@ Procdraw C++ Coding Style
 Layout
 ------
 
-- Use an indentation size of 4 spaces
-- Use a maximum line length of 80 characters
+- Indentation size: 4 spaces
+- Maximum line length: 80 characters
 
 Naming
 ------
