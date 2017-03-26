@@ -1,7 +1,7 @@
 #include "procdraw/color.h"
 #include "gtest/gtest.h"
 
-TEST(ColorTest, hsv2rgb_red)
+TEST(ColorTest, Hsv2rgbRed)
 {
     float r, g, b;
     std::tie(r, g, b) = procdraw::hsv2rgb(0.0f, 1.0f, 1.0f);
@@ -10,7 +10,7 @@ TEST(ColorTest, hsv2rgb_red)
     EXPECT_EQ(0.0f, b);
 }
 
-TEST(ColorTest, hsv2rgb_green)
+TEST(ColorTest, Hsv2rgbGreen)
 {
     float r, g, b;
     std::tie(r, g, b) = procdraw::hsv2rgb(120.0f, 1.0f, 1.0f);
@@ -19,7 +19,7 @@ TEST(ColorTest, hsv2rgb_green)
     EXPECT_EQ(0.0f, b);
 }
 
-TEST(ColorTest, hsv2rgb_blue)
+TEST(ColorTest, Hsv2rgbBlue)
 {
     float r, g, b;
     std::tie(r, g, b) = procdraw::hsv2rgb(240.0f, 1.0f, 1.0f);
