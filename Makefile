@@ -1,13 +1,16 @@
 FUNCTIONS_SRC_DIR = Documentation/docs/functions
 FUNCTION_SCHEMA = $(FUNCTIONS_SRC_DIR)/function-spec.rnc
 
+# Override with: make format CLANG_FORMAT=<new-name>
+CLANG_FORMAT = clang-format
+
 default: lint
 
 .PHONY: default
 
 format:
 	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
-	-exec clang-format -i -style=file {} +
+	-exec $(CLANG_FORMAT) -i -style=file {} +
 
 .PHONY: format
 
