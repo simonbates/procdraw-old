@@ -130,15 +130,30 @@ LispInterpreter::Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
     return env;
 }
 
-LispObjectPtr LispInterpreter::BoolToLisp(bool b) { return b ? True : False; }
+LispObjectPtr LispInterpreter::BoolToLisp(bool b)
+{
+    return b ? True : False;
+}
 
-LispObjectPtr LispInterpreter::Caar(LispObjectPtr obj) { return Car(Car(obj)); }
+LispObjectPtr LispInterpreter::Caar(LispObjectPtr obj)
+{
+    return Car(Car(obj));
+}
 
-LispObjectPtr LispInterpreter::Cadr(LispObjectPtr obj) { return Car(Cdr(obj)); }
+LispObjectPtr LispInterpreter::Cadr(LispObjectPtr obj)
+{
+    return Car(Cdr(obj));
+}
 
-LispObjectPtr LispInterpreter::Cdar(LispObjectPtr obj) { return Cdr(Car(obj)); }
+LispObjectPtr LispInterpreter::Cdar(LispObjectPtr obj)
+{
+    return Cdr(Car(obj));
+}
 
-LispObjectPtr LispInterpreter::Cddr(LispObjectPtr obj) { return Cdr(Cdr(obj)); }
+LispObjectPtr LispInterpreter::Cddr(LispObjectPtr obj)
+{
+    return Cdr(Cdr(obj));
+}
 
 LispObjectPtr LispInterpreter::Caddr(LispObjectPtr obj)
 {

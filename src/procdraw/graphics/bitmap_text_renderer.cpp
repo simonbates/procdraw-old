@@ -23,7 +23,10 @@ BitmapTextRenderer::BitmapTextRenderer()
     }
 }
 
-BitmapTextRenderer::~BitmapTextRenderer() { Cleanup(); }
+BitmapTextRenderer::~BitmapTextRenderer()
+{
+    Cleanup();
+}
 
 void BitmapTextRenderer::Cleanup()
 {

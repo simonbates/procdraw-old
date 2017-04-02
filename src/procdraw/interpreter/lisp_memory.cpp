@@ -165,7 +165,10 @@ LispObjectPtr LispInterpreter::MakeDict()
     return std::make_shared<LispDictionary>();
 }
 
-LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj) { return obj->Type; }
+LispObjectType LispInterpreter::TypeOf(LispObjectPtr obj)
+{
+    return obj->Type;
+}
 
 bool LispInterpreter::Null(LispObjectPtr obj)
 {

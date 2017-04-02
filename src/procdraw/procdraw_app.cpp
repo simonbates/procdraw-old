@@ -136,7 +136,10 @@ void ProcdrawApp::OnMidiControllerInput(unsigned int channel,
     }
 }
 
-LispObjectPtr ProcdrawApp::IsShowRepl() { return L_.SymbolValue(S_SHOW_REPL); }
+LispObjectPtr ProcdrawApp::IsShowRepl()
+{
+    return L_.SymbolValue(S_SHOW_REPL);
+}
 
 void ProcdrawApp::MakeKeySignals()
 {

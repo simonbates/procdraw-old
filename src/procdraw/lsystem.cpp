@@ -3,7 +3,10 @@
 
 namespace procdraw {
 
-std::string Lsystem::GetString() { return current_; }
+std::string Lsystem::GetString()
+{
+    return current_;
+}
 
 void Lsystem::Next()
 {

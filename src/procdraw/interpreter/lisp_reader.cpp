@@ -47,7 +47,10 @@ void LispReader::SetInput(const std::string& str)
     GetToken();
 }
 
-void LispReader::GetCh() { ch_ = input_.get(); }
+void LispReader::GetCh()
+{
+    ch_ = input_.get();
+}
 
 void LispReader::GetToken()
 {
@@ -162,7 +165,10 @@ void LispReader::GetString()
     stringVal_ = str;
 }
 
-bool LispReader::IsStartOfNumber() { return isdigit(ch_) != 0; }
+bool LispReader::IsStartOfNumber()
+{
+    return isdigit(ch_) != 0;
+}
 
 void LispReader::GetNumber()
 {

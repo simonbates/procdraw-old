@@ -133,7 +133,10 @@ void GlRenderer::Cube()
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 }
 
-void GlRenderer::DoSwap() { SDL_GL_SwapWindow(window_); }
+void GlRenderer::DoSwap()
+{
+    SDL_GL_SwapWindow(window_);
+}
 
 void GlRenderer::DrawBlockCursorBackground(int cursorX,
                                            int cursorY,
@@ -163,9 +166,15 @@ void GlRenderer::DrawText(int x,
     textRenderer_->DrawText(x, y, layout, startLineNum, endLineNum);
 }
 
-void GlRenderer::EndInverse() { SetDefaultBlend(); }
+void GlRenderer::EndInverse()
+{
+    SetDefaultBlend();
+}
 
-int GlRenderer::GetLinespace() { return textRenderer_->GetLinespace(); }
+int GlRenderer::GetLinespace()
+{
+    return textRenderer_->GetLinespace();
+}
 
 int GlRenderer::Height()
 {
@@ -536,7 +545,10 @@ void GlRenderer::MakeRectangleVao()
     glEnableVertexAttribArray(0);
 }
 
-void GlRenderer::ResetMatrix() { worldMatrix_ = glm::mat4(1.0f); }
+void GlRenderer::ResetMatrix()
+{
+    worldMatrix_ = glm::mat4(1.0f);
+}
 
 void GlRenderer::InitLighting()
 {
@@ -545,7 +557,10 @@ void GlRenderer::InitLighting()
     ambientLightColor_ = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 
-void GlRenderer::InitMaterial() { Color(0, 0, 0.8f); }
+void GlRenderer::InitMaterial()
+{
+    Color(0, 0, 0.8f);
+}
 
 void GlRenderer::UpdateUniformsForObject()
 {

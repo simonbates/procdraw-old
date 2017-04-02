@@ -252,7 +252,10 @@ TEST_F(LispInterpreterTest, ImplicitTypeConversionToBool)
     EXPECT_TRUE(L_.BoolVal(L_.Eof));
 }
 
-TEST_F(LispInterpreterTest, EvalNil) { EXPECT_TRUE(L_.Null(L_.Eval(L_.Nil))); }
+TEST_F(LispInterpreterTest, EvalNil)
+{
+    EXPECT_TRUE(L_.Null(L_.Eval(L_.Nil)));
+}
 
 TEST_F(LispInterpreterTest, EvalNumber)
 {
@@ -282,7 +285,10 @@ TEST_F(LispInterpreterTest, EvalString)
               L_.StringVal(L_.Eval(L_.MakeString("some string"))));
 }
 
-TEST_F(LispInterpreterTest, EvalEof) { EXPECT_TRUE(L_.IsEof(L_.Eval(L_.Eof))); }
+TEST_F(LispInterpreterTest, EvalEof)
+{
+    EXPECT_TRUE(L_.IsEof(L_.Eval(L_.Eof)));
+}
 
 TEST_F(LispInterpreterTest, EvalQuote)
 {

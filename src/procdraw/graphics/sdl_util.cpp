@@ -3,7 +3,10 @@
 
 namespace procdraw {
 
-void ThrowSdlError() { throw std::runtime_error(SDL_GetError()); }
+void ThrowSdlError()
+{
+    throw std::runtime_error(SDL_GetError());
+}
 
 SDL::SDL(Uint32 flags)
 {
@@ -12,5 +15,8 @@ SDL::SDL(Uint32 flags)
     }
 }
 
-SDL::~SDL() { SDL_Quit(); }
+SDL::~SDL()
+{
+    SDL_Quit();
+}
 }

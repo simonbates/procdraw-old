@@ -10,14 +10,20 @@ void LineBuffer::Clear(const std::string& prompt)
     cursorPos_ = promptLen_;
 }
 
-std::string LineBuffer::GetLine() { return line_; }
+std::string LineBuffer::GetLine()
+{
+    return line_;
+}
 
 std::string LineBuffer::GetUserText()
 {
     return line_.substr(promptLen_, line_.length() - promptLen_);
 }
 
-int LineBuffer::GetCursorPos() { return cursorPos_; }
+int LineBuffer::GetCursorPos()
+{
+    return cursorPos_;
+}
 
 void LineBuffer::ForwardChar()
 {

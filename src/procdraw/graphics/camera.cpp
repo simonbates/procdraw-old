@@ -13,5 +13,8 @@ Camera::Camera()
     viewProjectionMatrix_ = projectionMatrix * viewMatrix;
 }
 
-glm::mat4 Camera::ViewProjectionMatrix() { return viewProjectionMatrix_; }
+glm::mat4 Camera::ViewProjectionMatrix()
+{
+    return viewProjectionMatrix_;
+}
 }
