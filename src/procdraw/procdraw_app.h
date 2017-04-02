@@ -1,11 +1,11 @@
 #pragma once
 
 #include "procdraw/command_processor.h"
-#include "procdraw/interpreter/lisp_interpreter.h"
-#include "procdraw/midi_listener.h"
 #include "procdraw/graphics/console.h"
 #include "procdraw/graphics/frame_counter.h"
 #include "procdraw/graphics/glrenderer.h"
+#include "procdraw/interpreter/lisp_interpreter.h"
+#include "procdraw/midi_listener.h"
 
 #ifdef PROCDRAW_ENABLE_ALSA_MIDI
 #include "procdraw/alsa_midi/alsa_midi_client.h"
@@ -26,8 +26,9 @@ public:
     BalancedState CheckCommand(const std::string& cmd);
     double FramesPerSecond();
     void Message(const std::string& msg);
-    void OnMidiControllerInput(
-        unsigned int channel, unsigned int controller, int value);
+    void OnMidiControllerInput(unsigned int channel,
+                               unsigned int controller,
+                               int value);
 
 private:
     GlRenderer renderer_;

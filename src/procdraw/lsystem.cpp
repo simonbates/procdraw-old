@@ -12,7 +12,8 @@ void Lsystem::Next()
         auto iter = rules_.find(c);
         if (iter != rules_.end()) {
             next += iter->second;
-        } else {
+        }
+        else {
             next += c;
         }
     }

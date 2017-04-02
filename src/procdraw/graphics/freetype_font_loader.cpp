@@ -13,8 +13,10 @@ FreeTypeFontLoader::FreeTypeFontLoader()
     }
 }
 
-void FreeTypeFontLoader::LoadFont(const std::string& path, int sizePixels,
-    BitmapFontMetrics* out_fontMetrics, GLuint* out_fontTexture)
+void FreeTypeFontLoader::LoadFont(const std::string& path,
+                                  int sizePixels,
+                                  BitmapFontMetrics* out_fontMetrics,
+                                  GLuint* out_fontTexture)
 {
     FT_Face face;
 
@@ -29,12 +31,15 @@ void FreeTypeFontLoader::LoadFont(const std::string& path, int sizePixels,
     out_fontMetrics->LinespacePixels = face->size->metrics.height / 64;
 
     MakeFontTexture(face, 32, FreeTypeFontLoaderMaxAsciiCode, out_fontMetrics,
-        out_fontTexture);
+                    out_fontTexture);
     PopulateTexture(face, 32, FreeTypeFontLoaderMaxAsciiCode, out_fontMetrics);
 }
 
-void FreeTypeFontLoader::MakeFontTexture(FT_Face face, FT_ULong fromCharCode,
-    FT_ULong toCharCode, BitmapFontMetrics* fontMetrics, GLuint* fontTexture)
+void FreeTypeFontLoader::MakeFontTexture(FT_Face face,
+                                         FT_ULong fromCharCode,
+                                         FT_ULong toCharCode,
+                                         BitmapFontMetrics* fontMetrics,
+                                         GLuint* fontTexture)
 {
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, fontTexture);
@@ -46,15 +51,20 @@ void FreeTypeFontLoader::MakeFontTexture(FT_Face face, FT_ULong fromCharCode,
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     CalculateTextureSize(face, fromCharCode, toCharCode,
-        &(fontMetrics->BitmapWidth), &(fontMetrics->BitmapHeight));
+                         &(fontMetrics->BitmapWidth),
+                         &(fontMetrics->BitmapHeight));
 
     // Allocate the texture memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, fontMetrics->BitmapWidth,
-        fontMetrics->BitmapHeight, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+                 fontMetrics->BitmapHeight, 0, GL_RED, GL_UNSIGNED_BYTE,
+                 nullptr);
 }
 
 void FreeTypeFontLoader::CalculateTextureSize(FT_Face face,
-    FT_ULong fromCharCode, FT_ULong toCharCode, GLsizei* width, GLsizei* height)
+                                              FT_ULong fromCharCode,
+                                              FT_ULong toCharCode,
+                                              GLsizei* width,
+                                              GLsizei* height)
 {
     *width = 0;
     *height = 0;
@@ -62,8 +72,8 @@ void FreeTypeFontLoader::CalculateTextureSize(FT_Face face,
         RenderChar(face, charCode);
         FT_GlyphSlot g = face->glyph;
         *width += g->bitmap.width;
-        auto bitmapRows
-            = static_cast<std::remove_pointer<decltype(height)>::type>(
+        auto bitmapRows =
+            static_cast<std::remove_pointer<decltype(height)>::type>(
                 g->bitmap.rows);
         if (bitmapRows > *height) {
             *height = bitmapRows;
@@ -74,8 +84,10 @@ void FreeTypeFontLoader::CalculateTextureSize(FT_Face face,
     *height = PowerOf2Gte(*height);
 }
 
-void FreeTypeFontLoader::PopulateTexture(FT_Face face, FT_ULong fromCharCode,
-    FT_ULong toCharCode, BitmapFontMetrics* fontMetrics)
+void FreeTypeFontLoader::PopulateTexture(FT_Face face,
+                                         FT_ULong fromCharCode,
+                                         FT_ULong toCharCode,
+                                         BitmapFontMetrics* fontMetrics)
 {
     fontMetrics->ClearGlyphs(toCharCode);
 
@@ -88,7 +100,8 @@ void FreeTypeFontLoader::PopulateTexture(FT_Face face, FT_ULong fromCharCode,
         FT_GlyphSlot g = face->glyph;
 
         glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, 0, g->bitmap.width,
-            g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);
+                        g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE,
+                        g->bitmap.buffer);
 
         glyphMetrics.XoffsetPixels = xoffset;
         glyphMetrics.WidthPixels = g->bitmap.width;

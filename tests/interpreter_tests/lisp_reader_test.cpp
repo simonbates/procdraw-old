@@ -246,12 +246,12 @@ TEST_F(LispReaderTest, ReadingIncompleteExpressionReturnsEof)
 {
     EXPECT_EQ(procdraw::LispObjectType::Eof, L_.TypeOf(reader_.Read(&L_, "")));
     EXPECT_EQ(procdraw::LispObjectType::Eof, L_.TypeOf(reader_.Read(&L_, "(")));
-    EXPECT_EQ(
-        procdraw::LispObjectType::Eof, L_.TypeOf(reader_.Read(&L_, "(1")));
-    EXPECT_EQ(
-        procdraw::LispObjectType::Eof, L_.TypeOf(reader_.Read(&L_, "(1 2")));
-    EXPECT_EQ(
-        procdraw::LispObjectType::Eof, L_.TypeOf(reader_.Read(&L_, "(1 (2")));
+    EXPECT_EQ(procdraw::LispObjectType::Eof,
+              L_.TypeOf(reader_.Read(&L_, "(1")));
+    EXPECT_EQ(procdraw::LispObjectType::Eof,
+              L_.TypeOf(reader_.Read(&L_, "(1 2")));
+    EXPECT_EQ(procdraw::LispObjectType::Eof,
+              L_.TypeOf(reader_.Read(&L_, "(1 (2")));
 }
 
 TEST_F(LispReaderTest, CheckBalancedExpression)
@@ -259,13 +259,13 @@ TEST_F(LispReaderTest, CheckBalancedExpression)
     EXPECT_EQ(procdraw::BalancedState::Balanced, reader_.CheckBalanced(""));
     EXPECT_EQ(procdraw::BalancedState::Balanced, reader_.CheckBalanced("42"));
     EXPECT_EQ(procdraw::BalancedState::Balanced, reader_.CheckBalanced("()"));
-    EXPECT_EQ(
-        procdraw::BalancedState::Balanced, reader_.CheckBalanced("(A B C)"));
-    EXPECT_EQ(
-        procdraw::BalancedState::Balanced, reader_.CheckBalanced("(A (1 2))"));
+    EXPECT_EQ(procdraw::BalancedState::Balanced,
+              reader_.CheckBalanced("(A B C)"));
+    EXPECT_EQ(procdraw::BalancedState::Balanced,
+              reader_.CheckBalanced("(A (1 2))"));
     EXPECT_EQ(procdraw::BalancedState::Balanced, reader_.CheckBalanced("\"\""));
-    EXPECT_EQ(
-        procdraw::BalancedState::Balanced, reader_.CheckBalanced("\"abc\""));
+    EXPECT_EQ(procdraw::BalancedState::Balanced,
+              reader_.CheckBalanced("\"abc\""));
 }
 
 TEST_F(LispReaderTest, CheckNonClosedExpression)
@@ -273,36 +273,36 @@ TEST_F(LispReaderTest, CheckNonClosedExpression)
     EXPECT_EQ(procdraw::BalancedState::NotClosed, reader_.CheckBalanced("("));
     EXPECT_EQ(procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(("));
     EXPECT_EQ(procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(42"));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(A B C"));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(A (1 2"));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(A (1 2)"));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("(A B C"));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("(A (1 2"));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("(A (1 2)"));
 }
 
 TEST_F(LispReaderTest, CheckNonClosedString)
 {
     EXPECT_EQ(procdraw::BalancedState::NotClosed, reader_.CheckBalanced("\""));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("\"abc"));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("\"abc"));
     EXPECT_EQ(procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(\""));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(42 \""));
-    EXPECT_EQ(
-        procdraw::BalancedState::NotClosed, reader_.CheckBalanced("(42 (\""));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("(42 \""));
+    EXPECT_EQ(procdraw::BalancedState::NotClosed,
+              reader_.CheckBalanced("(42 (\""));
 }
 
 TEST_F(LispReaderTest, CheckTooManyClosingParens)
 {
     EXPECT_EQ(procdraw::BalancedState::TooManyClosingParens,
-        reader_.CheckBalanced(")"));
+              reader_.CheckBalanced(")"));
     EXPECT_EQ(procdraw::BalancedState::TooManyClosingParens,
-        reader_.CheckBalanced("))"));
+              reader_.CheckBalanced("))"));
     EXPECT_EQ(procdraw::BalancedState::TooManyClosingParens,
-        reader_.CheckBalanced("(42))"));
+              reader_.CheckBalanced("(42))"));
     EXPECT_EQ(procdraw::BalancedState::TooManyClosingParens,
-        reader_.CheckBalanced("(A B C))"));
+              reader_.CheckBalanced("(A B C))"));
     EXPECT_EQ(procdraw::BalancedState::TooManyClosingParens,
-        reader_.CheckBalanced("(A (1 2)))"));
+              reader_.CheckBalanced("(A (1 2)))"));
 }

@@ -8,15 +8,15 @@ protected:
     virtual void SetUp()
     {
         fontMetrics_ = MakeTestFontMetrics();
-        exclamationCoords_ = layoutEngine_.LayOutGlyph(
-            fontMetrics_.GetGlyph(33), fontMetrics_);
-        quoteCoords_ = layoutEngine_.LayOutGlyph(
-            fontMetrics_.GetGlyph(34), fontMetrics_);
+        exclamationCoords_ =
+            layoutEngine_.LayOutGlyph(fontMetrics_.GetGlyph(33), fontMetrics_);
+        quoteCoords_ =
+            layoutEngine_.LayOutGlyph(fontMetrics_.GetGlyph(34), fontMetrics_);
         spaceAdvance_ = fontMetrics_.GetGlyph(32).AdvanceWidthPixels;
         exclamationAdvance_ = fontMetrics_.GetGlyph(33).AdvanceWidthPixels;
         quoteAdvance_ = fontMetrics_.GetGlyph(34).AdvanceWidthPixels;
-        fontGlyphHeight_
-            = fontMetrics_.AscenderPixels - fontMetrics_.DescenderPixels;
+        fontGlyphHeight_ =
+            fontMetrics_.AscenderPixels - fontMetrics_.DescenderPixels;
     }
 
     static procdraw::BitmapFontMetrics MakeTestFontMetrics()
@@ -62,8 +62,10 @@ protected:
     }
 
     static void ExpectGlyphVertices(const procdraw::GlyphCoords& expected,
-        int expectedHOffset, int expectedVOffset,
-        const std::vector<float>& vertices, int verticesOffset)
+                                    int expectedHOffset,
+                                    int expectedVOffset,
+                                    const std::vector<float>& vertices,
+                                    int verticesOffset)
     {
 
         std::ostringstream message;
@@ -71,48 +73,48 @@ protected:
         SCOPED_TRACE(message.str());
 
         // Left top
-        EXPECT_EQ(
-            expectedHOffset + expected.Left, vertices[verticesOffset + 0]);
+        EXPECT_EQ(expectedHOffset + expected.Left,
+                  vertices[verticesOffset + 0]);
         EXPECT_EQ(expectedVOffset + expected.Top, vertices[verticesOffset + 1]);
         EXPECT_EQ(expected.TextureLeft, vertices[verticesOffset + 2]);
         EXPECT_EQ(expected.TextureTop, vertices[verticesOffset + 3]);
 
         // Left bottom
-        EXPECT_EQ(
-            expectedHOffset + expected.Left, vertices[verticesOffset + 4]);
-        EXPECT_EQ(
-            expectedVOffset + expected.Bottom, vertices[verticesOffset + 5]);
+        EXPECT_EQ(expectedHOffset + expected.Left,
+                  vertices[verticesOffset + 4]);
+        EXPECT_EQ(expectedVOffset + expected.Bottom,
+                  vertices[verticesOffset + 5]);
         EXPECT_EQ(expected.TextureLeft, vertices[verticesOffset + 6]);
         EXPECT_EQ(expected.TextureBottom, vertices[verticesOffset + 7]);
 
         // Right top
-        EXPECT_EQ(
-            expectedHOffset + expected.Right, vertices[verticesOffset + 8]);
+        EXPECT_EQ(expectedHOffset + expected.Right,
+                  vertices[verticesOffset + 8]);
         EXPECT_EQ(expectedVOffset + expected.Top, vertices[verticesOffset + 9]);
         EXPECT_EQ(expected.TextureRight, vertices[verticesOffset + 10]);
         EXPECT_EQ(expected.TextureTop, vertices[verticesOffset + 11]);
 
         // Left bottom
-        EXPECT_EQ(
-            expectedHOffset + expected.Left, vertices[verticesOffset + 12]);
-        EXPECT_EQ(
-            expectedVOffset + expected.Bottom, vertices[verticesOffset + 13]);
+        EXPECT_EQ(expectedHOffset + expected.Left,
+                  vertices[verticesOffset + 12]);
+        EXPECT_EQ(expectedVOffset + expected.Bottom,
+                  vertices[verticesOffset + 13]);
         EXPECT_EQ(expected.TextureLeft, vertices[verticesOffset + 14]);
         EXPECT_EQ(expected.TextureBottom, vertices[verticesOffset + 15]);
 
         // Right bottom
-        EXPECT_EQ(
-            expectedHOffset + expected.Right, vertices[verticesOffset + 16]);
-        EXPECT_EQ(
-            expectedVOffset + expected.Bottom, vertices[verticesOffset + 17]);
+        EXPECT_EQ(expectedHOffset + expected.Right,
+                  vertices[verticesOffset + 16]);
+        EXPECT_EQ(expectedVOffset + expected.Bottom,
+                  vertices[verticesOffset + 17]);
         EXPECT_EQ(expected.TextureRight, vertices[verticesOffset + 18]);
         EXPECT_EQ(expected.TextureBottom, vertices[verticesOffset + 19]);
 
         // Right top
-        EXPECT_EQ(
-            expectedHOffset + expected.Right, vertices[verticesOffset + 20]);
-        EXPECT_EQ(
-            expectedVOffset + expected.Top, vertices[verticesOffset + 21]);
+        EXPECT_EQ(expectedHOffset + expected.Right,
+                  vertices[verticesOffset + 20]);
+        EXPECT_EQ(expectedVOffset + expected.Top,
+                  vertices[verticesOffset + 21]);
         EXPECT_EQ(expected.TextureRight, vertices[verticesOffset + 22]);
         EXPECT_EQ(expected.TextureTop, vertices[verticesOffset + 23]);
     }
@@ -178,8 +180,8 @@ TEST_F(TextLayoutEngineTest, LayOutTextSingleLine)
     auto vertices = layout.GetVerticesForLine(0);
     EXPECT_EQ(static_cast<size_t>(24 * 2), vertices.size());
     ExpectGlyphVertices(exclamationCoords_, spaceAdvance_, 0, vertices, 0);
-    ExpectGlyphVertices(
-        quoteCoords_, spaceAdvance_ * 2 + exclamationAdvance_, 0, vertices, 24);
+    ExpectGlyphVertices(quoteCoords_, spaceAdvance_ * 2 + exclamationAdvance_,
+                        0, vertices, 24);
 }
 
 TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
@@ -208,26 +210,30 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxNumberGlyphsExceeded)
     auto lineOneVertices = layout.GetVerticesForLine(0);
     EXPECT_EQ(static_cast<size_t>(24 * 4), lineOneVertices.size());
     ExpectGlyphVertices(exclamationCoords_,
-        spaceAdvance_ + exclamationAdvance_ * 0, 0, lineOneVertices, 24 * 0);
+                        spaceAdvance_ + exclamationAdvance_ * 0, 0,
+                        lineOneVertices, 24 * 0);
     ExpectGlyphVertices(exclamationCoords_,
-        spaceAdvance_ + exclamationAdvance_ * 1, 0, lineOneVertices, 24 * 1);
+                        spaceAdvance_ + exclamationAdvance_ * 1, 0,
+                        lineOneVertices, 24 * 1);
     ExpectGlyphVertices(exclamationCoords_,
-        spaceAdvance_ + exclamationAdvance_ * 2, 0, lineOneVertices, 24 * 2);
+                        spaceAdvance_ + exclamationAdvance_ * 2, 0,
+                        lineOneVertices, 24 * 2);
     ExpectGlyphVertices(exclamationCoords_,
-        spaceAdvance_ + exclamationAdvance_ * 3, 0, lineOneVertices, 24 * 3);
+                        spaceAdvance_ + exclamationAdvance_ * 3, 0,
+                        lineOneVertices, 24 * 3);
 
     auto lineTwoVertices = layout.GetVerticesForLine(1);
     EXPECT_EQ(static_cast<size_t>(24 * 2), lineTwoVertices.size());
     ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 0,
-        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
+                        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
     ExpectGlyphVertices(quoteCoords_, quoteAdvance_ * 1,
-        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
+                        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
 }
 
 TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
 {
-    auto layout = layoutEngine_.LayOutText(
-        "    ! !!!!!!", fontMetrics_, 1000, spaceAdvance_ * 3);
+    auto layout = layoutEngine_.LayOutText("    ! !!!!!!", fontMetrics_, 1000,
+                                           spaceAdvance_ * 3);
 
     // Expect:
     //
@@ -257,25 +263,30 @@ TEST_F(TextLayoutEngineTest, LayOutTextWrapWhenMaxPixelWidthExceeded)
     auto lineTwoVertices = layout.GetVerticesForLine(1);
     EXPECT_EQ(static_cast<size_t>(24), lineTwoVertices.size());
     ExpectGlyphVertices(exclamationCoords_, spaceAdvance_,
-        fontMetrics_.LinespacePixels, lineTwoVertices, 0);
+                        fontMetrics_.LinespacePixels, lineTwoVertices, 0);
 
     auto lineThreeVertices = layout.GetVerticesForLine(2);
     EXPECT_EQ(static_cast<size_t>(24 * 5), lineThreeVertices.size());
     ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 0,
-        fontMetrics_.LinespacePixels * 2, lineThreeVertices, 24 * 0);
+                        fontMetrics_.LinespacePixels * 2, lineThreeVertices,
+                        24 * 0);
     ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 1,
-        fontMetrics_.LinespacePixels * 2, lineThreeVertices, 24 * 1);
+                        fontMetrics_.LinespacePixels * 2, lineThreeVertices,
+                        24 * 1);
     ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 2,
-        fontMetrics_.LinespacePixels * 2, lineThreeVertices, 24 * 2);
+                        fontMetrics_.LinespacePixels * 2, lineThreeVertices,
+                        24 * 2);
     ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 3,
-        fontMetrics_.LinespacePixels * 2, lineThreeVertices, 24 * 3);
+                        fontMetrics_.LinespacePixels * 2, lineThreeVertices,
+                        24 * 3);
     ExpectGlyphVertices(exclamationCoords_, exclamationAdvance_ * 4,
-        fontMetrics_.LinespacePixels * 2, lineThreeVertices, 24 * 4);
+                        fontMetrics_.LinespacePixels * 2, lineThreeVertices,
+                        24 * 4);
 
     auto lineFourVertices = layout.GetVerticesForLine(3);
     EXPECT_EQ(static_cast<size_t>(24), lineFourVertices.size());
     ExpectGlyphVertices(exclamationCoords_, 0, fontMetrics_.LinespacePixels * 3,
-        lineFourVertices, 0);
+                        lineFourVertices, 0);
 }
 
 TEST_F(TextLayoutEngineTest, LayOutTextEmbeddedNewline)
@@ -308,7 +319,7 @@ TEST_F(TextLayoutEngineTest, LayOutTextEmbeddedNewline)
     auto lineTwoVertices = layout.GetVerticesForLine(1);
     EXPECT_EQ(static_cast<size_t>(24 * 2), lineTwoVertices.size());
     ExpectGlyphVertices(exclamationCoords_, spaceAdvance_,
-        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
+                        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 0);
     ExpectGlyphVertices(exclamationCoords_, spaceAdvance_ + exclamationAdvance_,
-        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
+                        fontMetrics_.LinespacePixels, lineTwoVertices, 24 * 1);
 }

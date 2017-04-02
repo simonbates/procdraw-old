@@ -17,7 +17,7 @@ struct GlyphCoords {
 
 template <typename T> class TextLayout {
 public:
-    typedef typename std::vector<std::vector<T> >::size_type size_type;
+    typedef typename std::vector<std::vector<T>>::size_type size_type;
     int FixedGlyphWidth = 0;
     int GlyphHeight = 0;
     int LinespacePixels = 0;
@@ -28,11 +28,14 @@ public:
     const std::vector<T>& GetVerticesForLine(size_type lineNum) const;
     void SetNumCharsInLine(int n);
     int GetNumCharsInLine(size_type lineNum) const;
-    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition, int* out_x,
-        int* out_y, int* out_width, int* out_height) const;
+    void CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
+                                           int* out_x,
+                                           int* out_y,
+                                           int* out_width,
+                                           int* out_height) const;
 
 private:
-    std::vector<std::vector<T> > lines_;
+    std::vector<std::vector<T>> lines_;
     std::vector<int> numChars_;
 };
 
@@ -49,8 +52,9 @@ typename TextLayout<T>::size_type TextLayout<T>::NumLines() const
 }
 
 template <typename T>
-void TextLayout<T>::AddGlyph(
-    const GlyphCoords& glyphCoords, int cursorX, int cursorY)
+void TextLayout<T>::AddGlyph(const GlyphCoords& glyphCoords,
+                             int cursorX,
+                             int cursorY)
 {
     if (!lines_.empty()) {
         std::vector<T>& vertices = lines_.back();
@@ -110,7 +114,10 @@ int TextLayout<T>::GetNumCharsInLine(size_type lineNum) const
 
 template <typename T>
 void TextLayout<T>::CalculateFixedWidthBlockCursorPos(int cursorTextPosition,
-    int* out_x, int* out_y, int* out_width, int* out_height) const
+                                                      int* out_x,
+                                                      int* out_y,
+                                                      int* out_width,
+                                                      int* out_height) const
 {
     int physicalCursorTextPosition = cursorTextPosition;
     int physicalLineNum = 0;

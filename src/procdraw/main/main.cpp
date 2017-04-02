@@ -15,11 +15,10 @@ int main()
 }
 
 #ifdef _WIN32
-int CALLBACK WinMain(
-    _In_ HINSTANCE hInstance,
-    _In_ HINSTANCE hPrevInstance,
-    _In_ LPSTR lpCmdLine,
-    _In_ int nCmdShow)
+int CALLBACK WinMain(_In_ HINSTANCE hInstance,
+                     _In_ HINSTANCE hPrevInstance,
+                     _In_ LPSTR lpCmdLine,
+                     _In_ int nCmdShow)
 {
     // Delegate to the main() function
     return main();

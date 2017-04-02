@@ -4,13 +4,16 @@
 
 class FunctionSpecCheckerTest : public ::testing::Test {
 protected:
-    void ExpectFailure(const std::string& filename, int expectedNumTests,
-        const std::string& expectedMessage, bool resolveFilename = true)
+    void ExpectFailure(const std::string& filename,
+                       int expectedNumTests,
+                       const std::string& expectedMessage,
+                       bool resolveFilename = true)
     {
         std::string fullpath;
         if (resolveFilename) {
             fullpath = ResolveTestFile(filename);
-        } else {
+        }
+        else {
             fullpath = filename;
         }
         EXPECT_FALSE(checker_.Check(fullpath.c_str(), expectedNumTests));
@@ -24,7 +27,7 @@ protected:
     static std::string ResolveTestFile(const std::string& filename)
     {
         return PROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR + std::string("/")
-            + filename;
+               + filename;
     }
 
     procdraw_test::FunctionSpecChecker checker_;
@@ -32,8 +35,8 @@ protected:
 
 TEST_F(FunctionSpecCheckerTest, NonExistingFile)
 {
-    ExpectFailure(
-        "NON_EXISTING_FILE", 0, "Error loading file: NON_EXISTING_FILE", false);
+    ExpectFailure("NON_EXISTING_FILE", 0,
+                  "Error loading file: NON_EXISTING_FILE", false);
 }
 
 TEST_F(FunctionSpecCheckerTest, Testcase1)

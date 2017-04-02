@@ -1,0 +1,14 @@
+AccessModifierOffset: -4
+BinPackArguments: true
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Stroustrup
+ColumnLimit: 80
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: true
+IndentWidth: 4
+Language: Cpp
+PointerAlignment: Left
+ReflowComments: false
+Standard: Cpp11
+UseTab: Never

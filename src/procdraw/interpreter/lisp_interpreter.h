@@ -20,8 +20,10 @@ enum class LispObjectType {
     Eof
 };
 
-typedef LispObjectPtr (*lisp_CFunction)(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data);
+typedef LispObjectPtr (*lisp_CFunction)(LispInterpreter* L,
+                                        LispObjectPtr args,
+                                        LispObjectPtr env,
+                                        void* data);
 
 class LispInterpreter {
 public:
@@ -50,19 +52,20 @@ public:
     std::string StringVal(LispObjectPtr obj);
     LispObjectPtr Rplaca(LispObjectPtr cons, LispObjectPtr obj);
     LispObjectPtr Rplacd(LispObjectPtr cons, LispObjectPtr obj);
-    LispObjectPtr Get(
-        LispObjectPtr key, LispObjectPtr dict, LispObjectPtr notFound);
+    LispObjectPtr
+    Get(LispObjectPtr key, LispObjectPtr dict, LispObjectPtr notFound);
     LispObjectPtr Get(LispObjectPtr key, LispObjectPtr dict);
     LispObjectPtr Put(LispObjectPtr key, LispObjectPtr val, LispObjectPtr dict);
     LispObjectPtr Keys(LispObjectPtr dict);
     LispObjectPtr Clear(LispObjectPtr dict);
     // Symbols
     LispObjectPtr SymbolRef(const std::string& name);
-    LispObjectPtr SetGlobalCFunction(
-        const std::string& name, lisp_CFunction cfun, void* data);
+    LispObjectPtr SetGlobalCFunction(const std::string& name,
+                                     lisp_CFunction cfun,
+                                     void* data);
     // Functions
-    LispObjectPtr Apply(
-        LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env);
+    LispObjectPtr
+    Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr Assoc(LispObjectPtr key, LispObjectPtr alist);
     bool Atom(LispObjectPtr obj);
     LispObjectPtr BoolToLisp(bool b);
@@ -86,11 +89,11 @@ public:
     std::string PrettyPrintToString(LispObjectPtr obj, int margin);
     std::string PrintToString(LispObjectPtr obj);
     LispObjectPtr Progn(LispObjectPtr actions, LispObjectPtr env);
-    LispObjectPtr Putassoc(
-        LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist);
+    LispObjectPtr
+    Putassoc(LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist);
     LispObjectPtr Read(const std::string& str);
-    LispObjectPtr Set(
-        LispObjectPtr symbol, LispObjectPtr value, LispObjectPtr env);
+    LispObjectPtr
+    Set(LispObjectPtr symbol, LispObjectPtr value, LispObjectPtr env);
     LispObjectPtr Value(LispObjectPtr symbol, LispObjectPtr env);
 
 private:
@@ -104,11 +107,11 @@ private:
     LispObjectPtr S_QUOTE;
     LispObjectPtr S_SETQ;
     void InitSingletons();
-    LispObjectPtr ApplyCFunction(
-        LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
+    LispObjectPtr
+    ApplyCFunction(LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr Assoc1(LispObjectPtr key, LispObjectPtr alist, bool* found);
-    LispObjectPtr Bind(
-        LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);
+    LispObjectPtr
+    Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env);
     LispObjectPtr MakeSymbol(const std::string& name, LispObjectPtr value);
     LispObjectPtr SetSymbolValue(LispObjectPtr symbol, LispObjectPtr value);
 };

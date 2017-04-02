@@ -8,8 +8,7 @@ namespace procdraw {
 class Lsystem {
 public:
     Lsystem(const std::string& start, const std::map<char, std::string>& rules)
-        : current_(start)
-        , rules_(rules)
+        : current_(start), rules_(rules)
     {
     }
     std::string GetString();

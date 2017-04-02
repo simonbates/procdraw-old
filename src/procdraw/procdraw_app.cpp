@@ -17,8 +17,8 @@ ProcdrawApp::ProcdrawApp()
     S_SHOW_REPL = L_.SymbolRef("show-repl");
     S_OUT = L_.SymbolRef("out");
 
-    midiChannelOneControllers_
-        = std::vector<LispObjectPtr>(numMidiControllers, L_.Nil);
+    midiChannelOneControllers_ =
+        std::vector<LispObjectPtr>(numMidiControllers, L_.Nil);
 
     RegisterSignals(&L_);
     RegisterProcdrawAppFunctions(this, &L_);
@@ -57,10 +57,12 @@ int ProcdrawApp::MainLoop()
                     if (e.key.repeat == 0) {
                         L_.Set(S_SHOW_REPL, L_.Not(IsShowRepl()), L_.Nil);
                     }
-                } else {
+                }
+                else {
                     if (showReplVal) {
                         console_->ProcessKey(&(e.key));
-                    } else {
+                    }
+                    else {
                         if ((e.key.keysym.sym == SDLK_SPACE)
                             && (e.key.repeat == 0)) {
                             PutSlot(&L_, keySpaceSignal_, S_EVENT, L_.True);
@@ -94,7 +96,8 @@ std::string ProcdrawApp::DoCommand(const std::string& cmd)
     try {
         // TODO: Use actual console width, rather than hardcoding a value
         val = L_.PrettyPrintToString(L_.Eval(L_.Read(cmd)), 40);
-    } catch (std::exception e) {
+    }
+    catch (std::exception e) {
         val = e.what();
     }
     return val;
@@ -115,12 +118,13 @@ void ProcdrawApp::Message(const std::string& msg)
     std::cout << msg << std::endl;
 }
 
-void ProcdrawApp::OnMidiControllerInput(
-    unsigned int channel, unsigned int controller, int value)
+void ProcdrawApp::OnMidiControllerInput(unsigned int channel,
+                                        unsigned int controller,
+                                        int value)
 {
     if (channel == 1 && controller < numMidiControllers) {
         PutSlot(&L_, midiChannelOneControllers_[controller], S_OUT,
-            L_.MakeNumber(value / 128.0));
+                L_.MakeNumber(value / 128.0));
     }
 
     if (L_.BoolVal(L_.SymbolValue(S_LOG_MIDI))) {
@@ -159,20 +163,20 @@ LispObjectPtr ProcdrawApp::MakeMidiSignal(int channel, int controller)
 
 void ProcdrawApp::InitProg()
 {
-    const std::string prog
-        = "(progn                                                           "
-          "  (setq y-angle (saw))                                           "
-          "  (put-slot y-angle 'freq (/ (* 37 60)))                         "
-          "  (setq z-angle (saw))                                           "
-          "  (put-slot z-angle 'freq (/ (* 181 60)))                        "
-          "  (def draw ()                                                   "
-          "    (background 200 (/ 6 10) (/ 9 10))                           "
-          "    (rotate-z (sigval z-angle))                                  "
-          "    (rotate-y (sigval y-angle))                                  "
-          "    (translate 6 0 0)                                            "
-          "    (rotate-y (sigval y-angle))                                  "
-          "    (color 7 (/ 7 10) (/ 7 10))                                  "
-          "    (tetrahedron)))                                              ";
+    const std::string prog =
+        "(progn                                                           "
+        "  (setq y-angle (saw))                                           "
+        "  (put-slot y-angle 'freq (/ (* 37 60)))                         "
+        "  (setq z-angle (saw))                                           "
+        "  (put-slot z-angle 'freq (/ (* 181 60)))                        "
+        "  (def draw ()                                                   "
+        "    (background 200 (/ 6 10) (/ 9 10))                           "
+        "    (rotate-z (sigval z-angle))                                  "
+        "    (rotate-y (sigval y-angle))                                  "
+        "    (translate 6 0 0)                                            "
+        "    (rotate-y (sigval y-angle))                                  "
+        "    (color 7 (/ 7 10) (/ 7 10))                                  "
+        "    (tetrahedron)))                                              ";
 
     L_.Eval(L_.Read(prog));
 }

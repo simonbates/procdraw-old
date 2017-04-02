@@ -7,7 +7,7 @@ default: lint
 
 format:
 	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
-	-exec clang-format -i '-style={BasedOnStyle: WebKit, ColumnLimit: 80}' {} +
+	-exec clang-format -i -style=file {} +
 
 .PHONY: format
 

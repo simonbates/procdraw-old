@@ -5,12 +5,12 @@
 namespace procdraw {
 
 GLuint CompileProgram(const GLchar** vertexShaderSource,
-    const GLchar** fragmentShaderSource,
-    std::map<GLuint, const GLchar*> attribLocations)
+                      const GLchar** fragmentShaderSource,
+                      std::map<GLuint, const GLchar*> attribLocations)
 {
     GLuint vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
-    GLuint fragmentShader
-        = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
+    GLuint fragmentShader =
+        CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
     GLuint program = glCreateProgram();
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);

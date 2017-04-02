@@ -10,8 +10,8 @@ void BitmapFontMetrics::ClearGlyphs(int maxCharCode)
 
 int BitmapFontMetrics::MaxCharCode() const { return glyphMetrics_.size() - 1; }
 
-void BitmapFontMetrics::SetGlyph(
-    int charCode, const BitmapGlyphMetrics& glyphMetrics)
+void BitmapFontMetrics::SetGlyph(int charCode,
+                                 const BitmapGlyphMetrics& glyphMetrics)
 {
     glyphMetrics_.at(charCode) = glyphMetrics;
 }

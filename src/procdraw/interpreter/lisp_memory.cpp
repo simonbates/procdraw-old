@@ -12,10 +12,7 @@ size_t LispObjectHash(const LispObjectPtr& obj);
 
 class LispObject {
 public:
-    explicit LispObject(LispObjectType t)
-        : Type(t)
-    {
-    }
+    explicit LispObject(LispObjectType t) : Type(t) {}
     virtual ~LispObject() {}
     const LispObjectType Type;
 };
@@ -23,8 +20,7 @@ public:
 class LispNumber : public LispObject {
 public:
     explicit LispNumber(double val)
-        : LispObject(LispObjectType::Number)
-        , val_(val)
+        : LispObject(LispObjectType::Number), val_(val)
     {
     }
     double val_;
@@ -33,9 +29,7 @@ public:
 class LispSymbol : public LispObject {
 public:
     LispSymbol(const std::string& name, LispObjectPtr value)
-        : LispObject(LispObjectType::Symbol)
-        , name_(name)
-        , value_(value)
+        : LispObject(LispObjectType::Symbol), name_(name), value_(value)
     {
     }
     std::string name_;
@@ -45,9 +39,7 @@ public:
 class LispCons : public LispObject {
 public:
     LispCons(LispObjectPtr car, LispObjectPtr cdr)
-        : LispObject(LispObjectType::Cons)
-        , car_(car)
-        , cdr_(cdr)
+        : LispObject(LispObjectType::Cons), car_(car), cdr_(cdr)
     {
     }
     LispObjectPtr car_;
@@ -57,9 +49,7 @@ public:
 class LispCFunction : public LispObject {
 public:
     LispCFunction(lisp_CFunction cfun, void* data)
-        : LispObject(LispObjectType::CFunction)
-        , cfun_(cfun)
-        , data_(data)
+        : LispObject(LispObjectType::CFunction), cfun_(cfun), data_(data)
     {
     }
     lisp_CFunction cfun_;
@@ -69,8 +59,7 @@ public:
 class LispBoolean : public LispObject {
 public:
     explicit LispBoolean(bool val)
-        : LispObject(LispObjectType::Boolean)
-        , val_(val)
+        : LispObject(LispObjectType::Boolean), val_(val)
     {
     }
     bool val_;
@@ -79,8 +68,7 @@ public:
 class LispString : public LispObject {
 public:
     explicit LispString(const std::string& str)
-        : LispObject(LispObjectType::String)
-        , str_(str)
+        : LispObject(LispObjectType::String), str_(str)
     {
         strHashValue_ = std::hash<std::string>()(str_);
     }
@@ -91,12 +79,14 @@ public:
 class LispDictionary : public LispObject {
 public:
     LispDictionary()
-        : LispObject(LispObjectType::Dictionary)
-        , dictData_(10, LispObjectHash, LispObjectEq)
+        : LispObject(LispObjectType::Dictionary),
+          dictData_(10, LispObjectHash, LispObjectEq)
     {
     }
-    std::unordered_map<LispObjectPtr, LispObjectPtr, decltype(LispObjectHash)*,
-        decltype(LispObjectEq)*>
+    std::unordered_map<LispObjectPtr,
+                       LispObjectPtr,
+                       decltype(LispObjectHash)*,
+                       decltype(LispObjectEq)*>
         dictData_;
 };
 
@@ -105,17 +95,20 @@ bool LispObjectEq(const LispObjectPtr& x, const LispObjectPtr& y)
     if (x->Type == LispObjectType::Number
         && y->Type == LispObjectType::Number) {
         return static_cast<LispNumber*>(x.get())->val_
-            == static_cast<LispNumber*>(y.get())->val_;
-    } else if (x->Type == LispObjectType::String
-        && y->Type == LispObjectType::String) {
+               == static_cast<LispNumber*>(y.get())->val_;
+    }
+    else if (x->Type == LispObjectType::String
+             && y->Type == LispObjectType::String) {
         LispString* stringX = static_cast<LispString*>(x.get());
         LispString* stringY = static_cast<LispString*>(y.get());
         if (stringX->strHashValue_ != stringY->strHashValue_) {
             return false;
-        } else {
+        }
+        else {
             return stringX->str_ == stringY->str_;
         }
-    } else {
+    }
+    else {
         return x.get() == y.get();
     }
 }
@@ -124,9 +117,11 @@ size_t LispObjectHash(const LispObjectPtr& obj)
 {
     if (obj->Type == LispObjectType::Number) {
         return std::hash<double>()(static_cast<LispNumber*>(obj.get())->val_);
-    } else if (obj->Type == LispObjectType::String) {
+    }
+    else if (obj->Type == LispObjectType::String) {
         return static_cast<LispString*>(obj.get())->strHashValue_;
-    } else {
+    }
+    else {
         return std::hash<LispObjectPtr>()(obj);
     }
 }
@@ -144,8 +139,8 @@ LispObjectPtr LispInterpreter::MakeNumber(double val)
     return std::make_shared<LispNumber>(val);
 }
 
-LispObjectPtr LispInterpreter::MakeSymbol(
-    const std::string& name, LispObjectPtr value)
+LispObjectPtr LispInterpreter::MakeSymbol(const std::string& name,
+                                          LispObjectPtr value)
 {
     return std::make_shared<LispSymbol>(name, value);
 }
@@ -186,7 +181,8 @@ double LispInterpreter::NumVal(LispObjectPtr obj)
 {
     if (obj->Type == LispObjectType::Number) {
         return static_cast<LispNumber*>(obj.get())->val_;
-    } else {
+    }
+    else {
         return std::numeric_limits<double>::quiet_NaN();
     }
 }
@@ -195,7 +191,8 @@ std::string LispInterpreter::SymbolName(LispObjectPtr symbol)
 {
     if (symbol->Type == LispObjectType::Symbol) {
         return static_cast<LispSymbol*>(symbol.get())->name_;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return "";
     }
@@ -205,19 +202,21 @@ LispObjectPtr LispInterpreter::SymbolValue(LispObjectPtr symbol)
 {
     if (symbol->Type == LispObjectType::Symbol) {
         return static_cast<LispSymbol*>(symbol.get())->value_;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return Nil;
     }
 }
 
-LispObjectPtr LispInterpreter::SetSymbolValue(
-    LispObjectPtr symbol, LispObjectPtr value)
+LispObjectPtr LispInterpreter::SetSymbolValue(LispObjectPtr symbol,
+                                              LispObjectPtr value)
 {
     if (symbol->Type == LispObjectType::Symbol) {
         static_cast<LispSymbol*>(symbol.get())->value_ = value;
         return value;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return Nil;
     }
@@ -227,7 +226,8 @@ LispObjectPtr LispInterpreter::Car(LispObjectPtr obj)
 {
     if (obj->Type == LispObjectType::Cons) {
         return static_cast<LispCons*>(obj.get())->car_;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return Nil;
     }
@@ -237,7 +237,8 @@ LispObjectPtr LispInterpreter::Cdr(LispObjectPtr obj)
 {
     if (obj->Type == LispObjectType::Cons) {
         return static_cast<LispCons*>(obj.get())->cdr_;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return Nil;
     }
@@ -259,7 +260,8 @@ std::string LispInterpreter::StringVal(LispObjectPtr obj)
 {
     if (obj->Type == LispObjectType::String) {
         return static_cast<LispString*>(obj.get())->str_;
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return "";
     }
@@ -283,15 +285,17 @@ LispObjectPtr LispInterpreter::Rplacd(LispObjectPtr cons, LispObjectPtr obj)
     return cons;
 }
 
-LispObjectPtr LispInterpreter::Get(
-    LispObjectPtr key, LispObjectPtr dict, LispObjectPtr notFound)
+LispObjectPtr LispInterpreter::Get(LispObjectPtr key,
+                                   LispObjectPtr dict,
+                                   LispObjectPtr notFound)
 {
     if (dict->Type == LispObjectType::Dictionary) {
         auto dictData = static_cast<LispDictionary*>(dict.get())->dictData_;
         auto found = dictData.find(key);
         if (found != dictData.end()) {
             return found->second;
-        } else {
+        }
+        else {
             return notFound;
         }
     }
@@ -304,8 +308,8 @@ LispObjectPtr LispInterpreter::Get(LispObjectPtr key, LispObjectPtr dict)
     return Get(key, dict, Nil);
 }
 
-LispObjectPtr LispInterpreter::Put(
-    LispObjectPtr key, LispObjectPtr val, LispObjectPtr dict)
+LispObjectPtr
+LispInterpreter::Put(LispObjectPtr key, LispObjectPtr val, LispObjectPtr dict)
 {
     if (dict->Type == LispObjectType::Dictionary) {
         static_cast<LispDictionary*>(dict.get())->dictData_[key] = val;
@@ -337,13 +341,15 @@ LispObjectPtr LispInterpreter::Clear(LispObjectPtr dict)
     return Nil;
 }
 
-LispObjectPtr LispInterpreter::ApplyCFunction(
-    LispObjectPtr cfun, LispObjectPtr args, LispObjectPtr env)
+LispObjectPtr LispInterpreter::ApplyCFunction(LispObjectPtr cfun,
+                                              LispObjectPtr args,
+                                              LispObjectPtr env)
 {
     if (cfun->Type == LispObjectType::CFunction) {
         LispCFunction* f = static_cast<LispCFunction*>(cfun.get());
         return f->cfun_(this, args, env, f->data_);
-    } else {
+    }
+    else {
         // TODO: Or throw bad type exception?
         return Nil;
     }

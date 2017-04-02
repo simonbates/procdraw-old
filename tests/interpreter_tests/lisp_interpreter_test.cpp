@@ -14,7 +14,7 @@ TEST_F(LispInterpreterTest, MakeListWithEmptyList)
 
 TEST_F(LispInterpreterTest, MakeListWithSingleItem)
 {
-    auto list1 = L_.MakeList({ L_.MakeNumber(42) });
+    auto list1 = L_.MakeList({L_.MakeNumber(42)});
     EXPECT_EQ(procdraw::LispObjectType::Cons, L_.TypeOf(list1));
     EXPECT_EQ(42, L_.NumVal(L_.Car(list1)));
     EXPECT_TRUE(L_.Null(L_.Cdr(list1)));
@@ -26,8 +26,8 @@ TEST_F(LispInterpreterTest, MakeListWithSingleItem)
 //
 TEST_F(LispInterpreterTest, MakeListWithMultipleItems)
 {
-    auto list1 = L_.MakeList({ L_.MakeNumber(1), L_.MakeNumber(2),
-        L_.MakeNumber(3), L_.MakeNumber(4) });
+    auto list1 = L_.MakeList({L_.MakeNumber(1), L_.MakeNumber(2),
+                              L_.MakeNumber(3), L_.MakeNumber(4)});
     EXPECT_EQ(procdraw::LispObjectType::Cons, L_.TypeOf(list1));
     EXPECT_EQ(1, L_.NumVal(L_.Car(list1)));
     EXPECT_EQ(2, L_.NumVal(L_.Car(L_.Cdr(list1))));
@@ -47,9 +47,8 @@ TEST_F(LispInterpreterTest, MakeListWithMultipleItems)
 //
 TEST_F(LispInterpreterTest, MakeListWithEmbeddedList)
 {
-    auto list1
-        = L_.MakeList({ L_.MakeList({ L_.MakeNumber(1), L_.MakeNumber(2) }),
-            L_.MakeNumber(3), L_.MakeNumber(4) });
+    auto list1 = L_.MakeList({L_.MakeList({L_.MakeNumber(1), L_.MakeNumber(2)}),
+                              L_.MakeNumber(3), L_.MakeNumber(4)});
     EXPECT_EQ(procdraw::LispObjectType::Cons, L_.TypeOf(list1));
     EXPECT_EQ(1, L_.NumVal(L_.Car(L_.Car(list1))));
     EXPECT_EQ(2, L_.NumVal(L_.Car(L_.Cdr(L_.Car(list1)))));
@@ -62,12 +61,12 @@ TEST_F(LispInterpreterTest, MakeListWithEmbeddedList)
 TEST_F(LispInterpreterTest, PrettyPrintToString)
 {
     EXPECT_EQ("(42)",
-        L_.PrettyPrintToString(L_.MakeList({ L_.MakeNumber(42) }), 100));
+              L_.PrettyPrintToString(L_.MakeList({L_.MakeNumber(42)}), 100));
 }
 
 TEST_F(LispInterpreterTest, PrintToString)
 {
-    EXPECT_EQ("(42)", L_.PrintToString(L_.MakeList({ L_.MakeNumber(42) })));
+    EXPECT_EQ("(42)", L_.PrintToString(L_.MakeList({L_.MakeNumber(42)})));
 }
 
 TEST_F(LispInterpreterTest, SymbolRef)
@@ -99,7 +98,7 @@ TEST_F(LispInterpreterTest, Eq)
     EXPECT_TRUE(LispObjectEq(L_.SymbolRef("A"), L_.SymbolRef("A")));
     EXPECT_FALSE(LispObjectEq(L_.SymbolRef("A"), L_.SymbolRef("B")));
 
-    auto list1 = L_.MakeList({ L_.MakeNumber(42) });
+    auto list1 = L_.MakeList({L_.MakeNumber(42)});
     EXPECT_TRUE(LispObjectEq(list1, list1));
 }
 
@@ -112,8 +111,8 @@ TEST_F(LispInterpreterTest, AssocOnNonEmptyAssociationList)
 {
     auto symbolA = L_.SymbolRef("A");
     auto symbolB = L_.SymbolRef("B");
-    auto alist = L_.MakeList({ L_.Cons(symbolA, L_.MakeNumber(1)),
-        L_.Cons(symbolB, L_.MakeNumber(2)) });
+    auto alist = L_.MakeList({L_.Cons(symbolA, L_.MakeNumber(1)),
+                              L_.Cons(symbolB, L_.MakeNumber(2))});
 
     auto pairA = L_.Assoc(symbolA, alist);
     EXPECT_TRUE(LispObjectEq(symbolA, L_.Car(pairA)));
@@ -157,11 +156,11 @@ TEST_F(LispInterpreterTest, GetAndPutAndClearWithSymbolKeys)
 {
     auto dict = L_.MakeDict();
     EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key1"), dict)));
-    EXPECT_EQ(
-        42, L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict)));
+    EXPECT_EQ(42,
+              L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(42), dict)));
     EXPECT_EQ(42, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)));
-    EXPECT_EQ(
-        10, L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(10), dict)));
+    EXPECT_EQ(10,
+              L_.NumVal(L_.Put(L_.SymbolRef("key1"), L_.MakeNumber(10), dict)));
     EXPECT_EQ(10, L_.NumVal(L_.Get(L_.SymbolRef("key1"), dict)));
     EXPECT_TRUE(L_.Null(L_.Get(L_.SymbolRef("key2"), dict)));
     L_.Put(L_.SymbolRef("key2"), L_.MakeNumber(100), dict);
@@ -200,8 +199,8 @@ TEST_F(LispInterpreterTest, Keys)
     auto twoKeys = L_.Keys(dict);
     EXPECT_TRUE(L_.Null(L_.Cddr(twoKeys)));
     auto foundExpectedKeys = (L_.SymbolName(L_.Car(twoKeys)) == "key1"
-                                 && L_.SymbolName(L_.Cadr(twoKeys)) == "key2")
-        || (L_.SymbolName(L_.Car(twoKeys)) == "key2"
+                              && L_.SymbolName(L_.Cadr(twoKeys)) == "key2")
+                             || (L_.SymbolName(L_.Car(twoKeys)) == "key2"
                                  && L_.SymbolName(L_.Cadr(twoKeys)) == "key1");
     EXPECT_TRUE(foundExpectedKeys);
 }
@@ -273,14 +272,14 @@ TEST_F(LispInterpreterTest, EvalUnboundSymbol)
 
 TEST_F(LispInterpreterTest, EvalBoundSymbol)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(42)) });
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(42))});
     EXPECT_EQ(42, L_.NumVal(L_.Eval(L_.SymbolRef("a"), env)));
 }
 
 TEST_F(LispInterpreterTest, EvalString)
 {
-    EXPECT_EQ(
-        "some string", L_.StringVal(L_.Eval(L_.MakeString("some string"))));
+    EXPECT_EQ("some string",
+              L_.StringVal(L_.Eval(L_.MakeString("some string"))));
 }
 
 TEST_F(LispInterpreterTest, EvalEof) { EXPECT_TRUE(L_.IsEof(L_.Eval(L_.Eof))); }
@@ -293,9 +292,9 @@ TEST_F(LispInterpreterTest, EvalQuote)
 
 TEST_F(LispInterpreterTest, EvalSumWithSubexpressions)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-        L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)),
-        L_.Cons(L_.SymbolRef("c"), L_.MakeNumber(4)) });
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)),
+                            L_.Cons(L_.SymbolRef("c"), L_.MakeNumber(4))});
     EXPECT_EQ(31, L_.NumVal(L_.Eval(L_.Read("(+ (+ a b 8) 16 c)"), env)));
 }
 
@@ -318,7 +317,7 @@ TEST_F(LispInterpreterTest, EvalQuotientWithDivisorOf0IsInfinity)
 TEST_F(LispInterpreterTest, EvalLambdaExpressionEvaluatesToSelf)
 {
     EXPECT_EQ("(lambda (n) (+ n 1))",
-        L_.PrintToString(L_.Eval(L_.Read("(lambda (n) (+ n 1))"))));
+              L_.PrintToString(L_.Eval(L_.Read("(lambda (n) (+ n 1))"))));
 }
 
 TEST_F(LispInterpreterTest, EvalLambdaCallNoArgs)
@@ -333,8 +332,8 @@ TEST_F(LispInterpreterTest, EvalLambdaCallOneArg)
 
 TEST_F(LispInterpreterTest, EvalLambdaCallTwoArgs)
 {
-    EXPECT_EQ(
-        42, L_.NumVal(L_.Eval(L_.Read("((lambda (m n) (+ m n 10)) 30 2)"))));
+    EXPECT_EQ(42,
+              L_.NumVal(L_.Eval(L_.Read("((lambda (m n) (+ m n 10)) 30 2)"))));
 }
 
 TEST_F(LispInterpreterTest, EvalLambdaReturnsValueOfLastExpression)
@@ -390,8 +389,8 @@ TEST_F(LispInterpreterTest, EvalDefOneArg)
 
 TEST_F(LispInterpreterTest, EvalApplyNoArgs)
 {
-    EXPECT_EQ(3,
-        L_.NumVal(L_.Eval(L_.Read("(apply (lambda () (+ 1 2)) (quote ()))"))));
+    EXPECT_EQ(3, L_.NumVal(L_.Eval(
+                     L_.Read("(apply (lambda () (+ 1 2)) (quote ()))"))));
 }
 
 TEST_F(LispInterpreterTest, EvalApplyOneArg)
@@ -420,29 +419,29 @@ TEST_F(LispInterpreterTest, EvalCdr)
 
 TEST_F(LispInterpreterTest, EvalIfTrueWithElse)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-        L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2))});
     EXPECT_EQ(10,
-        L_.NumVal(
-            L_.Eval(L_.Read("(if (eq 42 42) (setq a 10) (setq b 20))"), env)));
+              L_.NumVal(L_.Eval(
+                  L_.Read("(if (eq 42 42) (setq a 10) (setq b 20))"), env)));
     EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("a"), env)));
     EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
 }
 
 TEST_F(LispInterpreterTest, EvalIfTrueWithoutElse)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-        L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
-    EXPECT_EQ(
-        10, L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10))"), env)));
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2))});
+    EXPECT_EQ(10,
+              L_.NumVal(L_.Eval(L_.Read("(if (eq 42 42) (setq a 10))"), env)));
     EXPECT_EQ(10, L_.NumVal(L_.Eval(L_.Read("a"), env)));
     EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
 }
 
 TEST_F(LispInterpreterTest, EvalIfFalseWithElse)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-        L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2))});
     EXPECT_EQ(20, L_.NumVal(L_.Eval(
                       L_.Read("(if (eq 1 2) (setq a 10) (setq b 20))"), env)));
     EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("a"), env)));
@@ -451,8 +450,8 @@ TEST_F(LispInterpreterTest, EvalIfFalseWithElse)
 
 TEST_F(LispInterpreterTest, EvalIfFalseWithoutElse)
 {
-    auto env = L_.MakeList({ L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
-        L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2)) });
+    auto env = L_.MakeList({L_.Cons(L_.SymbolRef("a"), L_.MakeNumber(1)),
+                            L_.Cons(L_.SymbolRef("b"), L_.MakeNumber(2))});
     EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(if (eq 1 2) (setq a 10))"), env)));
     EXPECT_EQ(1, L_.NumVal(L_.Eval(L_.Read("a"), env)));
     EXPECT_EQ(2, L_.NumVal(L_.Eval(L_.Read("b"), env)));
@@ -493,21 +492,21 @@ TEST_F(LispInterpreterTest, EvalMapRange)
     // [0, 10] to [-1, 0]
 
     EXPECT_EQ(-1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 0)"))));
-    EXPECT_EQ(
-        -0.75, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 10 4))"))));
+    EXPECT_EQ(-0.75,
+              L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 10 4))"))));
     EXPECT_EQ(-0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 5)"))));
-    EXPECT_EQ(
-        -0.25, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 30 4))"))));
+    EXPECT_EQ(-0.25,
+              L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 (/ 30 4))"))));
     EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 -1 0 10)"))));
 
     // [0, 10] to [1, -1]
 
     EXPECT_EQ(1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 0)"))));
-    EXPECT_EQ(
-        0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 10 4))"))));
+    EXPECT_EQ(0.5,
+              L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 10 4))"))));
     EXPECT_EQ(0.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 5)"))));
-    EXPECT_EQ(
-        -0.5, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 30 4))"))));
+    EXPECT_EQ(-0.5,
+              L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 (/ 30 4))"))));
     EXPECT_EQ(-1.0, L_.NumVal(L_.Eval(L_.Read("(map-range 0 10 1 -1 10)"))));
 }
 
@@ -563,10 +562,10 @@ TEST_F(LispInterpreterTest, EvalAssoc)
     EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1)))"))));
     EXPECT_TRUE(L_.Null(L_.Eval(L_.Read("(assoc 'a '((b . 1) (c . 2)))"))));
 
-    EXPECT_EQ(
-        "(a . 1)", L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((a . 1)))"))));
-    EXPECT_EQ("(a . 2)",
-        L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((b . 1) (a . 2)))"))));
+    EXPECT_EQ("(a . 1)",
+              L_.PrintToString(L_.Eval(L_.Read("(assoc 'a '((a . 1)))"))));
+    EXPECT_EQ("(a . 2)", L_.PrintToString(L_.Eval(
+                             L_.Read("(assoc 'a '((b . 1) (a . 2)))"))));
     EXPECT_EQ("(a . 2)", L_.PrintToString(L_.Eval(L_.Read(
                              "(assoc 'a '((b . 1) (a . 2) (a . 3)))"))));
 }
@@ -579,7 +578,7 @@ TEST_F(LispInterpreterTest, EvalPutassocUpdatesFirstMatch)
     L_.Eval(L_.Read("(setq alist '((b . 1) (a . 2) (a . 3)))"));
     EXPECT_EQ(4, L_.NumVal(L_.Eval(L_.Read("(putassoc 'a 4 alist)"))));
     EXPECT_EQ("((b . 1) (a . 4) (a . 3))",
-        L_.PrintToString(L_.Eval(L_.Read("alist"))));
+              L_.PrintToString(L_.Eval(L_.Read("alist"))));
 }
 
 TEST_F(LispInterpreterTest, EvalPutassocNoMatch)
@@ -589,7 +588,7 @@ TEST_F(LispInterpreterTest, EvalPutassocNoMatch)
     EXPECT_EQ("((b . 1) (a . 2))", L_.PrintToString(L_.Eval(L_.Read("alist"))));
     EXPECT_EQ(3, L_.NumVal(L_.Eval(L_.Read("(putassoc 'c 3 alist)"))));
     EXPECT_EQ("((b . 1) (a . 2) (c . 3))",
-        L_.PrintToString(L_.Eval(L_.Read("alist"))));
+              L_.PrintToString(L_.Eval(L_.Read("alist"))));
 }
 
 TEST_F(LispInterpreterTest, EvalNot)
@@ -606,7 +605,9 @@ TEST_F(LispInterpreterTest, EvalNot)
 static int testCfunData = 42;
 
 static procdraw::LispObjectPtr TestCfun(procdraw::LispInterpreter* L,
-    procdraw::LispObjectPtr args, procdraw::LispObjectPtr env, void* data)
+                                        procdraw::LispObjectPtr args,
+                                        procdraw::LispObjectPtr env,
+                                        void* data)
 {
     EXPECT_EQ(&testCfunData, data);
     int dataval = *(static_cast<int*>(data));

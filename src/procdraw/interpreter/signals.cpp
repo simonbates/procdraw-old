@@ -22,18 +22,21 @@ static void InitSinWavetable()
     int wavetableEnd = SIN_WAVETABLE_LEN - 1;
     for (int i = 0; i < SIN_WAVETABLE_LEN; ++i) {
         double x = (static_cast<double>(i) / static_cast<double>(wavetableEnd))
-            * 2 * M_PI;
+                   * 2 * M_PI;
         sinWavetable[i] = (sin(x) + 1) / 2;
     }
 }
 
-static LispObjectPtr PutassocHolder(LispInterpreter* L, LispObjectPtr key,
-    LispObjectPtr val, LispObjectPtr holder)
+static LispObjectPtr PutassocHolder(LispInterpreter* L,
+                                    LispObjectPtr key,
+                                    LispObjectPtr val,
+                                    LispObjectPtr holder)
 {
     auto alist = L->Car(holder);
     if (L->Null(alist)) {
         L->Rplaca(holder, L->Cons(L->Cons(key, val), L->Nil));
-    } else {
+    }
+    else {
         L->Putassoc(key, val, alist);
     }
     return val;
@@ -49,27 +52,31 @@ static LispObjectPtr InputsHolder(LispInterpreter* L, LispObjectPtr signal)
     return L->Cddr(signal);
 }
 
-LispObjectPtr GetSlot(
-    LispInterpreter* L, LispObjectPtr signal, LispObjectPtr key)
+LispObjectPtr
+GetSlot(LispInterpreter* L, LispObjectPtr signal, LispObjectPtr key)
 {
     return L->Cdr(L->Assoc(key, L->Car(SlotsHolder(L, signal))));
 }
 
-LispObjectPtr PutSlot(LispInterpreter* L, LispObjectPtr signal,
-    LispObjectPtr key, LispObjectPtr val)
+LispObjectPtr PutSlot(LispInterpreter* L,
+                      LispObjectPtr signal,
+                      LispObjectPtr key,
+                      LispObjectPtr val)
 {
     return PutassocHolder(L, key, val, SlotsHolder(L, signal));
 }
 
 LispObjectPtr MakeSignal(LispInterpreter* L, LispObjectPtr stepFun)
 {
-    auto signal = L->MakeList({ L->SymbolRef("signal"), L->Nil, L->Nil });
+    auto signal = L->MakeList({L->SymbolRef("signal"), L->Nil, L->Nil});
     PutSlot(L, signal, L->SymbolRef("step"), stepFun);
     return signal;
 }
 
-static LispObjectPtr lisp_StepEventRelay(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_StepEventRelay(LispInterpreter* L,
+                                         LispObjectPtr args,
+                                         LispObjectPtr env,
+                                         void* data)
 {
     auto self = L->Car(args);
     auto eventKey = L->SymbolRef("event");
@@ -94,12 +101,12 @@ static bool HasBeenStepped(LispInterpreter* L, LispObjectPtr signal)
 static void RecordAsStepped(LispInterpreter* L, LispObjectPtr signal)
 {
     L->Set(L->SymbolRef("stepped-signals"),
-        L->Cons(signal, L->SymbolValue(L->SymbolRef("stepped-signals"))),
-        L->Nil);
+           L->Cons(signal, L->SymbolValue(L->SymbolRef("stepped-signals"))),
+           L->Nil);
 }
 
-static LispObjectPtr Sigval(
-    LispInterpreter* L, LispObjectPtr signal, LispObjectPtr env)
+static LispObjectPtr
+Sigval(LispInterpreter* L, LispObjectPtr signal, LispObjectPtr env)
 {
     auto stepFun = GetSlot(L, signal, L->SymbolRef("step"));
     if (!L->Null(stepFun) && !HasBeenStepped(L, signal)) {
@@ -118,8 +125,8 @@ static LispObjectPtr Sigval(
     return GetSlot(L, signal, L->SymbolRef("out"));
 }
 
-static LispObjectPtr MakeWavetableOscillator(
-    LispInterpreter* L, LispObjectPtr stepFun)
+static LispObjectPtr MakeWavetableOscillator(LispInterpreter* L,
+                                             LispObjectPtr stepFun)
 {
     auto sig = MakeSignal(L, stepFun);
     PutSlot(L, sig, L->SymbolRef("freq"), L->MakeNumber(0));
@@ -129,11 +136,13 @@ static LispObjectPtr MakeWavetableOscillator(
 }
 
 static LispObjectPtr StepWavetableOscillator(LispInterpreter* L,
-    LispObjectPtr signal, double* wavetable, int wavetableLen)
+                                             LispObjectPtr signal,
+                                             double* wavetable,
+                                             int wavetableLen)
 {
     int wavetableEnd = wavetableLen - 1;
-    double incr
-        = L->NumVal(GetSlot(L, signal, L->SymbolRef("freq"))) * wavetableEnd;
+    double incr =
+        L->NumVal(GetSlot(L, signal, L->SymbolRef("freq"))) * wavetableEnd;
     auto indexKey = L->SymbolRef("index");
     double index = L->NumVal(GetSlot(L, signal, indexKey));
     index = Wrap(0.0, wavetableEnd, index + incr);
@@ -143,32 +152,40 @@ static LispObjectPtr StepWavetableOscillator(LispInterpreter* L,
     PutSlot(L, signal, indexKey, L->MakeNumber(index));
     int indexBefore = static_cast<int>(floor(index));
     double out = Lerp(wavetable[indexBefore], wavetable[indexBefore + 1],
-        index - indexBefore);
+                      index - indexBefore);
     auto outNum = L->MakeNumber(out);
     PutSlot(L, signal, L->SymbolRef("out"), outNum);
     return outNum;
 }
 
-static LispObjectPtr lisp_MakeSignal(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_MakeSignal(LispInterpreter* L,
+                                     LispObjectPtr args,
+                                     LispObjectPtr env,
+                                     void* data)
 {
     return MakeSignal(L, L->Car(args));
 }
 
-static LispObjectPtr lisp_GetSlot(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_GetSlot(LispInterpreter* L,
+                                  LispObjectPtr args,
+                                  LispObjectPtr env,
+                                  void* data)
 {
     return GetSlot(L, L->Car(args), L->Cadr(args));
 }
 
-static LispObjectPtr lisp_PutSlot(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_PutSlot(LispInterpreter* L,
+                                  LispObjectPtr args,
+                                  LispObjectPtr env,
+                                  void* data)
 {
     return PutSlot(L, L->Car(args), L->Cadr(args), L->Caddr(args));
 }
 
-static LispObjectPtr lisp_Connect(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_Connect(LispInterpreter* L,
+                                  LispObjectPtr args,
+                                  LispObjectPtr env,
+                                  void* data)
 {
     auto expr = L->Car(args);
     auto destSignal = L->Cadr(args);
@@ -177,33 +194,39 @@ static LispObjectPtr lisp_Connect(
     return PutassocHolder(L, destKey, expr, InputsHolder(L, destSignal));
 }
 
-static LispObjectPtr lisp_Sigval(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_Sigval(LispInterpreter* L,
+                                 LispObjectPtr args,
+                                 LispObjectPtr env,
+                                 void* data)
 {
     return Sigval(L, L->Car(args), env);
 }
 
-static LispObjectPtr lisp_ClearSteppedSignals(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_ClearSteppedSignals(LispInterpreter* L,
+                                              LispObjectPtr args,
+                                              LispObjectPtr env,
+                                              void* data)
 {
     return L->Set(L->SymbolRef("stepped-signals"), L->Nil, L->Nil);
 }
 
-static LispObjectPtr lisp_StepSaw(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_StepSaw(LispInterpreter* L,
+                                  LispObjectPtr args,
+                                  LispObjectPtr env,
+                                  void* data)
 {
     auto self = L->Car(args);
     auto outKey = L->SymbolRef("out");
     double out = L->NumVal(GetSlot(L, self, outKey));
-    out = Wrap(
-        0.0, 1.0, out + L->NumVal(GetSlot(L, self, L->SymbolRef("freq"))));
+    out =
+        Wrap(0.0, 1.0, out + L->NumVal(GetSlot(L, self, L->SymbolRef("freq"))));
     auto outNum = L->MakeNumber(out);
     PutSlot(L, self, outKey, outNum);
     return outNum;
 }
 
-static LispObjectPtr lisp_Saw(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr
+lisp_Saw(LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
 {
     auto saw = MakeSignal(L, L->MakeCFunction(lisp_StepSaw, nullptr));
     PutSlot(L, saw, L->SymbolRef("freq"), L->MakeNumber(0));
@@ -211,35 +234,43 @@ static LispObjectPtr lisp_Saw(
     return saw;
 }
 
-static LispObjectPtr lisp_StepTri(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_StepTri(LispInterpreter* L,
+                                  LispObjectPtr args,
+                                  LispObjectPtr env,
+                                  void* data)
 {
-    return StepWavetableOscillator(
-        L, L->Car(args), triWavetable, TRI_WAVETABLE_LEN);
+    return StepWavetableOscillator(L, L->Car(args), triWavetable,
+                                   TRI_WAVETABLE_LEN);
 }
 
-static LispObjectPtr lisp_Tri(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr
+lisp_Tri(LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
 {
     return MakeWavetableOscillator(L, L->MakeCFunction(lisp_StepTri, nullptr));
 }
 
-static LispObjectPtr lisp_StepSinOsc(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_StepSinOsc(LispInterpreter* L,
+                                     LispObjectPtr args,
+                                     LispObjectPtr env,
+                                     void* data)
 {
-    return StepWavetableOscillator(
-        L, L->Car(args), sinWavetable, SIN_WAVETABLE_LEN);
+    return StepWavetableOscillator(L, L->Car(args), sinWavetable,
+                                   SIN_WAVETABLE_LEN);
 }
 
-static LispObjectPtr lisp_SinOsc(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_SinOsc(LispInterpreter* L,
+                                 LispObjectPtr args,
+                                 LispObjectPtr env,
+                                 void* data)
 {
-    return MakeWavetableOscillator(
-        L, L->MakeCFunction(lisp_StepSinOsc, nullptr));
+    return MakeWavetableOscillator(L,
+                                   L->MakeCFunction(lisp_StepSinOsc, nullptr));
 }
 
-static LispObjectPtr lisp_StepToggle(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+static LispObjectPtr lisp_StepToggle(LispInterpreter* L,
+                                     LispObjectPtr args,
+                                     LispObjectPtr env,
+                                     void* data)
 {
     auto self = L->Car(args);
     auto outKey = L->SymbolRef("out");
@@ -251,7 +282,8 @@ static LispObjectPtr lisp_StepToggle(
         if (LispObjectEq(GetSlot(L, self, selectedKey), symbolA)) {
             PutSlot(L, self, selectedKey, symbolB);
             out = GetSlot(L, self, symbolB);
-        } else {
+        }
+        else {
             PutSlot(L, self, selectedKey, symbolA);
             out = GetSlot(L, self, symbolA);
         }
@@ -260,16 +292,18 @@ static LispObjectPtr lisp_StepToggle(
     return out;
 }
 
-LispObjectPtr lisp_Toggle(
-    LispInterpreter* L, LispObjectPtr args, LispObjectPtr env, void* data)
+LispObjectPtr lisp_Toggle(LispInterpreter* L,
+                          LispObjectPtr args,
+                          LispObjectPtr env,
+                          void* data)
 {
     auto toggle = MakeSignal(L, L->MakeCFunction(lisp_StepToggle, nullptr));
     PutSlot(L, toggle, L->SymbolRef("event"), L->Nil);
     PutSlot(L, toggle, L->SymbolRef("a"), L->MakeNumber(0));
     PutSlot(L, toggle, L->SymbolRef("b"), L->MakeNumber(1));
     PutSlot(L, toggle, L->SymbolRef("selected"), L->SymbolRef("a"));
-    PutSlot(
-        L, toggle, L->SymbolRef("out"), GetSlot(L, toggle, L->SymbolRef("a")));
+    PutSlot(L, toggle, L->SymbolRef("out"),
+            GetSlot(L, toggle, L->SymbolRef("a")));
     return toggle;
 }
 
@@ -283,8 +317,8 @@ void RegisterSignals(LispInterpreter* L)
     L->SetGlobalCFunction("put-slot", lisp_PutSlot, nullptr);
     L->SetGlobalCFunction("=>", lisp_Connect, nullptr);
     L->SetGlobalCFunction("sigval", lisp_Sigval, nullptr);
-    L->SetGlobalCFunction(
-        "clear-stepped-signals", lisp_ClearSteppedSignals, nullptr);
+    L->SetGlobalCFunction("clear-stepped-signals", lisp_ClearSteppedSignals,
+                          nullptr);
     L->SetGlobalCFunction("saw", lisp_Saw, nullptr);
     L->SetGlobalCFunction("sin-osc", lisp_SinOsc, nullptr);
     L->SetGlobalCFunction("tri", lisp_Tri, nullptr);

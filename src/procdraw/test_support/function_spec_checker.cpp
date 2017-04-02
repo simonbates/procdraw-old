@@ -21,11 +21,11 @@ bool FunctionSpecChecker::Check(const char* filename, int expectedNumTests)
 
     tinyxml2::XMLElement* functionSpec = doc.FirstChildElement("function-spec");
     if (functionSpec != NULL) {
-        tinyxml2::XMLElement* examples
-            = functionSpec->FirstChildElement("examples");
+        tinyxml2::XMLElement* examples =
+            functionSpec->FirstChildElement("examples");
         if (examples != NULL) {
-            tinyxml2::XMLElement* example
-                = examples->FirstChildElement("example");
+            tinyxml2::XMLElement* example =
+                examples->FirstChildElement("example");
             while (example != NULL) {
                 if (!CheckExample(example, &L, &numTests)) {
                     allPassed = false;
@@ -37,12 +37,15 @@ bool FunctionSpecChecker::Check(const char* filename, int expectedNumTests)
 
     if (!allPassed) {
         return false;
-    } else {
+    }
+    else {
         if (expectedNumTests != numTests) {
             messages_.push_back("EXPECTED " + std::to_string(expectedNumTests)
-                + " TESTS BUT " + std::to_string(numTests) + " WERE RUN");
+                                + " TESTS BUT " + std::to_string(numTests)
+                                + " WERE RUN");
             return false;
-        } else {
+        }
+        else {
             return true;
         }
     }
@@ -53,8 +56,9 @@ std::vector<std::string> FunctionSpecChecker::GetMessages()
     return messages_;
 }
 
-bool FunctionSpecChecker::CheckExample(
-    tinyxml2::XMLElement* example, procdraw::LispInterpreter* L, int* numTests)
+bool FunctionSpecChecker::CheckExample(tinyxml2::XMLElement* example,
+                                       procdraw::LispInterpreter* L,
+                                       int* numTests)
 {
     bool testPassed = false;
 
@@ -66,10 +70,11 @@ bool FunctionSpecChecker::CheckExample(
             *numTests = *numTests + 1;
             if (result == expectedValue) {
                 testPassed = true;
-            } else {
+            }
+            else {
                 testPassed = false;
                 messages_.push_back(std::string("EXPR: ") + expr + " EXPECTED: "
-                    + expectedValue + " ACTUAL: " + result);
+                                    + expectedValue + " ACTUAL: " + result);
             }
         }
     }

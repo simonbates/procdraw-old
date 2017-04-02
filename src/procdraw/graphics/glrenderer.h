@@ -26,18 +26,24 @@ public:
     void Color(float h, float s, float v, float a = 1.0f);
     void Cube();
     void DoSwap();
-    void DrawBlockCursorBackground(
-        int cursorX, int cursorY, int cursorWidth, int cursorHeight);
-    void DrawBlockCursorInversion(
-        int cursorX, int cursorY, int cursorWidth, int cursorHeight);
-    void DrawText(int x, int y, const TextLayout<GLfloat>& layout,
-        TextLayout<GLfloat>::size_type startLineNum,
-        TextLayout<GLfloat>::size_type endLineNum);
+    void DrawBlockCursorBackground(int cursorX,
+                                   int cursorY,
+                                   int cursorWidth,
+                                   int cursorHeight);
+    void DrawBlockCursorInversion(int cursorX,
+                                  int cursorY,
+                                  int cursorWidth,
+                                  int cursorHeight);
+    void DrawText(int x,
+                  int y,
+                  const TextLayout<GLfloat>& layout,
+                  TextLayout<GLfloat>::size_type startLineNum,
+                  TextLayout<GLfloat>::size_type endLineNum);
     void EndInverse();
     int GetLinespace();
     int Height();
-    TextLayout<GLfloat> LayOutText(
-        const std::string& text, int maxLineWidthPixels);
+    TextLayout<GLfloat> LayOutText(const std::string& text,
+                                   int maxLineWidthPixels);
     void LightColor(float h, float s, float v);
     double MouseX();
     double MouseY();

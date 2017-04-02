@@ -60,14 +60,15 @@ LispObjectPtr LispInterpreter::SymbolRef(const std::string& name)
     return symbol;
 }
 
-LispObjectPtr LispInterpreter::SetGlobalCFunction(
-    const std::string& name, lisp_CFunction cfun, void* data)
+LispObjectPtr LispInterpreter::SetGlobalCFunction(const std::string& name,
+                                                  lisp_CFunction cfun,
+                                                  void* data)
 {
     return Set(SymbolRef(name), MakeCFunction(cfun, data), Nil);
 }
 
-LispObjectPtr LispInterpreter::Apply(
-    LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
+LispObjectPtr
+LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
 {
     switch (TypeOf(fun)) {
     case LispObjectType::CFunction:
@@ -80,8 +81,8 @@ LispObjectPtr LispInterpreter::Apply(
     }
 }
 
-LispObjectPtr LispInterpreter::Assoc1(
-    LispObjectPtr key, LispObjectPtr alist, bool* found)
+LispObjectPtr
+LispInterpreter::Assoc1(LispObjectPtr key, LispObjectPtr alist, bool* found)
 {
     LispObjectPtr next = alist;
     LispObjectPtr prev = alist;
@@ -104,7 +105,8 @@ LispObjectPtr LispInterpreter::Assoc(LispObjectPtr key, LispObjectPtr alist)
     auto pair = Assoc1(key, alist, &found);
     if (found) {
         return pair;
-    } else {
+    }
+    else {
         return Nil;
     }
 }
@@ -114,8 +116,8 @@ bool LispInterpreter::Atom(LispObjectPtr obj)
     return TypeOf(obj) != LispObjectType::Cons;
 }
 
-LispObjectPtr LispInterpreter::Bind(
-    LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
+LispObjectPtr
+LispInterpreter::Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
 {
     // TODO: verify that vars and args are the same length
     auto v = vars;
@@ -176,21 +178,28 @@ LispObjectPtr LispInterpreter::Eval(LispObjectPtr exp, LispObjectPtr env)
         default:
             return Value(exp, env);
         }
-    } else {
+    }
+    else {
         auto first = Car(exp);
         if (LispObjectEq(first, S_DEF)) {
             return Set(Cadr(exp), Cons(S_LAMBDA, Cddr(exp)), env);
-        } else if (LispObjectEq(first, S_IF)) {
+        }
+        else if (LispObjectEq(first, S_IF)) {
             return Evif(Cdr(exp), env);
-        } else if (LispObjectEq(first, S_LAMBDA)) {
+        }
+        else if (LispObjectEq(first, S_LAMBDA)) {
             return exp;
-        } else if (LispObjectEq(first, S_PROGN)) {
+        }
+        else if (LispObjectEq(first, S_PROGN)) {
             return Progn(Cdr(exp), env);
-        } else if (LispObjectEq(first, S_QUOTE)) {
+        }
+        else if (LispObjectEq(first, S_QUOTE)) {
             return Cadr(exp);
-        } else if (LispObjectEq(first, S_SETQ)) {
+        }
+        else if (LispObjectEq(first, S_SETQ)) {
             return Set(Cadr(exp), Eval(Caddr(exp), env), env);
-        } else {
+        }
+        else {
             return Apply(Eval(first, env), Evlis(Cdr(exp), env), env);
         }
     }
@@ -207,7 +216,8 @@ LispObjectPtr LispInterpreter::Evif(LispObjectPtr arglist, LispObjectPtr env)
 {
     if (BoolVal(Eval(Car(arglist), env))) {
         return Eval(Cadr(arglist), env);
-    } else {
+    }
+    else {
         return Eval(Caddr(arglist), env);
     }
 }
@@ -216,7 +226,8 @@ LispObjectPtr LispInterpreter::Evlis(LispObjectPtr arglist, LispObjectPtr env)
 {
     if (Null(arglist)) {
         return Nil;
-    } else {
+    }
+    else {
         return Cons(Eval(Car(arglist), env), Evlis(Cdr(arglist), env));
     }
 }
@@ -225,7 +236,7 @@ bool LispInterpreter::Functionp(LispObjectPtr obj)
 {
     auto type = TypeOf(obj);
     return (type == LispObjectType::Cons && LispObjectEq(Car(obj), S_LAMBDA))
-        || type == LispObjectType::CFunction;
+           || type == LispObjectType::CFunction;
 }
 
 LispObjectPtr LispInterpreter::MakeList(std::vector<LispObjectPtr> objs)
@@ -251,7 +262,8 @@ LispObjectPtr LispInterpreter::Not(LispObjectPtr obj)
 {
     if (BoolVal(obj)) {
         return False;
-    } else {
+    }
+    else {
         return True;
     }
 }
@@ -277,20 +289,23 @@ LispObjectPtr LispInterpreter::Progn(LispObjectPtr actions, LispObjectPtr env)
     return result;
 }
 
-LispObjectPtr LispInterpreter::Putassoc(
-    LispObjectPtr key, LispObjectPtr val, LispObjectPtr alist)
+LispObjectPtr LispInterpreter::Putassoc(LispObjectPtr key,
+                                        LispObjectPtr val,
+                                        LispObjectPtr alist)
 {
     if (TypeOf(alist) == LispObjectType::Cons) {
         bool found;
         auto pair = Assoc1(key, alist, &found);
         if (found) {
             Rplacd(pair, val);
-        } else {
+        }
+        else {
             // The object returned from Assoc1 is the last element in the list
             // Add the new (key, val) association onto the end
             Rplacd(pair, Cons(Cons(key, val), Nil));
         }
-    } else {
+    }
+    else {
         // TODO complain
     }
     return val;
@@ -301,13 +316,15 @@ LispObjectPtr LispInterpreter::Read(const std::string& str)
     return reader_.Read(this, str);
 }
 
-LispObjectPtr LispInterpreter::Set(
-    LispObjectPtr symbol, LispObjectPtr value, LispObjectPtr env)
+LispObjectPtr LispInterpreter::Set(LispObjectPtr symbol,
+                                   LispObjectPtr value,
+                                   LispObjectPtr env)
 {
     auto binding = Assoc(symbol, env);
     if (Null(binding)) {
         SetSymbolValue(symbol, value);
-    } else {
+    }
+    else {
         Rplacd(binding, value);
     }
     return value;
@@ -318,7 +335,8 @@ LispObjectPtr LispInterpreter::Value(LispObjectPtr symbol, LispObjectPtr env)
     auto binding = Assoc(symbol, env);
     if (Null(binding)) {
         return SymbolValue(symbol);
-    } else {
+    }
+    else {
         return Cdr(binding);
     }
 }

@@ -23,22 +23,17 @@ public:
     static PrettyPrinterToken Blank();
 
 private:
-    explicit PrettyPrinterToken(PrettyPrinterTokenType t)
-        : Type(t)
-    {
-    }
+    explicit PrettyPrinterToken(PrettyPrinterTokenType t) : Type(t) {}
     explicit PrettyPrinterToken(const std::string& s)
-        : Type(PrettyPrinterTokenType::String)
-        , Str(s)
-        , Size(s.length())
+        : Type(PrettyPrinterTokenType::String), Str(s), Size(s.length())
     {
     }
 };
 
 class PrettyPrinter {
 public:
-    std::string PrintToString(
-        LispInterpreter* L, LispObjectPtr obj, int margin);
+    std::string
+    PrintToString(LispInterpreter* L, LispObjectPtr obj, int margin);
 
 private:
     int indentAmount_ = 1;

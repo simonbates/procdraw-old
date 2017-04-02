@@ -17,10 +17,11 @@ BalancedState LispReader::CheckBalanced(const std::string& str)
     int parenCount = 0;
 
     while (token_ != LispTokenType::EndOfInput
-        && token_ != LispTokenType::NonClosedString) {
+           && token_ != LispTokenType::NonClosedString) {
         if (token_ == LispTokenType::LParen) {
             ++parenCount;
-        } else if (token_ == LispTokenType::RParen) {
+        }
+        else if (token_ == LispTokenType::RParen) {
             --parenCount;
         }
         GetToken();
@@ -28,9 +29,11 @@ BalancedState LispReader::CheckBalanced(const std::string& str)
 
     if (token_ == LispTokenType::NonClosedString) {
         return BalancedState::NotClosed;
-    } else if (parenCount > 0) {
+    }
+    else if (parenCount > 0) {
         return BalancedState::NotClosed;
-    } else if (parenCount < 0) {
+    }
+    else if (parenCount < 0) {
         return BalancedState::TooManyClosingParens;
     }
     return BalancedState::Balanced;
@@ -77,7 +80,8 @@ void LispReader::GetToken()
         GetCh();
         if (IsStartOfNumber()) {
             GetNumber();
-        } else {
+        }
+        else {
             token_ = LispTokenType::Symbol;
             symbolVal_ = "+";
         }
@@ -87,7 +91,8 @@ void LispReader::GetToken()
         if (IsStartOfNumber()) {
             GetNumber();
             numVal_ = -numVal_;
-        } else {
+        }
+        else {
             token_ = LispTokenType::Symbol;
             symbolVal_ = "-";
         }
@@ -102,7 +107,8 @@ void LispReader::GetToken()
             token_ = LispTokenType::Symbol;
             symbolVal_ = "=>";
             GetCh();
-        } else {
+        }
+        else {
             token_ = LispTokenType::Undefined;
         }
         break;
@@ -119,7 +125,8 @@ void LispReader::GetToken()
     default:
         if (IsStartOfNumber()) {
             GetNumber();
-        } else if (isalpha(ch_)) {
+        }
+        else if (isalpha(ch_)) {
             std::string str;
             while (isalnum(ch_) || ch_ == '-') {
                 str += ch_;
@@ -127,7 +134,8 @@ void LispReader::GetToken()
             }
             token_ = LispTokenType::Symbol;
             symbolVal_ = str;
-        } else {
+        }
+        else {
             token_ = LispTokenType::Undefined;
             GetCh();
         }
@@ -171,7 +179,8 @@ void LispReader::Expect(LispTokenType t)
 {
     if (token_ == t) {
         GetToken();
-    } else {
+    }
+    else {
         // TODO custom syntax error type
         throw std::runtime_error("Syntax error");
     }
@@ -197,11 +206,14 @@ LispObjectPtr LispReader::Read(LispInterpreter* L)
         LispObjectPtr obj;
         if (symbolVal_ == "nil") {
             obj = L->Nil;
-        } else if (symbolVal_ == "true") {
+        }
+        else if (symbolVal_ == "true") {
             obj = L->True;
-        } else if (symbolVal_ == "false") {
+        }
+        else if (symbolVal_ == "false") {
             obj = L->False;
-        } else {
+        }
+        else {
             obj = L->SymbolRef(symbolVal_);
         }
         GetToken();
@@ -237,7 +249,8 @@ LispObjectPtr LispReader::ReadCons(LispInterpreter* L)
         if (token_ == LispTokenType::RParen) {
             GetToken();
             return head;
-        } else if (token_ == LispTokenType::Dot) {
+        }
+        else if (token_ == LispTokenType::Dot) {
             GetToken();
             if (token_ == LispTokenType::EndOfInput) {
                 return L->Eof;

@@ -6,16 +6,9 @@ namespace procdraw {
 
 class LineBuffer {
 public:
-    LineBuffer()
-        : line_("")
-        , promptLen_(0)
-        , cursorPos_(0)
-    {
-    }
+    LineBuffer() : line_(""), promptLen_(0), cursorPos_(0) {}
     explicit LineBuffer(const std::string& prompt)
-        : line_(prompt)
-        , promptLen_(prompt.length())
-        , cursorPos_(promptLen_)
+        : line_(prompt), promptLen_(prompt.length()), cursorPos_(promptLen_)
     {
     }
     void Clear(const std::string& prompt);

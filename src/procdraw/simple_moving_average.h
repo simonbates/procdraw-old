@@ -20,9 +20,7 @@ private:
 
 template <typename T>
 SimpleMovingAverage<T>::SimpleMovingAverage(int numDataPoints)
-    : numDataPoints_(numDataPoints)
-    , index_(0)
-    , sum_(0)
+    : numDataPoints_(numDataPoints), index_(0), sum_(0)
 {
     if (!(numDataPoints > 0)) {
         throw std::invalid_argument("numDataPoints must be greater than zero");

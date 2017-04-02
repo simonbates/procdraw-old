@@ -5,11 +5,11 @@
 namespace procdraw {
 
 Console::Console(GlRenderer* r, CommandProcessor* p, int width, int height)
-    : renderer_(r)
-    , cmdProcessor_(p)
-    , consoleWidth_(width)
-    , consoleHeight_(height)
-    , inputLine_(topLevelPrompt_)
+    : renderer_(r),
+      cmdProcessor_(p),
+      consoleWidth_(width),
+      consoleHeight_(height),
+      inputLine_(topLevelPrompt_)
 {
     linespace_ = r->GetLinespace();
     // In C++ 11, the result of integer division is truncated towards zero
@@ -20,8 +20,8 @@ void Console::Draw()
 {
     // Update the input line layout if needed
     if (inputLineNeedsLayOut_) {
-        inputLineLayout_
-            = renderer_->LayOutText(inputLine_.GetLine(), consoleWidth_);
+        inputLineLayout_ =
+            renderer_->LayOutText(inputLine_.GetLine(), consoleWidth_);
         inputLineNeedsLayOut_ = false;
     }
 
@@ -44,8 +44,8 @@ void Console::Draw()
     cursorY += linespace_ * numVisibleLines_;
 
     // Draw the cursor background
-    renderer_->DrawBlockCursorBackground(
-        cursorX, cursorY, cursorWidth, cursorHeight);
+    renderer_->DrawBlockCursorBackground(cursorX, cursorY, cursorWidth,
+                                         cursorHeight);
 
     // Draw text
     renderer_->BeginText();
@@ -53,8 +53,8 @@ void Console::Draw()
 
     // Do block cursor inversion
     renderer_->Begin2D();
-    renderer_->DrawBlockCursorInversion(
-        cursorX, cursorY, cursorWidth, cursorHeight);
+    renderer_->DrawBlockCursorInversion(cursorX, cursorY, cursorWidth,
+                                        cursorHeight);
 
     renderer_->Begin3D();
 }
@@ -91,8 +91,8 @@ void Console::ProcessKey(SDL_KeyboardEvent* key)
     case SDLK_RETURN:
         Println(inputLine_.GetLine());
         ProcessReturn();
-        inputLine_.Clear(
-            continuedLine_ ? continuedLinePrompt_ : topLevelPrompt_);
+        inputLine_.Clear(continuedLine_ ? continuedLinePrompt_
+                                        : topLevelPrompt_);
         inputLineNeedsLayOut_ = true;
         break;
     }
@@ -106,7 +106,8 @@ void Console::ProcessReturn()
         // If cmd_ is all white space, ignore it
         cmd_ = "";
         continuedLine_ = false;
-    } else {
+    }
+    else {
         switch (cmdProcessor_->CheckCommand(cmd_)) {
         case BalancedState::Balanced:
             Println(cmdProcessor_->DoCommand(cmd_));
@@ -131,8 +132,8 @@ void Console::DrawConsoleText()
     for (decltype(lines_)::size_type i = displayFromLogicalLine_;
          i < lines_.size(); ++i) {
         auto line = lines_.at(i);
-        auto startLineNum
-            = (i == displayFromLogicalLine_ ? displayFromPhysicalLine_ : 0);
+        auto startLineNum =
+            (i == displayFromLogicalLine_ ? displayFromPhysicalLine_ : 0);
         auto endLineNum = line.layout.NumLines();
         renderer_->DrawText(0, y, line.layout, startLineNum, endLineNum);
         y += linespace_ * (endLineNum - startLineNum);
@@ -149,11 +150,13 @@ void Console::ScrollShowInput(int inputNumLines)
                 < lines_.at(displayFromLogicalLine_).layout.NumLines()) {
                 ++displayFromPhysicalLine_;
                 --numVisibleLines_;
-            } else if (displayFromLogicalLine_ + 1 < lines_.size()) {
+            }
+            else if (displayFromLogicalLine_ + 1 < lines_.size()) {
                 ++displayFromLogicalLine_;
                 displayFromPhysicalLine_ = 0;
                 --numVisibleLines_;
-            } else {
+            }
+            else {
                 break;
             }
         }

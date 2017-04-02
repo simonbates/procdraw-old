@@ -31,8 +31,8 @@ PrettyPrinterToken PrettyPrinterToken::Blank()
     return token;
 }
 
-std::string PrettyPrinter::PrintToString(
-    LispInterpreter* L, LispObjectPtr obj, int margin)
+std::string
+PrettyPrinter::PrintToString(LispInterpreter* L, LispObjectPtr obj, int margin)
 {
     margin_ = margin;
     blockStack_ = std::stack<int>();
@@ -73,15 +73,18 @@ void PrettyPrinter::Scan(LispInterpreter* L, LispObjectPtr obj)
             }
             Emit(PrettyPrinterToken::String(")"));
             Emit(PrettyPrinterToken::End());
-        } else if (LispObjectEq(L->Car(obj), L->SymbolRef("quote"))) {
+        }
+        else if (LispObjectEq(L->Car(obj), L->SymbolRef("quote"))) {
             Emit(PrettyPrinterToken::String("'"));
             Scan(L, L->Cadr(obj));
             break;
-        } else if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
+        }
+        else if (LispObjectEq(L->Car(obj), L->SymbolRef("sigval"))) {
             Emit(PrettyPrinterToken::String("$"));
             Scan(L, L->Cadr(obj));
             break;
-        } else {
+        }
+        else {
             Emit(PrettyPrinterToken::Begin(indentAmount_));
             Emit(PrettyPrinterToken::String("("));
             ScanListContents(L, obj);
@@ -184,7 +187,8 @@ void PrettyPrinter::Emit(PrettyPrinterToken token)
     case PrettyPrinterTokenType::String:
         if (blockStack_.empty()) {
             Print(token);
-        } else {
+        }
+        else {
             stream_.push_back(token);
             streamCharLen_ += token.Size;
             for (auto x : endedSinceBlank_) {
@@ -207,7 +211,8 @@ void PrettyPrinter::Print(PrettyPrinterToken token)
     case PrettyPrinterTokenType::Begin:
         if (token.Size <= (margin_ - printCol_)) {
             indentStack_.push(blockFits);
-        } else {
+        }
+        else {
             indentStack_.push(printCol_ + token.IndentAmount);
         }
         break;
@@ -218,7 +223,8 @@ void PrettyPrinter::Print(PrettyPrinterToken token)
         if (indentStack_.top() == blockFits) {
             outstr_.append(" ");
             ++printCol_;
-        } else {
+        }
+        else {
             printCol_ = indentStack_.top();
             outstr_.append("\n");
             outstr_.append(std::string(printCol_, ' '));

@@ -16,7 +16,8 @@ std::tuple<float, float, float> hsv2rgb(float h, float s, float v)
         r = v;
         g = v;
         b = v;
-    } else {
+    }
+    else {
         if (h == 360) {
             h = 0;
         }

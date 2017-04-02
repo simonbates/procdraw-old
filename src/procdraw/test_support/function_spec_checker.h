@@ -15,6 +15,7 @@ public:
 private:
     std::vector<std::string> messages_;
     bool CheckExample(tinyxml2::XMLElement* example,
-        procdraw::LispInterpreter* L, int* numTests);
+                      procdraw::LispInterpreter* L,
+                      int* numTests);
 };
 }

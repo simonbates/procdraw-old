@@ -9,10 +9,11 @@ namespace procdraw {
 template <typename T> class TextLayoutEngine {
 public:
     TextLayout<T> LayOutText(const std::string& text,
-        const BitmapFontMetrics& fontMetrics, int maxDrawGlyphsPerLine,
-        int maxLineWidthPixels);
+                             const BitmapFontMetrics& fontMetrics,
+                             int maxDrawGlyphsPerLine,
+                             int maxLineWidthPixels);
     GlyphCoords LayOutGlyph(const procdraw::BitmapGlyphMetrics& glyphMetrics,
-        const procdraw::BitmapFontMetrics& fontMetrics);
+                            const procdraw::BitmapFontMetrics& fontMetrics);
 
 private:
     int cursorX;
@@ -23,15 +24,17 @@ private:
 };
 
 template <typename T>
-TextLayout<T> TextLayoutEngine<T>::LayOutText(const std::string& text,
-    const BitmapFontMetrics& fontMetrics, int maxDrawGlyphsPerLine,
-    int maxLineWidthPixels)
+TextLayout<T>
+TextLayoutEngine<T>::LayOutText(const std::string& text,
+                                const BitmapFontMetrics& fontMetrics,
+                                int maxDrawGlyphsPerLine,
+                                int maxLineWidthPixels)
 {
     TextLayout<T> layout;
 
     layout.FixedGlyphWidth = fontMetrics.GetGlyph(32).AdvanceWidthPixels;
-    layout.GlyphHeight
-        = fontMetrics.AscenderPixels - fontMetrics.DescenderPixels;
+    layout.GlyphHeight =
+        fontMetrics.AscenderPixels - fontMetrics.DescenderPixels;
     layout.LinespacePixels = fontMetrics.LinespacePixels;
     layout.MaxLineWidthPixels = maxLineWidthPixels;
 
@@ -50,13 +53,15 @@ TextLayout<T> TextLayoutEngine<T>::LayOutText(const std::string& text,
     for (const char& ch : text) {
         if (ch == '\n') {
             NewLine(&layout);
-        } else if (ch <= 32 || ch > maxCharCode) {
+        }
+        else if (ch <= 32 || ch > maxCharCode) {
             if (cursorX + spaceAdvance > maxLineWidthPixels) {
                 NewLine(&layout);
             }
             ++numCharsThisLine;
             cursorX += spaceAdvance;
-        } else {
+        }
+        else {
             glyphMetrics = fontMetrics.GetGlyph(ch);
             glyphCoords = LayOutGlyph(glyphMetrics, fontMetrics);
 
@@ -85,17 +90,17 @@ GlyphCoords TextLayoutEngine<T>::LayOutGlyph(
     GlyphCoords coords;
     coords.Left = static_cast<float>(glyphMetrics.LeftBearingPixels);
     coords.Right = coords.Left + glyphMetrics.WidthPixels;
-    coords.Top = static_cast<float>(
-        fontMetrics.AscenderPixels - glyphMetrics.TopBearingPixels);
+    coords.Top = static_cast<float>(fontMetrics.AscenderPixels
+                                    - glyphMetrics.TopBearingPixels);
     coords.Bottom = coords.Top + glyphMetrics.HeightPixels;
     coords.TextureLeft = static_cast<float>(glyphMetrics.XoffsetPixels)
-        / fontMetrics.BitmapWidth;
+                         / fontMetrics.BitmapWidth;
     coords.TextureRight = (static_cast<float>(glyphMetrics.XoffsetPixels)
-                              + glyphMetrics.WidthPixels)
-        / fontMetrics.BitmapWidth;
+                           + glyphMetrics.WidthPixels)
+                          / fontMetrics.BitmapWidth;
     coords.TextureTop = 0.0f;
     coords.TextureBottom = static_cast<float>(glyphMetrics.HeightPixels)
-        / fontMetrics.BitmapHeight;
+                           / fontMetrics.BitmapHeight;
     return coords;
 }
 
