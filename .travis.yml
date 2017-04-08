@@ -10,11 +10,12 @@ before_install:
   - sudo apt-get -qq install jing
   - sudo apt-get -qq install libsdl2-dev
   - if [ $ENABLE_ALSA_MIDI = ON ] ; then sudo apt-get -qq install libasound2-dev ; fi
-  - nvm install 'lts/*'
   - cmake --version
+install:
+  nvm install --lts
+  nvm use --lts
 script: >
-  nvm use 'lts/*'
-  && node --version
+  node --version
   && npm --version
   && make lint
   && mkdir build
