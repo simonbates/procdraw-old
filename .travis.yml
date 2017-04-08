@@ -12,8 +12,8 @@ before_install:
   - if [ $ENABLE_ALSA_MIDI = ON ] ; then sudo apt-get -qq install libasound2-dev ; fi
   - cmake --version
 install:
-  nvm install --lts
-  nvm use --lts
+  - nvm install --lts
+  - nvm use --lts
 script: >
   node --version
   && npm --version
