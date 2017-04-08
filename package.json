@@ -1,0 +1,12 @@
+{
+    "name": "procdraw",
+    "dependencies": {
+        "shelljs": "0.7.7"
+    },
+    "scripts": {
+        "lint": "node scripts/lint.js",
+        "format": "node scripts/format.js",
+        "gl3w": "node scripts/gl3w.js"
+    },
+    "private": true
+}
