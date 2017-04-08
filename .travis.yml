@@ -11,6 +11,8 @@ before_install:
   - sudo apt-get -qq install libsdl2-dev
   - if [ $ENABLE_ALSA_MIDI = ON ] ; then sudo apt-get -qq install libasound2-dev ; fi
   - cmake --version
+  - node --version
+  - npm --version
 script: >
   make lint
   && mkdir build
