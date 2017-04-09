@@ -89,15 +89,12 @@ To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
 $ cmake -DCMAKE_BUILD_TYPE=Debug ..
 ```
 
-### Additional make targets
+### Development scripts
 
-Procdraw includes a `Makefile` at the root of the project with some
-additional targets:
+Procdraw includes some npm scripts:
 
+* `lint`: run `cpplint` and validate the function specs (requires Python 2 and Jing)
 * `format`: format the source code (requires `clang-format`)
-* `cpplint`: run `cpplint` on the source code (requires Python 2)
-* `validate-function-specs`: check XML function-specs (requires Jing)
-* `lint`: run `cpplint` and `validate-function-specs`
 * `gl3w`: regenerate gl3w (requires Python 2)
 
 Building and running Procdraw on Windows
