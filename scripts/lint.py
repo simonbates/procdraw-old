@@ -1,12 +1,15 @@
-import os, subprocess
-
-# TODO: Fail on non-zero returncode from subprocess.call()
+import itertools, os, subprocess, sys
 
 def find(*args):
     for path in args:
         for (dirpath, dirnames, filenames) in os.walk(path):
             for filename in filenames:
                 yield os.path.join(dirpath, filename)
+
+def exec_command(args):
+    returncode = subprocess.call(args)
+    if returncode != 0:
+        sys.exit(returncode)
 
 def src_files():
     return (f for f in find('src', 'tests')
@@ -16,12 +19,8 @@ def function_specs():
     return (f for f in find('Documentation/docs/functions')
             if f.endswith('.xml'))
 
-def jing(schema, files):
-    args = ['jing', '-c', schema]
-    args.extend(files)
-    return subprocess.call(args)
+cpplint = 'third_party/google/styleguide/cpplint/cpplint.py'
+exec_command(itertools.chain(['python', cpplint], src_files()))
 
-for f in src_files():
-    print(f)
-
-print(jing('Documentation/docs/functions/function-spec.rnc', function_specs()))
+schema = 'Documentation/docs/functions/function-spec.rnc'
+exec_command(itertools.chain(['jing', '-c', schema], function_specs()))
