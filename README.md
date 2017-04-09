@@ -91,11 +91,11 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 ### Development scripts
 
-Procdraw includes some npm scripts:
+Procdraw includes some Python scripts:
 
-* `lint`: run `cpplint` and validate the function specs (requires Python 2 and Jing)
-* `format`: format the source code (requires `clang-format`)
-* `gl3w`: regenerate gl3w (requires Python 2)
+* `lint.py`: run `cpplint` and validate the function specs (requires Python 2 and Jing)
+* `format.py`: format the source code (requires `clang-format`)
+* `gl3w.py`: regenerate gl3w
 
 Building and running Procdraw on Windows
 ----------------------------------------
