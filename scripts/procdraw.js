@@ -1,3 +1,7 @@
+// TODO: Implement my own exec function, with child_process.execFileSync(),
+//       that does not use a shell.
+//       See https://nodejs.org/api/child_process.html#child_process_child_process_execfilesync_file_args_options
+
 var Procdraw = function (shell) {
     this.shell = shell;
 };
