@@ -31,3 +31,6 @@ def cpplint(files):
 
 def jing(schema, files):
     exec_command(itertools.chain(['jing', '-c', schema], files))
+
+def clang_format(files):
+    exec_command(itertools.chain(['clang-format', '-i', '-style=file'], files))
