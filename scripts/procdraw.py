@@ -1,7 +1,7 @@
 import itertools, os, subprocess
 
 functions_src_dir = os.path.join('Documentation', 'docs', 'functions')
-function_schema = os.path.join(functions_src_dir, 'function-spec.rnc')
+function_schema = os.path.join(functions_src_dir, 'function-spec.rng')
 
 cpplint_prog = os.path.join('third_party', 'google', 'styleguide',
                             'cpplint', 'cpplint.py')
@@ -30,7 +30,7 @@ def cpplint(files):
     exec_command(itertools.chain(['python', cpplint_prog], files))
 
 def jing(schema, files):
-    exec_command(itertools.chain(['jing', '-c', schema], files))
+    exec_command(itertools.chain(['jing', schema], files))
 
 def clang_format(files):
     exec_command(itertools.chain(['clang-format', '-i', '-style=file'], files))
