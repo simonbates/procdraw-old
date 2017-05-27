@@ -6,6 +6,7 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install jing
   - sudo apt-get -qq install libsdl2-dev
+  - sudo apt-get -qq install libglm-dev
   - sudo apt-get -qq install libfreetype6-dev
   - sudo apt-get -qq install libasound2-dev
   - cmake --version

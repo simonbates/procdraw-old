@@ -24,10 +24,6 @@ add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
 target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
 target_link_libraries(gl3w dl)
 
-# GLM
-
-set(GLM_DIR ${PROJECT_SOURCE_DIR}/third_party/glm)
-
 # Google Test
 
 set(GTEST_DIR ${PROJECT_SOURCE_DIR}/third_party/google/googletest)
