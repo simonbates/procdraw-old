@@ -5,6 +5,8 @@ add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_C
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
 add_executable(procdraw_all_tests
+    ../src/procdraw/test_support/function_spec_checker.cpp
+    ../src/procdraw/test_support/function_spec_checker.h
     interpreter_tests/lisp_interpreter_test.cpp
     interpreter_tests/lisp_reader_test.cpp
     interpreter_tests/prettyprinter_test.cpp
@@ -21,9 +23,9 @@ add_executable(procdraw_all_tests
 
 target_link_libraries(procdraw_all_tests
     procdraw_lib
-    procdraw_test_support
     gtest
     gtest_main
+    tinyxml2
     ${CMAKE_THREAD_LIBS_INIT})
 
 add_test(procdraw_all_tests procdraw_all_tests)

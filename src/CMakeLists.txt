@@ -71,19 +71,6 @@ target_link_libraries(procdraw_lib
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES})
 
-# procdraw_test_support
-
-add_library(procdraw_test_support
-    procdraw/test_support/function_spec_checker.cpp
-    procdraw/test_support/function_spec_checker.h)
-
-target_include_directories(procdraw_test_support
-    PUBLIC ${PROCDRAW_SRC_DIR})
-
-target_link_libraries(procdraw_test_support
-    procdraw_lib
-    tinyxml2)
-
 # procdraw_main
 
 add_executable(procdraw_main
