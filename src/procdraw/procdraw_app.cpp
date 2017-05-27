@@ -77,9 +77,7 @@ int ProcdrawApp::MainLoop()
                 break;
             }
         }
-#ifdef PROCDRAW_ENABLE_ALSA_MIDI
         midiClient_.Poll(this);
-#endif
         L_.Call("draw");
         if (showReplVal) {
             console_->Draw();

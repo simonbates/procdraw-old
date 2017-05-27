@@ -69,18 +69,16 @@ target_link_libraries(procdraw_lib
 
 # procdraw_alsa_midi
 
-if(ENABLE_ALSA_MIDI)
-    add_library(procdraw_alsa_midi
-        procdraw/alsa_midi/alsa_midi_client.cpp
-        procdraw/alsa_midi/alsa_midi_client.h)
+add_library(procdraw_alsa_midi
+    procdraw/alsa_midi/alsa_midi_client.cpp
+    procdraw/alsa_midi/alsa_midi_client.h)
 
-    target_include_directories(procdraw_alsa_midi
-        PUBLIC ${PROCDRAW_SRC_DIR}
-        PRIVATE ${ALSA_INCLUDE_DIRS})
+target_include_directories(procdraw_alsa_midi
+    PUBLIC ${PROCDRAW_SRC_DIR}
+    PRIVATE ${ALSA_INCLUDE_DIRS})
 
-    target_link_libraries(procdraw_alsa_midi
-        ${ALSA_LIBRARIES})
-endif()
+target_link_libraries(procdraw_alsa_midi
+    ${ALSA_LIBRARIES})
 
 # procdraw_test_support
 
@@ -106,9 +104,7 @@ target_include_directories(procdraw_main
 target_link_libraries(procdraw_main
     procdraw_lib)
 
-if(ENABLE_ALSA_MIDI)
-    target_link_libraries(procdraw_main procdraw_alsa_midi)
-endif()
+target_link_libraries(procdraw_main procdraw_alsa_midi)
 
 set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)

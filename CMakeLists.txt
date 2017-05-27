@@ -4,21 +4,9 @@ project(Procdraw)
 
 enable_testing()
 
-# Options
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    option(ENABLE_ALSA_MIDI "Enable ALSA MIDI" ON)
-else()
-    option(ENABLE_ALSA_MIDI "Enable ALSA MIDI" OFF)
-endif()
-
 # Find dependencies
 
-if(ENABLE_ALSA_MIDI)
-    find_package(ALSA REQUIRED)
-    add_definitions(-DPROCDRAW_ENABLE_ALSA_MIDI)
-endif()
-
+find_package(ALSA REQUIRED)
 find_package(OpenGL REQUIRED)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
