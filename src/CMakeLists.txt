@@ -3,6 +3,8 @@ set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 # procdraw_lib
 
 add_library(procdraw_lib
+    procdraw/alsa_midi/alsa_midi_client.cpp
+    procdraw/alsa_midi/alsa_midi_client.h
     procdraw/graphics/bitmap_text_renderer.cpp
     procdraw/graphics/bitmap_text_renderer.h
     procdraw/graphics/camera.cpp
@@ -59,26 +61,15 @@ target_include_directories(procdraw_lib
     PUBLIC ${PROCDRAW_SRC_DIR}
     PUBLIC ${GLM_DIR}
     PUBLIC ${SDL2_INCLUDE_DIRS}
+    PRIVATE ${ALSA_INCLUDE_DIRS}
     PRIVATE ${OPENGL_INCLUDE_DIRS})
 
 target_link_libraries(procdraw_lib
     freetype2
     gl3w
+    ${ALSA_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES})
-
-# procdraw_alsa_midi
-
-add_library(procdraw_alsa_midi
-    procdraw/alsa_midi/alsa_midi_client.cpp
-    procdraw/alsa_midi/alsa_midi_client.h)
-
-target_include_directories(procdraw_alsa_midi
-    PUBLIC ${PROCDRAW_SRC_DIR}
-    PRIVATE ${ALSA_INCLUDE_DIRS})
-
-target_link_libraries(procdraw_alsa_midi
-    ${ALSA_LIBRARIES})
 
 # procdraw_test_support
 
@@ -103,8 +94,6 @@ target_include_directories(procdraw_main
 
 target_link_libraries(procdraw_main
     procdraw_lib)
-
-target_link_libraries(procdraw_main procdraw_alsa_midi)
 
 set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)
