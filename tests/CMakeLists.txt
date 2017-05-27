@@ -26,6 +26,4 @@ target_link_libraries(procdraw_all_tests
     gtest_main
     ${CMAKE_THREAD_LIBS_INIT})
 
-add_custom_target(check
-    COMMAND procdraw_all_tests
-    DEPENDS procdraw_all_tests)
+add_test(procdraw_all_tests procdraw_all_tests)

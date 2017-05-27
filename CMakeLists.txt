@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Procdraw)
 
+enable_testing()
+
 # Options
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

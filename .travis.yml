@@ -17,4 +17,4 @@ script: >
   && cd build
   && cmake -DENABLE_ALSA_MIDI=$ENABLE_ALSA_MIDI ..
   && make
-  && make check
+  && ctest --verbose
