@@ -60,14 +60,15 @@ add_library(procdraw_lib
 target_include_directories(procdraw_lib
     PUBLIC ${PROCDRAW_SRC_DIR}
     PUBLIC ${GLM_DIR}
+    PUBLIC ${FT2_INCLUDE_DIRS}
     PUBLIC ${SDL2_INCLUDE_DIRS}
     PRIVATE ${ALSA_INCLUDE_DIRS}
     PRIVATE ${OPENGL_INCLUDE_DIRS})
 
 target_link_libraries(procdraw_lib
-    freetype2
     gl3w
     ${ALSA_LIBRARIES}
+    ${FT2_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES})
 
