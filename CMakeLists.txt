@@ -26,7 +26,7 @@ target_link_libraries(gl3w dl)
 
 # Google Test
 
-set(GTEST_DIR ${PROJECT_SOURCE_DIR}/third_party/google/googletest)
+set(GTEST_DIR ${PROJECT_SOURCE_DIR}/third_party/googletest/googletest)
 
 add_library(gtest ${GTEST_DIR}/src/gtest-all.cc)
 target_include_directories(gtest
