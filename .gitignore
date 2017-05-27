@@ -1,6 +1,5 @@
 /build/
 /node_modules/
-/procdraw.sublime-workspace
 
 /Documentation/node_modules/
 /Documentation/out/
@@ -8,3 +7,7 @@
 *.pyc
 .vagrant/
 npm-debug.log
+
+# CLion
+/.idea/
+/cmake-build-debug/
