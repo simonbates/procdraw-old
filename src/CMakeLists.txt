@@ -108,12 +108,3 @@ target_link_libraries(procdraw_main procdraw_alsa_midi)
 
 set_target_properties(procdraw_main
     PROPERTIES OUTPUT_NAME procdraw)
-
-if(WIN32)
-    set_target_properties(procdraw_main
-        PROPERTIES WIN32_EXECUTABLE TRUE)
-    add_custom_command(TARGET procdraw_main POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-            ${PROCDRAW_SDL2_DLL}
-            $<TARGET_FILE_DIR:procdraw_main>)
-endif()

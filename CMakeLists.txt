@@ -9,31 +9,12 @@ enable_testing()
 find_package(ALSA REQUIRED)
 find_package(OpenGL REQUIRED)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    include(FindPkgConfig)
-    pkg_search_module(SDL2 REQUIRED sdl2)
-    find_package(Threads REQUIRED)
-elseif(WIN32)
-    set(PROCDRAW_SDL2_DIR $ENV{PROCDRAW_SDL2_DIR})
-    set(PROCDRAW_SDL2_LIB "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.lib")
-    set(PROCDRAW_SDL2_DLL "${PROCDRAW_SDL2_DIR}/lib/x86/SDL2.dll")
-    set(SDL2_INCLUDE_DIRS "${PROCDRAW_SDL2_DIR}/include")
-    set(SDL2_LIBRARIES ${PROCDRAW_SDL2_LIB})
-endif()
+include(FindPkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+find_package(Threads REQUIRED)
 
-# Configure SDL2 include names
-#
-# On Linux, the SDL2 headers live inside a directory "SDL2". But on
-# Windows, the build of SDL2 does not include a parent "SDL2"
-# directory for the headers.
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    add_definitions(-DPROCDRAW_SDL2_H=<SDL2/SDL.h>)
-    add_definitions(-DPROCDRAW_SDL2_OPENGL_H=<SDL2/SDL_opengl.h>)
-elseif(WIN32)
-    add_definitions(-DPROCDRAW_SDL2_H=<SDL.h>)
-    add_definitions(-DPROCDRAW_SDL2_OPENGL_H=<SDL_opengl.h>)
-endif()
+add_definitions(-DPROCDRAW_SDL2_H=<SDL2/SDL.h>)
+add_definitions(-DPROCDRAW_SDL2_OPENGL_H=<SDL2/SDL_opengl.h>)
 
 # FreeType 2
 
@@ -61,10 +42,7 @@ target_compile_definitions(freetype2 PRIVATE FT2_BUILD_LIBRARY)
 set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)
 add_library(gl3w ${GL3W_DIR}/src/gl3w.c)
 target_include_directories(gl3w PUBLIC ${GL3W_DIR}/include)
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    target_link_libraries(gl3w dl)
-endif()
+target_link_libraries(gl3w dl)
 
 # GLM
 
@@ -89,10 +67,6 @@ add_library(tinyxml2 ${TINYXML2_DIR}/tinyxml2.cpp)
 target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
 
 # Platform-specific compiler settings
-
-if(WIN32)
-    add_definitions(-DUNICODE -D_UNICODE -D_USE_MATH_DEFINES)
-endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wpedantic -Wall")
