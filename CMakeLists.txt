@@ -14,9 +14,6 @@ include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(FT2 REQUIRED freetype2)
 
-add_definitions(-DPROCDRAW_SDL2_H=<SDL2/SDL.h>)
-add_definitions(-DPROCDRAW_SDL2_OPENGL_H=<SDL2/SDL_opengl.h>)
-
 # GL3W
 
 set(GL3W_DIR ${PROJECT_SOURCE_DIR}/third_party/gl3w_out)

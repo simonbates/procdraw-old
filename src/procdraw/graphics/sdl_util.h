@@ -1,6 +1,6 @@
 #pragma once
 
-#include PROCDRAW_SDL2_H
+#include <SDL2/SDL.h>
 
 namespace procdraw {
 

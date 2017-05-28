@@ -4,7 +4,7 @@
 #include "procdraw/graphics/console_line.h"
 #include "procdraw/graphics/glrenderer.h"
 #include "procdraw/line_buffer.h"
-#include PROCDRAW_SDL2_H
+#include <SDL2/SDL.h>
 #include <string>
 #include <vector>
 

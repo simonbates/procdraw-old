@@ -5,8 +5,8 @@
 #include "procdraw/graphics/bitmap_text_renderer.h"
 #include "procdraw/graphics/camera.h"
 #include <GL/gl3w.h>
-#include PROCDRAW_SDL2_H
-#include PROCDRAW_SDL2_OPENGL_H
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #include "glm/glm.hpp"
 #include <memory>
 #include <string>
