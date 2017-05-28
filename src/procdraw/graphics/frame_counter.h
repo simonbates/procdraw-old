@@ -1,7 +1,7 @@
 #pragma once
 
 #include "procdraw/simple_moving_average.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 namespace procdraw {
 

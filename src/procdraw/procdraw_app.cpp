@@ -1,7 +1,7 @@
 #include "procdraw/procdraw_app.h"
 #include "procdraw/interpreter/signals.h"
 #include "procdraw/procdraw_app_lisp.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <iostream>
 #include <string>
 #include <vector>
