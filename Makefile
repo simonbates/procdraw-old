@@ -10,7 +10,7 @@ default: lint
 .PHONY: cpplint
 cpplint:
 	find src tests -type f \( -name \*.cpp -o -name \*.h \) \
-	-exec third_party/google/styleguide/cpplint/cpplint.py {} +
+	-exec third_party/google-styleguide/cpplint/cpplint.py {} +
 
 .PHONY: validate-function-specs
 validate-function-specs:
