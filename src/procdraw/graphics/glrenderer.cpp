@@ -1,11 +1,11 @@
 #include "procdraw/graphics/glrenderer.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
 #include "procdraw/color.h"
 #include "procdraw/graphics/gl_util.h"
 #include "procdraw/graphics/sdl_util.h"
 #include "procdraw/graphics/vertex.h"
 #include "procdraw/math.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <string>
 

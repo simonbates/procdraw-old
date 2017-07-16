@@ -7,7 +7,7 @@
 #include <GL/gl3w.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 #include <memory>
 #include <string>
 

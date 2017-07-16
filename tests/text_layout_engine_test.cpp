@@ -1,5 +1,5 @@
 #include "procdraw/text_layout_engine.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <sstream>
 #include <vector>
 

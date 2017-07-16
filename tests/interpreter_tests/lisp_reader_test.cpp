@@ -1,6 +1,6 @@
 #include "procdraw/interpreter/lisp_reader.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 class LispReaderTest : public ::testing::Test {
 protected:

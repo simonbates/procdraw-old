@@ -1,5 +1,5 @@
 #include "procdraw/color.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ColorTest, Hsv2rgbRed)
 {

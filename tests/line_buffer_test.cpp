@@ -1,5 +1,5 @@
 #include "procdraw/line_buffer.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <string>
 
 TEST(LineBufferTest, VoidConstructor)

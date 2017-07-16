@@ -1,8 +1,8 @@
 #pragma once
 
 #include "procdraw/interpreter/lisp_interpreter.h"
-#include "tinyxml2.h" // NOLINT
 #include <string>
+#include <tinyxml2.h>
 #include <vector>
 
 namespace procdraw_test {

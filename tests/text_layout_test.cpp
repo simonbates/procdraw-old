@@ -1,5 +1,5 @@
 #include "procdraw/text_layout.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 class TextLayoutTest : public ::testing::Test {
 protected:

@@ -1,5 +1,5 @@
 #include "procdraw/lsystem.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <string>
 
 TEST(LsystemTest, Algae)

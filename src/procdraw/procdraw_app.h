@@ -1,12 +1,12 @@
 #pragma once
 
+#include "procdraw/alsa_midi/alsa_midi_client.h"
 #include "procdraw/command_processor.h"
 #include "procdraw/graphics/console.h"
 #include "procdraw/graphics/frame_counter.h"
 #include "procdraw/graphics/glrenderer.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
 #include "procdraw/midi_listener.h"
-#include "procdraw/alsa_midi/alsa_midi_client.h"
 
 #include <memory>
 #include <string>

@@ -1,5 +1,5 @@
 #include "procdraw/test_support/function_spec_checker.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <string>
 
 class FunctionSpecCheckerTest : public ::testing::Test {

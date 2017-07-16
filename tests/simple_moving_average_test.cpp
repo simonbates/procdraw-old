@@ -1,5 +1,5 @@
 #include "procdraw/simple_moving_average.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(SimpleMovingAverageTest, SimpleMovingAverage)
 {

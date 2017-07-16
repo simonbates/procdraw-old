@@ -1,7 +1,7 @@
 #include "procdraw/interpreter/signals.h"
 #include "procdraw/interpreter/lisp_interpreter.h"
 #include "procdraw/math.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 class SignalsTest : public ::testing::Test {
 protected:

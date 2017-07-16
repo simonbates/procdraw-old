@@ -1,10 +1,10 @@
 #define GLM_FORCE_RADIANS
 
 #include "procdraw/graphics/bitmap_text_renderer.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
 #include "procdraw/graphics/font_config.h"
 #include "procdraw/graphics/gl_util.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 namespace procdraw {

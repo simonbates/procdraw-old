@@ -45,8 +45,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wpedantic -Wall")
 endif()
 
-set(PROCDRAW_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-
 # procdraw_lib
 
 add_library(procdraw_lib
@@ -74,10 +72,10 @@ add_library(procdraw_lib
         src/procdraw/procdraw_app_lisp.cpp)
 
 target_include_directories(procdraw_lib
-        PUBLIC ${PROCDRAW_SRC_DIR}
-        PUBLIC ${GLM_DIR}
         PUBLIC ${FT2_INCLUDE_DIRS}
+        PUBLIC ${GLM_DIR}
         PUBLIC ${SDL2_INCLUDE_DIRS}
+        PRIVATE ${PROJECT_SOURCE_DIR}/src
         PRIVATE ${ALSA_INCLUDE_DIRS}
         PRIVATE ${OPENGL_INCLUDE_DIRS})
 
@@ -94,7 +92,7 @@ add_executable(procdraw_main
         src/procdraw/main/main.cpp)
 
 target_include_directories(procdraw_main
-        PRIVATE ${PROCDRAW_SRC_DIR})
+        PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(procdraw_main
         procdraw_lib)
@@ -125,6 +123,9 @@ add_executable(procdraw_all_tests
         tests/simple_moving_average_test.cpp
         tests/text_layout_engine_test.cpp
         tests/text_layout_test.cpp)
+
+target_include_directories(procdraw_all_tests
+        PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(procdraw_all_tests
         procdraw_lib
