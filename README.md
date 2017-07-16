@@ -16,8 +16,6 @@ In its current form, it consists of:
 * A dataflow model ("signals")
 * The beginnings of a 3D graphics API using OpenGL
 
-It runs on Linux and Windows (the Windows port is still a little rough).
-
 I'm still working on the basics at the moment: memory model,
 interpreters, editing interfaces. Once I'm a little further along, I'd
 like to use Procdraw to explore:
@@ -35,8 +33,10 @@ like to use Procdraw to explore:
 * Runtime modification of as much as possible, including the Procdraw
   user interfaces
 
-Building and running Procdraw on Linux
---------------------------------------
+Procdraw runs on Linux.
+
+Building and running Procdraw
+-----------------------------
 
 ### Install dependencies
 
@@ -89,70 +89,13 @@ To make a debug build, invoke CMake with the `-DCMAKE_BUILD_TYPE=Debug` option:
 $ cmake -DCMAKE_BUILD_TYPE=Debug ..
 ```
 
-### Development scripts
+### Development tasks
 
-Procdraw includes some Python scripts:
+Procdraw includes a top-level Makefile for running some development tasks:
 
-* `lint.py`: run `cpplint` and validate the function specs (requires Python 2 and Jing)
-* `format.py`: format the source code (requires `clang-format`)
-* `gl3w.py`: regenerate gl3w
-
-Building and running Procdraw on Windows
-----------------------------------------
-
-### Install dependencies
-
-Procdraw has the following build dependencies:
-
-* OpenGL 3.2
-* Visual Studio Community 2015 (with C++ tools and Windows SDK)
-* CMake
-* SDL2
-
-SDL2 can be downloaded from the [SDL
-website](https://www.libsdl.org/). Download the development libraries
-for Windows Visual C++ and unpack to your filesystem. To tell Procdraw
-where to find the SDL2 files, please set an environment variable,
-`PROCDRAW_SDL2_DIR`, to the location that the distribution was
-unpacked to (such as `C:/SDL/SDL2-2.0.4`).
-
-### Clone the Procdraw repo and submodules
-
-```
-> git clone https://github.com/simonbates/procdraw.git
-> cd procdraw
-> git submodule update --init
-```
-
-### Configure the font
-
-Edit the file `src/procdraw/graphics/font_config.h` and set
-`MonospaceFontFilePath` to a suitable monospaced font on your system
-(such as `"C:/Windows/Fonts/consola.ttf"`).
-
-### Build Procdraw and run the tests
-
-Run CMake to generate the Visual Studio solution:
-
-```
-> cd procdraw
-> mkdir build
-> cd build
-> cmake -G "Visual Studio 14" ..
-```
-
-To build in Visual Studio:
-
-- Open `build\Procdraw.sln`
-- Build Solution (Ctrl+Shift+B)
-
-To run the tests in Visual Studio:
-
-- Build the `check` project
-
-### Running Procdraw
-
-In Visual Studio, start a new instance of the `procdraw_main` project.
+* `lint`: run `cpplint` and validate the function specs (requires Python 2 and `xmllint`)
+* `format`: format the source code (requires `clang-format`)
+* `gl3w`: regenerate gl3w
 
 License
 -------
