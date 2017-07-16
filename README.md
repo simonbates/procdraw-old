@@ -95,7 +95,7 @@ Procdraw includes a top-level Makefile for running some development tasks:
 
 * `lint`: run `cpplint` and validate the function specs (requires Python 2 and `xmllint`)
 * `format`: format the source code (requires `clang-format`)
-* `gl3w`: regenerate gl3w
+* `gl3w`: regenerate gl3w (requires Python 2)
 
 License
 -------
