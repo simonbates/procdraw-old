@@ -76,7 +76,7 @@ LispInterpreter::Apply(LispObjectPtr fun, LispObjectPtr args, LispObjectPtr env)
     case LispObjectType::Cons:
         return Progn(Cddr(fun), Bind(Cadr(fun), args, env));
     default:
-        // TODO complain
+        // TODO: Complain
         return Nil;
     }
 }
@@ -119,7 +119,7 @@ bool LispInterpreter::Atom(LispObjectPtr obj)
 LispObjectPtr
 LispInterpreter::Bind(LispObjectPtr vars, LispObjectPtr args, LispObjectPtr env)
 {
-    // TODO: verify that vars and args are the same length
+    // TODO: Verify that vars and args are the same length
     auto v = vars;
     auto a = args;
     while (!Null(v)) {
@@ -290,8 +290,8 @@ std::string LispInterpreter::PrettyPrintToString(LispObjectPtr obj, int margin)
 
 std::string LispInterpreter::PrintToString(LispObjectPtr obj)
 {
-    // TODO: Using a value of 1000 here is a kludge -- implement proper support
-    // for printing without newlines
+    // TODO: Implement proper support for printing without newlines
+    // The hardcoded value of 1000 here is a kludge
     return prettyPrinter_.PrintToString(this, obj, 1000);
 }
 
@@ -321,7 +321,7 @@ LispObjectPtr LispInterpreter::Putassoc(LispObjectPtr key,
         }
     }
     else {
-        // TODO complain
+        // TODO: Complain
     }
     return val;
 }
