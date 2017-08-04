@@ -86,19 +86,16 @@ target_link_libraries(procdraw_lib
         ${OPENGL_LIBRARIES}
         ${SDL2_LIBRARIES})
 
-# procdraw_main
+# procdraw executable
 
-add_executable(procdraw_main
+add_executable(procdraw
         src/procdraw/main/main.cpp)
 
-target_include_directories(procdraw_main
+target_include_directories(procdraw
         PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
-target_link_libraries(procdraw_main
+target_link_libraries(procdraw
         procdraw_lib)
-
-set_target_properties(procdraw_main
-        PROPERTIES OUTPUT_NAME procdraw)
 
 # Tests
 
@@ -108,7 +105,7 @@ get_filename_component(FUNCTION_SPECS_DIR "${PROJECT_SOURCE_DIR}/Documentation/d
 add_definitions(-DPROCDRAW_FUNCTION_SPEC_CHECKER_TESTDATA_DIR="${FUNCTION_SPEC_CHECKER_TESTDATA_DIR}")
 add_definitions(-DPROCDRAW_FUNCTION_SPECS_DIR="${FUNCTION_SPECS_DIR}")
 
-add_executable(procdraw_all_tests
+add_executable(procdraw_tests
         src/procdraw/test_support/function_spec_checker.cpp
         tests/interpreter_tests/lisp_interpreter_test.cpp
         tests/interpreter_tests/lisp_reader_test.cpp
@@ -124,14 +121,14 @@ add_executable(procdraw_all_tests
         tests/text_layout_engine_test.cpp
         tests/text_layout_test.cpp)
 
-target_include_directories(procdraw_all_tests
+target_include_directories(procdraw_tests
         PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
-target_link_libraries(procdraw_all_tests
+target_link_libraries(procdraw_tests
         procdraw_lib
         gtest
         gtest_main
         tinyxml2
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(procdraw_all_tests procdraw_all_tests)
+add_test(procdraw_tests procdraw_tests)
