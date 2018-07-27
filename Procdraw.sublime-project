@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "folder_exclude_patterns": [".vs", "Debug", "Release"]
+        }
+    ],
+    "settings": {
+        "ensure_newline_at_eof_on_save": true,
+        "translate_tabs_to_spaces": true,
+        "trim_trailing_white_space_on_save": true
+    }
+}

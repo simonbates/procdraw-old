@@ -1,0 +1,10 @@
+# Visual Studio
+
+/.vs/
+Debug/
+Release/
+*.vcxproj.user
+
+# Sublime Text
+
+/Procdraw.sublime-workspace
