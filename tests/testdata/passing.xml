@@ -1,6 +1,0 @@
-<function-spec name="passing">
-  <examples>
-    <example expr="(+ 2)" value="2"/>
-    <example expr="(+ 3)" value="3"/>
-  </examples>
-</function-spec>

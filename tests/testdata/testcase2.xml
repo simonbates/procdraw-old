@@ -1,6 +1,0 @@
-<function-spec name="testcase2">
-  <examples>
-    <example expr="(+ 2)" value="0"/>
-    <example expr="(+ 3)" value="3"/>
-  </examples>
-</function-spec>

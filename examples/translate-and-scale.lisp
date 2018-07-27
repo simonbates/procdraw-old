@@ -1,6 +1,0 @@
-(def draw ()
-  (background 0 0 0)
-  (translate (lerp -4 4 (sigval mouse-x)) 0 0)
-  (scale (lerp 2 (/ 4) (sigval mouse-y)))
-  (rotate-y (lerp 0 2 (sigval mouse-y)))
-  (tetrahedron))
