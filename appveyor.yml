@@ -1,0 +1,7 @@
+image: Visual Studio 2017
+configuration: Debug
+platform: x86
+build:
+  project: Procdraw.sln
+test_script:
+  - vstest.console /logger:Appveyor %CONFIGURATION%\ProcdrawTests.dll
