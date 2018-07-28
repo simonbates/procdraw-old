@@ -158,7 +158,7 @@ namespace procdraw {
         bool IsAtom();
         // bool IsCarLambda();
         bool IsNull();
-        StackIndexType StackSize();
+        StackIndexType StackSize() const;
         ObjType Type();
         // Operations
         void Add();

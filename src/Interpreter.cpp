@@ -157,7 +157,7 @@ namespace procdraw {
     }
 
     // ( -- )
-    StackIndexType Interpreter::StackSize()
+    StackIndexType Interpreter::StackSize() const
     {
         return stack.size();
     }
