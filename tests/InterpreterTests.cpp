@@ -251,121 +251,117 @@ public:
         AssertStackSize(0, interpreter);
     }
 
+    TEST_METHOD(AssocFindsMatch)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        interpreter.PushSymbol("b");
+        AssertStackSize(1, interpreter);
+        interpreter.Read("((a . 10) (b . 11) (c . 12))");
+        AssertStackSize(2, interpreter);
+        Assert::AreEqual(ObjType::ConsPtr, interpreter.Type());
+        interpreter.Assoc();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::ConsPtr, interpreter.Type());
+        // TODO: Rather than checking printed value, check is same object with Eq
+        //       Read Dup Cadr Swap -- Should put (b . 11) under the alist
+        Assert::AreEqual(std::string("(b . 11)"), interpreter.PrintToString());
+        AssertStackSize(0, interpreter);
+    }
+
+    TEST_METHOD(AssocNilOnMatchNotFound)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        interpreter.PushSymbol("d");
+        AssertStackSize(1, interpreter);
+        interpreter.Read("((a . 10) (b . 11) (c . 12))");
+        AssertStackSize(2, interpreter);
+        Assert::AreEqual(ObjType::ConsPtr, interpreter.Type());
+        interpreter.Assoc();
+        AssertStackSize(1, interpreter);
+        Assert::IsTrue(interpreter.IsNull());
+    }
+
+    TEST_METHOD(EvalLambdaMakesExpr)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        interpreter.Read("(lambda (x) (+ x 1))");
+        interpreter.Eval();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Expr, interpreter.Type());
+        Assert::AreEqual(std::string("(lambda (x) (+ x 1))"), interpreter.PrintToString());
+        AssertStackSize(0, interpreter);
+    }
+
+    TEST_METHOD(LoadLooksUpCurrentEnvBeforeGlobal)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        // Bind global value of foo to 42
+        interpreter.PushReal(42.0);
+        interpreter.PushSymbol("foo");
+        interpreter.Store();
+        interpreter.Drop();
+        AssertStackSize(0, interpreter);
+        // Make a new environment and bind foo to 10
+        interpreter.NewEnv();
+        interpreter.PushReal(10.0);
+        interpreter.PushSymbol("foo");
+        interpreter.AddBinding();
+        AssertStackSize(0, interpreter);
+        // Look up foo
+        interpreter.PushSymbol("foo");
+        interpreter.Load();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(10.0, interpreter.PopReal());
+        // Delete environment and look up foo again
+        interpreter.DeleteEnv();
+        interpreter.PushSymbol("foo");
+        interpreter.Load();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(42.0, interpreter.PopReal());
+    }
+
+    TEST_METHOD(EvalExpr)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        interpreter.Read("((lambda (x) (+ x 1)) 2)");
+        interpreter.Eval();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(3.0, interpreter.PopReal());
+    }
+
+    TEST_METHOD(EvalSetGlobalVariable)
+    {
+        Interpreter interpreter;
+        AssertStackSize(0, interpreter);
+        interpreter.PushSymbol("x");
+        interpreter.Eval();
+        AssertStackSize(1, interpreter);
+        Assert::IsTrue(interpreter.IsNull());
+        AssertStackSize(1, interpreter);
+        interpreter.Drop();
+        AssertStackSize(0, interpreter);
+        interpreter.Read("(set x (+ 2 3))");
+        interpreter.Eval();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(5.0, interpreter.PopReal());
+        AssertStackSize(0, interpreter);
+        interpreter.PushSymbol("x");
+        interpreter.Eval();
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(5.0, interpreter.PopReal());
+    }
+
 };
 
 }
 }
-
-/*
-
-TEST_METHOD("Assoc(((a . 10) (b . 11) (c . 12)), b) should be (b . 11)")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    interpreter.PushSymbol("b");
-    AssertStackSize(, interpreter1);
-    interpreter.Read("((a . 10) (b . 11) (c . 12))");
-    AssertStackSize(, interpreter2);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::ConsPtr);
-    interpreter.Assoc();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::ConsPtr);
-    // TODO: Rather than checking printed value, check is same object with Eq
-    //       Read Dup Cadr Swap -- Should put (b . 11) under the alist
-    Assert::AreEqual(interpreter.PrintToString() == "(b . 11)");
-    AssertStackSize(, interpreter0);
-}
-
-TEST_METHOD("Assoc(((a . 10) (b . 11) (c . 12)), d) should be nil")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    interpreter.PushSymbol("d");
-    AssertStackSize(, interpreter1);
-    interpreter.Read("((a . 10) (b . 11) (c . 12))");
-    AssertStackSize(, interpreter2);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::ConsPtr);
-    interpreter.Assoc();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.IsNull());
-}
-
-TEST_METHOD("Evaluating a lambda should make an Expr")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    interpreter.Read("(lambda (x) (+ x 1))");
-    interpreter.Eval();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Expr);
-    Assert::AreEqual(interpreter.PrintToString() == "(lambda (x) (+ x 1))");
-    AssertStackSize(, interpreter0);
-}
-
-TEST_METHOD("Load should look up current environment and then global")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    // Bind global value of foo to 42
-    interpreter.PushReal(42.0);
-    interpreter.PushSymbol("foo");
-    interpreter.Store();
-    interpreter.Drop();
-    AssertStackSize(, interpreter0);
-    // Make a new environment and bind foo to 10
-    interpreter.NewEnv();
-    interpreter.PushReal(10.0);
-    interpreter.PushSymbol("foo");
-    interpreter.AddBinding();
-    AssertStackSize(, interpreter0);
-    // Look up foo
-    interpreter.PushSymbol("foo");
-    interpreter.Load();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Real);
-    Assert::AreEqual(interpreter.PopReal() == 10.0);
-    // Delete environment and look up foo again
-    interpreter.DeleteEnv();
-    interpreter.PushSymbol("foo");
-    interpreter.Load();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Real);
-    Assert::AreEqual(interpreter.PopReal() == 42.0);
-}
-
-TEST_METHOD("Eval ((lambda (x) (+ x 1)) 2) should be 3")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    interpreter.Read("((lambda (x) (+ x 1)) 2)");
-    interpreter.Eval();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Real);
-    Assert::AreEqual(interpreter.PopReal() == 3);
-}
-
-TEST_METHOD("Eval (set x (+ 2 3)) should set global variable x to 5")
-{
-    procdraw::Interpreter interpreter;
-    AssertStackSize(, interpreter0);
-    interpreter.PushSymbol("x");
-    interpreter.Eval();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.IsNull());
-    AssertStackSize(, interpreter1);
-    interpreter.Drop();
-    AssertStackSize(, interpreter0);
-    interpreter.Read("(set x (+ 2 3))");
-    interpreter.Eval();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Real);
-    Assert::AreEqual(interpreter.PopReal() == 5);
-    AssertStackSize(, interpreter0);
-    interpreter.PushSymbol("x");
-    interpreter.Eval();
-    AssertStackSize(, interpreter1);
-    Assert::AreEqual(interpreter.Type() == procdraw::ObjType::Real);
-    Assert::AreEqual(interpreter.PopReal() == 5);
-}
-
-*/
