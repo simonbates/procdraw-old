@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace procdraw {
+namespace Procdraw {
 
     Reader::Reader(Interpreter* interpreter, const std::string& str)
         : interpreter_(interpreter)

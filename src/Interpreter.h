@@ -91,7 +91,7 @@
 //       (and Lisp memory management more generally in presence of C++
 //       exceptions)
 
-namespace procdraw {
+namespace Procdraw {
 
     enum class ObjType {
         Boolean,

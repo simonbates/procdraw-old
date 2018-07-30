@@ -3,7 +3,7 @@
 #include <cassert>
 #include <utility>
 
-namespace procdraw {
+namespace Procdraw {
 
     void FsubrLambda(Interpreter *interpreter, int numArgs)
     {

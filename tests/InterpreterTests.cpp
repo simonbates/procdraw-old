@@ -7,7 +7,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace procdraw {
+namespace Procdraw {
 namespace Tests {
 
 void AssertStackSize(StackIndexType expected, const Interpreter& interpreter)

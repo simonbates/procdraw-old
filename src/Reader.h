@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-namespace procdraw {
+namespace Procdraw {
 
     class Interpreter;
 

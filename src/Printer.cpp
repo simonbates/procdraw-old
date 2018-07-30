@@ -3,7 +3,7 @@
 #include "Interpreter.h"
 #include <sstream>
 
-namespace procdraw {
+namespace Procdraw {
 
     std::string Printer::PrintToString(Interpreter* interpreter)
     {

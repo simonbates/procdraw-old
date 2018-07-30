@@ -5,24 +5,24 @@ namespace VisualStudio {
 namespace CppUnitTestFramework {
 
 template<>
-static std::wstring ToString<procdraw::ObjType>(const procdraw::ObjType& type)
+static std::wstring ToString<Procdraw::ObjType>(const Procdraw::ObjType& type)
 {
     switch (type) {
-    case procdraw::ObjType::Boolean:
+    case Procdraw::ObjType::Boolean:
         return L"Boolean";
-    case procdraw::ObjType::ConsPtr:
+    case Procdraw::ObjType::ConsPtr:
         return L"ConsPtr";
-    case procdraw::ObjType::Expr:
+    case Procdraw::ObjType::Expr:
         return L"Expr";
-    case procdraw::ObjType::Fsubr:
+    case Procdraw::ObjType::Fsubr:
         return L"Fsubr";
-    case procdraw::ObjType::Null:
+    case Procdraw::ObjType::Null:
         return L"Null";
-    case procdraw::ObjType::Real:
+    case Procdraw::ObjType::Real:
         return L"Real";
-    case procdraw::ObjType::Subr:
+    case Procdraw::ObjType::Subr:
         return L"Subr";
-    case procdraw::ObjType::SymbolPtr:
+    case Procdraw::ObjType::SymbolPtr:
         return L"SymbolPtr";
     default:
         return L"*UNKNOWN*";
