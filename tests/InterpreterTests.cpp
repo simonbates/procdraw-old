@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "Interpreter.h"
+#include "TestUtils.h"
 #include "ToString.h"
 
 // TODO: Do as many tests as possible with the DocTester
@@ -13,11 +14,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Procdraw {
 namespace Tests {
-
-void AssertStackSize(StackIndexType expected, const Interpreter& interpreter)
-{
-    Assert::AreEqual(expected, interpreter.StackSize());
-}
 
 TEST_CLASS(InterpreterTests) {
 public:
