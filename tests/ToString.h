@@ -9,7 +9,7 @@ namespace Microsoft {
 namespace VisualStudio {
 namespace CppUnitTestFramework {
 
-template<>
+template <>
 static std::wstring ToString<Procdraw::ObjType>(const Procdraw::ObjType& type)
 {
     switch (type) {
@@ -34,6 +34,6 @@ static std::wstring ToString<Procdraw::ObjType>(const Procdraw::ObjType& type)
     }
 };
 
-}
-}
-}
+} // namespace CppUnitTestFramework
+} // namespace VisualStudio
+} // namespace Microsoft

@@ -13,6 +13,8 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace Procdraw {
 namespace Tests {
 
+// clang-format off
+
 TEST_CLASS(InterpreterReadTests) {
 public:
 

@@ -1,0 +1,19 @@
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: Inline
+BinPackArguments: true
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Stroustrup
+ColumnLimit: 0
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: true
+IncludeCategories:
+  - Regex:          'stdafx\.h'
+    Priority:       -1
+IndentWidth: 4
+Language: Cpp
+NamespaceIndentation: None
+PointerAlignment: Left
+ReflowComments: false
+Standard: Cpp11
+UseTab: Never

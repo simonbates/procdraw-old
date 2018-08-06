@@ -11,6 +11,5 @@ namespace Procdraw {
 namespace Tests {
 
 void AssertStackSize(StackIndexType expected, const Interpreter& interpreter);
-
 }
-}
+} // namespace Procdraw

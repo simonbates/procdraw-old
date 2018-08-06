@@ -98,117 +98,121 @@
 
 namespace Procdraw {
 
-    enum class ObjType {
-        Boolean,
-        ConsPtr,
-        Expr,
-        Fsubr,
-        Null,
-        Real,
-        Subr,
-        SymbolPtr
-    };
+enum class ObjType {
+    Boolean,
+    ConsPtr,
+    Expr,
+    Fsubr,
+    Null,
+    Real,
+    Subr,
+    SymbolPtr
+};
 
-    using StackIndexType = size_t;
-    using SymbolIndexType = size_t;
-    using ConsIndexType = size_t;
+using StackIndexType = size_t;
+using SymbolIndexType = size_t;
+using ConsIndexType = size_t;
 
-    class Interpreter;
-    typedef void(*CProcedure)(Interpreter* vm, int numArgs);
+class Interpreter;
+typedef void (*CProcedure)(Interpreter* vm, int numArgs);
 
-    class Object {
-    public:
-        Object(ObjType type) : type(type) { }
-        ObjType type;
-        union {
-            bool boolVal;
-            ConsIndexType consIndex;
-            ConsIndexType exprIndex;
-            CProcedure proc;
-            double realVal;
-            SymbolIndexType symbolIndex;
-        } val;
-    };
+class Object {
+public:
+    Object(ObjType type)
+        : type(type) {}
+    ObjType type;
+    union {
+        bool boolVal;
+        ConsIndexType consIndex;
+        ConsIndexType exprIndex;
+        CProcedure proc;
+        double realVal;
+        SymbolIndexType symbolIndex;
+    } val;
+};
 
-    class Symbol {
-    public:
-        Symbol(const std::string& name) : name(name), value(ObjType::Null) { }
-        std::string name;
-        Object value;
-    };
+class Symbol {
+public:
+    Symbol(const std::string& name)
+        : name(name), value(ObjType::Null) {}
+    std::string name;
+    Object value;
+};
 
-    class ConsCell {
-    public:
-        ConsCell(Object car, Object cdr) : car(car), cdr(cdr) { }
-        Object car;
-        Object cdr;
-    };
+class ConsCell {
+public:
+    ConsCell(Object car, Object cdr)
+        : car(car), cdr(cdr) {}
+    Object car;
+    Object cdr;
+};
 
-    class InterpreterSwitcher;
+class InterpreterSwitcher;
 
-    class Interpreter {
-    public:
-        Interpreter();
-        // Data types
-        void PushBoolean(bool val);
-        bool PopBoolean();
-        void PushFsubr(CProcedure proc);
-        void PushNil();
-        void PushReal(double val);
-        double PopReal();
-        void PushSubr(CProcedure proc);
-        void PushSymbol(const std::string& name);
-        std::string PopSymbol();
-        // Query the stack
-        bool IsAtom();
-        // bool IsCarLambda();
-        bool IsNull();
-        StackIndexType StackSize() const;
-        ObjType Type();
-        // Operations
-        void Add();
-        void AddBinding();
-        void Apply(int numArgs);
-        void Assoc();
-        void Car();
-        void Cdr();
-        void Cons();
-        void DeleteEnv();
-        void Drop();
-        void Dup();
-        bool Eq();
-        bool EqCar(StackIndexType index, StackIndexType consIndex);
-        void Eval();
-        void ExprBody();
-        void ExprParams();
-        void Load();
-        void MakeExpr();
-        void Mul();
-        void Next();
-        void NewEnv();
-        void Nip();
-        void Pick(StackIndexType n);
-        void PushArg(StackIndexType n);
-        void Store();
-        void Swap();
-        // I/O
-        std::string PrintToString();
-        void Read(const std::string& str);
-    private:
-        InterpreterSwitcher *switcher;
-        std::vector<Object> stack;
-        std::vector<Object> envStack;
-        std::vector<Symbol> symbolTable;
-        std::vector<ConsCell> listMem;
-        StackIndexType argsFrameStart {0};
-        Printer printer;
-        void ApplyCProcedure(int numArgs);
-        void ApplyExpr(int numArgs);
-        bool Eq(const Object& x, const Object& y);
-        void EvalProcedureCall();
-        int ListElems(bool evalElems);
-        void StoreFsubr(const std::string& var, CProcedure proc);
-        void StoreSubr(const std::string& var, CProcedure proc);
-    };
+class Interpreter {
+public:
+    Interpreter();
+    // Data types
+    void PushBoolean(bool val);
+    bool PopBoolean();
+    void PushFsubr(CProcedure proc);
+    void PushNil();
+    void PushReal(double val);
+    double PopReal();
+    void PushSubr(CProcedure proc);
+    void PushSymbol(const std::string& name);
+    std::string PopSymbol();
+    // Query the stack
+    bool IsAtom();
+    // bool IsCarLambda();
+    bool IsNull();
+    StackIndexType StackSize() const;
+    ObjType Type();
+    // Operations
+    void Add();
+    void AddBinding();
+    void Apply(int numArgs);
+    void Assoc();
+    void Car();
+    void Cdr();
+    void Cons();
+    void DeleteEnv();
+    void Drop();
+    void Dup();
+    bool Eq();
+    bool EqCar(StackIndexType index, StackIndexType consIndex);
+    void Eval();
+    void ExprBody();
+    void ExprParams();
+    void Load();
+    void MakeExpr();
+    void Mul();
+    void Next();
+    void NewEnv();
+    void Nip();
+    void Pick(StackIndexType n);
+    void PushArg(StackIndexType n);
+    void Store();
+    void Swap();
+    // I/O
+    std::string PrintToString();
+    void Read(const std::string& str);
 
-}
+private:
+    InterpreterSwitcher* switcher;
+    std::vector<Object> stack;
+    std::vector<Object> envStack;
+    std::vector<Symbol> symbolTable;
+    std::vector<ConsCell> listMem;
+    StackIndexType argsFrameStart{0};
+    Printer printer;
+    void ApplyCProcedure(int numArgs);
+    void ApplyExpr(int numArgs);
+    bool Eq(const Object& x, const Object& y);
+    void EvalProcedureCall();
+    int ListElems(bool evalElems);
+    void StoreFsubr(const std::string& var, CProcedure proc);
+    void StoreSubr(const std::string& var, CProcedure proc);
+};
+
+} // namespace Procdraw

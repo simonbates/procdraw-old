@@ -9,12 +9,11 @@
 
 namespace Procdraw {
 
-    class Interpreter;
+class Interpreter;
 
-    class Printer
-    {
-    public:
-        std::string PrintToString(Interpreter* interpreter);
-    };
+class Printer {
+public:
+    std::string PrintToString(Interpreter* interpreter);
+};
 
-}
+} // namespace Procdraw
