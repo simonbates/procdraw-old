@@ -16,5 +16,5 @@ void AssertStackSize(StackIndexType expected, const Interpreter& interpreter)
     Assert::AreEqual(expected, interpreter.StackSize());
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw
