@@ -1,0 +1,15 @@
+<Project DefaultTargets="Format"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <ItemGroup>
+        <SourceFiles Include="src/**/*.cpp"/>
+        <SourceFiles Include="src/**/*.h"/>
+        <SourceFiles Include="tests/**/*.cpp"/>
+        <SourceFiles Include="tests/**/*.h"/>
+    </ItemGroup>
+
+    <Target Name="Format">
+        <Exec Command="clang-format -i -style=file @(SourceFiles, ' ')"/>
+    </Target>
+
+</Project>
