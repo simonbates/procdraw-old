@@ -14,7 +14,7 @@ namespace Tests {
 
 bool DocTester::RunTests(const char* filename, int expectedNumTests)
 {
-    messages.clear();
+    msgs.clear();
     int numTests = 0;
     int numPassed = 0;
 
@@ -22,13 +22,13 @@ bool DocTester::RunTests(const char* filename, int expectedNumTests)
     auto result = doc.load_file(filename);
 
     if (!result) {
-        messages.push_back(std::string("Error loading file: ") + filename);
+        msgs.push_back(std::string("Error loading file: ") + filename);
         return false;
     }
 
     auto functionDocs = doc.child("function-docs");
     for (auto functionDoc : functionDocs.children("function-doc")) {
-        TestFunction(functionDoc, &numTests, &numPassed);
+        TestFunction(functionDoc, numTests, numPassed);
     }
 
     // Did all tests pass?
@@ -37,51 +37,53 @@ bool DocTester::RunTests(const char* filename, int expectedNumTests)
     }
 
     if (expectedNumTests != numTests) {
-        messages.push_back("EXPECTED " + std::to_string(expectedNumTests)
-                           + " TESTS BUT " + std::to_string(numTests)
-                           + " WERE RUN");
+        msgs.push_back("EXPECTED " + std::to_string(expectedNumTests)
+                       + " TESTS BUT " + std::to_string(numTests)
+                       + " WERE RUN");
         return false;
     }
 
     return true;
 }
 
-std::vector<std::string> DocTester::GetMessages()
+const std::vector<std::string>& DocTester::Messages() const
 {
-    return messages;
+    return msgs;
 }
 
 void DocTester::TestFunction(pugi::xml_node functionDoc,
-                             int* numTests,
-                             int* numPassed)
+                             int& numTests,
+                             int& numPassed)
 {
     Interpreter interpreter;
     const char* functionName = functionDoc.attribute("name").value();
     for (auto example : functionDoc.child("examples").children("ex")) {
-        TestExample(example, &interpreter, functionName, numTests, numPassed);
+        TestExample(example, interpreter, functionName, numTests, numPassed);
     }
 }
 
 void DocTester::TestExample(pugi::xml_node example,
-                            Interpreter* interpreter,
+                            Interpreter& interpreter,
                             const char* functionName,
-                            int* numTests,
-                            int* numPassed)
+                            int& numTests,
+                            int& numPassed)
 {
     const char* expr = example.attribute("expr").value();
     const char* expectedValue = example.attribute("value").value();
-    interpreter->Read(expr);
-    interpreter->Eval();
-    std::string result = interpreter->PrintToString();
-    *numTests = *numTests + 1;
+    interpreter.Read(expr);
+    interpreter.Eval();
+    std::string result = interpreter.PrintToString();
+    ++numTests;
     if (result == expectedValue) {
-        *numPassed = *numPassed + 1;
+        ++numPassed;
     }
     else {
-        messages.push_back(std::string("FUNCTION: ") + functionName
-                           + " EXPR: " + expr + " EXPECTED: "
-                           + expectedValue + " ACTUAL: " + result);
+        msgs.push_back(std::string("FUNCTION: ") + functionName
+                       + " EXPR: " + expr
+                       + " EXPECTED: " + expectedValue
+                       + " ACTUAL: " + result);
     }
 }
+
 } // namespace Tests
 } // namespace Procdraw

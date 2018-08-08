@@ -16,18 +16,19 @@ namespace Tests {
 class DocTester {
 public:
     bool RunTests(const char* filename, int expectedNumTests);
-    std::vector<std::string> GetMessages();
+    const std::vector<std::string>& Messages() const;
 
 private:
-    std::vector<std::string> messages;
+    std::vector<std::string> msgs;
     void TestFunction(pugi::xml_node functionDoc,
-                      int* numTests,
-                      int* numPassed);
+                      int& numTests,
+                      int& numPassed);
     void TestExample(pugi::xml_node example,
-                     Interpreter* interpreter,
+                     Interpreter& interpreter,
                      const char* functionName,
-                     int* numTests,
-                     int* numPassed);
+                     int& numTests,
+                     int& numPassed);
 };
+
 } // namespace Tests
 } // namespace Procdraw

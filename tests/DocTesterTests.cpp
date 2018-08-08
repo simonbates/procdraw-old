@@ -22,19 +22,11 @@ public:
                        const std::string& expectedMessage,
                        bool resolveFilename = true)
     {
-        std::string filepath;
-        if (resolveFilename) {
-            filepath = TestFilepath(filename);
-        }
-        else {
-            filepath = filename;
-        }
-
+        const std::string filepath = resolveFilename ? TestFilepath(filename) : filename;
         DocTester tester;
         Assert::IsFalse(tester.RunTests(filepath.c_str(), expectedNumTests));
-        auto messages = tester.GetMessages();
-        Assert::IsTrue(messages.size() == 1);
-        Assert::AreEqual(expectedMessage, messages.at(0));
+        Assert::IsTrue(tester.Messages().size() == 1);
+        Assert::AreEqual(expectedMessage, tester.Messages().at(0));
     }
 
     std::string TestFilepath(const std::string& filename)
@@ -88,7 +80,7 @@ public:
     {
         DocTester tester;
         Assert::IsTrue(tester.RunTests(TestFilepath("function_docs_ok.xml").c_str(), 3));
-        Assert::IsTrue(tester.GetMessages().empty());
+        Assert::IsTrue(tester.Messages().empty());
     }
 
 };
