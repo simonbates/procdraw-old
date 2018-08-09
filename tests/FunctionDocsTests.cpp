@@ -18,19 +18,20 @@ namespace Tests {
 TEST_CLASS(FunctionDocsTests) {
 public:
 
-TEST_METHOD(RunFunctionDocsTests)
-{
-    DocTester tester;
-    bool passed = tester.RunTests(PROCDRAW_FUNCTION_DOCS_FILE, 10);
-    std::array<wchar_t, 1024> wmsg;
-    for (auto message : tester.Messages()) {
-        int c = MultiByteToWideChar(CP_UTF8, 0, (message + "\n").c_str(), -1,
-                                    wmsg.data(), wmsg.size());
-        Assert::IsTrue(c > 0);
-        Logger::WriteMessage(wmsg.data());
+    TEST_METHOD(RunFunctionDocsTests)
+    {
+        DocTester tester;
+        bool passed = tester.RunTests(PROCDRAW_FUNCTION_DOCS_FILE, 10);
+        std::array<wchar_t, 1024> wmsg;
+        for (auto message : tester.Messages()) {
+            int c = MultiByteToWideChar(CP_UTF8, 0,
+                                        (message + "\n").c_str(), -1,
+                                        wmsg.data(), wmsg.size());
+            Assert::IsTrue(c > 0);
+            Logger::WriteMessage(wmsg.data());
+        }
+        Assert::IsTrue(passed);
     }
-    Assert::IsTrue(passed);
-}
 
 };
 
