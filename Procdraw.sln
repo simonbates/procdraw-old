@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawLib", "src\Procdraw
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawTests", "tests\ProcdrawTests.vcxproj", "{59DCB670-A98F-4E4C-8D47-8E1DC7395504}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml", "vendor\msbuild\pugixml\pugixml.vcxproj", "{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{59DCB670-A98F-4E4C-8D47-8E1DC7395504}.Release|x64.Build.0 = Release|x64
 		{59DCB670-A98F-4E4C-8D47-8E1DC7395504}.Release|x86.ActiveCfg = Release|Win32
 		{59DCB670-A98F-4E4C-8D47-8E1DC7395504}.Release|x86.Build.0 = Release|Win32
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Debug|x64.ActiveCfg = Debug|x64
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Debug|x64.Build.0 = Debug|x64
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Debug|x86.ActiveCfg = Debug|Win32
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Debug|x86.Build.0 = Debug|Win32
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Release|x64.ActiveCfg = Release|x64
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Release|x64.Build.0 = Release|x64
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Release|x86.ActiveCfg = Release|Win32
+		{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

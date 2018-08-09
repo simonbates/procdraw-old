@@ -1,0 +1,12 @@
+<function-docs>
+    <function-doc name="failing-4a">
+        <examples>
+            <ex expr="(+ 2)" value="2"/>
+        </examples>
+    </function-doc>
+    <function-doc name="failing-4b">
+        <examples>
+            <ex expr="(+ 4)" value="0"/>
+        </examples>
+    </function-doc>
+</function-docs>
