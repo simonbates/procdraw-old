@@ -22,12 +22,12 @@ private:
     std::vector<std::string> msgs;
     void TestFunction(pugi::xml_node functionDoc,
                       int& numTests,
-                      int& numPassed);
+                      int& numFailed);
     void TestExample(pugi::xml_node example,
                      Interpreter& interpreter,
                      const char* functionName,
                      int& numTests,
-                     int& numPassed);
+                     int& numFailed);
 };
 
 } // namespace Tests

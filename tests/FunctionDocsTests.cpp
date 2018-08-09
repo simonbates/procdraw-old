@@ -20,8 +20,11 @@ public:
 
     TEST_METHOD(RunFunctionDocsTests)
     {
+        const int expectedNumTests = 10;
+
         DocTester tester;
-        bool passed = tester.RunTests(PROCDRAW_FUNCTION_DOCS_FILE, 10);
+        bool passed = tester.RunTests(PROCDRAW_FUNCTION_DOCS_FILE,
+                                      expectedNumTests);
         std::array<wchar_t, 1024> wmsg;
         for (auto message : tester.Messages()) {
             int c = MultiByteToWideChar(CP_UTF8, 0,
