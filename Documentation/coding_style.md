@@ -5,7 +5,7 @@
 - Types: PascalCase
 - Functions and methods: PascalCase
 - Variables and parameters: lowerCamelCase
-- Class data members: lowerCamelCase_
+- Class data members: lowerCamelCaseUnderscore_
 - Struct data members: lowerCamelCase
 
 ## Conditional Compilation
