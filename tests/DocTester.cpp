@@ -5,7 +5,8 @@
 
 #include "stdafx.h"
 #include "DocTester.h"
-#include <pugixml.hpp>
+#include "ProcdrawManual.h"
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -15,25 +16,21 @@ namespace Tests {
 bool DocTester::RunTests(const char* filename, int expectedNumTests)
 {
     msgs.clear();
-
-    pugi::xml_document doc;
-    auto result = doc.load_file(filename);
-    if (!result) {
-        msgs.push_back(std::string("Error loading file: ") + filename);
-        return false;
-    }
-
     int numTests = 0;
-    int numFailed = 0;
+    int numPassed = 0;
 
-    auto functionDocs = doc.child("function-docs");
-    for (auto functionDoc : functionDocs.children("function-doc")) {
-        TestFunction(functionDoc, numTests, numFailed);
+    const ProcdrawManual man(filename);
+    auto iter = man.FunctionDocs();
+    while (iter.HasNext()) {
+        TestFunction(iter.Next(), numTests, numPassed);
     }
 
-    bool passed = (numFailed == 0);
+    if (msgs.size() != (numTests - numPassed)) {
+        throw std::logic_error("msgs.size() != (numTests - numPassed)");
+    }
 
-    // And fail also if we didn't run the expected number of tests
+    bool passed = (numPassed == numTests);
+
     if (numTests != expectedNumTests) {
         passed = false;
         msgs.push_back("EXPECTED " + std::to_string(expectedNumTests)
@@ -49,33 +46,34 @@ const std::vector<std::string>& DocTester::Messages() const
     return msgs;
 }
 
-void DocTester::TestFunction(pugi::xml_node functionDoc,
+void DocTester::TestFunction(const FunctionDoc& functionDoc,
                              int& numTests,
-                             int& numFailed)
+                             int& numPassed)
 {
     Interpreter interpreter;
-    const char* functionName = functionDoc.attribute("name").value();
-    for (auto example : functionDoc.child("examples").children("ex")) {
-        TestExample(example, interpreter, functionName, numTests, numFailed);
+    std::string functionName = functionDoc.Name();
+    for (auto example : functionDoc.Examples()) {
+        TestExample(example, interpreter, functionName, numTests, numPassed);
     }
 }
 
-void DocTester::TestExample(pugi::xml_node example,
+void DocTester::TestExample(const FunctionExample& example,
                             Interpreter& interpreter,
-                            const char* functionName,
+                            const std::string& functionName,
                             int& numTests,
-                            int& numFailed)
+                            int& numPassed)
 {
-    const char* expr = example.attribute("expr").value();
-    const char* expectedValue = example.attribute("value").value();
-    interpreter.Read(expr);
+    interpreter.Read(example.Expression());
     interpreter.Eval();
     std::string actual = interpreter.PrintToString();
     ++numTests;
-    if (actual != expectedValue) {
-        ++numFailed;
+    std::string expectedValue = example.Value();
+    if (actual == expectedValue) {
+        ++numPassed;
+    }
+    else {
         msgs.push_back(std::string("FUNCTION: ") + functionName
-                       + " EXPR: " + expr
+                       + " EXPR: " + example.Expression()
                        + " EXPECTED: " + expectedValue
                        + " ACTUAL: " + actual);
     }

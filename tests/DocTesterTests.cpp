@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include "DocTester.h"
+#include <stdexcept>
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -19,11 +20,10 @@ public:
 
     void ExpectFailure(const std::string& filename,
                        int expectedNumTests,
-                       const std::string& expectedMessage,
-                       bool resolveFilename = true)
+                       const std::string& expectedMessage)
     {
-        const std::string filepath = resolveFilename ? TestFilepath(filename) : filename;
         DocTester tester;
+        const std::string filepath = TestFilepath(filename);
         Assert::IsFalse(tester.RunTests(filepath.c_str(), expectedNumTests));
         Assert::IsTrue(tester.Messages().size() == 1);
         Assert::AreEqual(expectedMessage, tester.Messages().at(0));
@@ -34,10 +34,12 @@ public:
         return PROCDRAW_TEST_DATA_DIR + std::string("/") + filename;
     }
 
-    TEST_METHOD(NonExistingFile)
+    TEST_METHOD(NonExistingFileThrowsException)
     {
-        ExpectFailure("NON_EXISTING_FILE", 0,
-                      "Error loading file: NON_EXISTING_FILE", false);
+        DocTester tester;
+        Assert::ExpectException<std::invalid_argument>([&tester]{
+            tester.RunTests("NON_EXISTING_FILE", 0);
+        });
     }
 
     TEST_METHOD(Failing1)

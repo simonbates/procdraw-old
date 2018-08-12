@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Interpreter.h"
-#include <pugixml.hpp>
+#include "ProcdrawManual.h"
 #include <string>
 #include <vector>
 
@@ -20,14 +20,14 @@ public:
 
 private:
     std::vector<std::string> msgs;
-    void TestFunction(pugi::xml_node functionDoc,
+    void TestFunction(const FunctionDoc& functionDoc,
                       int& numTests,
-                      int& numFailed);
-    void TestExample(pugi::xml_node example,
+                      int& numPassed);
+    void TestExample(const FunctionExample& example,
                      Interpreter& interpreter,
-                     const char* functionName,
+                     const std::string& functionName,
                      int& numTests,
-                     int& numFailed);
+                     int& numPassed);
 };
 
 } // namespace Tests
