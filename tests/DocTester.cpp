@@ -15,7 +15,7 @@ namespace Tests {
 
 bool DocTester::RunTests(const char* filename, int expectedNumTests)
 {
-    msgs.clear();
+    msgs_.clear();
     int numTests = 0;
     int numPassed = 0;
 
@@ -25,17 +25,17 @@ bool DocTester::RunTests(const char* filename, int expectedNumTests)
         TestFunction(iter.Next(), numTests, numPassed);
     }
 
-    if (msgs.size() != (numTests - numPassed)) {
-        throw std::logic_error("msgs.size() != (numTests - numPassed)");
+    if (msgs_.size() != (numTests - numPassed)) {
+        throw std::logic_error("msgs_.size() != (numTests - numPassed)");
     }
 
     bool passed = (numPassed == numTests);
 
     if (numTests != expectedNumTests) {
         passed = false;
-        msgs.push_back("EXPECTED " + std::to_string(expectedNumTests)
-                       + " TESTS BUT " + std::to_string(numTests)
-                       + " WERE RUN");
+        msgs_.push_back("EXPECTED " + std::to_string(expectedNumTests)
+                        + " TESTS BUT " + std::to_string(numTests)
+                        + " WERE RUN");
     }
 
     return passed;
@@ -43,7 +43,7 @@ bool DocTester::RunTests(const char* filename, int expectedNumTests)
 
 const std::vector<std::string>& DocTester::Messages() const
 {
-    return msgs;
+    return msgs_;
 }
 
 void DocTester::TestFunction(const FunctionDoc& functionDoc,
@@ -72,10 +72,10 @@ void DocTester::TestExample(const FunctionExample& example,
         ++numPassed;
     }
     else {
-        msgs.push_back(std::string("FUNCTION: ") + functionName
-                       + " EXPR: " + example.Expression()
-                       + " EXPECTED: " + expectedValue
-                       + " ACTUAL: " + actual);
+        msgs_.push_back(std::string("FUNCTION: ") + functionName
+                        + " EXPR: " + example.Expression()
+                        + " EXPECTED: " + expectedValue
+                        + " ACTUAL: " + actual);
     }
 }
 

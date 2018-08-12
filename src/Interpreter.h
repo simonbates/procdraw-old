@@ -114,10 +114,9 @@ using SymbolIndexType = size_t;
 using ConsIndexType = size_t;
 
 class Interpreter;
-typedef void (*CProcedure)(Interpreter* vm, int numArgs);
+typedef void (*CProcedure)(Interpreter* interpreter, int numArgs);
 
-class Object {
-public:
+struct Object {
     Object(ObjType type)
         : type(type) {}
     ObjType type;
@@ -131,16 +130,14 @@ public:
     } val;
 };
 
-class Symbol {
-public:
+struct Symbol {
     Symbol(const std::string& name)
         : name(name), value(ObjType::Null) {}
     std::string name;
     Object value;
 };
 
-class ConsCell {
-public:
+struct ConsCell {
     ConsCell(Object car, Object cdr)
         : car(car), cdr(cdr) {}
     Object car;
@@ -199,13 +196,13 @@ public:
     void Read(const std::string& str);
 
 private:
-    InterpreterSwitcher* switcher;
-    std::vector<Object> stack;
-    std::vector<Object> envStack;
-    std::vector<Symbol> symbolTable;
-    std::vector<ConsCell> listMem;
-    StackIndexType argsFrameStart{0};
-    Printer printer;
+    InterpreterSwitcher* switcher_;
+    std::vector<Object> stack_;
+    std::vector<Object> envStack_;
+    std::vector<Symbol> symbolTable_;
+    std::vector<ConsCell> listMem_;
+    StackIndexType argsFrameStart_{0};
+    Printer printer_;
     void ApplyCProcedure(int numArgs);
     void ApplyExpr(int numArgs);
     bool Eq(const Object& x, const Object& y);

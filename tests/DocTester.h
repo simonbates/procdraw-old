@@ -19,7 +19,7 @@ public:
     const std::vector<std::string>& Messages() const;
 
 private:
-    std::vector<std::string> msgs;
+    std::vector<std::string> msgs_;
     void TestFunction(const FunctionDoc& functionDoc,
                       int& numTests,
                       int& numPassed);

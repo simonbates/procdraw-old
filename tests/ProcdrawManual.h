@@ -14,40 +14,40 @@ namespace Tests {
 
 class FunctionExample {
 public:
-    FunctionExample(const std::string& expression,
+    FunctionExample(const std::string& expr,
                     const std::string& value)
-        : expression(expression), value(value){};
+        : expr_(expr), value_(value){};
     std::string Expression() const
     {
-        return expression;
+        return expr_;
     };
     std::string Value() const
     {
-        return value;
+        return value_;
     };
 
 private:
-    std::string expression;
-    std::string value;
+    std::string expr_;
+    std::string value_;
 };
 
 class FunctionDoc {
 public:
     FunctionDoc(const std::string& name,
                 const std::vector<FunctionExample>& examples)
-        : name(name), examples(examples){};
+        : name_(name), examples_(examples){};
     std::string Name() const
     {
-        return name;
+        return name_;
     };
     std::vector<FunctionExample> Examples() const
     {
-        return examples;
+        return examples_;
     };
 
 private:
-    std::string name;
-    std::vector<FunctionExample> examples;
+    std::string name_;
+    std::vector<FunctionExample> examples_;
 };
 
 class FunctionDocIterator {
@@ -57,9 +57,9 @@ public:
     FunctionDoc Next();
 
 private:
-    pugi::xpath_node_set nodes;
-    pugi::xpath_node_set::const_iterator iter;
-    pugi::xpath_node_set::const_iterator end;
+    pugi::xpath_node_set nodes_;
+    pugi::xpath_node_set::const_iterator iter_;
+    pugi::xpath_node_set::const_iterator end_;
 };
 
 class ProcdrawManual {
@@ -68,7 +68,7 @@ public:
     FunctionDocIterator FunctionDocs() const;
 
 private:
-    pugi::xml_document doc;
+    pugi::xml_document doc_;
 };
 
 } // namespace Tests
