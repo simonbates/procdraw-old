@@ -14,7 +14,7 @@ namespace Tests {
 
 ProcdrawManual::ProcdrawManual(const char* filename)
 {
-    auto result = doc.load_file(filename);
+    auto result = doc_.load_file(filename);
     if (!result) {
         throw std::invalid_argument(std::string("Error loading file: ") + filename);
     }
@@ -22,30 +22,30 @@ ProcdrawManual::ProcdrawManual(const char* filename)
 
 FunctionDocIterator ProcdrawManual::FunctionDocs() const
 {
-    return FunctionDocIterator(doc);
+    return FunctionDocIterator(doc_);
 }
 
 FunctionDocIterator::FunctionDocIterator(const pugi::xml_document& doc)
 {
-    nodes = doc.select_nodes("//function-doc");
-    iter = nodes.begin();
-    end = nodes.end();
+    nodes_ = doc.select_nodes("//function-doc");
+    iter_ = nodes_.begin();
+    end_ = nodes_.end();
 }
 
 bool FunctionDocIterator::HasNext()
 {
-    return iter != end;
+    return iter_ != end_;
 }
 
 FunctionDoc FunctionDocIterator::Next()
 {
-    pugi::xpath_node node = *iter;
+    pugi::xpath_node node = *iter_;
     std::vector<FunctionExample> examples;
     for (auto example : node.node().child("examples").children("ex")) {
         examples.emplace_back(example.attribute("expr").value(),
                               example.attribute("value").value());
     }
-    ++iter;
+    ++iter_;
     return FunctionDoc(node.node().attribute("name").value(), examples);
 }
 
