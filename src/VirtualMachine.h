@@ -48,9 +48,9 @@ struct Object {
         bool boolVal;
         ConsIndexType consIndex;
         ConsIndexType exprIndex;
-        SysFunc sysFunc;
         double realVal;
         SymbolIndexType symbolIndex;
+        SysFunc sysFunc;
     } val;
 };
 
