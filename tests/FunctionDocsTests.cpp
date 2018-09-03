@@ -20,7 +20,7 @@ public:
 
     TEST_METHOD(RunFunctionDocsTests)
     {
-        const int expectedNumTests = 10;
+        const int expectedNumTests = 15;
 
         DocTester tester;
         bool passed = tester.RunTests(PROCDRAW_FUNCTION_DOCS_FILE,

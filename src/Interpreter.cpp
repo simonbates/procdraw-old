@@ -27,6 +27,28 @@ void FsubrSet(Interpreter* interpreter, int numArgs)
     interpreter->Store();
 }
 
+void SubrDifference(Interpreter* interpreter, int numArgs)
+{
+    // TODO difference with 0 args? return a value or complain that not enough
+    // args?
+
+    if (numArgs == 0) {
+        interpreter->PushReal(0.0);
+    }
+    else if (numArgs == 1) {
+        interpreter->PushReal(0.0);
+        interpreter->PushArg(0);
+        interpreter->Sub();
+    }
+    else {
+        interpreter->PushArg(0);
+        for (int i = 1; i < numArgs; ++i) {
+            interpreter->PushArg(i);
+            interpreter->Sub();
+        }
+    }
+}
+
 void SubrProduct(Interpreter* interpreter, int numArgs)
 {
     // TODO: Check arguments are all Reals
@@ -53,6 +75,7 @@ Interpreter::Interpreter()
     StoreFsubr("set", FsubrSet);
     StoreSubr("*", SubrProduct);
     StoreSubr("+", SubrSum);
+    StoreSubr("-", SubrDifference);
 }
 
 // ( arg0 .. argn proc -- val )
