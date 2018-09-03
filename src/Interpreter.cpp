@@ -186,7 +186,7 @@ void Interpreter::CallExpr(int numArgs)
     Eval();
 
     // Drop the environment
-    DeleteEnv();
+    DropEnv();
 
     // Save the result on the aux stack
     ToAux();

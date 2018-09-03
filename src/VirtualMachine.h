@@ -92,8 +92,8 @@ public:
     void Car();
     void Cdr();
     void Cons();
-    void DeleteEnv();
     void Drop();
+    void DropEnv();
     void Dup();
     bool Eq();
     bool EqCar(StackIndexType index, StackIndexType consIndex);

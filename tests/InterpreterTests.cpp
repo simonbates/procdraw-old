@@ -320,8 +320,8 @@ public:
         AssertStackSize(1, interpreter);
         Assert::AreEqual(ObjType::Real, interpreter.Type());
         Assert::AreEqual(10.0, interpreter.PopReal());
-        // Delete environment and look up foo again
-        interpreter.DeleteEnv();
+        // Drop the environment and look up foo again
+        interpreter.DropEnv();
         interpreter.PushSymbol("foo");
         interpreter.Load();
         AssertStackSize(1, interpreter);

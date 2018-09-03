@@ -232,17 +232,17 @@ void VirtualMachine::Cons()
     cdr.val.consIndex = listMem_.size() - 1;
 }
 
-void VirtualMachine::DeleteEnv()
-{
-    assert(!envStack_.empty());
-    envStack_.pop_back();
-}
-
 // ( x -- )
 void VirtualMachine::Drop()
 {
     assert(!stack_.empty());
     stack_.pop_back();
+}
+
+void VirtualMachine::DropEnv()
+{
+    assert(!envStack_.empty());
+    envStack_.pop_back();
 }
 
 // ( x -- x x )
