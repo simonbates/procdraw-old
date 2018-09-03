@@ -92,13 +92,22 @@ public:
         AssertStackSize(0, interpreter);
     }
 
-    TEST_METHOD(ReadReal)
+    TEST_METHOD(ReadRealWithoutSign)
     {
         Interpreter interpreter;
         interpreter.Read("42");
         AssertStackSize(1, interpreter);
         Assert::AreEqual(ObjType::Real, interpreter.Type());
         Assert::AreEqual(42.0, interpreter.PopReal());
+    }
+
+    TEST_METHOD(ReadNegativeReal)
+    {
+        Interpreter interpreter;
+        interpreter.Read("-42");
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::Real, interpreter.Type());
+        Assert::AreEqual(-42.0, interpreter.PopReal());
     }
 
     TEST_METHOD(ReadSymbol)
@@ -117,6 +126,15 @@ public:
         AssertStackSize(1, interpreter);
         Assert::AreEqual(ObjType::SymbolPtr, interpreter.Type());
         Assert::AreEqual(std::string("+"), interpreter.PopSymbol());
+    }
+
+    TEST_METHOD(ReadHyphenMinusSymbol)
+    {
+        Interpreter interpreter;
+        interpreter.Read("-");
+        AssertStackSize(1, interpreter);
+        Assert::AreEqual(ObjType::SymbolPtr, interpreter.Type());
+        Assert::AreEqual(std::string("-"), interpreter.PopSymbol());
     }
 };
 
