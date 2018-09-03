@@ -393,6 +393,18 @@ void VirtualMachine::Store()
     symbolTable_.at(symbolIndex).value = stack_.back();
 }
 
+// ( y x -- y-x )
+// Top 2 elements must be Reals
+void VirtualMachine::Sub()
+{
+    assert(stack_.size() >= 2);
+    assert(stack_[stack_.size() - 1].type == ObjType::Real);
+    assert(stack_[stack_.size() - 2].type == ObjType::Real);
+    double x = stack_.back().val.realVal;
+    stack_.pop_back();
+    stack_.back().val.realVal = stack_.back().val.realVal - x;
+}
+
 // ( y x -- x y )
 void VirtualMachine::Swap()
 {
