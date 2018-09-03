@@ -77,6 +77,17 @@ void Reader::GetToken()
         symbolName_ = std::string(1, ch_);
         GetCh();
         break;
+    case '-':
+        GetCh();
+        if (isdigit(ch_)) {
+            GetReal();
+            realVal_ = -realVal_;
+        }
+        else {
+            token_ = ReaderTokenType::Symbol;
+            symbolName_ = std::string(1, '-');
+        }
+        break;
     case '.':
         token_ = ReaderTokenType::Dot;
         GetCh();

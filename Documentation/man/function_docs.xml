@@ -25,7 +25,6 @@
             <ex expr="(+ 2 3 4)" value="9"/>
         </examples>
     </function-doc>
-<!--
     <function-doc name="-">
         <syntax>(- number ...)</syntax>
         <description>
@@ -39,6 +38,7 @@
             <ex expr="(- 5 2 7)" value="-4"/>
         </examples>
     </function-doc>
+<!--
     <function-doc name="/">
         <syntax>(/ number ...)</syntax>
         <description>
