@@ -49,38 +49,15 @@
 //       environment (with the function args) and is pushed onto the
 //       environmentStack. When a Function call completes, the environment
 //       is popped of the stack.
-// TODO: Add numArgs to Apply(): Apply(numArgs)
 // TODO: Maybe use an API more like Lua's?
 //       - Access objects on the stack by index
 //           - Relative to stack frame (+ve), and relative to top of stack (-ve)
-//       - Automatic clean-up of stack at end of function call
-// TODO: Isolate memory operations from interpreter and access through stack API
-//       - Focuses places where checking of stack size, object type,
-//         and reference count updating need to be done
-//       - And more easily enables changing of memory/stack implementation
-//       Some options:
-//       - Make a VirtualMachine class a member of Interpreter; wrap operations
-//         in inline methods on Interpreter that forward onto member; such as:
-//             public:
-//                 ...
-//                 void Dup() { state.Dup() }
-//         This would allow multiple states per Interpreter
-//       - Make Interpreter a subclass of VirtualMachine
-//         One state per interpreter; something above would hold multiple
-//         interpreters (rather than one interpreter with multiple states)
 // TODO: Make Interpreters first class objects within the interpreter
 //       (clone-interpreter) creates a new Interpreter that is a clone of the current one
 //           Calls InterpreterSwitcher::CloneInterpreter(this)
 //       (use-interpreter interpreter) sets the active interpreter
 //           Calls InterpreterSwitcher::UseInterpreter()
 //       parent-interpreter points to the interpreter that this interpreter was cloned from
-// TODO: New policy:
-//     - All Interpreter methods may access the stack vector directly
-//     - The stack vector encapsulation boundary is the Interpreter
-//     - Take care: if I have a C++ variable of a ConsPtr, it's possible that
-//       an operation could invalidate the pointer between aquiring the pointer
-//       and using it. For example, the cons could have been garbage collected
-//       due to the reference count being reduced to 0.
 // TODO: Need a solution for iterating through lists
 //       while (!Null()) {
 //           Next();
@@ -90,9 +67,6 @@
 //       not specified for non-ConsPtr types.
 // TODO: Have Next() throw an exception if not ConsPtr (to handle case of
 //       iterating through an improper list, when we expect a proper list)
-// TODO: Do Cons reference count increment and decrement in Object construction
-//       and destruction -- a smart pointer. This will support convenient use
-//       of Object outside of the stack(s).
 // TODO: Solution for managing Lisp stack unwind when C++ exception thrown
 //       (and Lisp memory management more generally in presence of C++
 //       exceptions)
@@ -102,8 +76,8 @@ namespace Procdraw {
 class Interpreter : public VirtualMachine {
 public:
     Interpreter();
-    void Apply(int numArgs);
     void Assoc();
+    void Call(int numArgs);
     void Eval();
     std::string PrintToString();
     void Read(const std::string& str);

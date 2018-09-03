@@ -78,27 +78,6 @@ Interpreter::Interpreter()
     StoreSubr("-", SubrDifference);
 }
 
-// ( arg0 .. argn proc -- val )
-// TOS must be a procedure
-void Interpreter::Apply(int numArgs)
-{
-    assert(numArgs >= 0);
-    assert(StackSize() >= numArgs + 1);
-    assert(Type() == ObjType::Expr
-           || Type() == ObjType::Fsubr
-           || Type() == ObjType::Subr);
-
-    switch (Type()) {
-    case ObjType::Expr:
-        CallExpr(numArgs);
-        break;
-    case ObjType::Fsubr:
-    case ObjType::Subr:
-        CallSysFunc(numArgs, this);
-        break;
-    }
-}
-
 // ( key alist -- matched cons or nil )
 void Interpreter::Assoc()
 {
@@ -122,6 +101,27 @@ void Interpreter::Assoc()
     // We reached the end of the alist
     // Remove the key and leave nil on the stack
     Nip();
+}
+
+// ( arg0 .. argn proc -- val )
+// TOS must be a procedure
+void Interpreter::Call(int numArgs)
+{
+    assert(numArgs >= 0);
+    assert(StackSize() >= numArgs + 1);
+    assert(Type() == ObjType::Expr
+           || Type() == ObjType::Fsubr
+           || Type() == ObjType::Subr);
+
+    switch (Type()) {
+    case ObjType::Expr:
+        CallExpr(numArgs);
+        break;
+    case ObjType::Fsubr:
+    case ObjType::Subr:
+        CallSysFunc(numArgs, this);
+        break;
+    }
 }
 
 // ( expr -- value )
@@ -226,8 +226,8 @@ void Interpreter::EvalProcedureCall()
         int numArgs = ListElems(evalArgs);
         // Push the operator onto the top of the stack
         Pick(numArgs);
-        // Apply operator
-        Apply(numArgs);
+        // Call operator
+        Call(numArgs);
         break;
     }
     default:
