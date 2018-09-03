@@ -6,6 +6,8 @@
         <SourceFiles Include="src/**/*.h"/>
         <SourceFiles Include="tests/**/*.cpp"/>
         <SourceFiles Include="tests/**/*.h"/>
+        <SourceFiles Include="winmain/**/*.cpp"/>
+        <SourceFiles Include="winmain/**/*.h"/>
     </ItemGroup>
 
     <Target Name="Format">
