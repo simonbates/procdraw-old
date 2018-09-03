@@ -8,20 +8,13 @@
 #include <string>
 #include <vector>
 
-// TODO: Rename argsFrameStart_ to framePointer_
-// TODO: For ApplyCProcedure, do I need both frame pointer and numArgs?
-//       If the stack contains arg0 .. argn proc, then we can calculate
-//       one from the other.
 // TODO: Another stack layout option for function calls:
 //       ( argn .. arg0 proc )
 //       And set frame pointer to top of stack (after proc has been popped).
 //       Like the cdecl calling convention and more consistent with the
 //       existing stack operation argument ordering. For example Cons() is:
 //       ( cdr car -- cons )
-// TODO: The stack-effect for ApplyCProcedure() is funky:
-//       ( arg0 .. argn proc -- arg0 .. argn val )
-//       Better to be: ( arg0 .. argn proc -- val )
-// TODO: Can I make the frame pointer private and only use for CProcedures?
+// TODO: Can I make the frame pointer private and only use for SysFuncs?
 //       For Lisp lambda expressions, remove the arguments from the stack
 //       before we evaluate the expression. Would I ever want to refer to
 //       lambda expression arguments by position number?
@@ -45,7 +38,7 @@ using ConsIndexType = size_t;
 
 class Interpreter;
 
-typedef void (*CProcedure)(Interpreter* interpreter, int numArgs);
+typedef void (*SysFunc)(int numArgs, Interpreter* interpreter);
 
 struct Object {
     Object(ObjType type)
@@ -55,7 +48,7 @@ struct Object {
         bool boolVal;
         ConsIndexType consIndex;
         ConsIndexType exprIndex;
-        CProcedure proc;
+        SysFunc sysFunc;
         double realVal;
         SymbolIndexType symbolIndex;
     } val;
@@ -80,11 +73,11 @@ public:
     // Data types
     void PushBoolean(bool val);
     bool PopBoolean();
-    void PushFsubr(CProcedure proc);
+    void PushFsubr(SysFunc sysFunc);
     void PushNil();
     void PushReal(double val);
     double PopReal();
-    void PushSubr(CProcedure proc);
+    void PushSubr(SysFunc sysFunc);
     void PushSymbol(const std::string& name);
     std::string PopSymbol();
     // Query the stack
@@ -95,7 +88,7 @@ public:
     // Operations
     void Add();
     void AddBinding();
-    void ApplyCProcedure(Interpreter* interpreter, int numArgs);
+    void CallSysFunc(int numArgs, Interpreter* interpreter);
     void Car();
     void Cdr();
     void Cons();
@@ -121,7 +114,7 @@ public:
     void ToAux();
 
 protected:
-    StackIndexType argsFrameStart_{0};
+    StackIndexType framePointer_{0};
 
 private:
     std::vector<Object> stack_;

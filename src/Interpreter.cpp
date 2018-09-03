@@ -10,7 +10,7 @@
 
 namespace Procdraw {
 
-void FsubrLambda(Interpreter* interpreter, int numArgs)
+void FsubrLambda(int numArgs, Interpreter* interpreter)
 {
     // TODO: Support lambda expressions with more than one body form
     interpreter->PushArg(1); // body
@@ -18,7 +18,7 @@ void FsubrLambda(Interpreter* interpreter, int numArgs)
     interpreter->MakeExpr();
 }
 
-void FsubrSet(Interpreter* interpreter, int numArgs)
+void FsubrSet(int numArgs, Interpreter* interpreter)
 {
     // TODO: Check number and types of arguments
     interpreter->PushArg(1); // expr
@@ -27,7 +27,7 @@ void FsubrSet(Interpreter* interpreter, int numArgs)
     interpreter->Store();
 }
 
-void SubrDifference(Interpreter* interpreter, int numArgs)
+void SubrDifference(int numArgs, Interpreter* interpreter)
 {
     // TODO difference with 0 args? return a value or complain that not enough
     // args?
@@ -49,7 +49,7 @@ void SubrDifference(Interpreter* interpreter, int numArgs)
     }
 }
 
-void SubrProduct(Interpreter* interpreter, int numArgs)
+void SubrProduct(int numArgs, Interpreter* interpreter)
 {
     // TODO: Check arguments are all Reals
     interpreter->PushReal(1.0);
@@ -59,7 +59,7 @@ void SubrProduct(Interpreter* interpreter, int numArgs)
     }
 }
 
-void SubrSum(Interpreter* interpreter, int numArgs)
+void SubrSum(int numArgs, Interpreter* interpreter)
 {
     // TODO: Check arguments are all Reals
     interpreter->PushReal(0.0);
@@ -82,39 +82,21 @@ Interpreter::Interpreter()
 // TOS must be a procedure
 void Interpreter::Apply(int numArgs)
 {
+    assert(numArgs >= 0);
     assert(StackSize() >= numArgs + 1);
     assert(Type() == ObjType::Expr
            || Type() == ObjType::Fsubr
            || Type() == ObjType::Subr);
 
-    auto prevArgsFrameStart = argsFrameStart_;
-    argsFrameStart_ = StackSize() - numArgs - 1;
-
     switch (Type()) {
     case ObjType::Expr:
-        ApplyExpr(numArgs);
+        CallExpr(numArgs);
         break;
     case ObjType::Fsubr:
     case ObjType::Subr:
-        ApplyCProcedure(this, numArgs);
+        CallSysFunc(numArgs, this);
         break;
     }
-
-    assert(StackSize() == argsFrameStart_ + numArgs + 1);
-
-    // Save the result on the aux stack
-    ToAux();
-    // Drop the args
-    while (StackSize() > argsFrameStart_) {
-        Drop();
-    }
-    // Put back the result
-    FromAux();
-
-    assert(StackSize() == argsFrameStart_ + 1);
-
-    // Restore argsFrameStart_
-    argsFrameStart_ = prevArgsFrameStart;
 }
 
 // ( key alist -- matched cons or nil )
@@ -170,17 +152,20 @@ void Interpreter::Read(const std::string& str)
     reader.Read();
 }
 
-// ( arg0 .. argn expr -- arg0 .. argn val)
-// argsFrameStart must have been set
-void Interpreter::ApplyExpr(int numArgs)
+// ( arg0 .. argn expr -- val)
+void Interpreter::CallExpr(int numArgs)
 {
     // TODO: Verify called with the expected number of args
     // TODO: Support Exprs with more than one form in their body (Progn)
 
     assert(numArgs >= 0);
-    assert(argsFrameStart_ >= 0);
-    assert(StackSize() == argsFrameStart_ + numArgs + 1);
+    assert(StackSize() >= numArgs + 1);
     assert(Type() == ObjType::Expr);
+
+    // Save current framePointer_
+    auto prevFramePointer = framePointer_;
+    // Set framePointer_
+    framePointer_ = StackSize() - numArgs - 1;
 
     // Set up the environment for this call
     NewEnv();
@@ -200,8 +185,22 @@ void Interpreter::ApplyExpr(int numArgs)
     ExprBody();
     Eval();
 
-    // Pop the environment
+    // Drop the environment
     DeleteEnv();
+
+    // Save the result on the aux stack
+    ToAux();
+
+    // Clean up the stack
+    while (StackSize() > framePointer_) {
+        Drop();
+    }
+
+    // Put back the result
+    FromAux();
+
+    // Restore framePointer_
+    framePointer_ = prevFramePointer;
 }
 
 // ( call -- value )
@@ -259,17 +258,17 @@ int Interpreter::ListElems(bool evalElems)
     return numElems;
 }
 
-void Interpreter::StoreFsubr(const std::string& var, CProcedure proc)
+void Interpreter::StoreFsubr(const std::string& var, SysFunc sysFunc)
 {
-    PushFsubr(proc);
+    PushFsubr(sysFunc);
     PushSymbol(var);
     Store();
     Drop();
 }
 
-void Interpreter::StoreSubr(const std::string& var, CProcedure proc)
+void Interpreter::StoreSubr(const std::string& var, SysFunc sysFunc)
 {
-    PushSubr(proc);
+    PushSubr(sysFunc);
     PushSymbol(var);
     Store();
     Drop();

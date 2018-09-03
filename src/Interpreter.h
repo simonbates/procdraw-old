@@ -110,11 +110,11 @@ public:
 
 private:
     Printer printer_;
-    void ApplyExpr(int numArgs);
+    void CallExpr(int numArgs);
     void EvalProcedureCall();
     int ListElems(bool evalElems);
-    void StoreFsubr(const std::string& var, CProcedure proc);
-    void StoreSubr(const std::string& var, CProcedure proc);
+    void StoreFsubr(const std::string& var, SysFunc sysFunc);
+    void StoreSubr(const std::string& var, SysFunc sysFunc);
 };
 
 } // namespace Procdraw

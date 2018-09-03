@@ -28,10 +28,10 @@ bool VirtualMachine::PopBoolean()
 }
 
 // ( -- fsubr )
-void VirtualMachine::PushFsubr(CProcedure proc)
+void VirtualMachine::PushFsubr(SysFunc sysFunc)
 {
     Object obj(ObjType::Fsubr);
-    obj.val.proc = proc;
+    obj.val.sysFunc = sysFunc;
     stack_.push_back(obj);
 }
 
@@ -61,10 +61,10 @@ double VirtualMachine::PopReal()
 }
 
 // ( -- subr )
-void VirtualMachine::PushSubr(CProcedure proc)
+void VirtualMachine::PushSubr(SysFunc sysFunc)
 {
     Object obj(ObjType::Subr);
-    obj.val.proc = proc;
+    obj.val.sysFunc = sysFunc;
     stack_.push_back(obj);
 }
 
@@ -161,18 +161,36 @@ void VirtualMachine::AddBinding()
     cdr.val.consIndex = listMem_.size() - 1;
 }
 
-// ( arg0 .. argn proc -- arg0 .. argn val )
-// argsFrameStart must have been set
-void VirtualMachine::ApplyCProcedure(Interpreter* interpreter, int numArgs)
+// ( arg0 .. argn func -- val )
+void VirtualMachine::CallSysFunc(int numArgs, Interpreter* interpreter)
 {
     assert(numArgs >= 0);
-    assert(argsFrameStart_ >= 0);
-    assert(stack_.size() == argsFrameStart_ + numArgs + 1);
+    assert(StackSize() >= numArgs + 1);
     assert(Type() == ObjType::Fsubr || Type() == ObjType::Subr);
 
-    CProcedure proc = stack_.back().val.proc;
+    // Save current framePointer_
+    auto prevFramePointer = framePointer_;
+    // Set framePointer_
+    framePointer_ = stack_.size() - numArgs - 1;
+
+    // Call the function
+    SysFunc func = stack_.back().val.sysFunc;
     stack_.pop_back();
-    proc(interpreter, numArgs);
+    func(numArgs, interpreter);
+
+    // Save the result on the aux stack
+    ToAux();
+
+    // Clean up the stack
+    while (stack_.size() > framePointer_) {
+        Drop();
+    }
+
+    // Put back the result
+    FromAux();
+
+    // Restore framePointer_
+    framePointer_ = prevFramePointer;
 }
 
 // ( cons -- car )
@@ -376,10 +394,10 @@ void VirtualMachine::Pick(StackIndexType n)
 // ( -- x )
 void VirtualMachine::PushArg(StackIndexType n)
 {
-    assert(argsFrameStart_ >= 0);
+    assert(framePointer_ >= 0);
     assert(n >= 0);
-    assert((argsFrameStart_ + n) < stack_.size());
-    stack_.push_back(stack_[argsFrameStart_ + n]);
+    assert((framePointer_ + n) < stack_.size());
+    stack_.push_back(stack_[framePointer_ + n]);
 }
 
 // ( value var -- value )

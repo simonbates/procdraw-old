@@ -329,15 +329,15 @@ public:
         Assert::AreEqual(42.0, interpreter.PopReal());
     }
 
-    TEST_METHOD(EvalExpr)
+    TEST_METHOD(EvalLambdaExpr)
     {
         Interpreter interpreter;
         AssertStackSize(0, interpreter);
-        interpreter.Read("((lambda (x) (+ x 1)) 2)");
+        interpreter.Read("((lambda (x y) (+ (- x y) 1)) 11 5)");
         interpreter.Eval();
         AssertStackSize(1, interpreter);
         Assert::AreEqual(ObjType::Real, interpreter.Type());
-        Assert::AreEqual(3.0, interpreter.PopReal());
+        Assert::AreEqual(7.0, interpreter.PopReal());
     }
 
     TEST_METHOD(EvalSetGlobalVariable)
