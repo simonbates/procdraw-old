@@ -69,8 +69,6 @@ void ProcdrawApp::CreateAppWindow()
         throw std::runtime_error("Failed to create window");
     }
 
-    SetWindowLongPtr(hWnd_, GWLP_USERDATA, (LONG_PTR)this);
-
     ShowWindow(hWnd_, nCmdShow_);
 }
 
@@ -78,9 +76,6 @@ LRESULT CALLBACK ProcdrawApp::WindowProc(HWND hWnd, UINT message, WPARAM wParam,
 {
     HDC hdc;
     PAINTSTRUCT ps;
-
-    LONG_PTR ptr = GetWindowLongPtr(hWnd, GWLP_USERDATA);
-    ProcdrawApp* app = reinterpret_cast<ProcdrawApp*>(ptr);
 
     switch (message) {
     case WM_PAINT:
