@@ -160,6 +160,7 @@
     <ClInclude Include="ToString.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ColorTests.cpp" />
     <ClCompile Include="DocTester.cpp" />
     <ClCompile Include="DocTesterTests.cpp" />
     <ClCompile Include="FunctionDocsTests.cpp" />
