@@ -15,6 +15,7 @@ ProcdrawApp::ProcdrawApp(HINSTANCE hInstance, int nCmdShow)
       hWnd_(nullptr)
 {
     CreateAppWindow();
+    graphics_ = std::unique_ptr<D3D11Graphics>(new D3D11Graphics(hWnd_));
 }
 
 int ProcdrawApp::MainLoop()
@@ -31,8 +32,8 @@ int ProcdrawApp::MainLoop()
             }
         }
 
-        // TODO Draw();
-        // TODO graphics_->Present();
+        Draw();
+        graphics_->Present();
         // TODO frameCounter_.RecordFrame();
     }
 }
@@ -88,5 +89,10 @@ LRESULT CALLBACK ProcdrawApp::WindowProc(HWND hWnd, UINT message, WPARAM wParam,
     }
 
     return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void ProcdrawApp::Draw()
+{
+    graphics_->Background(180.0, 1.0, 1.0);
 }
 } // namespace Procdraw

@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include "D3D11Graphics.h"
+#include <memory>
+
 namespace Procdraw {
 
 class ProcdrawApp {
@@ -17,7 +20,9 @@ private:
     HINSTANCE hInstance_;
     int nCmdShow_;
     HWND hWnd_;
+    std::unique_ptr<D3D11Graphics> graphics_;
     void CreateAppWindow();
+    void Draw();
 };
 
 } // namespace Procdraw
