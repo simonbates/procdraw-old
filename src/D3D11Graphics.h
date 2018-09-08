@@ -58,9 +58,9 @@ public:
     void Present();
     void Tetrahedron();
     void Cube();
-    void RotateX(float angle);
-    void RotateY(float angle);
-    void RotateZ(float angle);
+    void RotateX(float turns);
+    void RotateY(float turns);
+    void RotateZ(float turns);
     void Translate(float x, float y, float z);
     void Scale(float x, float y, float z);
 
