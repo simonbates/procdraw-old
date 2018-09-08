@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include "ProcdrawApp.h"
+#include "ProcdrawMath.h"
 #include <stdexcept>
 
 namespace Procdraw {
@@ -36,6 +37,42 @@ int ProcdrawApp::MainLoop()
         graphics_->Present();
         // TODO frameCounter_.RecordFrame();
     }
+}
+
+double ProcdrawApp::Width()
+{
+    int width = 0;
+    RECT rect;
+    if (GetClientRect(hWnd_, &rect)) {
+        width = rect.right - rect.left;
+    }
+    return static_cast<double>(width);
+}
+
+double ProcdrawApp::Height()
+{
+    int height = 0;
+    RECT rect;
+    if (GetClientRect(hWnd_, &rect)) {
+        height = rect.bottom - rect.top;
+    }
+    return static_cast<double>(height);
+}
+
+double ProcdrawApp::MouseX()
+{
+    POINT pt;
+    GetCursorPos(&pt);
+    ScreenToClient(hWnd_, &pt);
+    return Clamp(static_cast<double>(pt.x) / (Width() - 1), 0.0, 1.0);
+}
+
+double ProcdrawApp::MouseY()
+{
+    POINT pt;
+    GetCursorPos(&pt);
+    ScreenToClient(hWnd_, &pt);
+    return Clamp(static_cast<double>(pt.y) / (Height() - 1), 0.0, 1.0);
 }
 
 void ProcdrawApp::CreateAppWindow()
@@ -93,6 +130,10 @@ LRESULT CALLBACK ProcdrawApp::WindowProc(HWND hWnd, UINT message, WPARAM wParam,
 
 void ProcdrawApp::Draw()
 {
-    graphics_->Background(180.0, 1.0, 1.0);
+    graphics_->Background(200.0, 0.6, 0.9);
+    graphics_->RotateX(Lerp(1.0, -1.0, MouseY()));
+    graphics_->RotateY(Lerp(1.0, -1.0, MouseX()));
+    graphics_->Color(7.0, 0.7, 0.7);
+    graphics_->Cube();
 }
 } // namespace Procdraw

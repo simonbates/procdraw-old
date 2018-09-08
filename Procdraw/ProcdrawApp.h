@@ -15,6 +15,10 @@ public:
     ProcdrawApp(HINSTANCE hInstance, int nCmdShow);
     static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
     int MainLoop();
+    double Width();
+    double Height();
+    double MouseX();
+    double MouseY();
 
 private:
     HINSTANCE hInstance_;
