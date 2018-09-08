@@ -118,21 +118,21 @@ void D3D11Graphics::Cube()
 
 void D3D11Graphics::RotateX(float turns)
 {
-    auto rotationMatrix = DirectX::XMMatrixRotationX(turns * 2 * M_PI);
+    auto rotationMatrix = DirectX::XMMatrixRotationX(static_cast<float>(turns * 2 * M_PI));
     auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
     DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
 }
 
 void D3D11Graphics::RotateY(float turns)
 {
-    auto rotationMatrix = DirectX::XMMatrixRotationY(turns * 2 * M_PI);
+    auto rotationMatrix = DirectX::XMMatrixRotationY(static_cast<float>(turns * 2 * M_PI));
     auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
     DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
 }
 
 void D3D11Graphics::RotateZ(float turns)
 {
-    auto rotationMatrix = DirectX::XMMatrixRotationZ(turns * 2 * M_PI);
+    auto rotationMatrix = DirectX::XMMatrixRotationZ(static_cast<float>(turns * 2 * M_PI));
     auto worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix_);
     DirectX::XMStoreFloat4x4(&worldMatrix_, rotationMatrix * worldMatrix);
 }
@@ -386,10 +386,10 @@ ComPtr<ID3D11Buffer> D3D11Graphics::CreateIndexBuffer(UINT* indices, int numIndi
 
 void D3D11Graphics::CreateTetrahedronVertexBuffer()
 {
-    auto vertex1 = DirectX::XMFLOAT3(1.0f, 0.0f, -M_SQRT1_2);
-    auto vertex2 = DirectX::XMFLOAT3(0.0f, 1.0f, M_SQRT1_2);
-    auto vertex3 = DirectX::XMFLOAT3(0.0f, -1.0f, M_SQRT1_2);
-    auto vertex4 = DirectX::XMFLOAT3(-1.0f, 0.0f, -M_SQRT1_2);
+    auto vertex1 = DirectX::XMFLOAT3(1.0f, 0.0f, static_cast<float>(-M_SQRT1_2));
+    auto vertex2 = DirectX::XMFLOAT3(0.0f, 1.0f, static_cast<float>(M_SQRT1_2));
+    auto vertex3 = DirectX::XMFLOAT3(0.0f, -1.0f, static_cast<float>(M_SQRT1_2));
+    auto vertex4 = DirectX::XMFLOAT3(-1.0f, 0.0f, static_cast<float>(-M_SQRT1_2));
 
     DirectX::XMFLOAT3 face1Normal;
     DirectX::XMFLOAT3 face2Normal;

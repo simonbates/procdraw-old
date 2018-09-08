@@ -130,10 +130,10 @@ LRESULT CALLBACK ProcdrawApp::WindowProc(HWND hWnd, UINT message, WPARAM wParam,
 
 void ProcdrawApp::Draw()
 {
-    graphics_->Background(200.0, 0.6, 0.9);
-    graphics_->RotateX(Lerp(1.0, -1.0, MouseY()));
-    graphics_->RotateY(Lerp(1.0, -1.0, MouseX()));
-    graphics_->Color(7.0, 0.7, 0.7);
+    graphics_->Background(200, 0.6f, 0.9f);
+    graphics_->RotateX(static_cast<float>(Lerp(1.0, -1.0, MouseY())));
+    graphics_->RotateY(static_cast<float>(Lerp(1.0, -1.0, MouseX())));
+    graphics_->Color(7, 0.7f, 0.7f);
     graphics_->Cube();
 }
 } // namespace Procdraw
