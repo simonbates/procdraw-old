@@ -160,6 +160,7 @@
     <ClInclude Include="ToString.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ColorTests.cpp" />
     <ClCompile Include="DocTester.cpp" />
     <ClCompile Include="DocTesterTests.cpp" />
     <ClCompile Include="FunctionDocsTests.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="InterpreterReadTests.cpp" />
     <ClCompile Include="InterpreterTests.cpp" />
     <ClCompile Include="ProcdrawManual.cpp" />
+    <ClCompile Include="ProcdrawMathTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

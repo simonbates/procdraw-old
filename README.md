@@ -17,6 +17,12 @@ To build Procdraw in Visual Studio:
 - Run "Build Solution" from the "Build" menu
 - The tests can be run using the built-in Test Explorer (Test/Windows/Test Explorer)
 
+And to run Procdraw from Visual Studio:
+
+- Set `Procdraw` as the Startup Project
+- Set the `Procdraw` project Working Directory to `$(SolutionDir)` (Properties/Debugging/Working Directory)
+- Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
+
 To build Procdraw on the command line:
 
 - Open the VS 2017 "Developer Command Prompt"
