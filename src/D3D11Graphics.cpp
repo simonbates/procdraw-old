@@ -3,13 +3,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// clang-format off
 #include "stdafx.h"
 #define _USE_MATH_DEFINES
 #include "D3D11Graphics.h"
+// clang-format on
 #include "Color.h"
 #include "WinUtils.h"
 #include <cmath>
 #include <d3dcompiler.h>
+
+using Microsoft::WRL::ComPtr;
 
 namespace Procdraw {
 
@@ -44,8 +48,8 @@ void D3D11Graphics::Background(float h, float s, float v)
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(h, s, v);
     FLOAT c[4] = {r, g, b, 1.0f};
-    d3dContext_->ClearDepthStencilView(depthStencilView_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-    d3dContext_->ClearRenderTargetView(renderTargetView_, c);
+    d3dContext_->ClearDepthStencilView(depthStencilView_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    d3dContext_->ClearRenderTargetView(renderTargetView_.Get(), c);
     ResetMatrix();
 }
 
@@ -93,7 +97,7 @@ void D3D11Graphics::Tetrahedron()
 
     UINT stride = sizeof(ShaderVertex);
     UINT offset = 0;
-    d3dContext_->IASetVertexBuffers(0, 1, &tetrahedronVertexBuffer_.GetInterfacePtr(), &stride, &offset);
+    d3dContext_->IASetVertexBuffers(0, 1, tetrahedronVertexBuffer_.GetAddressOf(), &stride, &offset);
 
     d3dContext_->Draw(12, 0);
 }
@@ -106,8 +110,8 @@ void D3D11Graphics::Cube()
 
     UINT stride = sizeof(ShaderVertex);
     UINT offset = 0;
-    d3dContext_->IASetVertexBuffers(0, 1, &cubeVertexBuffer_.GetInterfacePtr(), &stride, &offset);
-    d3dContext_->IASetIndexBuffer(cubeIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+    d3dContext_->IASetVertexBuffers(0, 1, cubeVertexBuffer_.GetAddressOf(), &stride, &offset);
+    d3dContext_->IASetIndexBuffer(cubeIndexBuffer_.Get(), DXGI_FORMAT_R32_UINT, 0);
 
     d3dContext_->DrawIndexed(36, 0, 0);
 }
@@ -177,9 +181,9 @@ void D3D11Graphics::InitD3D()
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    // TODO RefreshRate is ignored in windowed mode
-    // TODO and in full-screen mode, it must be set to a rate supported by the display
-    // TODO for full-screen mode, get the available display refresh rates using IDXGIOutput::GetDisplayModeList
+    // TODO: RefreshRate is ignored in windowed mode
+    // TODO: and in full-screen mode, it must be set to a rate supported by the display
+    // TODO: For full-screen mode, get the available display refresh rates using IDXGIOutput::GetDisplayModeList
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -189,25 +193,41 @@ void D3D11Graphics::InitD3D()
     sd.Windowed = TRUE;
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
-                                               createDeviceFlags, feature_levels, num_feature_levels,
-                                               D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-                                               &d3dFeatureLevel_, &d3dContext_);
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr,
+                                               driver_type,
+                                               nullptr,
+                                               createDeviceFlags,
+                                               feature_levels,
+                                               num_feature_levels,
+                                               D3D11_SDK_VERSION,
+                                               &sd,
+                                               swapChain_.ReleaseAndGetAddressOf(),
+                                               d3dDevice_.ReleaseAndGetAddressOf(),
+                                               &d3dFeatureLevel_,
+                                               d3dContext_.ReleaseAndGetAddressOf());
     if (hr == E_INVALIDARG) {
         // Try again without D3D_FEATURE_LEVEL_11_1
-        hr = D3D11CreateDeviceAndSwapChain(nullptr, driver_type, nullptr,
-                                           createDeviceFlags, &feature_levels[1], num_feature_levels - 1,
-                                           D3D11_SDK_VERSION, &sd, &swapChain_, &d3dDevice_,
-                                           &d3dFeatureLevel_, &d3dContext_);
+        hr = D3D11CreateDeviceAndSwapChain(nullptr,
+                                           driver_type,
+                                           nullptr,
+                                           createDeviceFlags,
+                                           &feature_levels[1],
+                                           num_feature_levels - 1,
+                                           D3D11_SDK_VERSION,
+                                           &sd,
+                                           swapChain_.ReleaseAndGetAddressOf(),
+                                           d3dDevice_.ReleaseAndGetAddressOf(),
+                                           &d3dFeatureLevel_,
+                                           d3dContext_.ReleaseAndGetAddressOf());
     }
     ThrowOnFail(hr);
 
     // Render Target View
 
     ThrowOnFail(swapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
-                                      reinterpret_cast<void**>(&backBuffer_)));
+                                      reinterpret_cast<void**>(backBuffer_.ReleaseAndGetAddressOf())));
 
-    ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_, nullptr, &renderTargetView_));
+    ThrowOnFail(d3dDevice_->CreateRenderTargetView(backBuffer_.Get(), nullptr, renderTargetView_.ReleaseAndGetAddressOf()));
 
     // Depth Stencil View
 
@@ -224,13 +244,13 @@ void D3D11Graphics::InitD3D()
     depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     depthStencilDesc.CPUAccessFlags = 0;
     depthStencilDesc.MiscFlags = 0;
-    ThrowOnFail(d3dDevice_->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer_));
+    ThrowOnFail(d3dDevice_->CreateTexture2D(&depthStencilDesc, nullptr, depthStencilBuffer_.ReleaseAndGetAddressOf()));
 
-    ThrowOnFail(d3dDevice_->CreateDepthStencilView(depthStencilBuffer_, nullptr, &depthStencilView_));
+    ThrowOnFail(d3dDevice_->CreateDepthStencilView(depthStencilBuffer_.Get(), nullptr, depthStencilView_.ReleaseAndGetAddressOf()));
 
     // Configure Output-Merger
 
-    d3dContext_->OMSetRenderTargets(1, &renderTargetView_.GetInterfacePtr(), depthStencilView_);
+    d3dContext_->OMSetRenderTargets(1, renderTargetView_.GetAddressOf(), depthStencilView_.Get());
 
     // Viewport
 
@@ -244,15 +264,22 @@ void D3D11Graphics::InitD3D()
     d3dContext_->RSSetViewports(1, &vp);
 }
 
-ID3D10BlobPtr D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
-                                                   _In_ LPCSTR pEntrypoint,
-                                                   _In_ LPCSTR pTarget)
+ComPtr<ID3D10Blob> D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
+                                                        _In_ LPCSTR pEntrypoint,
+                                                        _In_ LPCSTR pTarget)
 {
-    ID3D10BlobPtr compiledShader;
-    ID3D10BlobPtr errorMessages;
-    HRESULT hr = D3DCompileFromFile(pFileName, nullptr, nullptr,
-                                    pEntrypoint, pTarget, 0, 0, &compiledShader, &errorMessages);
-    if (errorMessages != nullptr) {
+    ComPtr<ID3D10Blob> compiledShader;
+    ComPtr<ID3D10Blob> errorMessages;
+    HRESULT hr = D3DCompileFromFile(pFileName,
+                                    nullptr,
+                                    nullptr,
+                                    pEntrypoint,
+                                    pTarget,
+                                    0,
+                                    0,
+                                    compiledShader.GetAddressOf(),
+                                    errorMessages.GetAddressOf());
+    if (errorMessages) {
         throw std::runtime_error(static_cast<char*>(errorMessages->GetBufferPointer()));
     }
     ThrowOnFail(hr);
@@ -263,10 +290,12 @@ void D3D11Graphics::CreateVertexShader()
 {
     // Create shader
 
-    ID3D10BlobPtr vs = CompileShaderFromFile(L"shaders\\flat.hlsl", "vertex_shader", "vs_4_0");
+    ComPtr<ID3D10Blob> vs = CompileShaderFromFile(L"shaders\\flat.hlsl", "vertex_shader", "vs_4_0");
     ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
-                                               vs->GetBufferSize(), nullptr, &vertexShader_));
-    d3dContext_->VSSetShader(vertexShader_, 0, 0);
+                                               vs->GetBufferSize(),
+                                               nullptr,
+                                               vertexShader_.ReleaseAndGetAddressOf()));
+    d3dContext_->VSSetShader(vertexShader_.Get(), 0, 0);
 
     // Input layout
 
@@ -278,17 +307,21 @@ void D3D11Graphics::CreateVertexShader()
          D3D11_INPUT_PER_VERTEX_DATA, 0}};
 
     ThrowOnFail(d3dDevice_->CreateInputLayout(inputElementDescriptions,
-                                              ARRAYSIZE(inputElementDescriptions), vs->GetBufferPointer(),
-                                              vs->GetBufferSize(), &inputLayout_));
-    d3dContext_->IASetInputLayout(inputLayout_);
+                                              ARRAYSIZE(inputElementDescriptions),
+                                              vs->GetBufferPointer(),
+                                              vs->GetBufferSize(),
+                                              inputLayout_.ReleaseAndGetAddressOf()));
+    d3dContext_->IASetInputLayout(inputLayout_.Get());
 }
 
 void D3D11Graphics::CreatePixelShader()
 {
-    ID3D10BlobPtr ps = CompileShaderFromFile(L"shaders\\flat.hlsl", "pixel_shader", "ps_4_0");
+    ComPtr<ID3D10Blob> ps = CompileShaderFromFile(L"shaders\\flat.hlsl", "pixel_shader", "ps_4_0");
     ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
-                                              ps->GetBufferSize(), nullptr, &pixelShader_));
-    d3dContext_->PSSetShader(pixelShader_, 0, 0);
+                                              ps->GetBufferSize(),
+                                              nullptr,
+                                              pixelShader_.ReleaseAndGetAddressOf()));
+    d3dContext_->PSSetShader(pixelShader_.Get(), 0, 0);
 }
 
 void D3D11Graphics::CreateConstantBuffer()
@@ -304,12 +337,14 @@ void D3D11Graphics::CreateConstantBuffer()
     ZeroMemory(&cbSubresourceData, sizeof(cbSubresourceData));
     cbSubresourceData.pSysMem = &cbData_;
 
-    ThrowOnFail(d3dDevice_->CreateBuffer(&cbDesc, &cbSubresourceData, &constantBuffer_));
+    ThrowOnFail(d3dDevice_->CreateBuffer(&cbDesc,
+                                         &cbSubresourceData,
+                                         constantBuffer_.ReleaseAndGetAddressOf()));
 
-    d3dContext_->VSSetConstantBuffers(0, 1, &constantBuffer_.GetInterfacePtr());
+    d3dContext_->VSSetConstantBuffers(0, 1, constantBuffer_.GetAddressOf());
 }
 
-ID3D11BufferPtr D3D11Graphics::CreateVertexBuffer(ShaderVertex* vertices, int numVertices)
+ComPtr<ID3D11Buffer> D3D11Graphics::CreateVertexBuffer(ShaderVertex* vertices, int numVertices)
 {
     D3D11_BUFFER_DESC vertexBufferDesc;
     ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
@@ -321,14 +356,15 @@ ID3D11BufferPtr D3D11Graphics::CreateVertexBuffer(ShaderVertex* vertices, int nu
     ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
     vertexSubresourceData.pSysMem = vertices;
 
-    ID3D11BufferPtr vertexBuffer;
+    ComPtr<ID3D11Buffer> vertexBuffer;
     ThrowOnFail(d3dDevice_->CreateBuffer(&vertexBufferDesc,
-                                         &vertexSubresourceData, &vertexBuffer));
+                                         &vertexSubresourceData,
+                                         vertexBuffer.GetAddressOf()));
 
     return vertexBuffer;
 }
 
-ID3D11BufferPtr D3D11Graphics::CreateIndexBuffer(UINT* indices, int numIndices)
+ComPtr<ID3D11Buffer> D3D11Graphics::CreateIndexBuffer(UINT* indices, int numIndices)
 {
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
@@ -340,8 +376,10 @@ ID3D11BufferPtr D3D11Graphics::CreateIndexBuffer(UINT* indices, int numIndices)
     ZeroMemory(&indexSubresourceData, sizeof(indexSubresourceData));
     indexSubresourceData.pSysMem = indices;
 
-    ID3D11BufferPtr indexBuffer;
-    ThrowOnFail(d3dDevice_->CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer));
+    ComPtr<ID3D11Buffer> indexBuffer;
+    ThrowOnFail(d3dDevice_->CreateBuffer(&indexBufferDesc,
+                                         &indexSubresourceData,
+                                         indexBuffer.GetAddressOf()));
 
     return indexBuffer;
 }
@@ -467,7 +505,7 @@ void D3D11Graphics::CreateCubeBuffers()
 
 void D3D11Graphics::InitViewProjectionMatrix()
 {
-    // TODO move the View-Projection matrix to its own 'camera' class
+    // TODO: Move the View-Projection matrix to its own 'camera' class
 
     // View
     auto eye = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
@@ -476,7 +514,7 @@ void D3D11Graphics::InitViewProjectionMatrix()
     auto viewMatrix = DirectX::XMMatrixLookAtLH(eye, at, up);
 
     // Projection
-    // TODO angle of view?
+    // TODO: Angle of view?
     auto projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, 1.0f, 1.0f, 100.0f);
 
     // View-Projection
@@ -519,9 +557,9 @@ void D3D11Graphics::UpdateConstantBufferForObject()
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ZeroMemory(&mappedResource, sizeof(mappedResource));
 
-    ThrowOnFail(d3dContext_->Map(constantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+    ThrowOnFail(d3dContext_->Map(constantBuffer_.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
     memcpy(mappedResource.pData, &cbData_, sizeof(cbData_));
-    d3dContext_->Unmap(constantBuffer_, 0);
+    d3dContext_->Unmap(constantBuffer_.Get(), 0);
 }
 
 } // namespace Procdraw
