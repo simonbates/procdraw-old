@@ -4,10 +4,10 @@
     <ItemGroup>
         <SourceFiles Include="Procdraw/**/*.cpp"/>
         <SourceFiles Include="Procdraw/**/*.h"/>
-        <SourceFiles Include="src/**/*.cpp"/>
-        <SourceFiles Include="src/**/*.h"/>
-        <SourceFiles Include="tests/**/*.cpp"/>
-        <SourceFiles Include="tests/**/*.h"/>
+        <SourceFiles Include="ProcdrawLib/**/*.cpp"/>
+        <SourceFiles Include="ProcdrawLib/**/*.h"/>
+        <SourceFiles Include="ProcdrawTests/**/*.cpp"/>
+        <SourceFiles Include="ProcdrawTests/**/*.h"/>
     </ItemGroup>
 
     <Target Name="Format">

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawLib", "src\ProcdrawLib.vcxproj", "{3AC12AC7-FA81-4C6B-916E-B9D9330CE90E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawLib", "ProcdrawLib\ProcdrawLib.vcxproj", "{3AC12AC7-FA81-4C6B-916E-B9D9330CE90E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawTests", "tests\ProcdrawTests.vcxproj", "{59DCB670-A98F-4E4C-8D47-8E1DC7395504}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcdrawTests", "ProcdrawTests\ProcdrawTests.vcxproj", "{59DCB670-A98F-4E4C-8D47-8E1DC7395504}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml", "vendor\msbuild\pugixml\pugixml.vcxproj", "{7841A6BD-2D08-4A03-A505-6B0F0C554BC1}"
 EndProject
