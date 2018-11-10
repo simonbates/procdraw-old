@@ -20,7 +20,6 @@ To build Procdraw in Visual Studio:
 And to run Procdraw from Visual Studio:
 
 - Set `Procdraw` as the Startup Project
-- Set the `Procdraw` project Working Directory to `$(SolutionDir)` (Properties/Debugging/Working Directory)
 - Start Debugging (F5) or Start Without Debugging (Ctrl+F5)
 
 To build Procdraw on the command line:

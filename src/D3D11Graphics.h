@@ -72,9 +72,10 @@ private:
     DirectX::XMFLOAT4 ambientLightColor_;
     DirectX::XMFLOAT4 materialColor_;
     void InitD3D();
-    Microsoft::WRL::ComPtr<ID3D10Blob> CompileShaderFromFile(_In_ LPCWSTR pFileName,
-                                                             _In_ LPCSTR pEntrypoint,
-                                                             _In_ LPCSTR pTarget);
+    Microsoft::WRL::ComPtr<ID3D10Blob> CompileShader(LPCVOID pSrcData,
+                                                     SIZE_T SrcDataSize,
+                                                     LPCSTR pEntrypoint,
+                                                     LPCSTR pTarget);
     void CreateVertexShader();
     void CreatePixelShader();
     void CreateConstantBuffer();
