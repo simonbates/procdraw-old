@@ -338,7 +338,7 @@ void D3D11Graphics::CreateVertexShader()
 {
     // Create shader
 
-    ComPtr<ID3D10Blob> vs = CompileShader(shaderSrc, sizeof(shaderSrc), "vertex_shader", "vs_4_0");
+    ComPtr<ID3D10Blob> vs = CompileShader(shaderSrc, sizeof shaderSrc, "vertex_shader", "vs_4_0");
     ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
                                                vs->GetBufferSize(),
                                                nullptr,
@@ -364,7 +364,7 @@ void D3D11Graphics::CreateVertexShader()
 
 void D3D11Graphics::CreatePixelShader()
 {
-    ComPtr<ID3D10Blob> ps = CompileShader(shaderSrc, sizeof(shaderSrc), "pixel_shader", "ps_4_0");
+    ComPtr<ID3D10Blob> ps = CompileShader(shaderSrc, sizeof shaderSrc, "pixel_shader", "ps_4_0");
     ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
                                               ps->GetBufferSize(),
                                               nullptr,
