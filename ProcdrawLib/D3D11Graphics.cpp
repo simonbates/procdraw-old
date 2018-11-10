@@ -17,6 +17,48 @@ using Microsoft::WRL::ComPtr;
 
 namespace Procdraw {
 
+static const char shaderSrc[] =
+    "cbuffer CBufferPerObject                                               \n"
+    "{                                                                      \n"
+    "    row_major float4x4 WorldViewProjection;                            \n"
+    "    // Direction to light in model space                               \n"
+    "    float4 LightDirection;                                             \n"
+    "    float4 LightColor;                                                 \n"
+    "    float4 AmbientLightColor;                                          \n"
+    "    float4 MaterialColor;                                              \n"
+    "}                                                                      \n"
+    "                                                                       \n"
+    "struct VertexShaderInput                                               \n"
+    "{                                                                      \n"
+    "    float4 pos : POSITION;                                             \n"
+    "    float3 normal : NORMAL;                                            \n"
+    "};                                                                     \n"
+    "                                                                       \n"
+    "struct VertexShaderOutput {                                            \n"
+    "    float4 pos : SV_Position;                                          \n"
+    "    float4 color : COLOR;                                              \n"
+    "};                                                                     \n"
+    "                                                                       \n"
+    "VertexShaderOutput vertex_shader(VertexShaderInput input)              \n"
+    "{                                                                      \n"
+    "    VertexShaderOutput output;                                         \n"
+    "                                                                       \n"
+    "    output.pos = mul(input.pos, WorldViewProjection);                  \n"
+    "                                                                       \n"
+    "    float diffFactor = max(dot(input.normal, LightDirection.xyz), 0);  \n"
+    "    float4 diffComponent = (LightColor * MaterialColor * diffFactor);  \n"
+    "    float4 ambientComponent = (AmbientLightColor * MaterialColor);     \n"
+    "    output.color.rgb = diffComponent.rgb + ambientComponent.rgb;       \n"
+    "    output.color.a = MaterialColor.a;                                  \n"
+    "                                                                       \n"
+    "    return output;                                                     \n"
+    "}                                                                      \n"
+    "                                                                       \n"
+    "float4 pixel_shader(VertexShaderOutput input) : SV_Target              \n"
+    "{                                                                      \n"
+    "    return input.color;                                                \n"
+    "}";
+
 D3D11Graphics::D3D11Graphics(HWND hWnd)
     : hWnd_(hWnd),
       d3dFeatureLevel_(D3D_FEATURE_LEVEL_10_0)
@@ -264,21 +306,27 @@ void D3D11Graphics::InitD3D()
     d3dContext_->RSSetViewports(1, &vp);
 }
 
-ComPtr<ID3D10Blob> D3D11Graphics::CompileShaderFromFile(_In_ LPCWSTR pFileName,
-                                                        _In_ LPCSTR pEntrypoint,
-                                                        _In_ LPCSTR pTarget)
+ComPtr<ID3D10Blob> D3D11Graphics::CompileShader(LPCVOID pSrcData,
+                                                SIZE_T SrcDataSize,
+                                                LPCSTR pEntrypoint,
+                                                LPCSTR pTarget)
 {
     ComPtr<ID3D10Blob> compiledShader;
     ComPtr<ID3D10Blob> errorMessages;
-    HRESULT hr = D3DCompileFromFile(pFileName,
-                                    nullptr,
-                                    nullptr,
-                                    pEntrypoint,
-                                    pTarget,
-                                    0,
-                                    0,
-                                    compiledShader.GetAddressOf(),
-                                    errorMessages.GetAddressOf());
+    HRESULT hr = D3DCompile2(pSrcData,
+                             SrcDataSize,
+                             nullptr,
+                             nullptr,
+                             nullptr,
+                             pEntrypoint,
+                             pTarget,
+                             0,
+                             0,
+                             0,
+                             nullptr,
+                             0,
+                             compiledShader.GetAddressOf(),
+                             errorMessages.GetAddressOf());
     if (errorMessages) {
         throw std::runtime_error(static_cast<char*>(errorMessages->GetBufferPointer()));
     }
@@ -290,7 +338,7 @@ void D3D11Graphics::CreateVertexShader()
 {
     // Create shader
 
-    ComPtr<ID3D10Blob> vs = CompileShaderFromFile(L"shaders\\flat.hlsl", "vertex_shader", "vs_4_0");
+    ComPtr<ID3D10Blob> vs = CompileShader(shaderSrc, sizeof shaderSrc, "vertex_shader", "vs_4_0");
     ThrowOnFail(d3dDevice_->CreateVertexShader(vs->GetBufferPointer(),
                                                vs->GetBufferSize(),
                                                nullptr,
@@ -316,7 +364,7 @@ void D3D11Graphics::CreateVertexShader()
 
 void D3D11Graphics::CreatePixelShader()
 {
-    ComPtr<ID3D10Blob> ps = CompileShaderFromFile(L"shaders\\flat.hlsl", "pixel_shader", "ps_4_0");
+    ComPtr<ID3D10Blob> ps = CompileShader(shaderSrc, sizeof shaderSrc, "pixel_shader", "ps_4_0");
     ThrowOnFail(d3dDevice_->CreatePixelShader(ps->GetBufferPointer(),
                                               ps->GetBufferSize(),
                                               nullptr,
