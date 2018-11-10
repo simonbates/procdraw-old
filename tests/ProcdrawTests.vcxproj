@@ -93,7 +93,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)vendor\pugixml-1.9\src;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;PROCDRAW_TEST_DATA_DIR=R"($(ProjectDir)test_data)";PROCDRAW_FUNCTION_DOCS_FILE=R"($(SolutionDir)Documentation\man\function_docs.xml)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;PROCDRAW_TEST_DATA_DIR=R"($(ProjectDir)test_data)";PROCDRAW_FUNCTION_DOCS_FILE=R"($(SolutionDir)Documentation\manual\function_docs.xml)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
     <Link>
@@ -123,7 +123,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)vendor\pugixml-1.9\src;$(SolutionDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;PROCDRAW_TEST_DATA_DIR=R"($(ProjectDir)test_data)";PROCDRAW_FUNCTION_DOCS_FILE=R"($(SolutionDir)Documentation\man\function_docs.xml)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;PROCDRAW_TEST_DATA_DIR=R"($(ProjectDir)test_data)";PROCDRAW_FUNCTION_DOCS_FILE=R"($(SolutionDir)Documentation\manual\function_docs.xml)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
     <Link>
