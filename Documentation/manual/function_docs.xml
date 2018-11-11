@@ -11,6 +11,7 @@
             <ex expr="(* 2 3)" value="6"/>
             <ex expr="(* 2 3 4)" value="24"/>
         </examples>
+        <foo/>
     </function-doc>
     <function-doc name="+">
         <syntax>(+ ...)</syntax>
