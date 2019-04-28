@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 Simon Bates
+/* Copyright (c) 2018, 2019 Simon Bates
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -165,7 +165,7 @@ void VirtualMachine::AddBinding()
 void VirtualMachine::CallSysFunc(int numArgs, Interpreter* interpreter)
 {
     assert(numArgs >= 0);
-    assert(StackSize() >= numArgs + 1);
+    assert(StackSize() >= static_cast<unsigned>(numArgs) + 1);
     assert(Type() == ObjType::Fsubr || Type() == ObjType::Subr);
 
     // Save current framePointer_
