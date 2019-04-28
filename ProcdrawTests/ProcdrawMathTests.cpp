@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, 2018 Simon Bates
+/* Copyright (c) 2015, 2018, 2019 Simon Bates
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -114,24 +114,24 @@ public:
 
         Assert::AreEqual(0.0, Wrap(0.0, 10.0, 0.0));
         Assert::AreEqual(0.0, Wrap(0.0, 10.0, 10.0));
-        Assert::AreEqual(0.0, Wrap(0.0, 10.0, 20.0));
-        Assert::AreEqual(0.0, Wrap(0.0, 10.0, -10.0));
         Assert::AreEqual(8.0, Wrap(0.0, 10.0, 8.0));
         Assert::AreEqual(2.0, Wrap(0.0, 10.0, 12.0));
+        Assert::AreEqual(0.0, Wrap(0.0, 10.0, 20.0));
         Assert::AreEqual(3.0, Wrap(0.0, 10.0, 23.0));
         Assert::AreEqual(8.0, Wrap(0.0, 10.0, -2.0));
+        Assert::AreEqual(0.0, Wrap(0.0, 10.0, -10.0));
         Assert::AreEqual(7.0, Wrap(0.0, 10.0, -13.0));
 
         // [-20, -10]
 
         Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, -20.0));
         Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, -10.0));
-        Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, 0.0));
-        Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, -30.0));
         Assert::AreEqual(-12.0, Wrap(-20.0, -10.0, -12.0));
         Assert::AreEqual(-18.0, Wrap(-20.0, -10.0, -8.0));
+        Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, 0.0));
         Assert::AreEqual(-17.0, Wrap(-20.0, -10.0, 13.0));
         Assert::AreEqual(-12.0, Wrap(-20.0, -10.0, -22.0));
+        Assert::AreEqual(-20.0, Wrap(-20.0, -10.0, -30.0));
         Assert::AreEqual(-13.0, Wrap(-20.0, -10.0, -33.0));
     }
 
