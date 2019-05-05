@@ -1,10 +1,2 @@
-# Visual Studio
-
-/.vs/
-Debug/
-Release/
-*.vcxproj.user
-
-# Sublime Text
-
+/build/
 /Procdraw.sublime-workspace

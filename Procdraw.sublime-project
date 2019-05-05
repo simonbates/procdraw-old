@@ -1,13 +1,20 @@
 {
     "folders": [
         {
-            "path": ".",
-            "folder_exclude_patterns": [".vs", "Debug", "Release"]
+            "path": "."
         }
     ],
     "settings": {
         "ensure_newline_at_eof_on_save": true,
         "translate_tabs_to_spaces": true,
         "trim_trailing_white_space_on_save": true
-    }
+    },
+    "build_systems": [
+        {
+            "name": "Build Procdraw",
+            "working_dir": "${project_path}/build",
+            "shell_cmd": "nmake && nmake test",
+            "file_regex": "^\\s*(.+)\\((\\d+)\\)():\\s+(.*)$"
+        }
+    ]
 }
