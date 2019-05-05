@@ -176,6 +176,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TestUtils.cpp" />
+    <ClCompile Include="VirtualMachineTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProcdrawLib\ProcdrawLib.vcxproj">

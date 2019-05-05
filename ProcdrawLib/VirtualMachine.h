@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 Simon Bates
+/* Copyright (c) 2018, 2019 Simon Bates
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -18,6 +18,21 @@
 //       For Lisp lambda expressions, remove the arguments from the stack
 //       before we evaluate the expression. Would I ever want to refer to
 //       lambda expression arguments by position number?
+// TODO: How about taking the mathematical operators out of VirtualMachine?
+//       And implementing them in the Interpreter primitive functions
+//       (*, +, -, /)
+//       And then its focus would be: Memory
+//           - Heap and access to the Heap via a stack
+//           - Symbol table
+//           - Function call arguments
+//           - Environments for Lisp function intrepretation
+//       I would need a method for retrieving Real values from the arguments
+//       part of the stack (not just the top).
+//       Maybe a mechanism similar to Lua where operations take a stack
+//       index? https://www.lua.org/manual/5.1/manual.html#3.1
+//       Could I then get rid of the environment stack and just use the
+//       regular stack? If there's a convenient way to get at parts of the
+//       stack frame, I can just put it at the start of the stack frame?
 
 namespace Procdraw {
 
@@ -36,6 +51,32 @@ using StackIndexType = size_t;
 using SymbolIndexType = size_t;
 using ConsIndexType = size_t;
 
+// TODO: Should VirtualMachine really know about Interpreter?
+// TODO: Should I just merge Interpreter and VirtualMachine?
+// Motivation for making them separate: to minimise access to internal
+// data structures. If objects are retrieved directly and references
+// stored in C++ objects, there is risk that reference counting is off
+// and we end up with dangling references. I want the VM state to be
+// self-contained so that I can make copies and process it. The stack
+// API should be used as much as possible.
+// Could I maintain the inheritance structure but make changes to make
+// the relationship clearer?
+// - Make this class abstract, with an unimplemented Call() method as
+//   is likely the only one SysFuncs would need access to and then use
+//   that in the SysFunc signature
+// - Or, use a new purely abstract class (interface) in the SysFunc
+//   signature that Interpreter implements
+// - Option:
+//     - Interpreter interface
+//     - InterpreterBase this class
+//     - InterpreterImpl current Interpreter
+//  - Or:
+//     - Interpreter interface
+//     - VirtulaMachine class (or rename to InterpreterState,
+//       or InterpreterVirtualMachine)
+//     - InterpreterImpl implements Interpreter, contains VirtualMachine
+//       and uses forwarding methods to vm
+// Make forwarding methods inline so that they can be optimized
 class Interpreter;
 
 typedef void (*SysFunc)(int numArgs, Interpreter* interpreter);
@@ -70,6 +111,8 @@ struct ConsCell {
 
 class VirtualMachine {
 public:
+    StackIndexType framePointer_{0};
+
     // Data types
     void PushBoolean(bool val);
     bool PopBoolean();
@@ -112,9 +155,6 @@ public:
     void Sub();
     void Swap();
     void ToAux();
-
-protected:
-    StackIndexType framePointer_{0};
 
 private:
     std::vector<Object> stack_;

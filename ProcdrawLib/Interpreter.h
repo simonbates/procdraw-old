@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 Simon Bates
+/* Copyright (c) 2018, 2019 Simon Bates
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -73,16 +73,41 @@
 
 namespace Procdraw {
 
-class Interpreter : public VirtualMachine {
+class Interpreter {
 public:
     Interpreter();
+    void Add() { vm_.Add(); }
     void Assoc();
     void Call(int numArgs);
+    void Cons() { vm_.Cons(); }
+    void Drop() { vm_.Drop(); }
+    void Dup() { vm_.Dup(); }
+    void ExprBody() { vm_.ExprBody(); }
+    void ExprParams() { vm_.ExprParams(); }
     void Eval();
+    bool IsAtom() { return vm_.IsAtom(); }
+    bool IsNull() { return vm_.IsNull(); }
+    void MakeExpr() { vm_.MakeExpr(); }
+    void Mul() { vm_.Mul(); }
+    void Next() { vm_.Next(); }
+    bool PopBoolean() { return vm_.PopBoolean(); }
+    double PopReal() { return vm_.PopReal(); }
+    std::string PopSymbol() { return vm_.PopSymbol(); }
     std::string PrintToString();
+    void PushArg(StackIndexType n) { vm_.PushArg(n); }
+    void PushBoolean(bool val) { vm_.PushBoolean(val); }
+    void PushNil() { vm_.PushNil(); }
+    void PushReal(double val) { vm_.PushReal(val); }
+    void PushSymbol(const std::string& name) { vm_.PushSymbol(name); }
     void Read(const std::string& str);
+    StackIndexType StackSize() const { return vm_.StackSize(); }
+    void Store() { vm_.Store(); }
+    void Sub() { vm_.Sub(); }
+    void Swap() { vm_.Swap(); }
+    ObjType Type() { return vm_.Type(); }
 
 private:
+    VirtualMachine vm_;
     Printer printer_;
     void CallExpr(int numArgs);
     void EvalProcedureCall();

@@ -82,25 +82,25 @@ Interpreter::Interpreter()
 void Interpreter::Assoc()
 {
     // TODO: alist could be non-nil terminated
-    assert(StackSize() >= 2);
-    assert(Type() == ObjType::ConsPtr);
-    while (!IsNull()) {
-        Next();
-        if (EqCar(2, 0)) {
+    assert(vm_.StackSize() >= 2);
+    assert(vm_.Type() == ObjType::ConsPtr);
+    while (!vm_.IsNull()) {
+        vm_.Next();
+        if (vm_.EqCar(2, 0)) {
             // Leave the matching cons on the stack and return
-            Nip();
-            Nip();
+            vm_.Nip();
+            vm_.Nip();
             return;
         }
         else {
             // This cons didn't match
-            Drop();
+            vm_.Drop();
         }
     }
 
     // We reached the end of the alist
     // Remove the key and leave nil on the stack
-    Nip();
+    vm_.Nip();
 }
 
 // ( arg0 .. argn proc -- val )
@@ -108,18 +108,18 @@ void Interpreter::Assoc()
 void Interpreter::Call(int numArgs)
 {
     assert(numArgs >= 0);
-    assert(StackSize() >= static_cast<unsigned>(numArgs) + 1);
-    assert(Type() == ObjType::Expr
-           || Type() == ObjType::Fsubr
-           || Type() == ObjType::Subr);
+    assert(vm_.StackSize() >= static_cast<unsigned>(numArgs) + 1);
+    assert(vm_.Type() == ObjType::Expr
+           || vm_.Type() == ObjType::Fsubr
+           || vm_.Type() == ObjType::Subr);
 
-    switch (Type()) {
+    switch (vm_.Type()) {
     case ObjType::Expr:
         CallExpr(numArgs);
         break;
     case ObjType::Fsubr:
     case ObjType::Subr:
-        CallSysFunc(numArgs, this);
+        vm_.CallSysFunc(numArgs, this);
         break;
     }
 }
@@ -127,13 +127,13 @@ void Interpreter::Call(int numArgs)
 // ( expr -- value )
 void Interpreter::Eval()
 {
-    assert(StackSize() > 0);
-    switch (Type()) {
+    assert(vm_.StackSize() > 0);
+    switch (vm_.Type()) {
     case ObjType::ConsPtr:
         EvalProcedureCall();
         break;
     case ObjType::SymbolPtr:
-        Load();
+        vm_.Load();
         break;
     }
 }
@@ -141,7 +141,7 @@ void Interpreter::Eval()
 // ( x -- )
 std::string Interpreter::PrintToString()
 {
-    assert(StackSize() > 0);
+    assert(vm_.StackSize() > 0);
     return printer_.PrintToString(this);
 }
 
@@ -159,73 +159,73 @@ void Interpreter::CallExpr(int numArgs)
     // TODO: Support Exprs with more than one form in their body (Progn)
 
     assert(numArgs >= 0);
-    assert(StackSize() >= static_cast<unsigned>(numArgs) + 1);
-    assert(Type() == ObjType::Expr);
+    assert(vm_.StackSize() >= static_cast<unsigned>(numArgs) + 1);
+    assert(vm_.Type() == ObjType::Expr);
 
     // Save current framePointer_
-    auto prevFramePointer = framePointer_;
+    auto prevFramePointer = vm_.framePointer_;
     // Set framePointer_
-    framePointer_ = StackSize() - numArgs - 1;
+    vm_.framePointer_ = vm_.StackSize() - numArgs - 1;
 
     // Set up the environment for this call
-    NewEnv();
-    Dup();
-    ExprParams();
+    vm_.NewEnv();
+    vm_.Dup();
+    vm_.ExprParams();
     int paramNum = 0;
-    while (!IsNull()) {
-        Next();
-        PushArg(paramNum);
-        Swap();
-        AddBinding();
+    while (!vm_.IsNull()) {
+        vm_.Next();
+        vm_.PushArg(paramNum);
+        vm_.Swap();
+        vm_.AddBinding();
         ++paramNum;
     }
-    Drop(); // The params list terminating nil
+    vm_.Drop(); // The params list terminating nil
 
     // Eval body
-    ExprBody();
+    vm_.ExprBody();
     Eval();
 
     // Drop the environment
-    DropEnv();
+    vm_.DropEnv();
 
     // Save the result on the aux stack
-    ToAux();
+    vm_.ToAux();
 
     // Clean up the stack
-    while (StackSize() > framePointer_) {
-        Drop();
+    while (vm_.StackSize() > vm_.framePointer_) {
+        vm_.Drop();
     }
 
     // Put back the result
-    FromAux();
+    vm_.FromAux();
 
     // Restore framePointer_
-    framePointer_ = prevFramePointer;
+    vm_.framePointer_ = prevFramePointer;
 }
 
 // ( call -- value )
 // TOS must be a procedure call form
 void Interpreter::EvalProcedureCall()
 {
-    assert(StackSize() > 0);
-    assert(Type() == ObjType::ConsPtr);
+    assert(vm_.StackSize() > 0);
+    assert(vm_.Type() == ObjType::ConsPtr);
 
     // Eval operator
-    Next();
+    vm_.Next();
     Eval();
 
     bool evalArgs = false;
 
-    switch (Type()) {
+    switch (vm_.Type()) {
     case ObjType::Expr:
     case ObjType::Subr:
         evalArgs = true;
     case ObjType::Fsubr: {
-        Swap();
+        vm_.Swap();
         // Expand the args list
         int numArgs = ListElems(evalArgs);
         // Push the operator onto the top of the stack
-        Pick(numArgs);
+        vm_.Pick(numArgs);
         // Call operator
         Call(numArgs);
         break;
@@ -236,42 +236,42 @@ void Interpreter::EvalProcedureCall()
     }
 
     // Remove the operator left on the stack
-    Nip();
+    vm_.Nip();
 }
 
 // ( list -- elem0 .. elemn )
 int Interpreter::ListElems(bool evalElems)
 {
-    assert(StackSize() > 0);
-    assert(Type() == ObjType::ConsPtr || Type() == ObjType::Null);
+    assert(vm_.StackSize() > 0);
+    assert(vm_.Type() == ObjType::ConsPtr || vm_.Type() == ObjType::Null);
 
     int numElems = 0;
-    while (!IsNull()) {
-        Next();
+    while (!vm_.IsNull()) {
+        vm_.Next();
         if (evalElems) {
             Eval();
         }
-        Swap();
+        vm_.Swap();
         ++numElems;
     }
-    Drop(); // The terminating nil
+    vm_.Drop(); // The terminating nil
     return numElems;
 }
 
 void Interpreter::StoreFsubr(const std::string& var, SysFunc sysFunc)
 {
-    PushFsubr(sysFunc);
-    PushSymbol(var);
-    Store();
-    Drop();
+    vm_.PushFsubr(sysFunc);
+    vm_.PushSymbol(var);
+    vm_.Store();
+    vm_.Drop();
 }
 
 void Interpreter::StoreSubr(const std::string& var, SysFunc sysFunc)
 {
-    PushSubr(sysFunc);
-    PushSymbol(var);
-    Store();
-    Drop();
+    vm_.PushSubr(sysFunc);
+    vm_.PushSymbol(var);
+    vm_.Store();
+    vm_.Drop();
 }
 
 } // namespace Procdraw
