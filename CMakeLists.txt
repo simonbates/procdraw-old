@@ -17,9 +17,24 @@ target_include_directories(gtest_main PUBLIC ${GTEST_DIR}/include)
 # procdraw_lib
 
 add_library(procdraw_lib
-        ProcdrawLib/ProcdrawMath.cpp)
+        ProcdrawLib/Color.cpp
+        ProcdrawLib/D3D11Graphics.cpp
+        ProcdrawLib/ProcdrawApp.cpp
+        ProcdrawLib/ProcdrawMath.cpp
+        ProcdrawLib/WinUtils.cpp)
+
+target_compile_definitions(procdraw_lib PRIVATE UNICODE _UNICODE)
 
 target_include_directories(procdraw_lib PUBLIC ProcdrawLib)
+
+# procdraw executable
+
+add_executable(procdraw WIN32 Procdraw/WinMain.cpp)
+
+target_link_libraries(procdraw
+        procdraw_lib
+        d3d11
+        D3DCompiler)
 
 # Tests
 
