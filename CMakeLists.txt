@@ -39,6 +39,7 @@ target_link_libraries(procdraw
 # Tests
 
 add_executable(procdraw_tests
+        tests/ColorTests.cpp
         tests/ProcdrawMathTests.cpp)
 
 target_link_libraries(procdraw_tests
