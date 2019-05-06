@@ -21,6 +21,7 @@ add_library(procdraw_lib
         ProcdrawLib/D3D11Graphics.cpp
         ProcdrawLib/ProcdrawApp.cpp
         ProcdrawLib/ProcdrawMath.cpp
+        ProcdrawLib/VirtualMachine.cpp
         ProcdrawLib/WinUtils.cpp)
 
 target_compile_definitions(procdraw_lib PRIVATE UNICODE _UNICODE)
@@ -40,7 +41,10 @@ target_link_libraries(procdraw
 
 add_executable(procdraw_tests
         tests/ColorTests.cpp
-        tests/ProcdrawMathTests.cpp)
+        tests/PrintTo.cpp
+        tests/ProcdrawMathTests.cpp
+        tests/TestUtils.cpp
+        tests/VirtualMachineTests.cpp)
 
 target_link_libraries(procdraw_tests
         procdraw_lib

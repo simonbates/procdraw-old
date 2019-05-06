@@ -15,27 +15,27 @@ TEST(ColorTests, Hsv2rgbRed)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(0.0f, 1.0f, 1.0f);
-    ASSERT_EQ(1.0f, r);
-    ASSERT_EQ(0.0f, g);
-    ASSERT_EQ(0.0f, b);
+    EXPECT_EQ(1.0f, r);
+    EXPECT_EQ(0.0f, g);
+    EXPECT_EQ(0.0f, b);
 }
 
 TEST(ColorTests, Hsv2rgbGreen)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(120.0f, 1.0f, 1.0f);
-    ASSERT_EQ(0.0f, r);
-    ASSERT_EQ(1.0f, g);
-    ASSERT_EQ(0.0f, b);
+    EXPECT_EQ(0.0f, r);
+    EXPECT_EQ(1.0f, g);
+    EXPECT_EQ(0.0f, b);
 }
 
 TEST(ColorTests, Hsv2rgbBblue)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(240.0f, 1.0f, 1.0f);
-    ASSERT_EQ(0.0f, r);
-    ASSERT_EQ(0.0f, g);
-    ASSERT_EQ(1.0f, b);
+    EXPECT_EQ(0.0f, r);
+    EXPECT_EQ(0.0f, g);
+    EXPECT_EQ(1.0f, b);
 }
 
 }
