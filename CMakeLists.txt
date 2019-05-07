@@ -19,8 +19,11 @@ target_include_directories(gtest_main PUBLIC ${GTEST_DIR}/include)
 add_library(procdraw_lib
         ProcdrawLib/Color.cpp
         ProcdrawLib/D3D11Graphics.cpp
+        ProcdrawLib/Interpreter.cpp
+        ProcdrawLib/Printer.cpp
         ProcdrawLib/ProcdrawApp.cpp
         ProcdrawLib/ProcdrawMath.cpp
+        ProcdrawLib/Reader.cpp
         ProcdrawLib/VirtualMachine.cpp
         ProcdrawLib/WinUtils.cpp)
 
@@ -41,6 +44,9 @@ target_link_libraries(procdraw
 
 add_executable(procdraw_tests
         tests/ColorTests.cpp
+        tests/InterpreterPrintTests.cpp
+        tests/InterpreterReadTests.cpp
+        tests/InterpreterTests.cpp
         tests/PrintTo.cpp
         tests/ProcdrawMathTests.cpp
         tests/TestUtils.cpp
