@@ -4,13 +4,9 @@
 
 ## Building
 
-Procdraw is built with CMake and the Visual Studio command line tools.
-
 Prerequisites:
 
 - Visual Studio 2017 with the "Desktop development with C++" workload
-
-(CMake is included with Visual Studio.)
 
 To build Procdraw, open the VS 2017 "Developer Command Prompt", change directory to the `procdraw` working directory, and run:
 
