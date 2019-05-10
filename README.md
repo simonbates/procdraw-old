@@ -4,7 +4,7 @@
 
 ## Building
 
-Procdraw uses CMake and the Visual Studio command line tools.
+Procdraw is built with CMake and the Visual Studio command line tools.
 
 Prerequisites:
 
