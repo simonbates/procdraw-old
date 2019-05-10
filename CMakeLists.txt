@@ -14,6 +14,14 @@ target_include_directories(gtest
 add_library(gtest_main ${GTEST_DIR}/src/gtest_main.cc)
 target_include_directories(gtest_main PUBLIC ${GTEST_DIR}/include)
 
+# pugixml
+
+set(PUGIXML_DIR ${PROJECT_SOURCE_DIR}/vendor/pugixml-1.9)
+
+add_library(pugixml ${PUGIXML_DIR}/src/pugixml.cpp)
+
+target_include_directories(pugixml PUBLIC ${PUGIXML_DIR}/src)
+
 # procdraw_lib
 
 add_library(procdraw_lib
@@ -42,18 +50,32 @@ target_link_libraries(procdraw
 
 # Tests
 
+get_filename_component(TEST_DATA_DIR
+        "${PROJECT_SOURCE_DIR}/tests/test_data" ABSOLUTE)
+get_filename_component(FUNCTION_DOCS_FILE
+        "${PROJECT_SOURCE_DIR}/Documentation/manual/function_docs.xml" ABSOLUTE)
+
 add_executable(procdraw_tests
         tests/ColorTests.cpp
+        tests/DocTester.cpp
+        tests/DocTesterTests.cpp
+        tests/FunctionDocsTests.cpp
         tests/InterpreterPrintTests.cpp
         tests/InterpreterReadTests.cpp
         tests/InterpreterTests.cpp
         tests/PrintTo.cpp
+        tests/ProcdrawManual.cpp
         tests/ProcdrawMathTests.cpp
         tests/TestUtils.cpp
         tests/VirtualMachineTests.cpp)
 
+target_compile_definitions(procdraw_tests
+        PRIVATE PROCDRAW_TEST_DATA_DIR="${TEST_DATA_DIR}"
+        PRIVATE PROCDRAW_FUNCTION_DOCS_FILE="${FUNCTION_DOCS_FILE}")
+
 target_link_libraries(procdraw_tests
         procdraw_lib
+        pugixml
         gtest
         gtest_main)
 
