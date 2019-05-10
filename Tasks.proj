@@ -2,12 +2,12 @@
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <ItemGroup>
-        <SourceFiles Include="Procdraw/**/*.cpp"/>
-        <SourceFiles Include="Procdraw/**/*.h"/>
-        <SourceFiles Include="ProcdrawLib/**/*.cpp"/>
-        <SourceFiles Include="ProcdrawLib/**/*.h"/>
-        <SourceFiles Include="ProcdrawTests/**/*.cpp"/>
-        <SourceFiles Include="ProcdrawTests/**/*.h"/>
+        <SourceFiles Include="src/**/*.cpp"/>
+        <SourceFiles Include="src/**/*.h"/>
+        <SourceFiles Include="tests/**/*.cpp"/>
+        <SourceFiles Include="tests/**/*.h"/>
+        <SourceFiles Include="winmain/**/*.cpp"/>
+        <SourceFiles Include="winmain/**/*.h"/>
     </ItemGroup>
 
     <Target Name="Format">
