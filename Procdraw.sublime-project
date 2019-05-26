@@ -12,8 +12,8 @@
     "build_systems": [
         {
             "name": "Build Procdraw",
-            "working_dir": "${project_path}/build",
-            "shell_cmd": "nmake && nmake test",
+            "working_dir": "${project_path}",
+            "shell_cmd": "nmake test",
             "file_regex": "^\\s*(.+)\\((\\d+)\\)():\\s+(.*)$"
         }
     ]
