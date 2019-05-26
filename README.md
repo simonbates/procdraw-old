@@ -8,10 +8,9 @@ Prerequisites:
 
 - Visual Studio 2017 with the "Desktop development with C++" workload
 
-To build Procdraw, open the VS 2017 "Developer Command Prompt", change directory to the `procdraw` working directory, and run:
+Procdraw is built using the Visual Studio command line tools.
 
-    > mkdir build
-    > cd build
-    > cmake -G "NMake Makefiles" ..
+To build Procdraw, open a VS 2017 "Developer Command Prompt" and run:
+
     > nmake
     > nmake test
