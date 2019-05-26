@@ -6,9 +6,10 @@
 
 ### Prerequisites
 
-The Procdraw build is managed by an NMAKE Makefile and uses the Visual C++ command line build tools. NMAKE and the other build tools are distributed as part of Visual Studio. To get the build tools, install:
+The Procdraw build is done using the Visual Studio 2019 C++ command line build tools. To get the build tools, install one of the following:
 
-- Visual Studio 2017 with the "Desktop development with C++" workload
+- Visual Studio Build Tools 2019 with the "C++ build tools" workload
+- Or, Visual Studio 2019 with the "Desktop development with C++" workload
 
 ### Build
 
