@@ -12,6 +12,7 @@
 #include "WinUtils.h"
 #include <cmath>
 #include <d3dcompiler.h>
+#include <stdexcept>
 
 using Microsoft::WRL::ComPtr;
 
