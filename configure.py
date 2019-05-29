@@ -26,11 +26,13 @@ build.add_source_set('procdraw_sources',
         'src/Reader.cpp',
         'src/VirtualMachine.cpp',
         'src/WinUtils.cpp'
-    ])
+    ]
+)
 
 build.add_executable('Procdraw',
     sources = ['winmain/WinMain.cpp'],
     deps = ['procdraw_sources'],
-    include_dirs = ['src'])
+    include_dirs = ['src']
+)
 
 buildgen.generate_ninja(build, open(BUILD_FILENAME, 'w'))
