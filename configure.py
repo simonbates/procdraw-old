@@ -7,13 +7,14 @@ sys.path.insert(0, os.path.join(projectdir, 'scripts'))
 
 from procdraw import buildgen
 
+BUILD_DIR = 'build'
 BUILD_FILENAME = 'build.ninja'
-BUILD_DIR = 'build_ninja'
 
 build = buildgen.Build()
 
 build.builddir = BUILD_DIR
 build.cppflags = '/nologo /EHsc /DUNICODE /D_UNICODE'
+build.linkflags = '/nologo'
 
 build.add_source_set('procdraw_sources',
     sources = [
@@ -32,7 +33,8 @@ build.add_source_set('procdraw_sources',
 build.add_executable('Procdraw',
     sources = ['winmain/WinMain.cpp'],
     deps = ['procdraw_sources'],
-    include_dirs = ['src']
+    include_dirs = ['src'],
+    libs = ['d3d11.lib', 'D3DCompiler.lib']
 )
 
 buildgen.generate_ninja(build, open(BUILD_FILENAME, 'w'))
