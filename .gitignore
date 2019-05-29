@@ -1,2 +1,4 @@
 /build/
+/build.ninja
 /Procdraw.sublime-workspace
+__pycache__/
