@@ -70,22 +70,13 @@ def get_obj_file(src_file):
     return '$builddir/' + os.path.splitext(src_file)[0] + '.obj'
 
 def get_obj_files(target):
-    obj_files = []
-    for source_file in target['sources']:
-        obj_files.append(get_obj_file(source_file))
-    return obj_files
+    return [get_obj_file(source_file) for source_file in target['sources']]
 
 def get_executable_file(target):
     return '$builddir/' + target['name'] + '.exe'
 
 def format_defines(defines):
-    formatted = ''
-    for define in defines:
-        formatted += '/D{:s} '.format(define)
-    return formatted.rstrip()
+    return ' '.join(['/D{:s}'.format(define) for define in defines])
 
 def format_include_dirs(include_dirs):
-    formatted = ''
-    for dir in include_dirs:
-        formatted += '/I{:s} '.format(dir)
-    return formatted.rstrip()
+    return ' '.join(['/I{:s}'.format(dir) for dir in include_dirs])
