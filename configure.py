@@ -79,4 +79,4 @@ build.add_executable('procdraw_tests',
     include_dirs = ['src', GTEST_DIR + '/include', PUGIXML_DIR + '/src']
 )
 
-buildgen.generate_ninja(build, open(BUILD_FILENAME, 'w'))
+buildgen.Generator(build).write(open(BUILD_FILENAME, 'w'))
