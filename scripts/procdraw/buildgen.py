@@ -26,7 +26,8 @@ def generate_ninja(build, output):
     n.variable('builddir', build.builddir)
     n.variable('cppflags', build.cppflags)
     n.variable('linkflags', build.linkflags)
-    n.rule('cpp', 'cl /c /showIncludes $cppflags $include_dirs /Fo$out $in',
+    n.rule('cpp',
+           'cl /c /showIncludes $cppflags $defines $include_dirs /Fo$out $in',
            deps='msvc')
     n.rule('link', 'link $linkflags /out:$out $in $libs')
     for target in build.targets:
@@ -39,25 +40,31 @@ def write_target(build, target, n):
 
 def write_compiles(target, n):
     variables = {}
+    if 'cppflags' in target:
+        variables['cppflags'] = target['cppflags']
+    if 'defines' in target:
+        variables['defines'] = format_defines(target['defines'])
     if 'include_dirs' in target:
         variables['include_dirs'] = format_include_dirs(target['include_dirs'])
     for source_file in target['sources']:
-        n.build(outputs = get_obj_file(source_file),
-                rule = 'cpp',
-                inputs = source_file,
-                variables = variables)
+        n.build(outputs=get_obj_file(source_file),
+                rule='cpp',
+                inputs=source_file,
+                variables=variables)
 
 def write_link(build, target, n):
     obj_files = get_obj_files(target)
     for dep in target['deps']:
         obj_files = obj_files + get_obj_files(build.get_target(dep))
     variables = {}
+    if 'linkflags' in target:
+        variables['linkflags'] = target['linkflags']
     if 'libs' in target:
         variables['libs'] = ' '.join(target['libs'])
-    n.build(outputs = get_executable_file(target),
-            rule = 'link',
-            inputs = obj_files,
-            variables = variables)
+    n.build(outputs=get_executable_file(target),
+            rule='link',
+            inputs=obj_files,
+            variables=variables)
 
 def get_obj_file(src_file):
     return '$builddir/' + os.path.splitext(src_file)[0] + '.obj'
@@ -70,6 +77,12 @@ def get_obj_files(target):
 
 def get_executable_file(target):
     return '$builddir/' + target['name'] + '.exe'
+
+def format_defines(defines):
+    formatted = ''
+    for define in defines:
+        formatted += '/D{:s} '.format(define)
+    return formatted.rstrip()
 
 def format_include_dirs(include_dirs):
     formatted = ''
