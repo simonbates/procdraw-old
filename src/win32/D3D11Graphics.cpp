@@ -1,10 +1,10 @@
-/* Copyright (c) 2014, 2015, 2018 Simon Bates
+/* Copyright (c) 2014, 2015, 2018, 2019 Simon Bates
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // clang-format off
-#include "stdafx.h"
+#include "pch.h"
 #define _USE_MATH_DEFINES
 #include "D3D11Graphics.h"
 // clang-format on

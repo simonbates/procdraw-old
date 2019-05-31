@@ -45,11 +45,13 @@ build.add_source_set('procdraw_sources',
 
 build.add_executable('Procdraw',
     sources = [
-        'src/D3D11Graphics.cpp',
-        'src/ProcdrawApp.cpp',
-        'src/WinUtils.cpp',
-        'winmain/WinMain.cpp'
+        'src/win32/D3D11Graphics.cpp',
+        'src/win32/ProcdrawApp.cpp',
+        'src/win32/WinMain.cpp',
+        'src/win32/WinUtils.cpp'
     ],
+    precompiled_header = "pch.h",
+    precompiled_source = "src/win32/pch.cpp",
     deps = ['procdraw_sources'],
     include_dirs = ['src'],
     libs = ['d3d11.lib', 'D3DCompiler.lib']
