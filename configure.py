@@ -64,13 +64,14 @@ build.add_executable('procdraw_tests',
         'tests/InterpreterPrintTests.cpp',
         'tests/InterpreterReadTests.cpp',
         'tests/InterpreterTests.cpp',
-        'tests/pch.cpp',
         'tests/PrintTo.cpp',
         'tests/ProcdrawManual.cpp',
         'tests/ProcdrawMathTests.cpp',
         'tests/TestUtils.cpp',
         'tests/VirtualMachineTests.cpp'
     ],
+    precompiled_header = "pch.h",
+    precompiled_source = "tests/pch.cpp",
     defines = [
         'PROCDRAW_TEST_DATA_DIR=\\"tests/test_data\\"',
         'PROCDRAW_FUNCTION_DOCS_FILE=\\"Documentation/manual/function_docs.xml\\"'
