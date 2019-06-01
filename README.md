@@ -8,14 +8,10 @@ Procdraw is a work-in-progress live programming environment.
 
 ### Prerequisites
 
-- Visual Studio 2019 C++ command line build tools
-    - The build tools can be installed by themselves, or as part of the Visual Studio IDE:
-        - Visual Studio Build Tools 2019 with the "C++ build tools" workload
-        - Or, Visual Studio 2019 with the "Desktop development with C++" workload
-    - Required components:
-        - MSVC v142
-        - Windows 10 SDK
-        - C++ CMake tools for Windows (for Ninja)
+- Visual Studio 2019 C++ command line build tools, with components:
+    - MSVC v142
+    - Windows 10 SDK
+    - C++ CMake tools for Windows (for Ninja)
 - Python 3
 
 ### Build
