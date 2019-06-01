@@ -13,7 +13,7 @@
         {
             "name": "Build Procdraw",
             "working_dir": "${project_path}",
-            "shell_cmd": "nmake test",
+            "shell_cmd": "ninja && .\\build\\procdraw_tests.exe",
             "file_regex": "^\\s*(.+)\\((\\d+)\\)():\\s+(.*)$"
         }
     ]
