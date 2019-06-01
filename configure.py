@@ -15,7 +15,7 @@ PUGIXML_DIR = 'vendor/pugixml-1.9'
 build = buildgen.Build()
 
 build.builddir = BUILD_DIR
-build.cppflags = '/nologo /EHsc /DUNICODE /D_UNICODE'
+build.cppflags = '/nologo /std:c++17 /EHsc /DUNICODE /D_UNICODE'
 build.linkflags = '/nologo'
 
 build.add_source_set('gtest',
