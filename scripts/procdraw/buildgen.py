@@ -36,7 +36,7 @@ class Generator:
         n.rule('cpp_pch',
                'cl /c /showIncludes $cppflags $defines $include_dirs /Yc$pch_header /Fp$pch_pch /Fo$pch_obj $in',
                deps='msvc')
-        n.rule('link', 'link $linkflags /out:$out $in $pch_obj $libs')
+        n.rule('link', 'link $linkflags /out:$out $in $pch_objs $libs')
         for target in self.build.targets:
             self._write_target(target, n)
 
@@ -88,8 +88,12 @@ class Generator:
 
     def _write_link(self, target, n):
         obj_files = self._get_obj_files(target)
+        pch_obj_files = []
         for dep in target['deps']:
-            obj_files += self._get_obj_files(self.build.get_target(dep))
+            dep_target = self.build.get_target(dep)
+            obj_files += self._get_obj_files(dep_target)
+            if self._target_has_pch(dep_target):
+                pch_obj_files.append(self._get_pch_obj_file(dep_target))
         implicit = None
         variables = {}
         if 'linkflags' in target:
@@ -98,7 +102,8 @@ class Generator:
             variables['libs'] = ' '.join(target['libs'])
         if self._target_has_pch(target):
             implicit = self._get_pch_file(target)
-            variables['pch_obj'] = self._get_pch_obj_file(target)
+            pch_obj_files.append(self._get_pch_obj_file(target))
+        variables['pch_objs'] = ' '.join(pch_obj_files)
         n.build(outputs=self._get_executable_file(target),
                 rule='link',
                 inputs=obj_files,

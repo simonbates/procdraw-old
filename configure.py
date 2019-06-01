@@ -35,25 +35,26 @@ build.add_source_set('pugixml',
 build.add_source_set('procdraw_sources',
     sources = [
         'src/Color.cpp',
+        'src/D3D11Graphics.cpp',
         'src/Interpreter.cpp',
         'src/Printer.cpp',
+        'src/ProcdrawApp.cpp',
         'src/ProcdrawMath.cpp',
         'src/Reader.cpp',
         'src/VirtualMachine.cpp',
-    ]
+        'src/WinUtils.cpp'
+    ],
+    precompiled_header = "pch.h",
+    precompiled_source = "src/pch.cpp"
 )
 
 build.add_executable('Procdraw',
     sources = [
-        'src/win32/D3D11Graphics.cpp',
-        'src/win32/ProcdrawApp.cpp',
-        'src/win32/WinMain.cpp',
-        'src/win32/WinUtils.cpp'
+        'src/WinMain.cpp'
     ],
     precompiled_header = "pch.h",
-    precompiled_source = "src/win32/pch.cpp",
+    precompiled_source = "src/pch.cpp",
     deps = ['procdraw_sources'],
-    include_dirs = ['src'],
     libs = ['d3d11.lib', 'D3DCompiler.lib']
 )
 
@@ -79,7 +80,8 @@ build.add_executable('procdraw_tests',
         'PROCDRAW_FUNCTION_DOCS_FILE=\\"Documentation/manual/function_docs.xml\\"'
     ],
     deps = ['procdraw_sources', 'gtest', 'pugixml'],
-    include_dirs = ['src', GTEST_DIR + '/include', PUGIXML_DIR + '/src']
+    include_dirs = ['src', GTEST_DIR + '/include', PUGIXML_DIR + '/src'],
+    libs = ['d3d11.lib', 'D3DCompiler.lib']
 )
 
 buildgen.Generator(build).write(open(BUILD_FILENAME, 'w'))
