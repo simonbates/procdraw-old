@@ -2,21 +2,31 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/4wiskg8t3hflfsuo?svg=true)](https://ci.appveyor.com/project/simonbates/procdraw)
 
+Procdraw is a work-in-progress live programming environment.
+
 ## Building
 
 ### Prerequisites
 
-The Procdraw build is done using the Visual Studio 2019 C++ command line build tools. To get the build tools, install one of the following:
+To build Procdraw, we need:
 
-- Visual Studio Build Tools 2019 with the "C++ build tools" workload
-- Or, Visual Studio 2019 with the "Desktop development with C++" workload
+- Visual Studio 2019 C++ command line build tools
+    - The build tools can be installed by themselves, or as part of the Visual Studio IDE:
+        - Visual Studio Build Tools 2019 with the "C++ build tools" workload
+        - Or, Visual Studio 2019 with the "Desktop development with C++" workload
+    - Required components:
+        - MSVC v142
+        - Windows 10 SDK
+        - C++ CMake tools for Windows (for Ninja)
+- Python 3
 
 ### Build
 
-To build Procdraw, open a Visual Studio "Developer Command Prompt" and run:
+To build Procdraw, run the following in a Visual Studio "Developer Command Prompt":
 
-    > nmake
+    > python configure.py
+    > ninja
 
-To run the automated tests:
+The automated tests can be run with:
 
-    > nmake test
+    > .\build\procdraw_tests.exe
