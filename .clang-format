@@ -9,7 +9,7 @@ ColumnLimit: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 Cpp11BracedListStyle: true
 IncludeCategories:
-  - Regex:          'stdafx\.h'
+  - Regex:          'pch\.h'
     Priority:       -1
 IndentWidth: 4
 Language: Cpp
