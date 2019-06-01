@@ -9,8 +9,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(ProcdrawMathTest, ClampInt)
 {
     EXPECT_EQ(100, Clamp(50, 100, 200));
@@ -130,5 +128,5 @@ TEST(ProcdrawMathTest, WrapTest)
     EXPECT_EQ(-13.0, Wrap(-20.0, -10.0, -33.0));
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

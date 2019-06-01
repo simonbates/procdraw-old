@@ -11,11 +11,8 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 class DocTesterTests : public ::testing::Test {
 protected:
-
     void ExpectFailure(const std::string& filename,
                        int expectedNumTests,
                        const std::string& expectedMessage)
@@ -31,7 +28,6 @@ protected:
     {
         return PROCDRAW_TEST_DATA_DIR + std::string("/") + filename;
     }
-
 };
 
 TEST_F(DocTesterTests, NonExistingFileThrowsException)
@@ -83,5 +79,5 @@ TEST_F(DocTesterTests, Passing)
     EXPECT_TRUE(tester.Messages().empty());
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

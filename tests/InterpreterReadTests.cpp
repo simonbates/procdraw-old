@@ -11,8 +11,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(InterpreterReadTests, ReadTrue)
 {
     Interpreter interpreter;
@@ -55,20 +53,20 @@ TEST(InterpreterReadTests, ReadNil)
 TEST(InterpreterReadTests, ReadList)
 {
     Interpreter interpreter;
-    interpreter.Read("(a b c)");                             // (a b c)
+    interpreter.Read("(a b c)"); // (a b c)
     CheckStackSize(1, interpreter);
     EXPECT_EQ(ObjType::ConsPtr, interpreter.Type());
-    interpreter.Next();                                      // (b c) a
+    interpreter.Next(); // (b c) a
     EXPECT_EQ(ObjType::SymbolPtr, interpreter.Type());
-    EXPECT_EQ(std::string("a"), interpreter.PopSymbol());    // (b c)
+    EXPECT_EQ(std::string("a"), interpreter.PopSymbol()); // (b c)
     EXPECT_EQ(ObjType::ConsPtr, interpreter.Type());
-    interpreter.Next();                                      // (c) b
+    interpreter.Next(); // (c) b
     EXPECT_EQ(ObjType::SymbolPtr, interpreter.Type());
-    EXPECT_EQ(std::string("b"), interpreter.PopSymbol());    // (c)
+    EXPECT_EQ(std::string("b"), interpreter.PopSymbol()); // (c)
     EXPECT_EQ(ObjType::ConsPtr, interpreter.Type());
-    interpreter.Next();                                     // nil c
+    interpreter.Next(); // nil c
     EXPECT_EQ(ObjType::SymbolPtr, interpreter.Type());
-    EXPECT_EQ(std::string("c"), interpreter.PopSymbol());   // nil
+    EXPECT_EQ(std::string("c"), interpreter.PopSymbol()); // nil
     EXPECT_TRUE(interpreter.IsNull());
     CheckStackSize(1, interpreter);
 }
@@ -76,12 +74,12 @@ TEST(InterpreterReadTests, ReadList)
 TEST(InterpreterReadTests, ReadDottedPair)
 {
     Interpreter interpreter;
-    interpreter.Read("(a . b)");                            // (a . b)
+    interpreter.Read("(a . b)"); // (a . b)
     CheckStackSize(1, interpreter);
     EXPECT_EQ(ObjType::ConsPtr, interpreter.Type());
-    interpreter.Next();                                     // b a
+    interpreter.Next(); // b a
     EXPECT_EQ(ObjType::SymbolPtr, interpreter.Type());
-    EXPECT_EQ(std::string("a"), interpreter.PopSymbol());   // b
+    EXPECT_EQ(std::string("a"), interpreter.PopSymbol()); // b
     EXPECT_EQ(ObjType::SymbolPtr, interpreter.Type());
     EXPECT_EQ(std::string("b"), interpreter.PopSymbol());
     CheckStackSize(0, interpreter);
@@ -132,5 +130,5 @@ TEST(InterpreterReadTests, ReadHyphenMinusSymbol)
     EXPECT_EQ(std::string("-"), interpreter.PopSymbol());
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

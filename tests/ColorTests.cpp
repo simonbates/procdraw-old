@@ -9,8 +9,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(ColorTests, Hsv2rgbRed)
 {
     float r, g, b;
@@ -38,5 +36,5 @@ TEST(ColorTests, Hsv2rgbBblue)
     EXPECT_EQ(1.0f, b);
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

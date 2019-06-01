@@ -10,8 +10,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(InterpreterPrintTests, PrintToStringAtoms)
 {
     Interpreter interpreter;
@@ -72,5 +70,5 @@ TEST(InterpreterPrintTests, PrintToStringDottedPair)
     CheckStackSize(0, interpreter);
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

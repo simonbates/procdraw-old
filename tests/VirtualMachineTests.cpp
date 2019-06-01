@@ -11,8 +11,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(VirtualMachineTests, BooleansOnStack)
 {
     VirtualMachine vm;
@@ -68,35 +66,35 @@ TEST(VirtualMachineTests, ConsListOfTwoElements)
 {
     VirtualMachine vm;
     CheckStackSize(0, vm);
-    vm.PushNil();                   // nil
+    vm.PushNil(); // nil
     CheckStackSize(1, vm);
-    vm.PushSymbol("bar");           // nil bar
+    vm.PushSymbol("bar"); // nil bar
     CheckStackSize(2, vm);
-    vm.Cons();                      // (bar)
+    vm.Cons(); // (bar)
     CheckStackSize(1, vm);
-    vm.PushSymbol("foo");           // (bar) foo
+    vm.PushSymbol("foo"); // (bar) foo
     CheckStackSize(2, vm);
-    vm.Cons();                      // (foo bar)
+    vm.Cons(); // (foo bar)
     CheckStackSize(1, vm);
     EXPECT_EQ(ObjType::ConsPtr, vm.Type());
-    vm.Dup();                       // (foo bar) (foo bar)
+    vm.Dup(); // (foo bar) (foo bar)
     CheckStackSize(2, vm);
-    vm.Car();                       // (foo bar) foo
+    vm.Car(); // (foo bar) foo
     CheckStackSize(2, vm);
     EXPECT_EQ(ObjType::SymbolPtr, vm.Type());
     EXPECT_EQ(std::string("foo"), vm.PopSymbol()); // (foo bar)
     CheckStackSize(1, vm);
     EXPECT_EQ(ObjType::ConsPtr, vm.Type());
-    vm.Cdr();                       // (bar)
+    vm.Cdr(); // (bar)
     CheckStackSize(1, vm);
     EXPECT_EQ(ObjType::ConsPtr, vm.Type());
-    vm.Dup();                       // (bar) (bar)
+    vm.Dup(); // (bar) (bar)
     CheckStackSize(2, vm);
-    vm.Car();                       // (bar) bar
+    vm.Car(); // (bar) bar
     CheckStackSize(2, vm);
     EXPECT_EQ(std::string("bar"), vm.PopSymbol()); // (bar)
     CheckStackSize(1, vm);
-    vm.Cdr();                       // nil
+    vm.Cdr(); // nil
     CheckStackSize(1, vm);
     EXPECT_TRUE(vm.IsNull());
     vm.Drop();
@@ -197,24 +195,24 @@ TEST(VirtualMachineTests, Next)
 {
     VirtualMachine vm;
     CheckStackSize(0, vm);
-    vm.PushNil();                           // nil
-    vm.PushReal(3.0);                       // nil 3
-    vm.Cons();                              // (3)
-    vm.PushReal(2.0);                       // (3) 2
-    vm.Cons();                              // (2 3)
-    vm.PushReal(1.0);                       // (2 3) 1
-    vm.Cons();                              // (1 2 3)
+    vm.PushNil();     // nil
+    vm.PushReal(3.0); // nil 3
+    vm.Cons();        // (3)
+    vm.PushReal(2.0); // (3) 2
+    vm.Cons();        // (2 3)
+    vm.PushReal(1.0); // (2 3) 1
+    vm.Cons();        // (1 2 3)
     CheckStackSize(1, vm);
-    vm.Next();                              // (2 3) 1
+    vm.Next(); // (2 3) 1
     CheckStackSize(2, vm);
     EXPECT_EQ(ObjType::Real, vm.Type());
-    EXPECT_EQ(1.0, vm.PopReal());           // (2 3)
-    vm.Next();                              // (3) 2
+    EXPECT_EQ(1.0, vm.PopReal()); // (2 3)
+    vm.Next();                    // (3) 2
     EXPECT_EQ(ObjType::Real, vm.Type());
-    EXPECT_EQ(2.0, vm.PopReal());           // (3)
-    vm.Next();                              // nil 3
+    EXPECT_EQ(2.0, vm.PopReal()); // (3)
+    vm.Next();                    // nil 3
     EXPECT_EQ(ObjType::Real, vm.Type());
-    EXPECT_EQ(3.0, vm.PopReal());           // nil
+    EXPECT_EQ(3.0, vm.PopReal()); // nil
     CheckStackSize(1, vm);
     EXPECT_TRUE(vm.IsNull());
 }
@@ -266,5 +264,5 @@ TEST(VirtualMachineTests, LoadLooksUpCurrentEnvBeforeGlobal)
     EXPECT_EQ(42.0, vm.PopReal());
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

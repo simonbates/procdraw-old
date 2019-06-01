@@ -14,8 +14,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(InterpreterTests, EvalSumExpression)
 {
     Interpreter interpreter;
@@ -106,5 +104,5 @@ TEST(InterpreterTests, EvalSetGlobalVariable)
     EXPECT_EQ(5.0, interpreter.PopReal());
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw

@@ -30,7 +30,7 @@ void PrintTo(const ObjType& type, std::ostream* os)
         *os << "Real";
         break;
     case Procdraw::ObjType::Subr:
-        *os <<"Subr";
+        *os << "Subr";
         break;
     case Procdraw::ObjType::SymbolPtr:
         *os << "SymbolPtr";
@@ -41,4 +41,4 @@ void PrintTo(const ObjType& type, std::ostream* os)
     }
 }
 
-}
+} // namespace Procdraw

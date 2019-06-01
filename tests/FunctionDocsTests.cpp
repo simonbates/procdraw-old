@@ -9,8 +9,6 @@
 namespace Procdraw {
 namespace Tests {
 
-// clang-format off
-
 TEST(FunctionDocsTests, RunFunctionDocsTests)
 {
     const int expectedNumTests = 15;
@@ -24,5 +22,5 @@ TEST(FunctionDocsTests, RunFunctionDocsTests)
     }
 }
 
-}
-}
+} // namespace Tests
+} // namespace Procdraw
