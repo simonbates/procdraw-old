@@ -1,4 +1,0 @@
--std=c++17
--Isrc
--Ivendor/googletest-1.8.1/googletest/include
--Ivendor/pugixml-1.9/src

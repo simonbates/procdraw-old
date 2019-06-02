@@ -1,3 +1,4 @@
+import json
 import ninja_syntax
 import os
 
@@ -21,7 +22,7 @@ class Build:
         target.update(target_vars)
         self.targets.append(target)
 
-class Generator:
+class MsvcNinjaGenerator:
     def __init__(self, build):
         self.build = build
 
@@ -29,12 +30,13 @@ class Generator:
         n = ninja_syntax.Writer(output)
         n.variable('builddir', self.build.builddir)
         n.variable('cppflags', self.build.cppflags)
+        n.variable('cppstd', self.build.cppstd)
         n.variable('linkflags', self.build.linkflags)
         n.rule('cpp',
-               'cl /c /showIncludes $cppflags $defines $include_dirs $pchflags /Fo$out $in',
+               'cl /c /showIncludes $cppflags /std:$cppstd $defines $include_dirs $pchflags /Fo$out $in',
                deps='msvc')
         n.rule('cpp_pch',
-               'cl /c /showIncludes $cppflags $defines $include_dirs /Yc$pch_header /Fp$pch_pch /Fo$pch_obj $in',
+               'cl /c /showIncludes $cppflags /std:$cppstd $defines $include_dirs /Yc$pch_header /Fp$pch_pch /Fo$pch_obj $in',
                deps='msvc')
         n.rule('link', 'link $linkflags /out:$out $in $pch_objs $libs')
         for target in self.build.targets:
@@ -138,3 +140,32 @@ class Generator:
 
     def _format_include_dirs(self, include_dirs):
         return ' '.join(['/I{:s}'.format(dir) for dir in include_dirs])
+
+class ClangCompilationDatabaseGenerator:
+    def __init__(self, build, command_prog):
+        self.build = build
+        self.command_prog = command_prog
+
+    def write(self, output):
+        db = []
+        for target in self.build.targets:
+            db.extend(self._get_command_objects(target))
+        print(json.dumps(db, indent=4), file=output)
+
+    def _get_command_objects(self, target):
+        command_objects = []
+        for source_file in target['sources']:
+            command = [self.command_prog]
+            command.append('-std={:s}'.format(self.build.cppstd))
+            if 'defines' in target:
+                for define in target['defines']:
+                    command.append('-D{:s}'.format(define))
+            if 'include_dirs' in target:
+                for dir in target['include_dirs']:
+                    command.append('-I{:s}'.format(dir))
+            command_objects.append({
+                'directory': self.build.projectdir,
+                'command': ' '.join(command),
+                'file': source_file
+            })
+        return command_objects
