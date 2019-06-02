@@ -14,13 +14,28 @@ class Build:
 
     def get_target(self, name):
         for target in self.targets:
-            if target['name'] == name:
+            if target.name == name:
                 return target
 
     def _add_target(self, name, type, target_vars):
-        target = {'name': name, 'type': type}
-        target.update(target_vars)
-        self.targets.append(target)
+        self.targets.append(Target(name, type, target_vars))
+
+class Target:
+    def __init__(self, name, type, vars):
+        self.name = name
+        self.type = type
+        self.sources = vars.get('sources', [])
+        self.precompiled_header = vars.get('precompiled_header', None)
+        self.precompiled_source = vars.get('precompiled_source', None)
+        self.cppflags = vars.get('cppflags', None)
+        self.defines = vars.get('defines', [])
+        self.deps = vars.get('deps', [])
+        self.include_dirs = vars.get('include_dirs', [])
+        self.libs = vars.get('libs', [])
+
+    def has_pch(self):
+        return ((self.precompiled_header is not None) and
+            (self.precompiled_source is not None))
 
 class MsvcNinjaGenerator:
     def __init__(self, build):
@@ -43,34 +58,33 @@ class MsvcNinjaGenerator:
             self._write_target(target, n)
 
     def _write_target(self, target, n):
-        if self._target_has_pch(target):
+        if target.has_pch():
             self._write_pch(target, n)
         self._write_compiles(target, n)
-        if target['type'] == 'executable':
+        if target.type == 'executable':
             self._write_link(target, n)
 
     def _write_pch(self, target, n):
-        pch_pch = self._get_pch_file(target)
-        pch_obj = self._get_pch_obj_file(target)
+        pch_pch_file = self._get_pch_pch_file(target)
+        pch_obj_file = self._get_pch_obj_file(target)
         variables = self._prepare_compile_vars(target)
-        variables['pch_header'] = target["precompiled_header"]
-        variables['pch_pch'] = pch_pch
-        variables['pch_obj'] = pch_obj
-        n.build(outputs=pch_pch,
+        variables['pch_header'] = target.precompiled_header
+        variables['pch_pch'] = pch_pch_file
+        variables['pch_obj'] = pch_obj_file
+        n.build(outputs=pch_pch_file,
                 rule='cpp_pch',
-                inputs=target["precompiled_source"],
+                inputs=target.precompiled_source,
                 variables=variables)
 
     def _write_compiles(self, target, n):
-        implicit = None
+        implicit = []
         variables = self._prepare_compile_vars(target)
-        if self._target_has_pch(target):
-            pch_file = self._get_pch_file(target)
-            implicit = pch_file
-            pchflags = '/Yu' + target["precompiled_header"]
-            pchflags += ' /Fp' + pch_file
-            variables['pchflags'] = pchflags
-        for source_file in target['sources']:
+        if target.has_pch():
+            pch_pch_file = self._get_pch_pch_file(target)
+            implicit.append(pch_pch_file)
+            variables['pchflags'] = '/Yu{:s} /Fp{:s}'.format(
+                target.precompiled_header, pch_pch_file)
+        for source_file in target.sources:
             n.build(outputs=self._get_obj_file(source_file),
                     rule='cpp',
                     inputs=source_file,
@@ -78,68 +92,62 @@ class MsvcNinjaGenerator:
                     variables=variables)
 
     def _prepare_compile_vars(self, target):
-        variables = {}
-        if 'cppflags' in target:
-            variables['cppflags'] = target['cppflags']
-        if 'defines' in target:
-            variables['defines'] = self._format_defines(target['defines'])
-        if 'include_dirs' in target:
-            variables['include_dirs'] \
-                = self._format_include_dirs(target['include_dirs'])
-        return variables
+        return {
+            'cppflags': target.cppflags,
+            'defines': self._format_defines(target.defines),
+            'include_dirs': self._format_include_dirs(target.include_dirs)
+        }
 
     def _write_link(self, target, n):
         obj_files = self._get_obj_files(target)
         pch_obj_files = []
-        for dep in target['deps']:
+        implicit = []
+        if target.has_pch():
+            pch_obj_files.append(self._get_pch_obj_file(target))
+            implicit.append(self._get_pch_pch_file(target))
+        for dep in target.deps:
             dep_target = self.build.get_target(dep)
             obj_files += self._get_obj_files(dep_target)
-            if self._target_has_pch(dep_target):
+            if dep_target.has_pch():
                 pch_obj_files.append(self._get_pch_obj_file(dep_target))
-        implicit = None
-        variables = {}
-        if 'linkflags' in target:
-            variables['linkflags'] = target['linkflags']
-        if 'libs' in target:
-            variables['libs'] = ' '.join(target['libs'])
-        if self._target_has_pch(target):
-            implicit = self._get_pch_file(target)
-            pch_obj_files.append(self._get_pch_obj_file(target))
-        variables['pch_objs'] = ' '.join(pch_obj_files)
+        variables = {
+            'libs': ' '.join(target.libs),
+            'pch_objs': ' '.join(pch_obj_files)
+        }
         n.build(outputs=self._get_executable_file(target),
                 rule='link',
                 inputs=obj_files,
                 implicit=implicit,
                 variables=variables)
 
-    def _target_has_pch(self, target):
-        return 'precompiled_header' in target \
-            and 'precompiled_source' in target
-
     def _get_obj_file(self, src_file):
-        return '$builddir/' + os.path.splitext(src_file)[0] + '.obj'
+        return '$builddir/{:s}.obj'.format(os.path.splitext(src_file)[0])
 
     def _get_obj_files(self, target):
-        return [self._get_obj_file(src_file) for src_file in target['sources']]
+        return [self._get_obj_file(src_file) for src_file in target.sources]
 
-    def _get_pch_file(self, target):
-        return '$builddir/' \
-            + target['name'] + '.pch/' \
-            + os.path.splitext(target['precompiled_header'])[0] + '.pch'
+    def _get_pch_pch_file(self, target):
+        return '$builddir/{:s}.pch/{:s}.pch'.format(target.name,
+            os.path.splitext(os.path.basename(target.precompiled_header))[0])
 
     def _get_pch_obj_file(self, target):
-        return '$builddir/' \
-            + target['name'] + '.pch/' \
-            + os.path.splitext(os.path.basename(target['precompiled_source']))[0] + '.obj'
+        return '$builddir/{:s}.pch/{:s}.obj'.format(target.name,
+            os.path.splitext(os.path.basename(target.precompiled_source))[0])
 
     def _get_executable_file(self, target):
-        return '$builddir/' + target['name'] + '.exe'
+        return '$builddir/{:s}.exe'.format(target.name)
 
     def _format_defines(self, defines):
-        return ' '.join(['/D{:s}'.format(define) for define in defines])
+        if len(defines) > 0:
+            return ' '.join(['/D{:s}'.format(define) for define in defines])
+        else:
+            return None
 
     def _format_include_dirs(self, include_dirs):
-        return ' '.join(['/I{:s}'.format(dir) for dir in include_dirs])
+        if len(include_dirs) > 0:
+            return ' '.join(['/I{:s}'.format(dir) for dir in include_dirs])
+        else:
+            return None
 
 class ClangCompilationDatabaseGenerator:
     def __init__(self, build, command_prog):
@@ -154,15 +162,13 @@ class ClangCompilationDatabaseGenerator:
 
     def _get_command_objects(self, target):
         command_objects = []
-        for source_file in target['sources']:
+        for source_file in target.sources:
             command = [self.command_prog]
             command.append('-std={:s}'.format(self.build.cppstd))
-            if 'defines' in target:
-                for define in target['defines']:
-                    command.append('-D{:s}'.format(define))
-            if 'include_dirs' in target:
-                for dir in target['include_dirs']:
-                    command.append('-I{:s}'.format(dir))
+            for define in target.defines:
+                command.append('-D{:s}'.format(define))
+            for dir in target.include_dirs:
+                command.append('-I{:s}'.format(dir))
             command_objects.append({
                 'directory': self.build.projectdir,
                 'command': ' '.join(command),
