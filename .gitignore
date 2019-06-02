@@ -1,10 +1,5 @@
-# Visual Studio
-
-/.vs/
-Debug/
-Release/
-*.vcxproj.user
-
-# Sublime Text
-
+/build/
+/build.ninja
+/compile_commands.json
 /Procdraw.sublime-workspace
+__pycache__/

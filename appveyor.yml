@@ -1,13 +1,11 @@
-image: Visual Studio 2017
-configuration:
-  - Debug
-  - Release
-platform: x86
+image: Visual Studio 2019
 install:
-  - cmd: pip install lxml
-build:
-  project: Procdraw.sln
+  - pip install lxml
+build_script:
+  - call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvars32.bat"
+  - C:\Python37\python configure.py
+  - ninja -v
 before_test:
   - msbuild Tasks.proj /t:ValidateXml
 test_script:
-  - vstest.console /logger:Appveyor %CONFIGURATION%\ProcdrawTests.dll
+  - .\build\procdraw_tests.exe
