@@ -72,6 +72,7 @@ D3D11Graphics::D3D11Graphics(HWND hWnd)
       d3dFeatureLevel_(D3D_FEATURE_LEVEL_10_0)
 {
     InitD3D();
+    InitD2D();
     CreateVertexShader();
     CreatePixelShader();
 
@@ -201,83 +202,84 @@ void D3D11Graphics::Scale(float x, float y, float z)
     DirectX::XMStoreFloat4x4(&worldMatrix_, scalingMatrix * worldMatrix);
 }
 
+void D3D11Graphics::Rectangle()
+{
+    D2D1_SIZE_F targetSize = backBufferRenderTarget_->GetSize();
+
+    backBufferRenderTarget_->BeginDraw();
+
+    D2D1_RECT_F rect = D2D1::RectF(
+        0.0f,
+        0.0f,
+        targetSize.width / 2,
+        targetSize.height / 2);
+
+    backBufferRenderTarget_->FillRectangle(&rect, rectangleBrush_.get());
+
+    THROW_IF_FAILED(backBufferRenderTarget_->EndDraw());
+}
+
 void D3D11Graphics::InitD3D()
 {
-    // Device, context, and swap chain
-
     RECT rc;
     GetClientRect(hWnd_, &rc);
     UINT width = rc.right - rc.left;
     UINT height = rc.bottom - rc.top;
 
-    UINT createDeviceFlags = 0;
+    UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-    D3D_DRIVER_TYPE driver_type = D3D_DRIVER_TYPE_HARDWARE;
-
-    D3D_FEATURE_LEVEL feature_levels[] = {
+    D3D_FEATURE_LEVEL featureLevels[] = {
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
     };
-    UINT num_feature_levels = ARRAYSIZE(feature_levels);
+    UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory(&sd, sizeof(sd));
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = width;
-    sd.BufferDesc.Height = height;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    DXGI_SWAP_CHAIN_DESC swapDesc;
+    ZeroMemory(&swapDesc, sizeof(swapDesc));
+    swapDesc.BufferCount = 1;
+    swapDesc.BufferDesc.Width = width;
+    swapDesc.BufferDesc.Height = height;
+    swapDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
     // TODO: RefreshRate is ignored in windowed mode
-    // TODO: and in full-screen mode, it must be set to a rate supported by the display
-    // TODO: For full-screen mode, get the available display refresh rates using IDXGIOutput::GetDisplayModeList
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = hWnd_;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
-    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    // TODO: and in full-screen mode, it must be set to a rate supported
+    //       by the display
+    // TODO: For full-screen mode, get the available display refresh rates
+    //       using IDXGIOutput::GetDisplayModeList
+    swapDesc.BufferDesc.RefreshRate.Numerator = 60;
+    swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+    swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapDesc.OutputWindow = hWnd_;
+    swapDesc.SampleDesc.Count = 1;
+    swapDesc.SampleDesc.Quality = 0;
+    swapDesc.Windowed = TRUE;
+    swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr,
-                                               driver_type,
-                                               nullptr,
-                                               createDeviceFlags,
-                                               feature_levels,
-                                               num_feature_levels,
-                                               D3D11_SDK_VERSION,
-                                               &sd,
-                                               &swapChain_,
-                                               &d3dDevice_,
-                                               &d3dFeatureLevel_,
-                                               &d3dContext_);
-    if (hr == E_INVALIDARG) {
-        // Try again without D3D_FEATURE_LEVEL_11_1
-        hr = D3D11CreateDeviceAndSwapChain(nullptr,
-                                           driver_type,
-                                           nullptr,
-                                           createDeviceFlags,
-                                           &feature_levels[1],
-                                           num_feature_levels - 1,
-                                           D3D11_SDK_VERSION,
-                                           &sd,
-                                           &swapChain_,
-                                           &d3dDevice_,
-                                           &d3dFeatureLevel_,
-                                           &d3dContext_);
-    }
-    THROW_IF_FAILED(hr);
+    THROW_IF_FAILED(D3D11CreateDeviceAndSwapChain(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        nullptr,
+        createDeviceFlags,
+        featureLevels,
+        numFeatureLevels,
+        D3D11_SDK_VERSION,
+        &swapDesc,
+        &swapChain_,
+        &d3dDevice_,
+        &d3dFeatureLevel_,
+        &d3dContext_));
 
     // Render Target View
 
-    THROW_IF_FAILED(swapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
-                                          reinterpret_cast<void**>(&backBuffer_)));
+    THROW_IF_FAILED(swapChain_->GetBuffer(
+        0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer_)));
 
-    THROW_IF_FAILED(d3dDevice_->CreateRenderTargetView(backBuffer_.get(), nullptr, &renderTargetView_));
+    THROW_IF_FAILED(d3dDevice_->CreateRenderTargetView(
+        backBuffer_.get(), nullptr, &renderTargetView_));
 
     // Depth Stencil View
 
@@ -294,24 +296,57 @@ void D3D11Graphics::InitD3D()
     depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     depthStencilDesc.CPUAccessFlags = 0;
     depthStencilDesc.MiscFlags = 0;
-    THROW_IF_FAILED(d3dDevice_->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer_));
 
-    THROW_IF_FAILED(d3dDevice_->CreateDepthStencilView(depthStencilBuffer_.get(), nullptr, &depthStencilView_));
+    THROW_IF_FAILED(d3dDevice_->CreateTexture2D(
+        &depthStencilDesc, nullptr, &depthStencilBuffer_));
+
+    THROW_IF_FAILED(d3dDevice_->CreateDepthStencilView(
+        depthStencilBuffer_.get(), nullptr, &depthStencilView_));
+
+    // Set Viewport
+
+    D3D11_VIEWPORT viewport;
+    viewport.Width = (FLOAT)width;
+    viewport.Height = (FLOAT)height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+
+    d3dContext_->RSSetViewports(1, &viewport);
 
     // Configure Output-Merger
 
-    d3dContext_->OMSetRenderTargets(1, renderTargetView_.addressof(), depthStencilView_.get());
+    d3dContext_->OMSetRenderTargets(
+        1, renderTargetView_.addressof(), depthStencilView_.get());
+}
 
-    // Viewport
+void D3D11Graphics::InitD2D()
+{
+    THROW_IF_FAILED(D2D1CreateFactory(
+        D2D1_FACTORY_TYPE_SINGLE_THREADED,
+        __uuidof(ID2D1Factory),
+        reinterpret_cast<void**>(&d2dFactory_)));
 
-    D3D11_VIEWPORT vp;
-    vp.Width = (FLOAT)width;
-    vp.Height = (FLOAT)height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    d3dContext_->RSSetViewports(1, &vp);
+    FLOAT dpiX;
+    FLOAT dpiY;
+    d2dFactory_->GetDesktopDpi(&dpiX, &dpiY);
+
+    D2D1_RENDER_TARGET_PROPERTIES d2dRenderTargetProps =
+        D2D1::RenderTargetProperties(
+            D2D1_RENDER_TARGET_TYPE_DEFAULT,
+            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+            dpiX,
+            dpiY);
+
+    THROW_IF_FAILED(d2dFactory_->CreateDxgiSurfaceRenderTarget(
+        backBuffer_.query<IDXGISurface>().get(),
+        &d2dRenderTargetProps,
+        &backBufferRenderTarget_));
+
+    THROW_IF_FAILED(backBufferRenderTarget_->CreateSolidColorBrush(
+        D2D1::ColorF(D2D1::ColorF::Black, 0.5f),
+        &rectangleBrush_));
 }
 
 wil::com_ptr<ID3D10Blob> D3D11Graphics::CompileShader(LPCVOID pSrcData,

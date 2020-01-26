@@ -143,5 +143,6 @@ void ProcdrawApp::Draw()
     graphics_->RotateY(static_cast<float>(Lerp(1.0, -1.0, MouseX())));
     graphics_->Color(7, 0.7f, 0.7f);
     graphics_->Cube();
+    graphics_->Rectangle();
 }
 } // namespace Procdraw

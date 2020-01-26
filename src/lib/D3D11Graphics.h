@@ -16,6 +16,7 @@
 #define PROCDRAW_D3D11GRAPHICS_H
 
 #include <DirectXMath.h>
+#include <d2d1.h>
 #include <d3d11_1.h>
 #include <string>
 #include <wil/com.h>
@@ -56,6 +57,7 @@ public:
     void RotateZ(float turns);
     void Translate(float x, float y, float z);
     void Scale(float x, float y, float z);
+    void Rectangle();
 
 private:
     HWND hWnd_;
@@ -81,7 +83,11 @@ private:
     DirectX::XMFLOAT4 lightColor_;
     DirectX::XMFLOAT4 ambientLightColor_;
     DirectX::XMFLOAT4 materialColor_;
+    wil::com_ptr<ID2D1Factory> d2dFactory_;
+    wil::com_ptr<ID2D1RenderTarget> backBufferRenderTarget_;
+    wil::com_ptr<ID2D1SolidColorBrush> rectangleBrush_;
     void InitD3D();
+    void InitD2D();
     wil::com_ptr<ID3D10Blob> CompileShader(LPCVOID pSrcData,
                                            SIZE_T SrcDataSize,
                                            LPCSTR pEntrypoint,

@@ -35,6 +35,7 @@ add_executable(procdraw WIN32
 
 target_link_libraries(procdraw
         procdraw_lib
+        D2d1.lib
         d3d11.lib
         D3DCompiler.lib)
 

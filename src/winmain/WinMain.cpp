@@ -19,6 +19,7 @@
 #include <string>
 
 #define PROCDRAW_EXIT_UNABLE_TO_CREATE_PROCDRAW_APPDATA_DIR 1;
+#define PROCDRAW_EXIT_EXCEPTION 2;
 
 int CALLBACK WinMain(
     _In_ HINSTANCE hInstance,
@@ -51,6 +52,12 @@ int CALLBACK WinMain(
 
     PLOG_INFO << "Procdraw started";
 
-    Procdraw::ProcdrawApp app(hInstance, nCmdShow);
-    return app.MainLoop();
+    try {
+        Procdraw::ProcdrawApp app(hInstance, nCmdShow);
+        return app.MainLoop();
+    }
+    catch (const std::exception& ex) {
+        PLOG_ERROR << ex.what();
+        return PROCDRAW_EXIT_EXCEPTION;
+    }
 }
