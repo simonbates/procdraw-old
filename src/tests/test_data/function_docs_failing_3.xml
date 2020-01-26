@@ -1,0 +1,10 @@
+<docs>
+    <functions>
+        <function name="failing-3">
+            <examples>
+                <ex expr="(+ 2)" value="2"/>
+                <ex expr="(+ 3)" value="0"/>
+            </examples>
+        </function>
+    </functions>
+</docs>

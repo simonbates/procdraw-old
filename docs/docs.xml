@@ -1,0 +1,26 @@
+<docs>
+    <functions>
+        <function name="*">
+            <syntax>(* ...)</syntax>
+            <desc>Returns the product of its arguments.</desc>
+            <examples>
+                <ex expr="(*)" value="1"/>
+                <ex expr="(* 0)" value="0"/>
+                <ex expr="(* 2)" value="2"/>
+                <ex expr="(* 2 3)" value="6"/>
+                <ex expr="(* 2 3 4)" value="24"/>
+            </examples>
+        </function>
+        <function name="+">
+            <syntax>(+ ...)</syntax>
+            <desc>Returns the sum of its arguments.</desc>
+            <examples>
+                <ex expr="(+)" value="0"/>
+                <ex expr="(+ 0)" value="0"/>
+                <ex expr="(+ 2)" value="2"/>
+                <ex expr="(+ 2 3)" value="5"/>
+                <ex expr="(+ 2 3 4)" value="9"/>
+            </examples>
+        </function>
+    </functions>
+</docs>

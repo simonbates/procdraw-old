@@ -1,5 +1,5 @@
-/build/
-/build.ninja
-/compile_commands.json
-/Procdraw.sublime-workspace
-__pycache__/
+/.idea/
+/cmake-build-debug/
+/env/
+/website/build/
+*.pyc

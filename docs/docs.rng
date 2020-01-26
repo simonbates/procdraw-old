@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+    <start>
+        <element name="docs">
+            <element name="functions">
+                <oneOrMore>
+                    <element name="function">
+                        <attribute name="name"/>
+                        <element name="syntax">
+                            <text/>
+                        </element>
+                        <element name="desc">
+                            <text/>
+                        </element>
+                        <element name="examples">
+                            <oneOrMore>
+                                <element name="ex">
+                                    <attribute name="expr"/>
+                                    <attribute name="value"/>
+                                </element>
+                            </oneOrMore>
+                        </element>
+                    </element>
+                </oneOrMore>
+            </element>
+        </element>
+    </start>
+</grammar>

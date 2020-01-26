@@ -1,8 +1,6 @@
 # Procdraw
 
-[![Build status](https://ci.appveyor.com/api/projects/status/4wiskg8t3hflfsuo?svg=true)](https://ci.appveyor.com/project/simonbates/procdraw)
-
-Procdraw is a work-in-progress live programming environment.
+Procdraw is an experimental live programming environment.
 
 ## Building
 
@@ -11,16 +9,32 @@ Procdraw is a work-in-progress live programming environment.
 - Visual Studio 2019 C++ command line build tools, with components:
     - MSVC v142
     - Windows 10 SDK
-    - C++ CMake tools for Windows (for Ninja)
-- Python 3
+    - C++ CMake tools for Windows
+- Vcpkg
+
+### Install dependencies with Vcpkg
+
+    > vcpkg install catch2 plog pugixml wil
 
 ### Build
 
-To build Procdraw, run the following in a Visual Studio "Developer Command Prompt":
+Run the following in a Visual Studio "Developer Command Prompt":
 
-    > python configure.py
-    > ninja
+    > mkdir build
+    > cd build
+    > cmake -G Ninja -D CMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake ..
+    > cmake --build .
 
-The automated tests can be run with:
+## Dependencies
 
-    > .\build\procdraw_tests.exe
+Procdraw depends on these awesome open source projects and libraries:
+
+| Dependency | License |
+| :--------- | :------ |
+| [github.com/catchorg/Catch2](https://github.com/catchorg/Catch2) | Boost Software License 1.0 |
+| [github.com/lxml/lxml](https://github.com/lxml/lxml) | BSD 3-Clause "New" or "Revised" License |
+| [github.com/microsoft/wil](https://github.com/microsoft/wil) | MIT License |
+| [github.com/pyinvoke/invoke](https://github.com/pyinvoke/invoke) | BSD 2-Clause "Simplified" License |
+| [github.com/SergiusTheBest/plog](https://github.com/SergiusTheBest/plog) | Mozilla Public License 2.0 |
+| [github.com/sqlalchemy/mako](https://github.com/sqlalchemy/mako) | MIT License |
+| [github.com/zeux/pugixml](https://github.com/zeux/pugixml) | MIT License |
