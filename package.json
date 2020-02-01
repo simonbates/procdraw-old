@@ -1,0 +1,7 @@
+{
+    "name": "procdraw",
+    "private": true,
+    "scripts": {
+        "build": "invoke website.build --output=public"
+    }
+}

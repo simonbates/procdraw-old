@@ -1,6 +1,5 @@
 /.idea/
 /cmake-build-debug/
 /env/
-/node_modules/
 /public/
 /website/build/
