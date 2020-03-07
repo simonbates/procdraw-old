@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Procdraw)
 
+enable_testing()
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
@@ -66,3 +68,14 @@ target_link_libraries(procdraw_tests
         procdraw_lib
         Catch2::Catch2
         pugixml)
+
+# Register CTest tests
+
+add_test(NAME validate-xml
+        COMMAND invoke validate-xml)
+
+add_test(NAME check-file-headers
+        COMMAND invoke check-file-headers)
+
+add_test(NAME procdraw_tests
+        COMMAND procdraw_tests)

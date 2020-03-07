@@ -1,6 +1,16 @@
+# CLion
 /.idea/
 /cmake-build-debug/
+
+# CTest
+/Testing/Temporary/
+
+# Python
 /env/
+
+# Node.js
 /node_modules/
+
+# Website
 /public/
 /website/build/

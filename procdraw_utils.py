@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from lxml import etree
+import yaml
 
 
 _apache2_header = [
@@ -21,6 +22,49 @@ _apache2_header = [
 ]
 
 
+class CheckResult:
+    def __init__(self, is_ok, description, details=None):
+        self.is_ok = is_ok
+        self.description = description
+        self.details = details
+
+
+class CheckResultTapReporter:
+    def __init__(self, plan):
+        self.plan = plan
+        self.num_tests = 0
+        self.num_pass = 0
+        self.num_fail = 0
+        print("1..{:d}".format(self.plan))
+
+    def add(self, result):
+        self.num_tests += 1
+        if result.is_ok:
+            print("ok {:d} {:s}".format(self.num_tests, result.description))
+            self.num_pass += 1
+        else:
+            print("not ok {:d} {:s}".format(self.num_tests, result.description))
+            self.num_fail += 1
+        if result.details is not None:
+            print("  ---")
+            for line in yaml.dump(result.details).splitlines():
+                print("  {}".format(line))
+            print("  ---")
+
+    def is_fail(self):
+        return (self.num_fail > 0) or (self.num_tests != self.plan)
+
+    def print_summary(self):
+        print("# tests {:d}".format(self.num_tests))
+        print("# pass  {:d}".format(self.num_pass))
+        if self.num_fail > 0:
+            print("# fail  {:d}".format(self.num_fail))
+        if self.num_tests != self.plan:
+            print("# unexpected number of tests")
+        if not self.is_fail():
+            print("# ok")
+
+
 class Apache2HeaderChecker:
     def __init__(self):
         self.file = None
@@ -32,38 +76,35 @@ class Apache2HeaderChecker:
         self.prefix = prefix
         with open(file) as file_in:
             self.line = file_in.readline()
-            if not self._check_copyright(file_in):
-                return False
-            if self._check_header(file_in):
-                print("ok {:s}".format(file))
-                return True
-            else:
-                return False
+            copyright_ok, copyright_result = self._check_copyright(file_in)
+            if not copyright_ok:
+                return copyright_result
+            return self._check_header(file_in)
 
     def _check_copyright(self, file_in):
         if not self.line.startswith(self.prefix + " Copyright "):
-            self._not_ok(self.prefix + " Copyright \n", self.line)
-            return False
+            return False, self._not_ok(self.prefix + " Copyright \n", self.line)
         self.line = file_in.readline()
         while self.line.startswith(self.prefix + " Copyright "):
             self.line = file_in.readline()
-        return True
+        return True, None
 
     def _check_header(self, file_in):
         for i in range(len(_apache2_header)):
             if self.line != self.prefix + _apache2_header[i]:
-                self._not_ok(self.prefix + _apache2_header[i], self.line)
-                return False
+                return self._not_ok(self.prefix + _apache2_header[i], self.line)
             else:
                 self.line = file_in.readline()
-        return True
+        return self._ok()
+
+    def _ok(self):
+        return CheckResult(True, self.file)
 
     def _not_ok(self, expected, got):
-        print("not ok {:s}".format(self.file))
-        print("Expected:")
-        print(expected, end="")
-        print("Got:")
-        print(got, end="")
+        return CheckResult(False, self.file, {
+            "expected": expected.rstrip(),
+            "got": got.rstrip()
+        })
 
 
 def find(paths):
@@ -94,23 +135,16 @@ def run(args):
         sys.exit("*** ERROR {:d}".format(completed_process.returncode))
 
 
-def check_file_headers(files):
-    at_least_one_fail = False
-    checker = Apache2HeaderChecker()
-    for file in files:
-        if not checker.check(file, "//"):
-            at_least_one_fail = True
-    if at_least_one_fail:
-        sys.exit(1)
-
-
 def validate_xml(schema_file, xml_file):
     schema_doc = etree.parse(schema_file)
     validator = etree.RelaxNG(schema_doc)
-
     xml_doc = etree.parse(xml_file)
-
     if validator.validate(xml_doc):
-        print("ok {:s}".format(os.path.relpath(xml_file)))
+        return CheckResult(True, os.path.relpath(xml_file))
     else:
-        sys.exit(validator.error_log)
+        errors = []
+        for error in validator.error_log:
+            errors.append("{:d}:{:d}: {:s}".format(error.line, error.column, error.message))
+        return CheckResult(False, os.path.relpath(xml_file), {
+            "errors": errors
+        })

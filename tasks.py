@@ -1,5 +1,6 @@
 import itertools
 import os
+import sys
 
 from invoke import Collection, task
 
@@ -17,7 +18,13 @@ def check_file_headers(_):
     """
     src_dir = os.path.relpath(os.path.join(_project_dir, "src"))
     files = utils.find_cpp_files([src_dir])
-    utils.check_file_headers(files)
+    reporter = utils.CheckResultTapReporter(31)
+    checker = utils.Apache2HeaderChecker()
+    for file in files:
+        reporter.add(checker.check(file, "//"))
+    reporter.print_summary()
+    if reporter.is_fail():
+        sys.exit(1)
 
 
 @task
@@ -36,8 +43,13 @@ def validate_xml(_):
     """
     Validate the docs XML
     """
-    utils.validate_xml(os.path.join(_project_dir, "docs", "docs.rng"),
-                       os.path.join(_project_dir, "docs", "docs.xml"))
+    reporter = utils.CheckResultTapReporter(1)
+    reporter.add(
+        utils.validate_xml(os.path.join(_project_dir, "docs", "docs.rng"),
+                           os.path.join(_project_dir, "docs", "docs.xml")))
+    reporter.print_summary()
+    if reporter.is_fail():
+        sys.exit(1)
 
 
 ns = Collection(check_file_headers, format_cpp, validate_xml, website)

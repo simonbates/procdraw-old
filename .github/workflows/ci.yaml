@@ -18,8 +18,6 @@ jobs:
         run: >-
           python -m pip install --upgrade pip
           && python -m pip install -r requirements.txt
-      - name: Validate XML
-        run: invoke validate-xml
       - name: Query vcpkg commit
         shell: cmd
         run: >-
@@ -37,8 +35,6 @@ jobs:
           && cmake --build .
       - name: Test
         shell: cmd
-        run: cd build && .\procdraw_tests.exe
-      - name: Check source file headers
-        run: invoke check-file-headers
+        run: cd build && ctest --verbose
       - name: Build the website
         run: invoke website.build
