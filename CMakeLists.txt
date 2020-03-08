@@ -11,24 +11,31 @@ add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
 # Dependencies
 
 find_package(Catch2 REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
 find_path(PLOG_INCLUDE_DIR plog/Log.h)
 find_package(pugixml REQUIRED)
-find_path(WIL_INCLUDE_DIR wil/com.h)
 
 # procdraw_lib
 
 add_library(procdraw_lib
+        src/lib/glrenderer/Camera.cpp
+        src/lib/glrenderer/Cube.cpp
+        src/lib/glrenderer/FlatProgram.cpp
+        src/lib/glrenderer/GLRenderer.cpp
+        src/lib/glrenderer/GLUtils.cpp
         src/lib/Colour.cpp
-        src/lib/D3D11Graphics.cpp
+        src/lib/FrameTimer.cpp
         src/lib/Interpreter.cpp
         src/lib/Printer.cpp
         src/lib/ProcdrawApp.cpp
         src/lib/ProcdrawMath.cpp
         src/lib/Reader.cpp
-        src/lib/WinUtils.cpp)
+        GL/src/glad.c)
 
 target_include_directories(procdraw_lib
-        PUBLIC ${WIL_INCLUDE_DIR})
+        PUBLIC GL/include
+        PRIVATE ${PLOG_INCLUDE_DIR})
 
 # procdraw executable
 
@@ -37,8 +44,8 @@ add_executable(procdraw WIN32
 
 target_link_libraries(procdraw
         procdraw_lib
-        d3d11.lib
-        D3DCompiler.lib)
+        glfw
+        glm)
 
 target_include_directories(procdraw
         PRIVATE ${PLOG_INCLUDE_DIR})
@@ -62,6 +69,7 @@ add_executable(procdraw_tests
         src/tests/InterpreterTypesTests.cpp
         src/tests/ProcdrawDocs.cpp
         src/tests/ProcdrawMathTests.cpp
+        src/tests/SimpleMovingAverageTests.cpp
         src/tests/TestsMain.cpp)
 
 target_link_libraries(procdraw_tests

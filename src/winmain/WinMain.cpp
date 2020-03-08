@@ -12,13 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../lib/ProcdrawApp.h"
-#include <Shlobj.h>
 #include <Windows.h>
+#include "../lib/ProcdrawApp.h"
+#include <GLFW/glfw3.h>
+#include <Shlobj.h>
 #include <plog/Log.h>
-#include <string>
+#include <stdexcept>
 
 #define PROCDRAW_EXIT_UNABLE_TO_CREATE_PROCDRAW_APPDATA_DIR 1;
+#define PROCDRAW_EXIT_EXCEPTION 2;
+
+static void glfwErrorCallback(int error, const char* description)
+{
+    PLOG_ERROR << description;
+}
+
+class GlfwManager {
+public:
+    GlfwManager()
+    {
+        if (!glfwInit()) {
+            throw std::exception("glfwInit() failed");
+        }
+    }
+    ~GlfwManager()
+    {
+        glfwTerminate();
+    }
+};
 
 int CALLBACK WinMain(
     _In_ HINSTANCE hInstance,
@@ -49,8 +70,17 @@ int CALLBACK WinMain(
         return PROCDRAW_EXIT_UNABLE_TO_CREATE_PROCDRAW_APPDATA_DIR;
     }
 
-    PLOG_INFO << "Procdraw started";
+    PLOG_INFO << "Procdraw starting";
 
-    Procdraw::ProcdrawApp app(hInstance, nCmdShow);
-    return app.MainLoop();
+    glfwSetErrorCallback(glfwErrorCallback);
+
+    try {
+        GlfwManager glfwManager;
+        Procdraw::ProcdrawApp app;
+        return app.MainLoop();
+    }
+    catch (const std::exception& ex) {
+        PLOG_ERROR << ex.what();
+        return PROCDRAW_EXIT_EXCEPTION;
+    }
 }

@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_WINUTILS_H
-#define PROCDRAW_WINUTILS_H
-
-#include <DirectXMath.h>
+#include "Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Procdraw {
 
-void TriangleNormal(DirectX::XMFLOAT3* normal, const DirectX::XMFLOAT3* vertex1, const DirectX::XMFLOAT3* vertex2, const DirectX::XMFLOAT3* vertex3);
+Camera::Camera()
+{
+    auto eye = glm::vec3(0.0f, 0.0f, 10.0f);
+    auto center = glm::vec3(0.0f, 0.0f, 0.0f);
+    auto up = glm::vec3(0.0f, 1.0f, 0.0f);
+    auto viewMatrix = glm::lookAt(eye, center, up);
+    auto projectionMatrix = glm::perspective(0.785f, 1.0f, 1.0f, 100.0f);
+    viewProjectionMatrix_ = projectionMatrix * viewMatrix;
+}
+
+glm::mat4 Camera::ViewProjectionMatrix()
+{
+    return viewProjectionMatrix_;
+}
 
 } // namespace Procdraw
-
-#endif

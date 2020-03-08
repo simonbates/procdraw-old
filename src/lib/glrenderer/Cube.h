@@ -12,44 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROCDRAWAPP_H
-#define PROCDRAW_PROCDRAWAPP_H
+#ifndef PROCDRAW_CUBE_H
+#define PROCDRAW_CUBE_H
 
-#include "FrameTimer.h"
-#include "glrenderer/GLRenderer.h"
-#include <GLFW/glfw3.h>
-#include <memory>
-#include <stdexcept>
+#include <glad/glad.h>
 
 namespace Procdraw {
 
-class ProcdrawAppWindow {
+class Cube {
 public:
-    ProcdrawAppWindow();
-    ~ProcdrawAppWindow();
-    GLFWwindow* Window()
+    Cube();
+    ~Cube();
+    GLuint Vao()
     {
-        return window_;
-    }
+        return vao_;
+    };
 
 private:
-    GLFWwindow* window_;
-};
-
-class ProcdrawApp {
-public:
-    ProcdrawApp();
-    int MainLoop();
-    double Width();
-    double Height();
-    double MouseX();
-    double MouseY();
-
-private:
-    ProcdrawAppWindow window_;
-    std::unique_ptr<GLRenderer> renderer_;
-    FrameTimer frameTimer_;
-    void Draw();
+    GLuint vao_;
+    GLuint vertexBuffer_;
+    GLuint indexBuffer_;
 };
 
 } // namespace Procdraw

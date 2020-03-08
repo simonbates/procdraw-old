@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "WinUtils.h"
+#ifndef PROCDRAW_FRAMETIMER_H
+#define PROCDRAW_FRAMETIMER_H
+
+#include "../lib/SimpleMovingAverage.h"
 
 namespace Procdraw {
 
-void TriangleNormal(DirectX::XMFLOAT3* normal, const DirectX::XMFLOAT3* vertex1, const DirectX::XMFLOAT3* vertex2, const DirectX::XMFLOAT3* vertex3)
-{
-    auto v1 = XMLoadFloat3(vertex1);
-    auto v2 = XMLoadFloat3(vertex2);
-    auto v3 = XMLoadFloat3(vertex3);
-    auto n = DirectX::XMVector3Cross(DirectX::XMVectorSubtract(v2, v1), DirectX::XMVectorSubtract(v3, v1));
-    XMStoreFloat3(normal, DirectX::XMVector3Normalize(n));
-}
+class FrameTimer {
+public:
+    FrameTimer();
+    void RecordFrame();
+    double GetFramesPerSecond();
 
+private:
+    double timerFrequency_;
+    uint64_t lastTimerValue_;
+    SimpleMovingAverage<uint64_t> frameTimes_;
+};
 } // namespace Procdraw
+
+#endif

@@ -12,46 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROCDRAWAPP_H
-#define PROCDRAW_PROCDRAWAPP_H
-
 #include "FrameTimer.h"
-#include "glrenderer/GLRenderer.h"
 #include <GLFW/glfw3.h>
-#include <memory>
-#include <stdexcept>
 
 namespace Procdraw {
 
-class ProcdrawAppWindow {
-public:
-    ProcdrawAppWindow();
-    ~ProcdrawAppWindow();
-    GLFWwindow* Window()
-    {
-        return window_;
-    }
+FrameTimer::FrameTimer()
+    : timerFrequency_(glfwGetTimerFrequency()),
+      lastTimerValue_(glfwGetTimerValue()),
+      frameTimes_(100)
+{
+}
 
-private:
-    GLFWwindow* window_;
-};
+void FrameTimer::RecordFrame()
+{
+    uint64_t timerValue = glfwGetTimerValue();
+    frameTimes_.AddDataPoint(timerValue - lastTimerValue_);
+    lastTimerValue_ = timerValue;
+}
 
-class ProcdrawApp {
-public:
-    ProcdrawApp();
-    int MainLoop();
-    double Width();
-    double Height();
-    double MouseX();
-    double MouseY();
-
-private:
-    ProcdrawAppWindow window_;
-    std::unique_ptr<GLRenderer> renderer_;
-    FrameTimer frameTimer_;
-    void Draw();
-};
-
+double FrameTimer::GetFramesPerSecond()
+{
+    double avg = frameTimes_.GetMean();
+    return avg == 0 ? 0 : timerFrequency_ / avg;
+}
 } // namespace Procdraw
-
-#endif

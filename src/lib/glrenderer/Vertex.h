@@ -12,44 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROCDRAWAPP_H
-#define PROCDRAW_PROCDRAWAPP_H
+#ifndef PROCDRAW_VERTEX_H
+#define PROCDRAW_VERTEX_H
 
-#include "FrameTimer.h"
-#include "glrenderer/GLRenderer.h"
-#include <GLFW/glfw3.h>
-#include <memory>
-#include <stdexcept>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace Procdraw {
 
-class ProcdrawAppWindow {
-public:
-    ProcdrawAppWindow();
-    ~ProcdrawAppWindow();
-    GLFWwindow* Window()
+struct Vertex {
+    // Position
+    GLfloat x;
+    GLfloat y;
+    GLfloat z;
+    GLfloat w;
+    // Normal
+    GLfloat nx;
+    GLfloat ny;
+    GLfloat nz;
+    Vertex(glm::vec3 pos, glm::vec3 normal)
     {
-        return window_;
+        this->x = pos.x;
+        this->y = pos.y;
+        this->z = pos.z;
+        this->w = 1.0f;
+        this->nx = normal.x;
+        this->ny = normal.y;
+        this->nz = normal.z;
     }
-
-private:
-    GLFWwindow* window_;
-};
-
-class ProcdrawApp {
-public:
-    ProcdrawApp();
-    int MainLoop();
-    double Width();
-    double Height();
-    double MouseX();
-    double MouseY();
-
-private:
-    ProcdrawAppWindow window_;
-    std::unique_ptr<GLRenderer> renderer_;
-    FrameTimer frameTimer_;
-    void Draw();
 };
 
 } // namespace Procdraw

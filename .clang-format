@@ -8,6 +8,11 @@ BreakBeforeBraces: Stroustrup
 ColumnLimit: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 Cpp11BracedListStyle: true
+IncludeCategories:
+  - Regex:          'windows\.h'
+    Priority:       -2
+  - Regex:          'glad\.h'
+    Priority:       -1
 IndentWidth: 4
 Language: Cpp
 NamespaceIndentation: None

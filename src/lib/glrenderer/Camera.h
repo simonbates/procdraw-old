@@ -12,44 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROCDRAWAPP_H
-#define PROCDRAW_PROCDRAWAPP_H
+#ifndef PROCDRAW_CAMERA_H
+#define PROCDRAW_CAMERA_H
 
-#include "FrameTimer.h"
-#include "glrenderer/GLRenderer.h"
-#include <GLFW/glfw3.h>
-#include <memory>
-#include <stdexcept>
+#include <glm/glm.hpp>
 
 namespace Procdraw {
 
-class ProcdrawAppWindow {
+class Camera {
 public:
-    ProcdrawAppWindow();
-    ~ProcdrawAppWindow();
-    GLFWwindow* Window()
-    {
-        return window_;
-    }
+    Camera();
+    glm::mat4 ViewProjectionMatrix();
 
 private:
-    GLFWwindow* window_;
-};
-
-class ProcdrawApp {
-public:
-    ProcdrawApp();
-    int MainLoop();
-    double Width();
-    double Height();
-    double MouseX();
-    double MouseY();
-
-private:
-    ProcdrawAppWindow window_;
-    std::unique_ptr<GLRenderer> renderer_;
-    FrameTimer frameTimer_;
-    void Draw();
+    glm::mat4 viewProjectionMatrix_;
 };
 
 } // namespace Procdraw

@@ -24,7 +24,7 @@ jobs:
           cd /D %VCPKG_INSTALLATION_ROOT%
           && git log -1 --pretty=format:"commit %%H%%nDate:  %%aD"
       - name: Install vcpkg dependencies
-        run: vcpkg install catch2 plog pugixml wil
+        run: vcpkg install catch2 glfw3 glm plog pugixml
       - name: Build
         shell: cmd
         run: >-
