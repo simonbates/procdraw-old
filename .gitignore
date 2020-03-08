@@ -9,5 +9,4 @@
 /env/
 
 # Website
-/public/
-/website/build/
+/website/public/

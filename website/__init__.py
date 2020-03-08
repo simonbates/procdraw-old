@@ -8,7 +8,7 @@ from .website_builder import WebsiteBuilder
 
 
 _project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-_default_output_dir = os.path.join(_project_dir, "website", "build")
+_default_output_dir = os.path.join(_project_dir, "website", "public")
 
 
 @task(help={"output": "Path to write files to"})
