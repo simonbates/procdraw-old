@@ -18,7 +18,7 @@ def check_file_headers(_):
     """
     src_dir = os.path.relpath(os.path.join(_project_dir, "src"))
     files = utils.find_cpp_files([src_dir])
-    reporter = utils.CheckResultTapReporter(42)
+    reporter = utils.CheckResultTapReporter(46)
     checker = utils.Apache2HeaderChecker()
     for file in files:
         reporter.add(checker.check(file, "//"))

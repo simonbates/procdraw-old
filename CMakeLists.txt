@@ -24,6 +24,8 @@ add_library(procdraw_lib
         src/lib/glrenderer/FlatProgram.cpp
         src/lib/glrenderer/GLRenderer.cpp
         src/lib/glrenderer/GLUtils.cpp
+        src/lib/glrenderer/Program2d.cpp
+        src/lib/glrenderer/Rectangle.cpp
         src/lib/Colour.cpp
         src/lib/FrameTimer.cpp
         src/lib/Interpreter.cpp

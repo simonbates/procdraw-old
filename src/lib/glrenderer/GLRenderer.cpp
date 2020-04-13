@@ -28,7 +28,7 @@
 
 namespace Procdraw {
 
-GLRenderer::GLRenderer()
+GLRenderer::GLRenderer(int width, int height)
     : worldMatrix_(glm::mat4(1.0f)),
       lightDirection_(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)),
       lightColor_(glm::vec4(0.5f, 0.5f, 0.5f, 0.0f)),
@@ -41,8 +41,13 @@ GLRenderer::GLRenderer()
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glUseProgram(program_.Program());
-    glEnable(GL_DEPTH_TEST);
+
+    // Set the 2D projection matrix
+    glUseProgram(program2d_.Program());
+    auto projection2d = glm::ortho(0.0f, static_cast<float>(width),
+                                   static_cast<float>(height), 0.0f);
+    glUniformMatrix4fv(program2d_.ProjectionLoc(), 1, GL_FALSE,
+                       glm::value_ptr(projection2d));
 }
 
 void GLRenderer::Background(float h, float s, float v)
@@ -52,6 +57,18 @@ void GLRenderer::Background(float h, float s, float v)
     glClearColor(r, g, b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     ResetMatrix();
+}
+
+void GLRenderer::Begin2D()
+{
+    glUseProgram(program2d_.Program());
+    glDisable(GL_DEPTH_TEST);
+}
+
+void GLRenderer::Begin3D()
+{
+    glUseProgram(program3d_.Program());
+    glEnable(GL_DEPTH_TEST);
 }
 
 void GLRenderer::Colour(float h, float s, float v, float a)
@@ -64,7 +81,15 @@ void GLRenderer::DrawCube()
 {
     UpdateUniformsForObject();
     glBindVertexArray(cube_.Vao());
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+    cube_.Draw();
+}
+
+void GLRenderer::DrawRectangle(int x, int y, int w, int h)
+{
+    glUniform4f(program2d_.ColorLoc(), materialR_, materialG_, materialB_,
+                materialA_);
+    glBindVertexArray(rectangle_.Vao());
+    rectangle_.Draw(x, y, w, h);
 }
 
 void GLRenderer::RotateX(float turns)
@@ -100,13 +125,13 @@ void GLRenderer::UpdateUniformsForObject()
     auto modelSpaceLightDirection =
         glm::normalize(inverseWorldMatrix * lightDirection_);
 
-    glUniformMatrix4fv(program_.WorldViewProjectionLoc(), 1, GL_FALSE,
+    glUniformMatrix4fv(program3d_.WorldViewProjectionLoc(), 1, GL_FALSE,
                        glm::value_ptr(worldViewProjection));
-    glUniform4fv(program_.LightDirectionLoc(), 1,
+    glUniform4fv(program3d_.LightDirectionLoc(), 1,
                  glm::value_ptr(modelSpaceLightDirection));
-    glUniform4fv(program_.LightColorLoc(), 1, glm::value_ptr(lightColor_));
-    glUniform4fv(program_.AmbientLightColorLoc(), 1, glm::value_ptr(ambientLightColor_));
-    glUniform4f(program_.MaterialColorLoc(), materialR_, materialG_, materialB_,
+    glUniform4fv(program3d_.LightColorLoc(), 1, glm::value_ptr(lightColor_));
+    glUniform4fv(program3d_.AmbientLightColorLoc(), 1, glm::value_ptr(ambientLightColor_));
+    glUniform4f(program3d_.MaterialColorLoc(), materialR_, materialG_, materialB_,
                 materialA_);
 }
 

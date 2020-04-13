@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_CUBE_H
-#define PROCDRAW_CUBE_H
+#ifndef PROCDRAW_RECTANGLE_H
+#define PROCDRAW_RECTANGLE_H
 
 #include <glad/glad.h>
 
 namespace Procdraw {
 
-class Cube {
+class Rectangle {
 public:
-    Cube();
-    ~Cube();
-    void Draw();
+    Rectangle();
+    ~Rectangle();
+    void Draw(int x, int y, int w, int h);
     GLuint Vao()
     {
         return vao_;
@@ -32,7 +32,7 @@ public:
 private:
     GLuint vao_;
     GLuint vertexBuffer_;
-    GLuint indexBuffer_;
+    GLfloat vertices_[8] = {};
 };
 
 } // namespace Procdraw

@@ -48,7 +48,8 @@ ProcdrawApp::ProcdrawApp()
     PLOG_INFO << "OpenGL version: " << glGetString(GL_VERSION);
     PLOG_INFO << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-    renderer_ = std::make_unique<GLRenderer>();
+    renderer_ = std::make_unique<GLRenderer>(static_cast<int>(Width()),
+                                             static_cast<int>(Height()));
 }
 
 int ProcdrawApp::MainLoop()
@@ -93,10 +94,14 @@ double ProcdrawApp::MouseY()
 void ProcdrawApp::Draw()
 {
     renderer_->Background(200, 0.6f, 0.9f);
+    renderer_->Begin3D();
     renderer_->RotateX(Procdraw::Lerp(-1.0, 1.0, MouseY()));
     renderer_->RotateY(Procdraw::Lerp(-1.0, 1.0, MouseX()));
     renderer_->Colour(7, 0.7f, 0.7f);
     renderer_->DrawCube();
+    renderer_->Begin2D();
+    renderer_->Colour(0, 0.0f, 0.0f, 0.5f);
+    renderer_->DrawRectangle(0, 0, 320, 320);
 }
 
 } // namespace Procdraw

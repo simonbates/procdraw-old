@@ -84,4 +84,9 @@ Cube::~Cube()
     glDeleteBuffers(1, &indexBuffer_);
 }
 
+void Cube::Draw()
+{
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+}
+
 } // namespace Procdraw

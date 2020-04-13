@@ -12,27 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_CUBE_H
-#define PROCDRAW_CUBE_H
+#ifndef PROCDRAW_PROGRAM2D_H
+#define PROCDRAW_PROGRAM2D_H
 
 #include <glad/glad.h>
 
 namespace Procdraw {
 
-class Cube {
+class Program2d {
 public:
-    Cube();
-    ~Cube();
-    void Draw();
-    GLuint Vao()
+    Program2d();
+    ~Program2d();
+    GLuint Program()
     {
-        return vao_;
+        return program_;
+    };
+    GLint ProjectionLoc()
+    {
+        return projectionLoc_;
+    };
+    GLint ColorLoc()
+    {
+        return colorLoc_;
     };
 
 private:
-    GLuint vao_;
-    GLuint vertexBuffer_;
-    GLuint indexBuffer_;
+    GLuint program_;
+    GLint projectionLoc_;
+    GLint colorLoc_;
 };
 
 } // namespace Procdraw

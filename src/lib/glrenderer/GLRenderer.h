@@ -18,24 +18,31 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "FlatProgram.h"
+#include "Program2d.h"
+#include "Rectangle.h"
 #include <glm/glm.hpp>
 
 namespace Procdraw {
 
 class GLRenderer {
 public:
-    GLRenderer();
+    GLRenderer(int width, int height);
     void Background(float h, float s, float v);
+    void Begin2D();
+    void Begin3D();
     void Colour(float h, float s, float v, float a = 1.0f);
     void DrawCube();
+    void DrawRectangle(int x, int y, int w, int h);
     void RotateX(float turns);
     void RotateY(float turns);
     void RotateZ(float turns);
 
 private:
-    FlatProgram program_;
+    FlatProgram program3d_;
+    Program2d program2d_;
     Camera camera_;
     Cube cube_;
+    Rectangle rectangle_;
     glm::mat4 worldMatrix_;
     glm::vec4 lightDirection_;
     glm::vec4 lightColor_;
