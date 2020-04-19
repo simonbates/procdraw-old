@@ -7,18 +7,18 @@ import yaml
 
 
 _apache2_header = [
-    '\n',
-    ' Licensed under the Apache License, Version 2.0 (the "License");\n',
-    ' you may not use this file except in compliance with the License.\n',
-    ' You may obtain a copy of the License at\n',
-    '\n',
-    '     http://www.apache.org/licenses/LICENSE-2.0\n',
-    '\n',
-    ' Unless required by applicable law or agreed to in writing, software\n',
-    ' distributed under the License is distributed on an "AS IS" BASIS,\n',
-    ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n',
-    ' See the License for the specific language governing permissions and\n',
-    ' limitations under the License.\n'
+ '\n',
+ ' Licensed under the Apache License, Version 2.0 (the "License");\n',
+ ' you may not use this file except in compliance with the License.\n',
+ ' You may obtain a copy of the License at\n',
+ '\n',
+ '     http://www.apache.org/licenses/LICENSE-2.0\n',
+ '\n',
+ ' Unless required by applicable law or agreed to in writing, software\n',
+ ' distributed under the License is distributed on an "AS IS" BASIS,\n',
+ ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n',
+ ' See the License for the specific language governing permissions and\n',
+ ' limitations under the License.\n'
 ]
 
 
@@ -43,7 +43,8 @@ class CheckResultTapReporter:
             print("ok {:d} {:s}".format(self.num_tests, result.description))
             self.num_pass += 1
         else:
-            print("not ok {:d} {:s}".format(self.num_tests, result.description))
+            print("not ok {:d} {:s}".format(self.num_tests,
+                                            result.description))
             self.num_fail += 1
         if result.details is not None:
             print("  ---")
@@ -83,7 +84,7 @@ class Apache2HeaderChecker:
 
     def _check_copyright(self, file_in):
         if not self.line.startswith(self.prefix + " Copyright "):
-            return False, self._not_ok(self.prefix + " Copyright \n", self.line)
+            return False, self._not_ok(self.prefix + " Copyright", self.line)
         self.line = file_in.readline()
         while self.line.startswith(self.prefix + " Copyright "):
             self.line = file_in.readline()
@@ -92,7 +93,8 @@ class Apache2HeaderChecker:
     def _check_header(self, file_in):
         for i in range(len(_apache2_header)):
             if self.line != self.prefix + _apache2_header[i]:
-                return self._not_ok(self.prefix + _apache2_header[i], self.line)
+                return self._not_ok(self.prefix + _apache2_header[i],
+                                    self.line)
             else:
                 self.line = file_in.readline()
         return self._ok()
@@ -122,6 +124,14 @@ def find_cpp_files(paths):
     return (f for f in find(paths) if is_cpp_file(f))
 
 
+def is_python_file(filename):
+    return filename.endswith(".py")
+
+
+def find_python_files(paths):
+    return (f for f in find(paths) if is_python_file(f))
+
+
 def mkdir_p(path):
     if not os.path.exists(path):
         os.makedirs(os.path.abspath(path))
@@ -144,7 +154,8 @@ def validate_xml(schema_file, xml_file):
     else:
         errors = []
         for error in validator.error_log:
-            errors.append("{:d}:{:d}: {:s}".format(error.line, error.column, error.message))
+            errors.append("{:d}:{:d}: {:s}".format(error.line, error.column,
+                                                   error.message))
         return CheckResult(False, os.path.relpath(xml_file), {
             "errors": errors
         })

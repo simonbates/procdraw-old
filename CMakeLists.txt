@@ -82,6 +82,9 @@ target_link_libraries(procdraw_tests
 add_test(NAME validate-xml
         COMMAND invoke validate-xml)
 
+add_test(NAME check-python-codestyle
+        COMMAND invoke check-python-codestyle)
+
 add_test(NAME check-file-headers
         COMMAND invoke check-file-headers)
 
