@@ -85,8 +85,12 @@ add_test(NAME validate-xml
 add_test(NAME check-python-codestyle
         COMMAND invoke check-python-codestyle)
 
-add_test(NAME check-file-headers
-        COMMAND invoke check-file-headers)
+add_test(NAME run_python_tests
+        COMMAND python -m unittest test_procdraw_utils
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+add_test(NAME check-cpp-files
+        COMMAND invoke check-cpp-files)
 
 add_test(NAME procdraw_tests
         COMMAND procdraw_tests)

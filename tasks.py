@@ -12,16 +12,17 @@ _project_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 @task
-def check_file_headers(_):
+def check_cpp_files(_):
     """
-    Check the C++ source file headers
+    Check the C++ source files
     """
     src_dir = os.path.relpath(os.path.join(_project_dir, "src"))
     files = utils.find_cpp_files([src_dir])
     reporter = utils.CheckResultTapReporter(42)
-    checker = utils.Apache2HeaderChecker()
+    checker = utils.SourceFileChecker()
     for file in files:
-        reporter.add(checker.check(file, "//"))
+        with open(file) as file_in:
+            reporter.add(checker.check(file, file_in, "//"))
     reporter.print_summary()
     if reporter.is_fail():
         sys.exit(1)
@@ -80,7 +81,7 @@ def validate_xml(_):
         sys.exit(1)
 
 
-ns = Collection(check_file_headers, check_python_codestyle, format_cpp,
+ns = Collection(check_cpp_files, check_python_codestyle, format_cpp,
                 generate_gl, validate_xml, website)
 
 ns.configure({

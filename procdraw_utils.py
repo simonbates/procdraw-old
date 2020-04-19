@@ -66,46 +66,62 @@ class CheckResultTapReporter:
             print("# ok")
 
 
-class Apache2HeaderChecker:
+class SourceFileChecker:
     def __init__(self):
-        self.file = None
+        self.filename = None
+        self.file_in = None
         self.prefix = None
         self.line = None
 
-    def check(self, file, prefix):
-        self.file = file
+    def check(self, filename, file_in, prefix):
+        self.filename = filename
+        self.file_in = file_in
         self.prefix = prefix
-        with open(file) as file_in:
-            self.line = file_in.readline()
-            copyright_ok, copyright_result = self._check_copyright(file_in)
-            if not copyright_ok:
-                return copyright_result
-            return self._check_header(file_in)
-
-    def _check_copyright(self, file_in):
-        if not self.line.startswith(self.prefix + " Copyright "):
-            return False, self._not_ok(self.prefix + " Copyright", self.line)
-        self.line = file_in.readline()
-        while self.line.startswith(self.prefix + " Copyright "):
-            self.line = file_in.readline()
-        return True, None
-
-    def _check_header(self, file_in):
-        for i in range(len(_apache2_header)):
-            if self.line != self.prefix + _apache2_header[i]:
-                return self._not_ok(self.prefix + _apache2_header[i],
-                                    self.line)
-            else:
-                self.line = file_in.readline()
+        checks = []
+        checks.append(self._check_copyright)
+        checks.append(self._check_apache2_header)
+        if is_cpp_header(filename):
+            checks.append(self._check_pragma_once)
+        self._read_next_line()
+        for check in checks:
+            is_ok, result = check()
+            if not is_ok:
+                return result
         return self._ok()
 
-    def _ok(self):
-        return CheckResult(True, self.file)
+    def _read_next_line(self):
+        self.line = self.file_in.readline()
 
-    def _not_ok(self, expected, got):
-        return CheckResult(False, self.file, {
+    def _check_copyright(self):
+        if not self.line.startswith(self.prefix + " Copyright "):
+            return False, self._not_ok(self.prefix + " Copyright ...")
+        self._read_next_line()
+        while self.line.startswith(self.prefix + " Copyright "):
+            self._read_next_line()
+        return True, None
+
+    def _check_apache2_header(self):
+        for i in range(len(_apache2_header)):
+            if self.line != self.prefix + _apache2_header[i]:
+                return False, self._not_ok(self.prefix + _apache2_header[i])
+            self._read_next_line()
+        return True, None
+
+    def _check_pragma_once(self):
+        while len(self.line.strip()) == 0:
+            self._read_next_line()
+        if self.line != "#pragma once\n":
+            return False, self._not_ok("#pragma once")
+        else:
+            return True, None
+
+    def _ok(self):
+        return CheckResult(True, self.filename)
+
+    def _not_ok(self, expected):
+        return CheckResult(False, self.filename, {
             "expected": expected.rstrip(),
-            "got": got.rstrip()
+            "got": self.line.rstrip()
         })
 
 
@@ -118,6 +134,10 @@ def find(paths):
 
 def is_cpp_file(filename):
     return filename.endswith(".cpp") or filename.endswith(".h")
+
+
+def is_cpp_header(filename):
+    return is_cpp_file(filename) and not filename.endswith(".cpp")
 
 
 def find_cpp_files(paths):

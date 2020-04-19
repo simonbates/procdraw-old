@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PRINTER_H
-#define PROCDRAW_PRINTER_H
+#pragma once
 
 #include "InterpreterTypes.h"
 #include <string>
@@ -32,5 +31,3 @@ private:
 };
 
 } // namespace Procdraw
-
-#endif

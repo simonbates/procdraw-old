@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_FRAMETIMER_H
-#define PROCDRAW_FRAMETIMER_H
+#pragma once
 
 #include "../lib/SimpleMovingAverage.h"
 
@@ -31,5 +30,3 @@ private:
     SimpleMovingAverage<uint64_t> frameTimes_;
 };
 } // namespace Procdraw
-
-#endif

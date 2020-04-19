@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROCDRAWAPP_H
-#define PROCDRAW_PROCDRAWAPP_H
+#pragma once
 
 #include "FrameTimer.h"
 #include "glrenderer/GLRenderer.h"
@@ -53,5 +52,3 @@ private:
 };
 
 } // namespace Procdraw
-
-#endif

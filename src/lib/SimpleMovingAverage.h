@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_SIMPLEMOVINGAVERAGE_H
-#define PROCDRAW_SIMPLEMOVINGAVERAGE_H
+#pragma once
 
 #include <stdexcept>
 #include <vector>
@@ -62,5 +61,3 @@ T SimpleMovingAverage<T>::GetMean()
     return sum_ / numDataPoints_;
 }
 } // namespace Procdraw
-
-#endif

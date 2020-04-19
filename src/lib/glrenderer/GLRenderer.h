@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_GLRENDERER_H
-#define PROCDRAW_GLRENDERER_H
+#pragma once
 
 #include "Camera.h"
 #include "Cube.h"
@@ -49,5 +48,3 @@ private:
 };
 
 } // namespace Procdraw
-
-#endif

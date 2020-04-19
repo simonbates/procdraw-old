@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_DOCSTESTER_H
-#define PROCDRAW_DOCSTESTER_H
+#pragma once
 
 #include "../lib/Interpreter.h"
 #include "ProcdrawDocs.h"
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace Procdraw::Tests
-
-#endif

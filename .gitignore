@@ -6,6 +6,7 @@
 
 # Python
 /env/
+__pycache__/
 
 # Website build output
 /website/public/

@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_INTERPRETERTYPES_H
-#define PROCDRAW_INTERPRETERTYPES_H
+#pragma once
 
 #include <exception>
 #include <memory>
@@ -248,5 +247,3 @@ inline SymbolHandle Object::GetSymbolHandle() const
 }
 
 } // namespace Procdraw
-
-#endif
