@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_COLOUR_H
-#define PROCDRAW_COLOUR_H
+#pragma once
 
 #include <tuple>
 
@@ -21,5 +20,3 @@ namespace Procdraw {
 
 std::tuple<float, float, float> Hsv2rgb(float h, float s, float v);
 }
-
-#endif

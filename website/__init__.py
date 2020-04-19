@@ -48,6 +48,7 @@ def server(c, directory=None):
 
     print("Serving files from {:s}".format(server_directory))
 
-    with socketserver.TCPServer((address, port), BuildDirRequestHandler) as httpd:
+    with socketserver.TCPServer((address, port),
+                                BuildDirRequestHandler) as httpd:
         print("Web Server is available at http://localhost:{}/".format(port))
         httpd.serve_forever()

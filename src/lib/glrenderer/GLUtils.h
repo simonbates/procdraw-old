@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_GLUTILS_H
-#define PROCDRAW_GLUTILS_H
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -29,5 +28,3 @@ GLuint CompileShader(const GLchar** shaderSource, GLenum shaderType);
 
 glm::vec3 TriangleNormal(const glm::vec3 a, const glm::vec3 b, const glm::vec3 c);
 } // namespace Procdraw
-
-#endif

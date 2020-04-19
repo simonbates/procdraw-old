@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PROCDRAW_PROGRAM2D_H
-#define PROCDRAW_PROGRAM2D_H
+#pragma once
 
 #include <glad/glad.h>
 
@@ -43,5 +42,3 @@ private:
 };
 
 } // namespace Procdraw
-
-#endif
