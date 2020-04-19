@@ -1,6 +1,5 @@
-# CLion
-/.idea/
-/cmake-build-debug/
+# CMake
+/build/
 
 # CTest
 /Testing/Temporary/
@@ -8,5 +7,5 @@
 # Python
 /env/
 
-# Website
+# Website build output
 /website/public/
