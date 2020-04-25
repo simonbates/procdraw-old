@@ -1,7 +1,4 @@
 import os
-import subprocess
-import sys
-
 from lxml import etree
 import yaml
 
@@ -125,44 +122,12 @@ class SourceFileChecker:
         })
 
 
-def find(paths):
-    for path in paths:
-        for (dirpath, dirnames, filenames) in os.walk(path):
-            for filename in filenames:
-                yield os.path.join(dirpath, filename)
-
-
 def is_cpp_file(filename):
     return filename.endswith(".cpp") or filename.endswith(".h")
 
 
 def is_cpp_header(filename):
     return is_cpp_file(filename) and not filename.endswith(".cpp")
-
-
-def find_cpp_files(paths):
-    return (f for f in find(paths) if is_cpp_file(f))
-
-
-def is_python_file(filename):
-    return filename.endswith(".py")
-
-
-def find_python_files(paths):
-    return (f for f in find(paths) if is_python_file(f))
-
-
-def mkdir_p(path):
-    if not os.path.exists(path):
-        os.makedirs(os.path.abspath(path))
-
-
-def run(args):
-    args = list(args)
-    print(" ".join(args))
-    completed_process = subprocess.run(args, shell=False)
-    if completed_process.returncode != 0:
-        sys.exit("*** ERROR {:d}".format(completed_process.returncode))
 
 
 def validate_xml(schema_file, xml_file):

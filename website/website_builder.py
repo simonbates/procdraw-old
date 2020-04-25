@@ -4,8 +4,6 @@ import shutil
 from lxml import etree
 from mako.lookup import TemplateLookup
 
-import procdraw_utils as utils
-
 
 class WebsiteBuilder:
     def __init__(self, docs_dir, website_dir, output_dir):
@@ -17,7 +15,8 @@ class WebsiteBuilder:
 
     def build(self):
         print("Writing files to {:s}".format(self.output_dir))
-        utils.mkdir_p(self.output_dir)
+        if not os.path.exists(self.output_dir):
+            os.makedirs(os.path.abspath(self.output_dir))
         self._copy_static()
         self._create_pages()
 

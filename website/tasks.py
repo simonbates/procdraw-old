@@ -2,9 +2,9 @@ import http.server
 import os
 import socketserver
 
-from invoke import task
+from invoke import Collection, task
 
-from .website_builder import WebsiteBuilder
+from website_builder import WebsiteBuilder
 
 
 _project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -52,3 +52,13 @@ def server(c, directory=None):
                                 BuildDirRequestHandler) as httpd:
         print("Web Server is available at http://localhost:{}/".format(port))
         httpd.serve_forever()
+
+
+ns = Collection(build, server)
+
+ns.configure({
+    "procdraw": {
+        "web_server_address": "127.0.0.1",
+        "web_server_port": 8000
+    }
+})

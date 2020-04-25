@@ -1,6 +1,5 @@
-import unittest
 import io
-
+import unittest
 import procdraw_utils
 
 

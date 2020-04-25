@@ -6,6 +6,9 @@ jobs:
   build:
     name: Build
     runs-on: windows-latest
+    env:
+      PROCDRAW_VISUAL_STUDIO_HOME: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
+      PROCDRAW_VCVARS: vcvars32.bat
     steps:
       - uses: actions/checkout@v1
         with:
@@ -18,6 +21,11 @@ jobs:
         run: >-
           python -m pip install --upgrade pip
           && python -m pip install -r requirements.txt
+      - name: Lint
+        shell: cmd
+        run: >-
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Lint
       - name: Query vcpkg commit
         shell: cmd
         run: >-
@@ -25,16 +33,21 @@ jobs:
           && git log -1 --pretty=format:"commit %%H%%nDate:  %%aD"
       - name: Install vcpkg dependencies
         run: vcpkg install catch2 glfw3 glm plog pugixml
-      - name: Build
+      - name: Configure
         shell: cmd
         run: >-
-          call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars32.bat"
-          && mkdir build
-          && cd build
-          && cmake -G Ninja -D CMAKE_C_COMPILER=cl.exe -D CMAKE_CXX_COMPILER=cl.exe -D CMAKE_TOOLCHAIN_FILE=%VCPKG_INSTALLATION_ROOT%\scripts\buildsystems\vcpkg.cmake ..
-          && cmake --build .
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Configure -p:VcpkgRoot=%VCPKG_INSTALLATION_ROOT%
+      - name: Compile
+        shell: cmd
+        run: >-
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Compile
       - name: Test
         shell: cmd
-        run: cd build && ctest --verbose
+        run: >-
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Test
       - name: Build the website
-        run: invoke website.build
+        shell: cmd
+        run: cd website && invoke build

@@ -13,16 +13,11 @@
     > python -m pip install --upgrade pip
     > pip install -r requirements.txt
 
-### Available tasks
+### Available targets
 
-    > invoke --list
-
-    Available tasks:
-
-      check-cpp-files          Check the C++ source files
-      check-python-codestyle   Run pycodestyle on Python files
-      format-cpp               Format the C++ source files with clang-format
-      generate-gl              Run glad to generate the OpenGL loader
-      validate-xml             Validate the docs XML
-      website.build            Build the website
-      website.server           Run a local dev web server
+- `MSBuild -t:Configure -p:VcpkgRoot=[vcpkg root]`
+- `MSBuild -t:Compile`
+- `MSBuild -t:Test`
+- `MSBuild -t:Lint`
+- `MSBuild -t:Format`
+- `MSBuild -t:GenerateGL`
