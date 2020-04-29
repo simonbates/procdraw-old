@@ -13,6 +13,7 @@ add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
 find_package(Catch2 REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 find_path(PLOG_INCLUDE_DIR plog/Log.h)
 find_package(pugixml REQUIRED)
 
@@ -50,6 +51,22 @@ target_link_libraries(procdraw
 target_include_directories(procdraw
         PRIVATE ${PLOG_INCLUDE_DIR})
 
+# Unit tests
+
+add_executable(procdraw_unit_tests
+        src/unit_tests/ColourTest.cpp
+        src/unit_tests/InterpreterPrintTest.cpp
+        src/unit_tests/InterpreterReadTest.cpp
+        src/unit_tests/InterpreterTest.cpp
+        src/unit_tests/InterpreterTypesTest.cpp
+        src/unit_tests/ProcdrawMathTest.cpp
+        src/unit_tests/SimpleMovingAverageTest.cpp)
+
+target_link_libraries(procdraw_unit_tests
+        procdraw_lib
+        GTest::gtest
+        GTest::gtest_main)
+
 # Tests
 
 get_filename_component(PROCDRAW_TEST_DATA_DIR "${PROJECT_SOURCE_DIR}/src/tests/test_data" ABSOLUTE)
@@ -59,17 +76,10 @@ add_definitions(-DPROCDRAW_TEST_DATA_DIR="${PROCDRAW_TEST_DATA_DIR}")
 add_definitions(-DPROCDRAW_DOCS_FILE="${PROCDRAW_DOCS_FILE}")
 
 add_executable(procdraw_tests
-        src/tests/ColourTests.cpp
         src/tests/DocsTester.cpp
         src/tests/DocsTesterTests.cpp
         src/tests/FunctionDocsTests.cpp
-        src/tests/InterpreterReadTests.cpp
-        src/tests/InterpreterPrintTests.cpp
-        src/tests/InterpreterTests.cpp
-        src/tests/InterpreterTypesTests.cpp
         src/tests/ProcdrawDocs.cpp
-        src/tests/ProcdrawMathTests.cpp
-        src/tests/SimpleMovingAverageTests.cpp
         src/tests/TestsMain.cpp)
 
 target_link_libraries(procdraw_tests
@@ -79,18 +89,8 @@ target_link_libraries(procdraw_tests
 
 # Register CTest tests
 
-add_test(NAME validate-xml
-        COMMAND invoke validate-xml)
-
-add_test(NAME check-python-codestyle
-        COMMAND invoke check-python-codestyle)
-
-add_test(NAME run_python_tests
-        COMMAND python -m unittest test_procdraw_utils
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-
-add_test(NAME check-cpp-files
-        COMMAND invoke check-cpp-files)
+add_test(NAME procdraw_unit_tests
+        COMMAND procdraw_unit_tests)
 
 add_test(NAME procdraw_tests
         COMMAND procdraw_tests)

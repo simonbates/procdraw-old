@@ -13,33 +13,33 @@
 // limitations under the License.
 
 #include "../lib/Colour.h"
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 using namespace Procdraw;
 
-TEST_CASE("Hsv2rgb Red")
+TEST(ColourTest, Hsv2rgbRed)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(0.0f, 1.0f, 1.0f);
-    REQUIRE(r == 1.0f);
-    REQUIRE(g == 0.0f);
-    REQUIRE(b == 0.0f);
+    EXPECT_EQ(1.0f, r);
+    EXPECT_EQ(0.0f, g);
+    EXPECT_EQ(0.0f, b);
 }
 
-TEST_CASE("Hsv2rgb Green")
+TEST(ColourTest, Hsv2rgbGreen)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(120.0f, 1.0f, 1.0f);
-    REQUIRE(r == 0.0f);
-    REQUIRE(g == 1.0f);
-    REQUIRE(b == 0.0f);
+    EXPECT_EQ(0.0f, r);
+    EXPECT_EQ(1.0f, g);
+    EXPECT_EQ(0.0f, b);
 }
 
-TEST_CASE("Hsv2rgb Blue")
+TEST(ColourTest, Hsv2rgbBlue)
 {
     float r, g, b;
     std::tie(r, g, b) = Hsv2rgb(240.0f, 1.0f, 1.0f);
-    REQUIRE(r == 0.0f);
-    REQUIRE(g == 0.0f);
-    REQUIRE(b == 1.0f);
+    EXPECT_EQ(0.0f, r);
+    EXPECT_EQ(0.0f, g);
+    EXPECT_EQ(1.0f, b);
 }

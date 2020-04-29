@@ -13,37 +13,37 @@
 // limitations under the License.
 
 #include "../lib/SimpleMovingAverage.h"
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 using namespace Procdraw;
 
-TEST_CASE("SimpleMovingAverage")
+TEST(SimpleMovingAverageTest, SimpleMovingAverage)
 {
     SimpleMovingAverage<int> sma(4);
 
-    REQUIRE(sma.GetMean() == 0);
+    ASSERT_EQ(0, sma.GetMean());
 
     sma.AddDataPoint(8);
     // 0, 0, 0, 8
-    REQUIRE(sma.GetMean() == 2);
+    ASSERT_EQ(2, sma.GetMean());
 
     sma.AddDataPoint(16);
     // 0, 0, 8, 16
-    REQUIRE(sma.GetMean() == 6);
+    ASSERT_EQ(6, sma.GetMean());
 
     sma.AddDataPoint(32);
     // 0, 8, 16, 32
-    REQUIRE(sma.GetMean() == 14);
+    ASSERT_EQ(14, sma.GetMean());
 
     sma.AddDataPoint(64);
     // 8, 16, 32, 64
-    REQUIRE(sma.GetMean() == 30);
+    ASSERT_EQ(30, sma.GetMean());
 
     sma.AddDataPoint(128);
     // 16, 32, 64, 128
-    REQUIRE(sma.GetMean() == 60);
+    ASSERT_EQ(60, sma.GetMean());
 
     sma.AddDataPoint(0);
     // 32, 64, 128, 0
-    REQUIRE(sma.GetMean() == 56);
+    ASSERT_EQ(56, sma.GetMean());
 }

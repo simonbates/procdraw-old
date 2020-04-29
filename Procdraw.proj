@@ -34,6 +34,9 @@
             Command="python -m unittest test_procdraw_utils"
             WorkingDirectory="scripts"/>
         <Exec
+            Command="procdraw_unit_tests.exe"
+            WorkingDirectory="$(BuildDir)"/>
+        <Exec
             Command="procdraw_tests.exe"
             WorkingDirectory="$(BuildDir)"/>
     </Target>

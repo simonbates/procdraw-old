@@ -13,70 +13,70 @@
 // limitations under the License.
 
 #include "../lib/Interpreter.h"
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 using namespace Procdraw;
 
-TEST_CASE("Lookup Symbol")
+TEST(InterpreterTest, LookupSymbol)
 {
     Interpreter interpreter;
     SymbolHandle foo1 = interpreter.SymbolRef("foo");
-    REQUIRE(interpreter.SymbolName(foo1) == "foo");
+    ASSERT_EQ("foo", interpreter.SymbolName(foo1));
     SymbolHandle foo2 = interpreter.SymbolRef("foo");
-    REQUIRE(foo1 == foo2);
+    ASSERT_EQ(foo1, foo2);
 }
 
-TEST_CASE("Symbols have an initial value of None")
+TEST(InterpreterTest, SymbolsHaveInitialValueOfNone)
 {
     Interpreter interpreter;
     SymbolHandle foo = interpreter.SymbolRef("foo");
-    REQUIRE(interpreter.SymbolValue(foo).Type() == ObjectType::None);
+    ASSERT_EQ(ObjectType::None, interpreter.SymbolValue(foo).Type());
 }
 
-TEST_CASE("Set and get Symbol value")
+TEST(InterpreterTest, SetAndGetSymbolValue)
 {
     Interpreter interpreter;
     SymbolHandle foo = interpreter.SymbolRef("foo");
-    REQUIRE(interpreter.SymbolValue(foo).Type() == ObjectType::None);
+    ASSERT_EQ(ObjectType::None, interpreter.SymbolValue(foo).Type());
     interpreter.SetSymbolValue(foo, 42);
     Object val = interpreter.SymbolValue(foo);
-    REQUIRE(val.Type() == ObjectType::Integer);
-    REQUIRE(val.GetInteger() == 42);
+    ASSERT_EQ(ObjectType::Integer, val.Type());
+    ASSERT_EQ(42, val.GetInteger());
 }
 
-TEST_CASE("Eval Boolean")
+TEST(InterpreterTest, EvalBoolean)
 {
     Interpreter interpreter;
-    REQUIRE(interpreter.Eval(true).GetBoolean());
-    REQUIRE_FALSE(interpreter.Eval(false).GetBoolean());
+    EXPECT_TRUE(interpreter.Eval(true).GetBoolean());
+    EXPECT_FALSE(interpreter.Eval(false).GetBoolean());
 }
 
-TEST_CASE("Eval Integer")
+TEST(InterpreterTest, EvalInteger)
 {
     Interpreter interpreter;
-    REQUIRE(interpreter.Eval(42).GetInteger() == 42);
+    ASSERT_EQ(42, interpreter.Eval(42).GetInteger());
 }
 
-TEST_CASE("Eval None")
+TEST(InterpreterTest, EvalNone)
 {
     Interpreter interpreter;
-    REQUIRE(interpreter.Eval(Object::None()).Type() == ObjectType::None);
+    ASSERT_EQ(ObjectType::None, interpreter.Eval(Object::None()).Type());
 }
 
-TEST_CASE("Eval Symbol")
+TEST(InterpreterTest, EvalSymbol)
 {
     Interpreter interpreter;
     SymbolHandle foo = interpreter.SymbolRef("foo");
     interpreter.SetSymbolValue(foo, 42);
-    REQUIRE(interpreter.Eval(Object::MakeSymbolHandle(foo)).GetInteger() == 42);
+    ASSERT_EQ(42, interpreter.Eval(Object::MakeSymbolHandle(foo)).GetInteger());
 }
 
-TEST_CASE("Eval sum function")
+TEST(InterpreterTest, EvalSumFunction)
 {
     Interpreter interpreter;
-    REQUIRE(interpreter.Eval(interpreter.Read("(+)")).GetInteger() == 0);
-    REQUIRE(interpreter.Eval(interpreter.Read("(+ 0)")).GetInteger() == 0);
-    REQUIRE(interpreter.Eval(interpreter.Read("(+ 2)")).GetInteger() == 2);
-    REQUIRE(interpreter.Eval(interpreter.Read("(+ 2 3)")).GetInteger() == 5);
-    REQUIRE(interpreter.Eval(interpreter.Read("(+ 2 3 4)")).GetInteger() == 9);
+    EXPECT_EQ(0, interpreter.Eval(interpreter.Read("(+)")).GetInteger());
+    EXPECT_EQ(0, interpreter.Eval(interpreter.Read("(+ 0)")).GetInteger());
+    EXPECT_EQ(2, interpreter.Eval(interpreter.Read("(+ 2)")).GetInteger());
+    EXPECT_EQ(5, interpreter.Eval(interpreter.Read("(+ 2 3)")).GetInteger());
+    EXPECT_EQ(9, interpreter.Eval(interpreter.Read("(+ 2 3 4)")).GetInteger());
 }
