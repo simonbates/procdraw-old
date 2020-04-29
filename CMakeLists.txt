@@ -13,7 +13,7 @@ add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
 find_package(Catch2 REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-find_package(GTest CONFIG REQUIRED)
+find_package(GTest REQUIRED)
 find_path(PLOG_INCLUDE_DIR plog/Log.h)
 find_package(pugixml REQUIRED)
 

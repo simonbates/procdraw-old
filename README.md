@@ -14,7 +14,7 @@ Procdraw is an experimental live programming environment.
 
 ### Install dependencies with Vcpkg
 
-    > vcpkg install catch2 glfw3 glm plog pugixml
+    > vcpkg install catch2 glfw3 glm gtest plog pugixml
 
 ### Build
 
@@ -35,6 +35,7 @@ Procdraw uses these awesome open source projects and libraries:
 | [github.com/Dav1dde/glad](https://github.com/Dav1dde/glad) | MIT License |
 | [github.com/g-truc/glm](https://github.com/g-truc/glm) | MIT License |
 | [github.com/glfw/glfw](https://github.com/glfw/glfw) | Zlib License |
+| [github.com/google/googletest](https://github.com/google/googletest) | BSD 3-Clause "New" or "Revised" License |
 | [github.com/lxml/lxml](https://github.com/lxml/lxml) | BSD 3-Clause "New" or "Revised" License |
 | [github.com/pyinvoke/invoke](https://github.com/pyinvoke/invoke) | BSD 2-Clause "Simplified" License |
 | [github.com/SergiusTheBest/plog](https://github.com/SergiusTheBest/plog) | Mozilla Public License 2.0 |
