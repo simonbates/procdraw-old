@@ -15,9 +15,6 @@
 
 ### Available targets
 
-- `MSBuild -t:Configure -p:VcpkgRoot=[vcpkg root]`
-- `MSBuild -t:Compile`
-- `MSBuild -t:Test`
-- `MSBuild -t:Lint`
 - `MSBuild -t:Format`
 - `MSBuild -t:GenerateGL`
+- `MSBuild -t:Test`

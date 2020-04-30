@@ -1,9 +1,0 @@
-<docs>
-    <functions>
-        <function name="failing-1">
-            <examples>
-                <ex expr="(+ 1)" value="0"/>
-            </examples>
-        </function>
-    </functions>
-</docs>

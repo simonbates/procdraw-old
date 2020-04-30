@@ -1,12 +1,6 @@
 # CMake
 /build/
 
-# CTest
-/Testing/Temporary/
-
 # Python
 /env/
 __pycache__/
-
-# Website build output
-/website/public/

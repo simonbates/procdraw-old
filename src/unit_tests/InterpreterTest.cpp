@@ -70,13 +70,3 @@ TEST(InterpreterTest, EvalSymbol)
     interpreter.SetSymbolValue(foo, 42);
     ASSERT_EQ(42, interpreter.Eval(Object::MakeSymbolHandle(foo)).GetInteger());
 }
-
-TEST(InterpreterTest, EvalSumFunction)
-{
-    Interpreter interpreter;
-    EXPECT_EQ(0, interpreter.Eval(interpreter.Read("(+)")).GetInteger());
-    EXPECT_EQ(0, interpreter.Eval(interpreter.Read("(+ 0)")).GetInteger());
-    EXPECT_EQ(2, interpreter.Eval(interpreter.Read("(+ 2)")).GetInteger());
-    EXPECT_EQ(5, interpreter.Eval(interpreter.Read("(+ 2 3)")).GetInteger());
-    EXPECT_EQ(9, interpreter.Eval(interpreter.Read("(+ 2 3 4)")).GetInteger());
-}

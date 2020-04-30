@@ -1,5 +1,4 @@
 import os
-from lxml import etree
 import yaml
 
 
@@ -128,19 +127,3 @@ def is_cpp_file(filename):
 
 def is_cpp_header(filename):
     return is_cpp_file(filename) and not filename.endswith(".cpp")
-
-
-def validate_xml(schema_file, xml_file):
-    schema_doc = etree.parse(schema_file)
-    validator = etree.RelaxNG(schema_doc)
-    xml_doc = etree.parse(xml_file)
-    if validator.validate(xml_doc):
-        return CheckResult(True, os.path.relpath(xml_file))
-    else:
-        errors = []
-        for error in validator.error_log:
-            errors.append("{:d}:{:d}: {:s}".format(error.line, error.column,
-                                                   error.message))
-        return CheckResult(False, os.path.relpath(xml_file), {
-            "errors": errors
-        })
