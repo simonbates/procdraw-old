@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Procdraw)
 
+enable_testing()
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
@@ -50,7 +52,8 @@ target_include_directories(procdraw
 # Test support
 
 add_library(procdraw_test_support
-        src/test_support/SourceFileChecker.cpp)
+        src/test_support/SourceFileChecker.cpp
+        src/test_support/TapReporter.cpp)
 
 # Unit tests
 
@@ -70,3 +73,21 @@ target_link_libraries(procdraw_unit_tests
         procdraw_test_support
         GTest::gtest
         GTest::gtest_main)
+
+# check_cpp_files
+
+add_executable(check_cpp_files
+        src/check_cpp_files/main.cpp)
+
+target_link_libraries(check_cpp_files
+        procdraw_test_support)
+
+# Register CTest tests
+
+file(TO_NATIVE_PATH "../src" PROCDRAW_SRC_DIR)
+
+add_test(NAME procdraw_unit_tests
+        COMMAND procdraw_unit_tests)
+
+add_test(NAME check_cpp_files
+        COMMAND check_cpp_files 42 "${PROCDRAW_SRC_DIR}")

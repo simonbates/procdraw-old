@@ -17,4 +17,3 @@
 
 - `MSBuild -t:Format`
 - `MSBuild -t:GenerateGL`
-- `MSBuild -t:Test`

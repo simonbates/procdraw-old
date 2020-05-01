@@ -36,4 +36,3 @@ Procdraw uses these awesome open source projects and libraries:
 | [github.com/glfw/glfw](https://github.com/glfw/glfw) | Zlib License |
 | [github.com/google/googletest](https://github.com/google/googletest) | BSD 3-Clause "New" or "Revised" License |
 | [github.com/SergiusTheBest/plog](https://github.com/SergiusTheBest/plog) | Mozilla Public License 2.0 |
-| [github.com/yaml/pyyaml](https://github.com/yaml/pyyaml) | MIT License |

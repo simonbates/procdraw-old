@@ -1,3 +1,1 @@
 glad==0.1.33
-pycodestyle==2.5.0
-pyyaml==5.3

@@ -40,4 +40,4 @@ jobs:
         shell: cmd
         run: >-
           call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
-          && MSBuild -t:Test
+          && ctest --verbose
