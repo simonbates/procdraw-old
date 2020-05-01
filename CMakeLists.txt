@@ -47,6 +47,11 @@ target_link_libraries(procdraw
 target_include_directories(procdraw
         PRIVATE ${PLOG_INCLUDE_DIR})
 
+# Test support
+
+add_library(procdraw_test_support
+        src/test_support/SourceFileChecker.cpp)
+
 # Unit tests
 
 add_executable(procdraw_unit_tests
@@ -57,9 +62,11 @@ add_executable(procdraw_unit_tests
         src/unit_tests/InterpreterTest.cpp
         src/unit_tests/InterpreterTypesTest.cpp
         src/unit_tests/ProcdrawMathTest.cpp
-        src/unit_tests/SimpleMovingAverageTest.cpp)
+        src/unit_tests/SimpleMovingAverageTest.cpp
+        src/unit_tests/SourceFileCheckerTest.cpp)
 
 target_link_libraries(procdraw_unit_tests
         procdraw_lib
+        procdraw_test_support
         GTest::gtest
         GTest::gtest_main)

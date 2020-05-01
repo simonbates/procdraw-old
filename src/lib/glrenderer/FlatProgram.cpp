@@ -20,7 +20,7 @@ namespace Procdraw {
 
 FlatProgram::FlatProgram()
 {
-    static const GLchar* vertexShaderSource[] = {
+    const GLchar* vertexShaderSource[]{
         "#version 150                                                   \n"
         "uniform mat4 world_view_projection;                            \n"
         "uniform vec4 light_direction;                                  \n"
@@ -40,7 +40,7 @@ FlatProgram::FlatProgram()
         "    vs_color.a = material_color.a;                             \n"
         "}                                                              \n"};
 
-    static const GLchar* fragmentShaderSource[] = {
+    const GLchar* fragmentShaderSource[]{
         "#version 150                                   \n"
         "in vec4 vs_color;                              \n"
         "out vec4 color;                                \n"

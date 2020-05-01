@@ -34,7 +34,7 @@
         <Exec
             Command="python -m unittest test_procdraw_utils"
             WorkingDirectory="scripts"/>
-        <Exec Command="python scripts\check_cpp_files.py 36 @(CppFiles, ' ')"/>
+        <Exec Command="python scripts\check_cpp_files.py 39 @(CppFiles, ' ')"/>
         <Exec
             Command="procdraw_unit_tests.exe"
             WorkingDirectory="$(BuildDir)"/>
