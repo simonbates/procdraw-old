@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Procdraw)
 
-enable_testing()
-
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_definitions(UNICODE _UNICODE PLOG_OMIT_LOG_DEFINES)
@@ -81,13 +79,3 @@ add_executable(check_cpp_files
 
 target_link_libraries(check_cpp_files
         procdraw_test_support)
-
-# Register CTest tests
-
-file(TO_NATIVE_PATH "../src" PROCDRAW_SRC_DIR)
-
-add_test(NAME procdraw_unit_tests
-        COMMAND procdraw_unit_tests)
-
-add_test(NAME check_cpp_files
-        COMMAND check_cpp_files 42 "${PROCDRAW_SRC_DIR}")
