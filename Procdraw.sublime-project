@@ -1,0 +1,22 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "folder_exclude_patterns": [
+                "build",
+                "env",
+                "GL/include",
+                "GL/src",
+                "__pycache__"
+            ],
+        }
+    ],
+    "build_systems": [
+        {
+            "name": "Procdraw Build",
+            "working_dir": "${project_path}",
+            "shell_cmd": "msbuild -t:Compile,Test",
+            "file_regex": "^\\s*\\.\\.\\\\(.+)\\((\\d+)\\)():\\s+(.+)$"
+        }
+    ]
+}

@@ -4,3 +4,6 @@
 # Python
 /env/
 __pycache__/
+
+# Sublime Text
+/Procdraw.sublime-workspace

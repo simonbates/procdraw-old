@@ -15,7 +15,8 @@
 #include "TapReporter.h"
 #include <iostream>
 
-TapReporter::TapReporter(std::ostream& out, int plan) : out_(out), plan_(plan)
+TapReporter::TapReporter(std::ostream& out, int plan)
+    : out_(out), plan_(plan)
 {
     out_ << "1.." << plan << std::endl;
 }

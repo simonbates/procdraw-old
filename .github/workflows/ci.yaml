@@ -28,17 +28,18 @@ jobs:
           && git log -1 --pretty=format:"commit %%H%%nDate:  %%aD"
       - name: Install vcpkg dependencies
         run: vcpkg install glfw3 glm gtest plog
-      - name: Build
+      - name: Configure
         shell: cmd
         run: >-
-          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
-          && mkdir build
-          && cd build
-          && cmake -G Ninja -D CMAKE_C_COMPILER=cl.exe -D CMAKE_CXX_COMPILER=cl.exe -D CMAKE_TOOLCHAIN_FILE=%VCPKG_INSTALLATION_ROOT%\scripts\buildsystems\vcpkg.cmake ..
-          && cmake --build .
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\VC\Auxiliary\Build\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Configure -p:VcpkgRoot=%VCPKG_INSTALLATION_ROOT%
+      - name: Compile
+        shell: cmd
+        run: >-
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\VC\Auxiliary\Build\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Compile
       - name: Test
         shell: cmd
         run: >-
-          call "%PROCDRAW_VISUAL_STUDIO_HOME%\\VC\\Auxiliary\\Build\\%PROCDRAW_VCVARS%"
-          && cd build
-          && ctest --verbose
+          call "%PROCDRAW_VISUAL_STUDIO_HOME%\VC\Auxiliary\Build\%PROCDRAW_VCVARS%"
+          && MSBuild -t:Test

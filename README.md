@@ -20,10 +20,8 @@ Procdraw is an experimental live programming environment.
 
 Run the following in a Visual Studio "Developer Command Prompt":
 
-    > mkdir build
-    > cd build
-    > cmake -G Ninja -D CMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake ..
-    > cmake --build .
+    > MSBuild -t:Configure -p:VcpkgRoot=[vcpkg root]
+    > MSBuild -t:Compile
 
 ## Dependencies
 
