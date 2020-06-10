@@ -10,7 +10,8 @@ Procdraw is an experimental live programming environment.
     - MSVC v142
     - Windows 10 SDK
     - C++ CMake tools for Windows
-- Vcpkg
+- [Ninja](https://ninja-build.org)
+- [Vcpkg](https://github.com/Microsoft/vcpkg)
 
 ### Install dependencies with Vcpkg
 
